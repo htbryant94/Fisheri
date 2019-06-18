@@ -85,14 +85,34 @@ class MapSampleState extends State<MapSample> {
                 ],
               ),
             ),
-            body: GoogleMap(
-              mapType: MapType.normal,
-              initialCameraPosition: _kGooglePlex,
-              compassEnabled: false,
-              myLocationButtonEnabled: false,
-              onMapCreated: (GoogleMapController controller) {
-                _controller.complete(controller);
-              },
+            body: TabBarView(
+              children: [
+                GoogleMap(
+                  mapType: MapType.normal,
+                  initialCameraPosition: _kGooglePlex,
+                  compassEnabled: false,
+                  myLocationButtonEnabled: false,
+                  onMapCreated: (GoogleMapController controller) {
+                    _controller.complete(controller);
+                  },
+                ),
+                Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    "Search Results Goes Here",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 30.0),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    "Account Details Goes Here",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 30.0),
+                  ),
+                ),
+              ],
             ),
             floatingActionButton: FloatingActionButton.extended(
               onPressed: _goToTheLake,
