@@ -147,28 +147,6 @@ class CustomListItemTwo extends StatelessWidget {
           ],
         ),
       ),
-      // child: SizedBox(
-      //   height: 100,
-      //   child: Row(
-      //     crossAxisAlignment: CrossAxisAlignment.start,
-      //     children: <Widget>[
-      //       AspectRatio(
-      //         child: thumbnail,
-      //         aspectRatio: 1.0,
-      //       ),
-      //       Padding(
-      //         padding: const EdgeInsets.fromLTRB(3, 0, 3, 0),
-      //         child: _CustomCell(
-      //           title: title,
-      //           subtitle: subtitle,
-      //           author: author,
-      //           publishDate: publishDate,
-      //           readDuration: readDuration,
-      //         ),
-      //       ),
-      //     ],
-      //   ),
-      // ),
     );
   }
 }
@@ -178,9 +156,17 @@ class MapSample extends StatefulWidget {
   State<MapSample> createState() => MapSampleState();
 }
 
-class MapSampleState extends State<MapSample> {
+class MapSampleState extends State<MapSample>
+    with SingleTickerProviderStateMixin {
+  int _selectedIndex = 0;
   final items = List<String>.generate(100, (i) => "Item $i");
   Completer<GoogleMapController> _controller = Completer();
+
+  void _incrementTab(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   static final CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(37.42796133580664, -122.085749655962),
@@ -217,6 +203,32 @@ class MapSampleState extends State<MapSample> {
     }
 
     Color color = Theme.of(context).primaryColor;
+
+    Widget _searchScreen = GoogleMap(
+      mapType: MapType.normal,
+      initialCameraPosition: _kGooglePlex,
+      compassEnabled: false,
+      myLocationButtonEnabled: false,
+      onMapCreated: (GoogleMapController controller) {
+        _controller.complete(controller);
+      },
+    );
+
+    Widget _resultsScreen = Align(
+        alignment: Alignment.center,
+        child: ListView.separated(
+          itemCount: items.length,
+          separatorBuilder: (BuildContext context, int index) => Divider(
+                height: 1,
+                color: Colors.grey[700],
+              ),
+          itemBuilder: (context, index) {
+            return CustomListItemTwo(
+                thumbnail: Container(
+                    decoration: const BoxDecoration(color: Colors.pink)),
+                title: '${items[index]}');
+          },
+        ));
 
     Widget textSection = Container(
         padding: const EdgeInsets.all(32),
@@ -268,6 +280,26 @@ class MapSampleState extends State<MapSample> {
       ),
     );
 
+    Widget _detailScreen = ListView(
+      children: [
+        Image.asset(
+          'images/lake.jpg',
+          width: 600,
+          height: 240,
+          fit: BoxFit.cover,
+        ),
+        titleSection,
+        textSection,
+        buttonSection,
+      ],
+    );
+
+    final List<Widget> _children = [
+      _searchScreen,
+      _resultsScreen,
+      _detailScreen
+    ];
+
     return new MaterialApp(
       home: DefaultTabController(
           length: 3,
@@ -302,80 +334,41 @@ class MapSampleState extends State<MapSample> {
               //         ),
               //   ),
               // ),
-              bottom: TabBar(
-                tabs: [
-                  Tab(icon: Icon(Icons.search, color: Color(0xffE4E4E4))),
-                  Tab(icon: Icon(Icons.star, color: Color(0xffE4E4E4))),
-                  Tab(
-                      icon:
-                          Icon(Icons.account_circle, color: Color(0xffE4E4E4))),
-                ],
-              ),
             ),
-            // bottomNavigationBar: BottomNavigationBar(
-            //   items: [
-            //     BottomNavigationBarItem(
-            //         icon: Icon(Icons.search), title: Text('Search')),
-            //     BottomNavigationBarItem(
-            //         icon: Icon(Icons.star), title: Text('Results')),
-            //     BottomNavigationBarItem(
-            //         icon: Icon(Icons.account_circle), title: Text('Venue'))
-            //   ],
-            // ),
-            body: TabBarView(
-              children: [
-                GoogleMap(
-                  mapType: MapType.normal,
-                  initialCameraPosition: _kGooglePlex,
-                  compassEnabled: false,
-                  myLocationButtonEnabled: false,
-                  onMapCreated: (GoogleMapController controller) {
-                    _controller.complete(controller);
-                  },
-                ),
-                Align(
-                    alignment: Alignment.center,
-                    child: ListView.separated(
-                      itemCount: items.length,
-                      separatorBuilder: (BuildContext context, int index) =>
-                          Divider(
-                            height: 1,
-                            color: Colors.grey[700],
-                          ),
-                      itemBuilder: (context, index) {
-                        return CustomListItemTwo(
-                            thumbnail: Container(
-                                decoration:
-                                    const BoxDecoration(color: Colors.pink)),
-                            title: '${items[index]}');
-                      },
-                    )
-                    // child: ListView.builder(
-                    //   itemCount: items.length,
-                    //   itemBuilder: (context, index) {
-                    //     return CustomListItemTwo(
-                    //         thumbnail: Container(
-                    //             decoration:
-                    //                 const BoxDecoration(color: Colors.pink)),
-                    //         title: '${items[index]}');
-                    //   },
-                    // ),
-                    ),
-                ListView(
-                  children: [
-                    Image.asset(
-                      'images/lake.jpg',
-                      width: 600,
-                      height: 240,
-                      fit: BoxFit.cover,
-                    ),
-                    titleSection,
-                    textSection,
-                    buttonSection,
-                  ],
-                )
+            bottomNavigationBar: BottomNavigationBar(
+              currentIndex: _selectedIndex,
+              type: BottomNavigationBarType.shifting,
+              backgroundColor: Color(0xff115429),
+              items: [
+                BottomNavigationBarItem(
+                    activeIcon: Icon(Icons.search),
+                    backgroundColor: Color(0xff115429),
+                    icon: Icon(Icons.search, color: Color(0xffE4E4E4)),
+                    title: Text(
+                      'Search',
+                      style: TextStyle(color: Color(0xffE4E4E4)),
+                    )),
+                BottomNavigationBarItem(
+                    backgroundColor: Color(0xff115429),
+                    icon: Icon(Icons.star, color: Color(0xffE4E4E4)),
+                    title: Text(
+                      'Results',
+                      style: TextStyle(color: Color(0xffE4E4E4)),
+                    )),
+                BottomNavigationBarItem(
+                    backgroundColor: Color(0xff115429),
+                    icon: Icon(Icons.account_circle, color: Color(0xffE4E4E4)),
+                    title: Text(
+                      'Venue',
+                      style: TextStyle(color: Color(0xffE4E4E4)),
+                    ))
               ],
+              onTap: (index) {
+                _incrementTab(index);
+                print("index changed: $index");
+              },
             ),
+            body: Center(child: _children[_selectedIndex],),
             floatingActionButton: FloatingActionButton.extended(
               onPressed: _goToTheLake,
               label: Text(
