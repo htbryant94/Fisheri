@@ -15,6 +15,25 @@ class MyApp extends StatelessWidget {
   }
 }
 
+class ResultInfo {
+
+  ResultInfo(String title,
+             String distance,
+             String location,
+             bool   isLake) {
+    this.title    = title;
+    this.distance = distance;
+    this.location = location;
+    this.isLake   = isLake;
+  }
+
+  String title;
+  String distance;
+  String location;
+  bool   isLake;
+
+}
+
 class _CustomCell extends StatelessWidget {
   _CustomCell({
     Key key,
@@ -45,14 +64,31 @@ class _CustomCell extends StatelessWidget {
                 '$title',
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
-              const Padding(padding: EdgeInsets.only(bottom: 0.0)),
+              const Padding(padding: EdgeInsets.only(bottom: 8.0)),
               Text(
                 '$subtitle',
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontSize: 12, color: Colors.black54),
+                style: const TextStyle(fontSize: 14, color: Colors.black87),
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          flex: 1,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              Text(
+                '$publishDate',
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: Colors.black87,
+                ),
               ),
             ],
           ),
@@ -162,6 +198,12 @@ class MapSampleState extends State<MapSample>
   final items = List<String>.generate(100, (i) => "Item $i");
   Completer<GoogleMapController> _controller = Completer();
 
+  final List<ResultInfo> _searchResults = [
+    ResultInfo("Manor Farm Lakes", "5 miles", "Biggleswade", true),
+    ResultInfo("Bluebell Lakes", "2.45 miles", "Oundle", true),
+    ResultInfo("Cawcutts Lakes", "120 miles", "Impington", false),
+  ];
+
   void _incrementTab(int index) {
     setState(() {
       _selectedIndex = index;
@@ -217,16 +259,21 @@ class MapSampleState extends State<MapSample>
     Widget _resultsScreen = Align(
         alignment: Alignment.center,
         child: ListView.separated(
-          itemCount: items.length,
+          itemCount: _searchResults.length,
           separatorBuilder: (BuildContext context, int index) => Divider(
                 height: 1,
                 color: Colors.grey[700],
               ),
           itemBuilder: (context, index) {
+            final _lakeToString = _searchResults[index].isLake ? "LAKE" : "SHOP";
             return CustomListItemTwo(
-                thumbnail: Container(
-                    decoration: const BoxDecoration(color: Colors.pink)),
-                title: '${items[index]}');
+              thumbnail: Container(
+                  decoration: const BoxDecoration(color: Colors.pink)),
+              title: '${_searchResults[index].title}',
+              subtitle: '${_searchResults[index].location}',
+              author: '${_searchResults[index].distance}',
+              publishDate: _lakeToString,
+            );
           },
         ));
 
@@ -368,7 +415,9 @@ class MapSampleState extends State<MapSample>
                 print("index changed: $index");
               },
             ),
-            body: Center(child: _children[_selectedIndex],),
+            body: Center(
+              child: _children[_selectedIndex],
+            ),
             floatingActionButton: FloatingActionButton.extended(
               onPressed: _goToTheLake,
               label: Text(
