@@ -202,6 +202,15 @@ class MapSampleState extends State<MapSample>
     ResultInfo("Manor Farm Lakes", "5 miles", "Biggleswade", true),
     ResultInfo("Bluebell Lakes", "2.45 miles", "Oundle", true),
     ResultInfo("Cawcutts Lakes", "120 miles", "Impington", false),
+    ResultInfo("Manor Farm Lakes", "5 miles", "Biggleswade", true),
+    ResultInfo("Bluebell Lakes", "2.45 miles", "Oundle", true),
+    ResultInfo("Cawcutts Lakes", "120 miles", "Impington", false),
+    ResultInfo("Manor Farm Lakes", "5 miles", "Biggleswade", true),
+    ResultInfo("Bluebell Lakes", "2.45 miles", "Oundle", true),
+    ResultInfo("Cawcutts Lakes", "120 miles", "Impington", false),
+    ResultInfo("Manor Farm Lakes", "5 miles", "Biggleswade", true),
+    ResultInfo("Bluebell Lakes", "2.45 miles", "Oundle", true),
+    ResultInfo("Cawcutts Lakes", "120 miles", "Impington", false),
   ];
 
   void _incrementTab(int index) {
@@ -412,7 +421,6 @@ class MapSampleState extends State<MapSample>
               ],
               onTap: (index) {
                 _incrementTab(index);
-                print("index changed: $index");
               },
             ),
             body: Center(
