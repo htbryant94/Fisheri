@@ -38,14 +38,14 @@ class _CustomCell extends StatelessWidget {
   _CustomCell({
     Key key,
     this.title,
-    this.subtitle,
+    this.venueType,
     this.author,
     this.publishDate,
     this.readDuration,
   }) : super(key: key);
 
   final String title;
-  final String subtitle;
+  final String venueType;
   final String author;
   final String publishDate;
   final String readDuration;
@@ -60,16 +60,17 @@ class _CustomCell extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+              const Padding(padding: EdgeInsets.only(top: 8.0)),
               Text(
                 '$title',
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style:
-                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
               const Padding(padding: EdgeInsets.only(bottom: 8.0)),
               Text(
-                '$subtitle',
+                '$venueType',
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(fontSize: 14, color: Colors.black87),
@@ -77,28 +78,47 @@ class _CustomCell extends StatelessWidget {
             ],
           ),
         ),
+        // Expanded(
+        //   flex: 1,
+        //   child: Column(
+        //     crossAxisAlignment: CrossAxisAlignment.start,
+        //     mainAxisAlignment: MainAxisAlignment.end,
+        //     children: <Widget>[
+        //       Text(
+        //         '$publishDate',
+        //         style: const TextStyle(
+        //           fontSize: 12,
+        //           color: Colors.black87,
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        // ),
+        // Expanded(
+        //   flex: 1,
+        //   child: Column(
+        //     crossAxisAlignment: CrossAxisAlignment.start,
+        //     mainAxisAlignment: MainAxisAlignment.end,
+        //     children: <Widget>[
+        //       Text(
+        //         '$author',
+        //         style: const TextStyle(
+        //           fontSize: 12,
+        //           color: Colors.black87,
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        // ),
         Expanded(
           flex: 1,
-          child: Column(
+          child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
-              Text(
-                '$publishDate',
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: Colors.black87,
-                ),
+                 Icon(
+                Icons.directions_boat
               ),
-            ],
-          ),
-        ),
-        Expanded(
-          flex: 1,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
               Text(
                 '$author',
                 style: const TextStyle(
@@ -119,7 +139,7 @@ class CustomListItemTwo extends StatelessWidget {
     Key key,
     this.thumbnail,
     this.title,
-    this.subtitle,
+    this.venueType,
     this.author,
     this.publishDate,
     this.readDuration,
@@ -127,7 +147,7 @@ class CustomListItemTwo extends StatelessWidget {
 
   final Widget thumbnail;
   final String title;
-  final String subtitle;
+  final String venueType;
   final String author;
   final String publishDate;
   final String readDuration;
@@ -147,7 +167,7 @@ class CustomListItemTwo extends StatelessWidget {
   //               Expanded(
   //                 child: _CustomCell(
   //                   title: title,
-  //                   subtitle: subtitle,
+  //                   venueType: venueType,
   //                   author: author,
   //                   publishDate: publishDate,
   //                   readDuration: readDuration,
@@ -171,10 +191,10 @@ class CustomListItemTwo extends StatelessWidget {
               aspectRatio: 1.0,
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(3, 0, 3, 0),
+              padding: const EdgeInsets.fromLTRB(8, 0, 3, 0),
               child: _CustomCell(
                 title: title,
-                subtitle: subtitle,
+                venueType: venueType,
                 author: author,
                 publishDate: publishDate,
                 readDuration: readDuration,
@@ -279,9 +299,8 @@ class MapSampleState extends State<MapSample>
               thumbnail: Container(
                   decoration: const BoxDecoration(color: Colors.pink)),
               title: '${_searchResults[index].title}',
-              subtitle: '${_searchResults[index].location}',
+              venueType: _lakeToString,
               author: '${_searchResults[index].distance}',
-              publishDate: _lakeToString,
             );
           },
         ));
