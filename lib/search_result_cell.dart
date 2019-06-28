@@ -108,9 +108,8 @@ class SearchResultCell extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
-          flex: 2,
-          child: Column(
+        // Expanded(
+          Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Padding(
@@ -124,60 +123,19 @@ class SearchResultCell extends StatelessWidget {
                     SizedBox(height: 4),
                     _VenueOperational(isOpen),
                     SizedBox(height: 4),
-                    _VenueFeatures(),
-                    SizedBox(height: 4),
-                    _VenueDistance(distance),
+                    // _VenueFeatures(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        _VenueFeatures(),
+                        _VenueDistance(distance)
+                    ],)
+                    
                   ],
                 ),
               ),
-              const Padding(padding: EdgeInsets.only(bottom: 8.0)),
             ],
           ),
-        ),
-        // Expanded(
-        //   flex: 1,
-        //   child: Column(
-        //     crossAxisAlignment: CrossAxisAlignment.start,
-        //     mainAxisAlignment: MainAxisAlignment.end,
-        //     children: <Widget>[
-
-        //     ],
-        //   ),
-        // ),
-        // Expanded(
-        //   flex: 1,
-        //   child: Column(
-        //     crossAxisAlignment: CrossAxisAlignment.start,
-        //     mainAxisAlignment: MainAxisAlignment.end,
-        //     children: <Widget>[
-        //       Text(
-        //         '$author',
-        //         style: const TextStyle(
-        //           fontSize: 12,
-        //           color: Colors.black87,
-        //         ),
-        //       ),
-        //     ],
-        //   ),
-        // ),
-        // Expanded(
-        //   flex: 1,
-        //   child: Row(
-        //     crossAxisAlignment: CrossAxisAlignment.start,
-        //     mainAxisAlignment: MainAxisAlignment.end,
-        //     children: <Widget>[
-        //       Icon(Icons.directions_boat),
-        //       Icon(Icons.directions_bike),
-        //       Icon(Icons.directions_car),
-        //       Text(
-        //         '$author',
-        //         style: const TextStyle(
-        //           fontSize: 12,
-        //           color: Colors.black87,
-        //         ),
-        //       ),
-        //     ],
-        //   ),
         // ),
       ],
     );

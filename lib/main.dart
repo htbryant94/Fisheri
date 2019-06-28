@@ -65,7 +65,8 @@ class CustomListItemTwo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 0),
-      child: SizedBox(
+      child: Container(
+        decoration: BoxDecoration(color: Colors.red),
         height: 120,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -74,14 +75,16 @@ class CustomListItemTwo extends StatelessWidget {
               child: thumbnail,
               aspectRatio: 1.0,
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8, 0, 3, 0),
-              child: SearchResultCell(
-                title: title,
-                venueType: venueType,
-                distance: distance,
-                isOpen: isOpen,
-                readDuration: readDuration,
+            Flexible(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+                child: SearchResultCell(
+                  title: title,
+                  venueType: venueType,
+                  distance: distance,
+                  isOpen: isOpen,
+                  readDuration: readDuration,
+                ),
               ),
             ),
           ],
@@ -182,7 +185,8 @@ class MapSampleState extends State<MapSample>
                 color: Colors.grey[700],
               ),
           itemBuilder: (context, index) {
-            final _lakeToString = _searchResults[index].isLake ? "LAKE" : "SHOP";    
+            final _lakeToString =
+                _searchResults[index].isLake ? "LAKE" : "SHOP";
             return CustomListItemTwo(
               thumbnail: Image.asset(
                 'images/lake.jpg',
@@ -271,7 +275,7 @@ class MapSampleState extends State<MapSample>
           ],
         ));
 
-        bool _descriptionExpanded = false;
+    bool _descriptionExpanded = false;
     Widget textSection = Container(
         padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
         child: Column(
@@ -293,15 +297,12 @@ class MapSampleState extends State<MapSample>
                 print(_descriptionExpanded);
                 _descriptionExpanded = !_descriptionExpanded;
               },
-              child: Text(
-                "Read More",
-                style: TextStyle(color: Colors.blue)
-              ),
+              child: Text("Read More", style: TextStyle(color: Colors.blue)),
             ),
           ],
         ));
 
-          Widget amenetiesSection = Container(
+    Widget amenetiesSection = Container(
         padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
         child: Column(
           children: <Widget>[
@@ -322,10 +323,7 @@ class MapSampleState extends State<MapSample>
                 print(_descriptionExpanded);
                 _descriptionExpanded = !_descriptionExpanded;
               },
-              child: Text(
-                "Read More",
-                style: TextStyle(color: Colors.blue)
-              ),
+              child: Text("Read More", style: TextStyle(color: Colors.blue)),
             ),
           ],
         ));
