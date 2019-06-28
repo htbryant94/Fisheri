@@ -11,7 +11,7 @@ class _Title extends StatelessWidget {
       '$title',
       maxLines: 2,
       overflow: TextOverflow.ellipsis,
-      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
     );
   }
 }
@@ -27,7 +27,7 @@ class _VenueType extends StatelessWidget {
       '$venueType',
       maxLines: 2,
       overflow: TextOverflow.ellipsis,
-      style: const TextStyle(fontSize: 14, color: Colors.black87),
+      style: TextStyle(fontSize: 14, color: Colors.black87),
     );
   }
 }
@@ -45,6 +45,43 @@ class _VenueOperational extends StatelessWidget {
         fontSize: 12,
         fontWeight: FontWeight.bold,
         color: isOpen ? Colors.green : Colors.red,
+      ),
+    );
+  }
+}
+
+class _VenueFeatures extends StatelessWidget {
+  // _VenueFeatures(this.features);
+
+  // final List<Icon> features;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: <Widget>[
+        Icon(Icons.directions_boat),
+        Icon(Icons.directions_bike),
+        Icon(Icons.directions_car),
+      ],
+    );
+  }
+}
+
+class _VenueDistance extends StatelessWidget {
+  _VenueDistance(this.distance);
+
+  final String distance;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      '$distance',
+      style: const TextStyle(
+        fontSize: 12,
+        fontStyle: FontStyle.italic,
+        color: Colors.black54,
       ),
     );
   }
@@ -76,27 +113,24 @@ class SearchResultCell extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              _Title(title),
-              _VenueType(venueType),
-              _VenueOperational(isOpen),
-              const Padding(padding: EdgeInsets.only(bottom: 8.0)),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Icon(Icons.directions_boat),
-                  Icon(Icons.directions_bike),
-                  Icon(Icons.directions_car),
-                  Text(
-                    '$distance',
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontStyle: FontStyle.italic,
-                      color: Colors.black54,
-                    ),
-                  ),
-                ],
+              Padding(
+                padding: EdgeInsets.only(top: 4),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _Title(title),
+                    SizedBox(height: 4),
+                    _VenueType(venueType),
+                    SizedBox(height: 4),
+                    _VenueOperational(isOpen),
+                    SizedBox(height: 4),
+                    _VenueFeatures(),
+                    SizedBox(height: 4),
+                    _VenueDistance(distance),
+                  ],
+                ),
               ),
+              const Padding(padding: EdgeInsets.only(bottom: 8.0)),
             ],
           ),
         ),
