@@ -1,5 +1,103 @@
 import 'package:flutter/material.dart';
 
+class SearchResultCell extends StatelessWidget {
+  SearchResultCell({
+    Key key,
+    this.imageURL,
+    this.title,
+    this.venueType,
+    this.isOpen,
+    this.distance,
+  }) : super(key: key);
+
+  final String imageURL;
+  final String title;
+  final String venueType;
+  final bool isOpen;
+  final String distance;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 120,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _SearchResultCellImage(imageURL),
+          _SearchResultCellInfo(
+            title: title,
+            venueType: venueType,
+            isOpen: isOpen,
+            distance: distance,
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class _SearchResultCellImage extends StatelessWidget {
+  _SearchResultCellImage(this.imageURL);
+
+  final String imageURL;
+
+  @override
+  Widget build(BuildContext context) {
+    return AspectRatio(
+      child: Image.asset(imageURL, fit: BoxFit.fill),
+      aspectRatio: 1.0,
+    );
+    // return Image.asset(imageURL, fit: BoxFit.fill);
+  }
+}
+
+class _SearchResultCellInfo extends StatelessWidget {
+  _SearchResultCellInfo({
+    Key key,
+    this.title,
+    this.venueType,
+    this.distance,
+    this.isOpen,
+  }) : super(key: key);
+
+  final String title;
+  final String venueType;
+  final String distance;
+  final bool isOpen;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+        child: Column(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _Title(title),
+                  _VenueType(venueType),
+                  _VenueOperational(isOpen),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      _VenueFeatures(),
+                      _VenueDistance(distance),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _Title extends StatelessWidget {
   _Title(this.title);
 
@@ -57,13 +155,16 @@ class _VenueFeatures extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const double _spacing = 4;
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: <Widget>[
+      children: [
         Icon(Icons.directions_boat),
+        SizedBox(width: _spacing),
         Icon(Icons.directions_bike),
-        Icon(Icons.directions_car),
+        SizedBox(width: _spacing),
+        Icon(Icons.add_location),
+        SizedBox(width: _spacing),
+        Icon(Icons.description),
       ],
     );
   }
@@ -83,47 +184,6 @@ class _VenueDistance extends StatelessWidget {
         fontStyle: FontStyle.italic,
         color: Colors.black87,
       ),
-    );
-  }
-}
-
-class SearchResultCell extends StatelessWidget {
-  SearchResultCell({
-    Key key,
-    this.title,
-    this.venueType,
-    this.distance,
-    this.isOpen,
-  }) : super(key: key);
-
-  final String title;
-  final String venueType;
-  final String distance;
-  final bool isOpen;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _Title(title),
-              _VenueType(venueType),
-              _VenueOperational(isOpen),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _VenueFeatures(),
-                  _VenueDistance(distance),
-                ],
-              )
-            ],
-          ),
-        ),
-      ],
     );
   }
 }

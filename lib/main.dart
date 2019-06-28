@@ -18,53 +18,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class CustomListItemTwo extends StatelessWidget {
-  CustomListItemTwo({
-    Key key,
-    this.thumbnail,
-    this.title,
-    this.venueType,
-    this.distance,
-    this.isOpen,
-  }) : super(key: key);
-
-  final Widget thumbnail;
-  final String title;
-  final String venueType;
-  final String distance;
-  final bool isOpen;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 0),
-      child: Container(
-        height: 120,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            AspectRatio(
-              child: thumbnail,
-              aspectRatio: 1.0,
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                child: SearchResultCell(
-                  title: title,
-                  venueType: venueType,
-                  distance: distance,
-                  isOpen: isOpen,
-                ),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 class MapSample extends StatefulWidget {
   @override
   State<MapSample> createState() => MapSampleState();
@@ -158,11 +111,8 @@ class MapSampleState extends State<MapSample>
           itemBuilder: (context, index) {
             final _lakeToString =
                 _searchResults[index].isLake ? "LAKE" : "SHOP";
-            return CustomListItemTwo(
-              thumbnail: Image.asset(
-                'images/lake.jpg',
-                fit: BoxFit.fill,
-              ),
+            return SearchResultCell(
+              imageURL: 'images/lake.jpg',
               title: '${_searchResults[index].title}',
               venueType: _lakeToString,
               distance: '${_searchResults[index].distance}',
