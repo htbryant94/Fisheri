@@ -81,7 +81,7 @@ class _VenueDistance extends StatelessWidget {
       style: const TextStyle(
         fontSize: 12,
         fontStyle: FontStyle.italic,
-        color: Colors.black54,
+        color: Colors.black87,
       ),
     );
   }
@@ -108,35 +108,24 @@ class SearchResultCell extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Expanded(
-          Column(
+        Expanded(
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(top: 4),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _Title(title),
-                    SizedBox(height: 4),
-                    _VenueType(venueType),
-                    SizedBox(height: 4),
-                    _VenueOperational(isOpen),
-                    SizedBox(height: 4),
-                    // _VenueFeatures(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        _VenueFeatures(),
-                        _VenueDistance(distance)
-                    ],)
-                    
-                  ],
-                ),
-              ),
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _Title(title),
+              _VenueType(venueType),
+              _VenueOperational(isOpen),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _VenueFeatures(),
+                  _VenueDistance(distance),
+                ],
+              )
             ],
           ),
-        // ),
+        ),
       ],
     );
   }

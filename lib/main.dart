@@ -66,7 +66,6 @@ class CustomListItemTwo extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 0),
       child: Container(
-        decoration: BoxDecoration(color: Colors.red),
         height: 120,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,9 +74,9 @@ class CustomListItemTwo extends StatelessWidget {
               child: thumbnail,
               aspectRatio: 1.0,
             ),
-            Flexible(
+            Expanded(
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+                padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
                 child: SearchResultCell(
                   title: title,
                   venueType: venueType,
@@ -86,7 +85,7 @@ class CustomListItemTwo extends StatelessWidget {
                   readDuration: readDuration,
                 ),
               ),
-            ),
+            )
           ],
         ),
       ),
