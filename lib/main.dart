@@ -16,22 +16,17 @@ class MyApp extends StatelessWidget {
 }
 
 class ResultInfo {
-
-  ResultInfo(String title,
-             String distance,
-             String location,
-             bool   isLake) {
-    this.title    = title;
+  ResultInfo(String title, String distance, String location, bool isLake) {
+    this.title = title;
     this.distance = distance;
     this.location = location;
-    this.isLake   = isLake;
+    this.isLake = isLake;
   }
 
   String title;
   String distance;
   String location;
-  bool   isLake;
-
+  bool isLake;
 }
 
 class _CustomCell extends StatelessWidget {
@@ -75,6 +70,35 @@ class _CustomCell extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(fontSize: 14, color: Colors.black87),
               ),
+              const Padding(padding: EdgeInsets.only(bottom: 8.0)),
+              Text(
+                // '$publishDate',
+                'Open',
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.green,
+                ),
+              ),
+              const Padding(padding: EdgeInsets.only(bottom: 8.0)),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Icon(Icons.directions_boat),
+                  Icon(Icons.directions_bike),
+                  Icon(Icons.directions_car),
+                  Text(
+                    '$author',
+                    // textAlign: TextAlign.right,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontStyle: FontStyle.italic,
+                      color: Colors.black87,
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
@@ -84,13 +108,7 @@ class _CustomCell extends StatelessWidget {
         //     crossAxisAlignment: CrossAxisAlignment.start,
         //     mainAxisAlignment: MainAxisAlignment.end,
         //     children: <Widget>[
-        //       Text(
-        //         '$publishDate',
-        //         style: const TextStyle(
-        //           fontSize: 12,
-        //           color: Colors.black87,
-        //         ),
-        //       ),
+
         //     ],
         //   ),
         // ),
@@ -110,25 +128,25 @@ class _CustomCell extends StatelessWidget {
         //     ],
         //   ),
         // ),
-        Expanded(
-          flex: 1,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-                 Icon(
-                Icons.directions_boat
-              ),
-              Text(
-                '$author',
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: Colors.black87,
-                ),
-              ),
-            ],
-          ),
-        ),
+        // Expanded(
+        //   flex: 1,
+        //   child: Row(
+        //     crossAxisAlignment: CrossAxisAlignment.start,
+        //     mainAxisAlignment: MainAxisAlignment.end,
+        //     children: <Widget>[
+        //       Icon(Icons.directions_boat),
+        //       Icon(Icons.directions_bike),
+        //       Icon(Icons.directions_car),
+        //       Text(
+        //         '$author',
+        //         style: const TextStyle(
+        //           fontSize: 12,
+        //           color: Colors.black87,
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        // ),
       ],
     );
   }
@@ -182,7 +200,7 @@ class CustomListItemTwo extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 0),
       child: SizedBox(
-        height: 100,
+        height: 120,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -294,10 +312,13 @@ class MapSampleState extends State<MapSample>
                 color: Colors.grey[700],
               ),
           itemBuilder: (context, index) {
-            final _lakeToString = _searchResults[index].isLake ? "LAKE" : "SHOP";
+            final _lakeToString =
+                _searchResults[index].isLake ? "LAKE" : "SHOP";
             return CustomListItemTwo(
-              thumbnail: Container(
-                  decoration: const BoxDecoration(color: Colors.pink)),
+              thumbnail: Image.asset(
+                'images/lake.jpg',
+                fit: BoxFit.fill,
+              ),
               title: '${_searchResults[index].title}',
               venueType: _lakeToString,
               author: '${_searchResults[index].distance}',
@@ -305,20 +326,183 @@ class MapSampleState extends State<MapSample>
           },
         ));
 
+    Widget _loginScreen = Align(
+        alignment: Alignment.center,
+        child: Column(
+          children: [
+            Flexible(
+              flex: 1,
+              child: Image.asset(
+                'images/lake.jpg',
+                height: MediaQuery.of(context).size.height / 3,
+                width: MediaQuery.of(context).size.width / 3,
+              ),
+            ),
+            Expanded(
+                child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(top: 10, bottom: 10),
+                  child: SizedBox(
+                    width: 250,
+                    height: 48,
+                    child: RaisedButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                      onPressed: () {},
+                      child: Text('Log In with Google',
+                          style: TextStyle(fontSize: 20)),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 10, bottom: 10),
+                  child: SizedBox(
+                    width: 250,
+                    height: 48,
+                    child: RaisedButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                      onPressed: () {},
+                      child: Text('Log In with Facebook',
+                          style: TextStyle(fontSize: 20)),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 10, bottom: 10),
+                  child: SizedBox(
+                    width: 250,
+                    height: 48,
+                    child: RaisedButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                      onPressed: () {},
+                      child: Text('Log In with Email',
+                          style: TextStyle(fontSize: 20)),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 10, bottom: 10),
+                  child: SizedBox(
+                    width: 250,
+                    height: 48,
+                    child: RaisedButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                      onPressed: () {},
+                      child: Text('Sign Up', style: TextStyle(fontSize: 20)),
+                    ),
+                  ),
+                ),
+              ],
+            )),
+          ],
+        ));
+
+        bool _descriptionExpanded = false;
     Widget textSection = Container(
-        padding: const EdgeInsets.all(32),
-        child: Text(
-          'Manor Farm Lakes is an extensive 100 acre fishery based in the heart of Central Bedfordshire, with easy access from the A1. Manor Farm Lakes consists of a range of 7 different fishing lakes with an 18 van touring caravan site with electric hook-ups. A range of fishing experiences are catered for at Manor Farm Lakes including carp fishing for pleasure anglers and specialists, night fishing, fly fishing for carp, match and coarse angling as well as predator spinning, lure and deadbait fishing in the winter months. The River Ivel acts as the boundary along our eastern edge and is also available to fish with a good head of chub, barbel, pike and bream.',
-          softWrap: true,
+        padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
+        child: Column(
+          children: <Widget>[
+            Text(
+              'Description',
+              textAlign: TextAlign.left,
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const Padding(padding: EdgeInsets.only(bottom: 16)),
+            Text(
+              'Manor Farm Lakes is an extensive 100 acre fishery based in the heart of Central Bedfordshire, with easy access from the A1. Manor Farm Lakes consists of a range of 7 different fishing lakes with an 18 van touring caravan site with electric hook-ups. A range of fishing experiences are catered for at Manor Farm Lakes including carp fishing for pleasure anglers and specialists, night fishing, fly fishing for carp, match and coarse angling as well as predator spinning, lure and deadbait fishing in the winter months. The River Ivel acts as the boundary along our eastern edge and is also available to fish with a good head of chub, barbel, pike and bream.',
+              softWrap: true,
+              overflow: TextOverflow.fade,
+              maxLines: _descriptionExpanded ? 8 : 4,
+            ),
+            FlatButton(
+              onPressed: () {
+                print(_descriptionExpanded);
+                _descriptionExpanded = !_descriptionExpanded;
+              },
+              child: Text(
+                "Read More",
+                style: TextStyle(color: Colors.blue)
+              ),
+            ),
+          ],
+        ));
+
+          Widget amenetiesSection = Container(
+        padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
+        child: Column(
+          children: <Widget>[
+            Text(
+              'Ameneties',
+              textAlign: TextAlign.left,
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const Padding(padding: EdgeInsets.only(bottom: 16)),
+            Text(
+              'Manor Farm Lakes is an extensive 100 acre fishery based in the heart of Central Bedfordshire, with easy access from the A1. Manor Farm Lakes consists of a range of 7 different fishing lakes with an 18 van touring caravan site with electric hook-ups. A range of fishing experiences are catered for at Manor Farm Lakes including carp fishing for pleasure anglers and specialists, night fishing, fly fishing for carp, match and coarse angling as well as predator spinning, lure and deadbait fishing in the winter months. The River Ivel acts as the boundary along our eastern edge and is also available to fish with a good head of chub, barbel, pike and bream.',
+              softWrap: true,
+              overflow: TextOverflow.fade,
+              maxLines: _descriptionExpanded ? 8 : 4,
+            ),
+            FlatButton(
+              onPressed: () {
+                print(_descriptionExpanded);
+                _descriptionExpanded = !_descriptionExpanded;
+              },
+              child: Text(
+                "Read More",
+                style: TextStyle(color: Colors.blue)
+              ),
+            ),
+          ],
         ));
 
     Widget buttonSection = Container(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          _buildButtonColumn(color, Icons.call, 'CALL'),
-          _buildButtonColumn(color, Icons.near_me, 'ROUTE'),
-          _buildButtonColumn(color, Icons.share, 'SHARE'),
+          _buildButtonColumn(color, Icons.call, 'Call'),
+          _buildButtonColumn(color, Icons.language, 'Website'),
+          _buildButtonColumn(color, Icons.email, 'Email'),
+        ],
+      ),
+    );
+
+    Widget overviewBox = SizedBox(
+      width: 50,
+      height: 50,
+      child: DecoratedBox(
+        decoration: const BoxDecoration(color: Colors.green),
+      ),
+    );
+
+    Widget overviewRow = Row(
+      children: <Widget>[overviewBox, overviewBox, overviewBox, overviewBox],
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    );
+
+    Widget overviewGrid = Column(
+      children: <Widget>[
+        overviewRow,
+        const Padding(padding: EdgeInsets.only(bottom: 32.0)),
+        overviewRow
+      ],
+    );
+
+    Widget overviewSection = Container(
+      padding: const EdgeInsets.fromLTRB(64, 8, 64, 8),
+      child: Column(
+        children: <Widget>[
+          Text(
+            'Overview',
+            textAlign: TextAlign.left,
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          const Padding(padding: EdgeInsets.only(bottom: 16.0)),
+          overviewGrid
         ],
       ),
     );
@@ -366,10 +550,14 @@ class MapSampleState extends State<MapSample>
         titleSection,
         textSection,
         buttonSection,
+        const Padding(padding: EdgeInsets.only(bottom: 16)),
+        overviewSection,
+        amenetiesSection
       ],
     );
 
     final List<Widget> _children = [
+      _loginScreen,
       _searchScreen,
       _resultsScreen,
       _detailScreen
@@ -416,6 +604,14 @@ class MapSampleState extends State<MapSample>
               backgroundColor: Color(0xff115429),
               items: [
                 BottomNavigationBarItem(
+                    activeIcon: Icon(Icons.explore),
+                    backgroundColor: Color(0xff115429),
+                    icon: Icon(Icons.explore, color: Color(0xffE4E4E4)),
+                    title: Text(
+                      'Login',
+                      style: TextStyle(color: Color(0xffE4E4E4)),
+                    )),
+                BottomNavigationBarItem(
                     activeIcon: Icon(Icons.search),
                     backgroundColor: Color(0xff115429),
                     icon: Icon(Icons.search, color: Color(0xffE4E4E4)),
@@ -445,18 +641,18 @@ class MapSampleState extends State<MapSample>
             body: Center(
               child: _children[_selectedIndex],
             ),
-            floatingActionButton: FloatingActionButton.extended(
-              onPressed: _goToTheLake,
-              label: Text(
-                'To the lake!',
-                style: TextStyle(color: Color(0xff115429)),
-              ),
-              icon: Icon(
-                Icons.directions_boat,
-                color: Color(0xff115429),
-              ),
-              backgroundColor: Color(0xffC7D648),
-            ),
+            // floatingActionButton: FloatingActionButton.extended(
+            //   onPressed: _goToTheLake,
+            //   label: Text(
+            //     'To the lake!',
+            //     style: TextStyle(color: Color(0xff115429)),
+            //   ),
+            //   icon: Icon(
+            //     Icons.directions_boat,
+            //     color: Color(0xff115429),
+            //   ),
+            //   backgroundColor: Color(0xffC7D648),
+            // ),
           )),
     );
   }
