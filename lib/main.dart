@@ -24,16 +24,16 @@ class CustomListItemTwo extends StatelessWidget {
     this.thumbnail,
     this.title,
     this.venueType,
-    this.author,
-    this.publishDate,
+    this.distance,
+    this.isOpen,
     this.readDuration,
   }) : super(key: key);
 
   final Widget thumbnail;
   final String title;
   final String venueType;
-  final String author;
-  final String publishDate;
+  final String distance;
+  final bool isOpen;
   final String readDuration;
 
   // @override
@@ -76,11 +76,11 @@ class CustomListItemTwo extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(8, 0, 3, 0),
-              child: CustomCell(
+              child: SearchResultCell(
                 title: title,
                 venueType: venueType,
-                author: author,
-                publishDate: publishDate,
+                distance: distance,
+                isOpen: isOpen,
                 readDuration: readDuration,
               ),
             ),
@@ -103,18 +103,22 @@ class MapSampleState extends State<MapSample>
   Completer<GoogleMapController> _controller = Completer();
 
   final List<ResultInfo> _searchResults = [
-    ResultInfo("Manor Farm Lakes", "5 miles", "Biggleswade", true),
-    ResultInfo("Bluebell Lakes", "2.45 miles", "Oundle", true),
-    ResultInfo("Cawcutts Lakes", "120 miles", "Impington", false),
-    ResultInfo("Manor Farm Lakes", "5 miles", "Biggleswade", true),
-    ResultInfo("Bluebell Lakes", "2.45 miles", "Oundle", true),
-    ResultInfo("Cawcutts Lakes", "120 miles", "Impington", false),
-    ResultInfo("Manor Farm Lakes", "5 miles", "Biggleswade", true),
-    ResultInfo("Bluebell Lakes", "2.45 miles", "Oundle", true),
-    ResultInfo("Cawcutts Lakes", "120 miles", "Impington", false),
-    ResultInfo("Manor Farm Lakes", "5 miles", "Biggleswade", true),
-    ResultInfo("Bluebell Lakes", "2.45 miles", "Oundle", true),
-    ResultInfo("Cawcutts Lakes", "120 miles", "Impington", false),
+    ResultInfo("Manor Farm Lakes", "5 miles", "Biggleswade", true, true),
+    ResultInfo("Bluebell Lakes", "2.45 miles", "Oundle", true, false),
+    ResultInfo("Cawcutts Lakes", "120 miles", "Impington", true, true),
+    ResultInfo("Manor Farm Lakes", "5 miles", "Biggleswade", true, true),
+    ResultInfo("Manor Farm Lakes", "5 miles", "Biggleswade", true, true),
+    ResultInfo("Bluebell Lakes", "2.45 miles", "Oundle", true, false),
+    ResultInfo("Cawcutts Lakes", "120 miles", "Impington", true, true),
+    ResultInfo("Manor Farm Lakes", "5 miles", "Biggleswade", true, true),
+    ResultInfo("Manor Farm Lakes", "5 miles", "Biggleswade", true, true),
+    ResultInfo("Bluebell Lakes", "2.45 miles", "Oundle", true, false),
+    ResultInfo("Cawcutts Lakes", "120 miles", "Impington", true, true),
+    ResultInfo("Manor Farm Lakes", "5 miles", "Biggleswade", true, true),
+    ResultInfo("Manor Farm Lakes", "5 miles", "Biggleswade", true, true),
+    ResultInfo("Bluebell Lakes", "2.45 miles", "Oundle", true, false),
+    ResultInfo("Cawcutts Lakes", "120 miles", "Impington", true, true),
+    ResultInfo("Manor Farm Lakes", "5 miles", "Biggleswade", true, true),
   ];
 
   void _incrementTab(int index) {
@@ -178,8 +182,7 @@ class MapSampleState extends State<MapSample>
                 color: Colors.grey[700],
               ),
           itemBuilder: (context, index) {
-            final _lakeToString =
-                _searchResults[index].isLake ? "LAKE" : "SHOP";
+            final _lakeToString = _searchResults[index].isLake ? "LAKE" : "SHOP";    
             return CustomListItemTwo(
               thumbnail: Image.asset(
                 'images/lake.jpg',
@@ -187,7 +190,8 @@ class MapSampleState extends State<MapSample>
               ),
               title: '${_searchResults[index].title}',
               venueType: _lakeToString,
-              author: '${_searchResults[index].distance}',
+              distance: '${_searchResults[index].distance}',
+              isOpen: _searchResults[index].isOpen,
             );
           },
         ));

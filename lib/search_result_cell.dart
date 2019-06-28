@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
 
-class CustomCell extends StatelessWidget {
-  CustomCell({
+class SearchResultCell extends StatelessWidget {
+  SearchResultCell({
     Key key,
     this.title,
     this.venueType,
-    this.author,
-    this.publishDate,
+    this.distance,
+    this.isOpen,
     this.readDuration,
   }) : super(key: key);
 
   final String title;
   final String venueType;
-  final String author;
-  final String publishDate;
+  final String distance;
+  final bool isOpen;
   final String readDuration;
 
   @override
   Widget build(BuildContext context) {
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -39,16 +40,17 @@ class CustomCell extends StatelessWidget {
                 '$venueType',
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontSize: 14, color: Colors.black87),
+                style: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.black87),
               ),
               const Padding(padding: EdgeInsets.only(bottom: 8.0)),
               Text(
-                // '$publishDate',
-                'Open',
-                style: const TextStyle(
+                '${isOpen ? "Open" : "Closed"}',
+                style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
-                  color: Colors.green,
+                  color: isOpen ? Colors.green : Colors.red,
                 ),
               ),
               const Padding(padding: EdgeInsets.only(bottom: 8.0)),
@@ -60,12 +62,11 @@ class CustomCell extends StatelessWidget {
                   Icon(Icons.directions_bike),
                   Icon(Icons.directions_car),
                   Text(
-                    '$author',
-                    // textAlign: TextAlign.right,
+                    '$distance',
                     style: const TextStyle(
                       fontSize: 12,
                       fontStyle: FontStyle.italic,
-                      color: Colors.black87,
+                      color: Colors.black54,
                     ),
                   ),
                 ],
