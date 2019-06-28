@@ -7,14 +7,27 @@ class _Title extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(top: 8, bottom: 8),
-      child: Text(
-        '$title',
-        maxLines: 2,
-        overflow: TextOverflow.ellipsis,
-        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-      ),
+    return Text(
+      '$title',
+      maxLines: 2,
+      overflow: TextOverflow.ellipsis,
+      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+    );
+  }
+}
+
+class _VenueType extends StatelessWidget {
+  _VenueType(this.venueType);
+
+  final String venueType;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      '$venueType',
+      maxLines: 2,
+      overflow: TextOverflow.ellipsis,
+      style: const TextStyle(fontSize: 14, color: Colors.black87),
     );
   }
 }
@@ -45,23 +58,8 @@ class SearchResultCell extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              // const Padding(padding: EdgeInsets.only(top: 8.0)),
               _Title(title),
-              // Text(
-              //   '$title',
-              //   maxLines: 2,
-              //   overflow: TextOverflow.ellipsis,
-              //   style:
-              //       const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              // ),
-              // const Padding(padding: EdgeInsets.only(bottom: 8.0)),
-              Text(
-                '$venueType',
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontSize: 14, color: Colors.black87),
-              ),
-              const Padding(padding: EdgeInsets.only(bottom: 8.0)),
+              _VenueType(venueType),
               Text(
                 '${isOpen ? "Open" : "Closed"}',
                 style: TextStyle(
