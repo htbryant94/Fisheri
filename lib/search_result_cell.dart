@@ -32,6 +32,24 @@ class _VenueType extends StatelessWidget {
   }
 }
 
+class _VenueOperational extends StatelessWidget {
+  _VenueOperational(this.isOpen);
+
+  final bool isOpen;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      '${isOpen ? "Open" : "Closed"}',
+      style: TextStyle(
+        fontSize: 12,
+        fontWeight: FontWeight.bold,
+        color: isOpen ? Colors.green : Colors.red,
+      ),
+    );
+  }
+}
+
 class SearchResultCell extends StatelessWidget {
   SearchResultCell({
     Key key,
@@ -60,14 +78,7 @@ class SearchResultCell extends StatelessWidget {
             children: <Widget>[
               _Title(title),
               _VenueType(venueType),
-              Text(
-                '${isOpen ? "Open" : "Closed"}',
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: isOpen ? Colors.green : Colors.red,
-                ),
-              ),
+              _VenueOperational(isOpen),
               const Padding(padding: EdgeInsets.only(bottom: 8.0)),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
