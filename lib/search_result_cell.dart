@@ -1,5 +1,24 @@
 import 'package:flutter/material.dart';
 
+class _Title extends StatelessWidget {
+  _Title(this.title);
+
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(top: 8, bottom: 8),
+      child: Text(
+        '$title',
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+      ),
+    );
+  }
+}
+
 class SearchResultCell extends StatelessWidget {
   SearchResultCell({
     Key key,
@@ -18,7 +37,6 @@ class SearchResultCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -27,22 +45,21 @@ class SearchResultCell extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              const Padding(padding: EdgeInsets.only(top: 8.0)),
-              Text(
-                '$title',
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style:
-                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              ),
-              const Padding(padding: EdgeInsets.only(bottom: 8.0)),
+              // const Padding(padding: EdgeInsets.only(top: 8.0)),
+              _Title(title),
+              // Text(
+              //   '$title',
+              //   maxLines: 2,
+              //   overflow: TextOverflow.ellipsis,
+              //   style:
+              //       const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              // ),
+              // const Padding(padding: EdgeInsets.only(bottom: 8.0)),
               Text(
                 '$venueType',
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                    fontSize: 14,
-                    color: Colors.black87),
+                style: const TextStyle(fontSize: 14, color: Colors.black87),
               ),
               const Padding(padding: EdgeInsets.only(bottom: 8.0)),
               Text(
