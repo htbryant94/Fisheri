@@ -26,7 +26,6 @@ class CustomListItemTwo extends StatelessWidget {
     this.venueType,
     this.distance,
     this.isOpen,
-    this.readDuration,
   }) : super(key: key);
 
   final Widget thumbnail;
@@ -34,32 +33,6 @@ class CustomListItemTwo extends StatelessWidget {
   final String venueType;
   final String distance;
   final bool isOpen;
-  final String readDuration;
-
-  // @override
-  // Widget build(BuildContext context) {
-  //   return Padding(
-  //     padding: const EdgeInsets.fromLTRB(8, 10, 8, 10),
-  //     child: SizedBox(
-  //         height: 250,
-  //         child: Column(
-  //             crossAxisAlignment: CrossAxisAlignment.start,
-  //             children: <Widget>[
-  //               Expanded(
-  //                 child: thumbnail,
-  //               ),
-  //               Expanded(
-  //                 child: _CustomCell(
-  //                   title: title,
-  //                   venueType: venueType,
-  //                   author: author,
-  //                   publishDate: publishDate,
-  //                   readDuration: readDuration,
-  //                 ),
-  //               ),
-  //             ])),
-  //   );
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +55,6 @@ class CustomListItemTwo extends StatelessWidget {
                   venueType: venueType,
                   distance: distance,
                   isOpen: isOpen,
-                  readDuration: readDuration,
                 ),
               ),
             )

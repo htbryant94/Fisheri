@@ -94,19 +94,16 @@ class SearchResultCell extends StatelessWidget {
     this.venueType,
     this.distance,
     this.isOpen,
-    this.readDuration,
   }) : super(key: key);
 
   final String title;
   final String venueType;
   final String distance;
   final bool isOpen;
-  final String readDuration;
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
           child: Column(
