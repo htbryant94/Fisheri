@@ -10,12 +10,7 @@ class DetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       children: [
-        Image.asset(
-          'images/lake.jpg',
-          width: 600,
-          height: 240,
-          fit: BoxFit.cover,
-        ),
+        _ImageCarousel('images/lake.jpg'),
         _TitleSection(),
         _TextSection(descriptionExpanded),
         _ButtonSection(color),
@@ -23,6 +18,22 @@ class DetailScreen extends StatelessWidget {
         _OverviewSection(),
         _AmenetiesSection(descriptionExpanded),
       ],
+    );
+  }
+}
+
+class _ImageCarousel extends StatelessWidget {
+  _ImageCarousel(this.imageURL);
+
+  final String imageURL;
+
+  @override
+  Widget build(BuildContext context) {
+    return Image.asset(
+      imageURL,
+      width: 600,
+      height: 240,
+      fit: BoxFit.cover,
     );
   }
 }
@@ -193,29 +204,30 @@ class _AmenetiesSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-    padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
-    child: Column(
-      children: <Widget>[
-        Text(
-          'Ameneties',
-          textAlign: TextAlign.left,
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-        const Padding(padding: EdgeInsets.only(bottom: 16)),
-        Text(
-          'Manor Farm Lakes is an extensive 100 acre fishery based in the heart of Central Bedfordshire, with easy access from the A1. Manor Farm Lakes consists of a range of 7 different fishing lakes with an 18 van touring caravan site with electric hook-ups. A range of fishing experiences are catered for at Manor Farm Lakes including carp fishing for pleasure anglers and specialists, night fishing, fly fishing for carp, match and coarse angling as well as predator spinning, lure and deadbait fishing in the winter months. The River Ivel acts as the boundary along our eastern edge and is also available to fish with a good head of chub, barbel, pike and bream.',
-          softWrap: true,
-          overflow: TextOverflow.fade,
-          maxLines: descriptionExpanded ? 8 : 4,
-        ),
-        FlatButton(
-          onPressed: () {
-            print(descriptionExpanded);
-            // _descriptionExpanded = !_descriptionExpanded;
-          },
-          child: Text("Read More", style: TextStyle(color: Colors.blue)),
-        ),
-      ],
-    ));;
+        padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
+        child: Column(
+          children: <Widget>[
+            Text(
+              'Ameneties',
+              textAlign: TextAlign.left,
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const Padding(padding: EdgeInsets.only(bottom: 16)),
+            Text(
+              'Manor Farm Lakes is an extensive 100 acre fishery based in the heart of Central Bedfordshire, with easy access from the A1. Manor Farm Lakes consists of a range of 7 different fishing lakes with an 18 van touring caravan site with electric hook-ups. A range of fishing experiences are catered for at Manor Farm Lakes including carp fishing for pleasure anglers and specialists, night fishing, fly fishing for carp, match and coarse angling as well as predator spinning, lure and deadbait fishing in the winter months. The River Ivel acts as the boundary along our eastern edge and is also available to fish with a good head of chub, barbel, pike and bream.',
+              softWrap: true,
+              overflow: TextOverflow.fade,
+              maxLines: descriptionExpanded ? 8 : 4,
+            ),
+            FlatButton(
+              onPressed: () {
+                print(descriptionExpanded);
+                // _descriptionExpanded = !_descriptionExpanded;
+              },
+              child: Text("Read More", style: TextStyle(color: Colors.blue)),
+            ),
+          ],
+        ));
+    ;
   }
 }
