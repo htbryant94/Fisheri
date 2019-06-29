@@ -9,6 +9,7 @@ import 'Screens/search_screen.dart';
 
 import 'result_info.dart';
 import 'house_colors.dart';
+import 'bottom_tab_bar.dart';
 
 void main() => runApp(MyApp());
 
@@ -74,98 +75,78 @@ class MapSampleState extends State<MapSample>
       DetailScreen(false, color)
     ];
 
+    BottomNavigationBar _bottomTabBar = BottomNavigationBar(
+      currentIndex: _selectedIndex,
+      type: BottomNavigationBarType.shifting,
+      backgroundColor: HouseColors.primaryGreen,
+      items: [
+        BottomNavigationBarItem(
+            activeIcon: Icon(Icons.explore),
+            backgroundColor: HouseColors.primaryGreen,
+            icon: Icon(Icons.explore, color: HouseColors.white),
+            title: Text(
+              'Login',
+              style: TextStyle(color: HouseColors.white),
+            )),
+        BottomNavigationBarItem(
+            activeIcon: Icon(Icons.search),
+            backgroundColor: HouseColors.primaryGreen,
+            icon: Icon(Icons.search, color: HouseColors.white),
+            title: Text(
+              'Search',
+              style: TextStyle(color: HouseColors.white),
+            )),
+        BottomNavigationBarItem(
+            backgroundColor: HouseColors.primaryGreen,
+            icon: Icon(Icons.star, color: HouseColors.white),
+            title: Text(
+              'Results',
+              style: TextStyle(color: HouseColors.white),
+            )),
+        BottomNavigationBarItem(
+            backgroundColor: HouseColors.primaryGreen,
+            icon: Icon(Icons.account_circle, color: HouseColors.white),
+            title: Text(
+              'Venue',
+              style: TextStyle(color: HouseColors.white),
+            ))
+      ],
+      onTap: (index) {
+        _incrementTab(index);
+      },
+    );
+
+    AppBar _appBar = AppBar(
+        title: Text(
+          "Fisheri",
+          style: TextStyle(color: HouseColors.white, fontSize: 24.0),
+        ),
+        backgroundColor: HouseColors.primaryGreen,
+        centerTitle: true);
+
+    FloatingActionButton _floatingActionButton = FloatingActionButton.extended(
+      onPressed: _goToTheLake,
+      label: Text(
+        'To the lake!',
+        style: TextStyle(color: HouseColors.primaryGreen),
+      ),
+      icon: Icon(
+        Icons.directions_boat,
+        color: HouseColors.primaryGreen,
+      ),
+      backgroundColor: Color(0xffC7D648),
+    );
+
     return new MaterialApp(
       home: DefaultTabController(
           length: 3,
           child: Scaffold(
-            appBar: AppBar(
-              title: Text(
-                "Fisheri",
-                style: TextStyle(color: HouseColors.white, fontSize: 24.0),
+              appBar: _appBar,
+              bottomNavigationBar: _bottomTabBar,
+              body: Center(
+                child: _children[_selectedIndex],
               ),
-              // backgroundColor: HouseColors.primaryGreen,
-              backgroundColor: HouseColors.primaryGreen,
-              centerTitle: true,
-              // bottom: PreferredSize(
-              //   preferredSize: const Size.fromHeight(48),
-              //   child: Theme(
-              //     data: Theme.of(context).copyWith(accentColor: Colors.white),
-              //     child: Container(
-              //         height: 48.0,
-              //         alignment: Alignment.center,
-              //         child: Align(
-              //           alignment: Alignment.center,
-              //           child: SizedBox(
-              //             height: 20,
-              //             width: 250,
-              //             child: TextField(
-              //             decoration: InputDecoration(
-              //                 border: InputBorder.none,
-              //                 hintText: 'Enter a search term'),
-              //           ),
-              //         )
-              //           )
-              //         // child: TabPageSelector(controller: _tabController),
-              //         ),
-              //   ),
-              // ),
-            ),
-            bottomNavigationBar: BottomNavigationBar(
-              currentIndex: _selectedIndex,
-              type: BottomNavigationBarType.shifting,
-              backgroundColor: HouseColors.primaryGreen,
-              items: [
-                BottomNavigationBarItem(
-                    activeIcon: Icon(Icons.explore),
-                    backgroundColor: HouseColors.primaryGreen,
-                    icon: Icon(Icons.explore, color: HouseColors.white),
-                    title: Text(
-                      'Login',
-                      style: TextStyle(color: HouseColors.white),
-                    )),
-                BottomNavigationBarItem(
-                    activeIcon: Icon(Icons.search),
-                    backgroundColor: HouseColors.primaryGreen,
-                    icon: Icon(Icons.search, color: HouseColors.white),
-                    title: Text(
-                      'Search',
-                      style: TextStyle(color: HouseColors.white),
-                    )),
-                BottomNavigationBarItem(
-                    backgroundColor: HouseColors.primaryGreen,
-                    icon: Icon(Icons.star, color: HouseColors.white),
-                    title: Text(
-                      'Results',
-                      style: TextStyle(color: HouseColors.white),
-                    )),
-                BottomNavigationBarItem(
-                    backgroundColor: HouseColors.primaryGreen,
-                    icon: Icon(Icons.account_circle, color: HouseColors.white),
-                    title: Text(
-                      'Venue',
-                      style: TextStyle(color: HouseColors.white),
-                    ))
-              ],
-              onTap: (index) {
-                _incrementTab(index);
-              },
-            ),
-            body: Center(
-              child: _children[_selectedIndex],
-            ),
-            // floatingActionButton: FloatingActionButton.extended(
-            //   onPressed: _goToTheLake,
-            //   label: Text(
-            //     'To the lake!',
-            //     style: TextStyle(color: HouseColors.primaryGreen),
-            //   ),
-            //   icon: Icon(
-            //     Icons.directions_boat,
-            //     color: HouseColors.primaryGreen,
-            //   ),
-            //   backgroundColor: Color(0xffC7D648),
-            // ),
-          )),
+              // floatingActionButton: _floatingActionButton)),
     );
   }
 
