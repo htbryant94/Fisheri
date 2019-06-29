@@ -11,7 +11,7 @@ class DetailScreen extends StatelessWidget {
     return ListView(
       children: [
         _ImageCarousel('images/lake.jpg'),
-        _TitleSection(),
+        _TitleSection(title: 'Manor Farm Lakes', subtitle: 'Biggleswade, Hertfordshire'),
         _TextSection(descriptionExpanded),
         _ButtonSection(color),
         const Padding(padding: EdgeInsets.only(bottom: 16)),
@@ -39,22 +39,28 @@ class _ImageCarousel extends StatelessWidget {
 }
 
 class _TitleSection extends StatelessWidget {
-  _TitleSection();
+  _TitleSection({
+    Key key,
+    this.title,
+    this.subtitle
+  }) : super(key: key);
+
+  final String title;
+  final String subtitle;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(24),
       child: Row(
-        children: <Widget>[
+        children: [
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                    padding: const EdgeInsets.only(bottom: 8),
-                    child: _TitleHeader()),
-                _TitleSubHeader()
+              children: [
+                _TitleHeader(title),
+                SizedBox(height: 8),
+                _TitleSubHeader(subtitle)
               ],
             ),
           ),
@@ -66,21 +72,24 @@ class _TitleSection extends StatelessWidget {
 }
 
 class _TitleHeader extends StatelessWidget {
-  _TitleHeader();
+  _TitleHeader(this.title);
+
+  final String title;
 
   @override
   Widget build(BuildContext context) {
-    return Text('Manor Farm Lakes',
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22));
+    return Text(title, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22));
   }
 }
 
 class _TitleSubHeader extends StatelessWidget {
-  _TitleSubHeader();
+  _TitleSubHeader(this.subtitle);
+
+  final String subtitle;
 
   @override
   Widget build(BuildContext context) {
-    return Text('Biggleswade, Hertfordshire',
+    return Text(subtitle,
         style: TextStyle(
           color: Colors.grey[500],
           fontSize: 18,
