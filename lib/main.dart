@@ -8,6 +8,7 @@ import 'Screens/search_results_screen.dart';
 import 'Screens/search_screen.dart';
 
 import 'result_info.dart';
+import 'house_colors.dart';
 
 void main() => runApp(MyApp());
 
@@ -29,7 +30,6 @@ class MapSample extends StatefulWidget {
 class MapSampleState extends State<MapSample>
     with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
-  final items = List<String>.generate(100, (i) => "Item $i");
   Completer<GoogleMapController> _controller = Completer();
 
   final List<ResultInfo> _searchResults = [
@@ -81,9 +81,10 @@ class MapSampleState extends State<MapSample>
             appBar: AppBar(
               title: Text(
                 "Fisheri",
-                style: TextStyle(color: Color(0xffE4E4E4), fontSize: 24.0),
+                style: TextStyle(color: HouseColors.white, fontSize: 24.0),
               ),
-              backgroundColor: Color(0xff115429),
+              // backgroundColor: HouseColors.primaryGreen,
+              backgroundColor: HouseColors.primaryGreen,
               centerTitle: true,
               // bottom: PreferredSize(
               //   preferredSize: const Size.fromHeight(48),
@@ -112,37 +113,37 @@ class MapSampleState extends State<MapSample>
             bottomNavigationBar: BottomNavigationBar(
               currentIndex: _selectedIndex,
               type: BottomNavigationBarType.shifting,
-              backgroundColor: Color(0xff115429),
+              backgroundColor: HouseColors.primaryGreen,
               items: [
                 BottomNavigationBarItem(
                     activeIcon: Icon(Icons.explore),
-                    backgroundColor: Color(0xff115429),
-                    icon: Icon(Icons.explore, color: Color(0xffE4E4E4)),
+                    backgroundColor: HouseColors.primaryGreen,
+                    icon: Icon(Icons.explore, color: HouseColors.white),
                     title: Text(
                       'Login',
-                      style: TextStyle(color: Color(0xffE4E4E4)),
+                      style: TextStyle(color: HouseColors.white),
                     )),
                 BottomNavigationBarItem(
                     activeIcon: Icon(Icons.search),
-                    backgroundColor: Color(0xff115429),
-                    icon: Icon(Icons.search, color: Color(0xffE4E4E4)),
+                    backgroundColor: HouseColors.primaryGreen,
+                    icon: Icon(Icons.search, color: HouseColors.white),
                     title: Text(
                       'Search',
-                      style: TextStyle(color: Color(0xffE4E4E4)),
+                      style: TextStyle(color: HouseColors.white),
                     )),
                 BottomNavigationBarItem(
-                    backgroundColor: Color(0xff115429),
-                    icon: Icon(Icons.star, color: Color(0xffE4E4E4)),
+                    backgroundColor: HouseColors.primaryGreen,
+                    icon: Icon(Icons.star, color: HouseColors.white),
                     title: Text(
                       'Results',
-                      style: TextStyle(color: Color(0xffE4E4E4)),
+                      style: TextStyle(color: HouseColors.white),
                     )),
                 BottomNavigationBarItem(
-                    backgroundColor: Color(0xff115429),
-                    icon: Icon(Icons.account_circle, color: Color(0xffE4E4E4)),
+                    backgroundColor: HouseColors.primaryGreen,
+                    icon: Icon(Icons.account_circle, color: HouseColors.white),
                     title: Text(
                       'Venue',
-                      style: TextStyle(color: Color(0xffE4E4E4)),
+                      style: TextStyle(color: HouseColors.white),
                     ))
               ],
               onTap: (index) {
@@ -156,11 +157,11 @@ class MapSampleState extends State<MapSample>
             //   onPressed: _goToTheLake,
             //   label: Text(
             //     'To the lake!',
-            //     style: TextStyle(color: Color(0xff115429)),
+            //     style: TextStyle(color: HouseColors.primaryGreen),
             //   ),
             //   icon: Icon(
             //     Icons.directions_boat,
-            //     color: Color(0xff115429),
+            //     color: HouseColors.primaryGreen,
             //   ),
             //   backgroundColor: Color(0xffC7D648),
             // ),

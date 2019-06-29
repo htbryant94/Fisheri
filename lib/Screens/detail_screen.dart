@@ -11,10 +11,12 @@ class DetailScreen extends StatelessWidget {
     return ListView(
       children: [
         _ImageCarousel('images/lake.jpg'),
-        _TitleSection(title: 'Manor Farm Lakes', subtitle: 'Biggleswade, Hertfordshire'),
-        _TextSection(descriptionExpanded),
+        _TitleSection(
+          title: 'Manor Farm Lakes',
+          subtitle: 'Biggleswade, Hertfordshire'),
+        _DescriptionSection(descriptionExpanded),
         _ButtonSection(color),
-        const Padding(padding: EdgeInsets.only(bottom: 16)),
+        SizedBox(height: 16),
         _OverviewSection(),
         _AmenetiesSection(descriptionExpanded),
       ],
@@ -39,11 +41,7 @@ class _ImageCarousel extends StatelessWidget {
 }
 
 class _TitleSection extends StatelessWidget {
-  _TitleSection({
-    Key key,
-    this.title,
-    this.subtitle
-  }) : super(key: key);
+  _TitleSection({Key key, this.title, this.subtitle}) : super(key: key);
 
   final String title;
   final String subtitle;
@@ -78,7 +76,8 @@ class _TitleHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(title, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22));
+    return Text(title,
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22));
   }
 }
 
@@ -90,10 +89,7 @@ class _TitleSubHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(subtitle,
-        style: TextStyle(
-          color: Colors.grey[500],
-          fontSize: 18,
-        ));
+        style: TextStyle(color: Colors.grey[500], fontSize: 18));
   }
 }
 
@@ -113,37 +109,37 @@ class _Favourites extends StatelessWidget {
   }
 }
 
-class _TextSection extends StatelessWidget {
-  _TextSection(this.descriptionExpanded);
+class _DescriptionSection extends StatelessWidget {
+  _DescriptionSection(this.descriptionExpanded);
 
   final bool descriptionExpanded;
 
   @override
   Widget build(BuildContext context) {
+    FlatButton readMoreButton = FlatButton(
+        child: Text("Read More", style: TextStyle(color: Colors.blue)),
+        onPressed: () {
+          print(descriptionExpanded);
+          // descriptionExpanded = !descriptionExpanded;
+        });
+
+    Text header = Text(
+      'Description',
+      textAlign: TextAlign.left,
+      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+    );
+
+    Text textBody = Text(
+      'Manor Farm Lakes is an extensive 100 acre fishery based in the heart of Central Bedfordshire, with easy access from the A1. Manor Farm Lakes consists of a range of 7 different fishing lakes with an 18 van touring caravan site with electric hook-ups. A range of fishing experiences are catered for at Manor Farm Lakes including carp fishing for pleasure anglers and specialists, night fishing, fly fishing for carp, match and coarse angling as well as predator spinning, lure and deadbait fishing in the winter months. The River Ivel acts as the boundary along our eastern edge and is also available to fish with a good head of chub, barbel, pike and bream.',
+      softWrap: true,
+      overflow: TextOverflow.fade,
+      maxLines: descriptionExpanded ? 8 : 4,
+    );
+
     return Container(
         padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
         child: Column(
-          children: <Widget>[
-            Text(
-              'Description',
-              textAlign: TextAlign.left,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const Padding(padding: EdgeInsets.only(bottom: 16)),
-            Text(
-              'Manor Farm Lakes is an extensive 100 acre fishery based in the heart of Central Bedfordshire, with easy access from the A1. Manor Farm Lakes consists of a range of 7 different fishing lakes with an 18 van touring caravan site with electric hook-ups. A range of fishing experiences are catered for at Manor Farm Lakes including carp fishing for pleasure anglers and specialists, night fishing, fly fishing for carp, match and coarse angling as well as predator spinning, lure and deadbait fishing in the winter months. The River Ivel acts as the boundary along our eastern edge and is also available to fish with a good head of chub, barbel, pike and bream.',
-              softWrap: true,
-              overflow: TextOverflow.fade,
-              maxLines: descriptionExpanded ? 8 : 4,
-            ),
-            FlatButton(
-              onPressed: () {
-                print(descriptionExpanded);
-                // descriptionExpanded = !descriptionExpanded;
-              },
-              child: Text("Read More", style: TextStyle(color: Colors.blue)),
-            ),
-          ],
+          children: [header, SizedBox(height: 16), textBody, readMoreButton],
         ));
   }
 }
@@ -159,7 +155,7 @@ class _ButtonSection extends StatelessWidget {
       return Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
+        children: [
           Icon(icon, color: color),
           Container(
             margin: const EdgeInsets.only(top: 8),
@@ -179,7 +175,7 @@ class _ButtonSection extends StatelessWidget {
     return Container(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
+        children: [
           _buildButtonColumn(color, Icons.call, 'Call'),
           _buildButtonColumn(color, Icons.language, 'Website'),
           _buildButtonColumn(color, Icons.email, 'Email'),
@@ -197,34 +193,27 @@ class _OverviewSection extends StatelessWidget {
     Widget overviewBox = SizedBox(
       width: 50,
       height: 50,
-      child: DecoratedBox(
-        decoration: const BoxDecoration(color: Colors.green),
-      ),
+      child: DecoratedBox(decoration: const BoxDecoration(color: Colors.green)),
     );
 
     Widget overviewRow = Row(
-      children: <Widget>[overviewBox, overviewBox, overviewBox, overviewBox],
+      children: [overviewBox, overviewBox, overviewBox, overviewBox],
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
     );
 
     Widget overviewGrid = Column(
-      children: <Widget>[
-        overviewRow,
-        const Padding(padding: EdgeInsets.only(bottom: 32.0)),
-        overviewRow
-      ],
+      children: [overviewRow, SizedBox(height: 32), overviewRow],
     );
 
     return Container(
       padding: const EdgeInsets.fromLTRB(64, 8, 64, 8),
       child: Column(
-        children: <Widget>[
+        children: [
           Text(
             'Overview',
-            textAlign: TextAlign.left,
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
-          const Padding(padding: EdgeInsets.only(bottom: 16.0)),
+          const SizedBox(height: 16),
           overviewGrid
         ],
       ),

@@ -9,75 +9,64 @@ class AuthScreen extends StatelessWidget {
         alignment: Alignment.center,
         child: Column(
           children: [
-            Flexible(
-              flex: 1,
-              child: Image.asset(
-                'images/lake.jpg',
-                height: MediaQuery.of(context).size.height / 3,
-                width: MediaQuery.of(context).size.width / 3,
-              ),
-            ),
+            _Logo('images/lake.jpg'),
             Expanded(
                 child: Column(
               children: [
-                Padding(
-                  padding: EdgeInsets.only(top: 10, bottom: 10),
-                  child: SizedBox(
-                    width: 250,
-                    height: 48,
-                    child: RaisedButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8)),
-                      onPressed: () {},
-                      child: Text('Log In with Google',
-                          style: TextStyle(fontSize: 20)),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 10, bottom: 10),
-                  child: SizedBox(
-                    width: 250,
-                    height: 48,
-                    child: RaisedButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8)),
-                      onPressed: () {},
-                      child: Text('Log In with Facebook',
-                          style: TextStyle(fontSize: 20)),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 10, bottom: 10),
-                  child: SizedBox(
-                    width: 250,
-                    height: 48,
-                    child: RaisedButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8)),
-                      onPressed: () {},
-                      child: Text('Log In with Email',
-                          style: TextStyle(fontSize: 20)),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 10, bottom: 10),
-                  child: SizedBox(
-                    width: 250,
-                    height: 48,
-                    child: RaisedButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8)),
-                      onPressed: () {},
-                      child: Text('Sign Up', style: TextStyle(fontSize: 20)),
-                    ),
-                  ),
-                ),
+                _Button(title: 'Log In With Google', backgroundColor: Colors.red, textColor: Colors.white),
+                _Button(title: 'Log In With Facebook', backgroundColor: Colors.blue, textColor: Colors.white),
+                _Button(title: 'Log In With Email'),
+                _Button(title: 'Sign Up', backgroundColor: Colors.green, textColor: Colors.white),
               ],
             )),
           ],
         ));
+  }
+}
+
+class _Logo extends StatelessWidget {
+  _Logo(this.imageURL);
+
+  final String imageURL;
+
+  @override
+  Widget build(BuildContext context) {
+    return Flexible(
+      flex: 1,
+      child: Image.asset(
+        imageURL,
+        height: MediaQuery.of(context).size.height / 3,
+        width: MediaQuery.of(context).size.width / 3,
+      ),
+    );
+  }
+}
+
+class _Button extends StatelessWidget {
+  _Button({
+    Key key,
+    this.title,
+    this.backgroundColor,
+    this.textColor}) : super(key: key);
+
+  final String title;
+  final Color backgroundColor;
+  final Color textColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(top: 10, bottom: 10),
+      child: SizedBox(
+        width: 250,
+        height: 48,
+        child: RaisedButton(
+          color: backgroundColor,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          onPressed: () {},
+          child: Text(title, style: TextStyle(fontSize: 18, color: textColor)),
+        ),
+      ),
+    );
   }
 }
