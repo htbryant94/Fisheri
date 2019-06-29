@@ -38,6 +38,72 @@ class _ImageCarousel extends StatelessWidget {
   }
 }
 
+class _TitleSection extends StatelessWidget {
+  _TitleSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: _TitleHeader()),
+                _TitleSubHeader()
+              ],
+            ),
+          ),
+          _Favourites(50)
+        ],
+      ),
+    );
+  }
+}
+
+class _TitleHeader extends StatelessWidget {
+  _TitleHeader();
+
+  @override
+  Widget build(BuildContext context) {
+    return Text('Manor Farm Lakes',
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22));
+  }
+}
+
+class _TitleSubHeader extends StatelessWidget {
+  _TitleSubHeader();
+
+  @override
+  Widget build(BuildContext context) {
+    return Text('Biggleswade, Hertfordshire',
+        style: TextStyle(
+          color: Colors.grey[500],
+          fontSize: 18,
+        ));
+  }
+}
+
+class _Favourites extends StatelessWidget {
+  _Favourites(this.count);
+
+  final int count;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(Icons.star, color: Colors.red[500]),
+        Text('41'),
+      ],
+    );
+  }
+}
+
 class _TextSection extends StatelessWidget {
   _TextSection(this.descriptionExpanded);
 
@@ -70,45 +136,6 @@ class _TextSection extends StatelessWidget {
             ),
           ],
         ));
-  }
-}
-
-class _TitleSection extends StatelessWidget {
-  _TitleSection();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: Text(
-                    'Manor Farm Lakes',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
-                  ),
-                ),
-                Text('Biggleswade, Hertfordshire',
-                    style: TextStyle(
-                      color: Colors.grey[500],
-                      fontSize: 18,
-                    ))
-              ],
-            ),
-          ),
-          Icon(
-            Icons.star,
-            color: Colors.red[500],
-          ),
-          Text('41'),
-        ],
-      ),
-    );
   }
 }
 
