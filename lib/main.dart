@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:my_first_flutter_project/detail_screen.dart';
-import 'package:my_first_flutter_project/search_results_screen.dart';
+import 'package:my_first_flutter_project/auth_screen.dart';
+import 'detail_screen.dart';
+import 'search_results_screen.dart';
 
 import 'result_info.dart';
-import 'search_result_cell.dart';
 
 void main() => runApp(MyApp());
 
@@ -79,85 +79,10 @@ class MapSampleState extends State<MapSample>
       onMapCreated: (GoogleMapController controller) {
         _controller.complete(controller);
       },
-    );
-
-    Widget _loginScreen = Align(
-        alignment: Alignment.center,
-        child: Column(
-          children: [
-            Flexible(
-              flex: 1,
-              child: Image.asset(
-                'images/lake.jpg',
-                height: MediaQuery.of(context).size.height / 3,
-                width: MediaQuery.of(context).size.width / 3,
-              ),
-            ),
-            Expanded(
-                child: Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(top: 10, bottom: 10),
-                  child: SizedBox(
-                    width: 250,
-                    height: 48,
-                    child: RaisedButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8)),
-                      onPressed: () {},
-                      child: Text('Log In with Google',
-                          style: TextStyle(fontSize: 20)),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 10, bottom: 10),
-                  child: SizedBox(
-                    width: 250,
-                    height: 48,
-                    child: RaisedButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8)),
-                      onPressed: () {},
-                      child: Text('Log In with Facebook',
-                          style: TextStyle(fontSize: 20)),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 10, bottom: 10),
-                  child: SizedBox(
-                    width: 250,
-                    height: 48,
-                    child: RaisedButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8)),
-                      onPressed: () {},
-                      child: Text('Log In with Email',
-                          style: TextStyle(fontSize: 20)),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 10, bottom: 10),
-                  child: SizedBox(
-                    width: 250,
-                    height: 48,
-                    child: RaisedButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8)),
-                      onPressed: () {},
-                      child: Text('Sign Up', style: TextStyle(fontSize: 20)),
-                    ),
-                  ),
-                ),
-              ],
-            )),
-          ],
-        ));
+    ); 
 
     final List<Widget> _children = [
-      _loginScreen,
+      AuthScreen(),
       _searchScreen,
       SearchResultsScreen(_searchResults),
       DetailScreen(false, color)
