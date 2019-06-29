@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:my_first_flutter_project/detail_screen.dart';
+import 'package:my_first_flutter_project/search_results_screen.dart';
 
 import 'result_info.dart';
 import 'search_result_cell.dart';
@@ -18,7 +19,6 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
 class MapSample extends StatefulWidget {
   @override
   State<MapSample> createState() => MapSampleState();
@@ -68,26 +68,6 @@ class MapSampleState extends State<MapSample>
 
   @override
   Widget build(BuildContext context) {
-    Column _buildButtonColumn(Color color, IconData icon, String label) {
-      return Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Icon(icon, color: color),
-          Container(
-            margin: const EdgeInsets.only(top: 8),
-            child: Text(
-              label,
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w400,
-                color: color,
-              ),
-            ),
-          ),
-        ],
-      );
-    }
 
     Color color = Theme.of(context).primaryColor;
 
@@ -100,27 +80,6 @@ class MapSampleState extends State<MapSample>
         _controller.complete(controller);
       },
     );
-
-    Widget _resultsScreen = Align(
-        alignment: Alignment.center,
-        child: ListView.separated(
-          itemCount: _searchResults.length,
-          separatorBuilder: (BuildContext context, int index) => Divider(
-                height: 1,
-                color: Colors.grey[700],
-              ),
-          itemBuilder: (context, index) {
-            final _lakeToString =
-                _searchResults[index].isLake ? "LAKE" : "SHOP";
-            return SearchResultCell(
-              imageURL: 'images/lake.jpg',
-              title: '${_searchResults[index].title}',
-              venueType: _lakeToString,
-              distance: '${_searchResults[index].distance}',
-              isOpen: _searchResults[index].isOpen,
-            );
-          },
-        ));
 
     Widget _loginScreen = Align(
         alignment: Alignment.center,
@@ -200,7 +159,7 @@ class MapSampleState extends State<MapSample>
     final List<Widget> _children = [
       _loginScreen,
       _searchScreen,
-      _resultsScreen,
+      SearchResultsScreen(_searchResults),
       DetailScreen(false, color)
     ];
 
