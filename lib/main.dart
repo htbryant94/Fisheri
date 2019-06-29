@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:my_first_flutter_project/detail_screen.dart';
 
 import 'result_info.dart';
 import 'search_result_cell.dart';
@@ -196,160 +197,11 @@ class MapSampleState extends State<MapSample>
           ],
         ));
 
-    bool _descriptionExpanded = false;
-    Widget textSection = Container(
-        padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
-        child: Column(
-          children: <Widget>[
-            Text(
-              'Description',
-              textAlign: TextAlign.left,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const Padding(padding: EdgeInsets.only(bottom: 16)),
-            Text(
-              'Manor Farm Lakes is an extensive 100 acre fishery based in the heart of Central Bedfordshire, with easy access from the A1. Manor Farm Lakes consists of a range of 7 different fishing lakes with an 18 van touring caravan site with electric hook-ups. A range of fishing experiences are catered for at Manor Farm Lakes including carp fishing for pleasure anglers and specialists, night fishing, fly fishing for carp, match and coarse angling as well as predator spinning, lure and deadbait fishing in the winter months. The River Ivel acts as the boundary along our eastern edge and is also available to fish with a good head of chub, barbel, pike and bream.',
-              softWrap: true,
-              overflow: TextOverflow.fade,
-              maxLines: _descriptionExpanded ? 8 : 4,
-            ),
-            FlatButton(
-              onPressed: () {
-                print(_descriptionExpanded);
-                _descriptionExpanded = !_descriptionExpanded;
-              },
-              child: Text("Read More", style: TextStyle(color: Colors.blue)),
-            ),
-          ],
-        ));
-
-    Widget amenetiesSection = Container(
-        padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
-        child: Column(
-          children: <Widget>[
-            Text(
-              'Ameneties',
-              textAlign: TextAlign.left,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const Padding(padding: EdgeInsets.only(bottom: 16)),
-            Text(
-              'Manor Farm Lakes is an extensive 100 acre fishery based in the heart of Central Bedfordshire, with easy access from the A1. Manor Farm Lakes consists of a range of 7 different fishing lakes with an 18 van touring caravan site with electric hook-ups. A range of fishing experiences are catered for at Manor Farm Lakes including carp fishing for pleasure anglers and specialists, night fishing, fly fishing for carp, match and coarse angling as well as predator spinning, lure and deadbait fishing in the winter months. The River Ivel acts as the boundary along our eastern edge and is also available to fish with a good head of chub, barbel, pike and bream.',
-              softWrap: true,
-              overflow: TextOverflow.fade,
-              maxLines: _descriptionExpanded ? 8 : 4,
-            ),
-            FlatButton(
-              onPressed: () {
-                print(_descriptionExpanded);
-                _descriptionExpanded = !_descriptionExpanded;
-              },
-              child: Text("Read More", style: TextStyle(color: Colors.blue)),
-            ),
-          ],
-        ));
-
-    Widget buttonSection = Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          _buildButtonColumn(color, Icons.call, 'Call'),
-          _buildButtonColumn(color, Icons.language, 'Website'),
-          _buildButtonColumn(color, Icons.email, 'Email'),
-        ],
-      ),
-    );
-
-    Widget overviewBox = SizedBox(
-      width: 50,
-      height: 50,
-      child: DecoratedBox(
-        decoration: const BoxDecoration(color: Colors.green),
-      ),
-    );
-
-    Widget overviewRow = Row(
-      children: <Widget>[overviewBox, overviewBox, overviewBox, overviewBox],
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    );
-
-    Widget overviewGrid = Column(
-      children: <Widget>[
-        overviewRow,
-        const Padding(padding: EdgeInsets.only(bottom: 32.0)),
-        overviewRow
-      ],
-    );
-
-    Widget overviewSection = Container(
-      padding: const EdgeInsets.fromLTRB(64, 8, 64, 8),
-      child: Column(
-        children: <Widget>[
-          Text(
-            'Overview',
-            textAlign: TextAlign.left,
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          const Padding(padding: EdgeInsets.only(bottom: 16.0)),
-          overviewGrid
-        ],
-      ),
-    );
-
-    Widget titleSection = Container(
-      padding: const EdgeInsets.all(24),
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: Text(
-                    'Manor Farm Lakes',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
-                  ),
-                ),
-                Text('Biggleswade, Hertfordshire',
-                    style: TextStyle(
-                      color: Colors.grey[500],
-                      fontSize: 18,
-                    ))
-              ],
-            ),
-          ),
-          Icon(
-            Icons.star,
-            color: Colors.red[500],
-          ),
-          Text('41'),
-        ],
-      ),
-    );
-
-    Widget _detailScreen = ListView(
-      children: [
-        Image.asset(
-          'images/lake.jpg',
-          width: 600,
-          height: 240,
-          fit: BoxFit.cover,
-        ),
-        titleSection,
-        textSection,
-        buttonSection,
-        const Padding(padding: EdgeInsets.only(bottom: 16)),
-        overviewSection,
-        amenetiesSection
-      ],
-    );
-
     final List<Widget> _children = [
       _loginScreen,
       _searchScreen,
       _resultsScreen,
-      _detailScreen
+      DetailScreen(false, color)
     ];
 
     return new MaterialApp(
