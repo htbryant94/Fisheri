@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'auth_screen.dart';
-import 'detail_screen.dart';
-import 'search_results_screen.dart';
-import 'search_screen.dart';
+import 'Screens/auth_screen.dart';
+import 'Screens/detail_screen.dart';
+import 'Screens/search_results_screen.dart';
+import 'Screens/search_screen.dart';
 
 import 'result_info.dart';
 
