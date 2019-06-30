@@ -30,92 +30,46 @@ class MapSample extends StatefulWidget {
 
 class MapSampleState extends State<MapSample>
     with SingleTickerProviderStateMixin {
-  int _selectedIndex = 0;
+
+  TabController _tabController;
+  int _selectedTab = 0;
   Completer<GoogleMapController> _controller = Completer();
 
-  final List<ResultInfo> _searchResults = [
-    ResultInfo("Manor Farm Lakes", "5 miles", "Biggleswade", true, true),
-    ResultInfo("Bluebell Lakes", "2.45 miles", "Oundle", true, false),
-    ResultInfo("Cawcutts Lakes", "120 miles", "Impington", true, true),
-    ResultInfo("Manor Farm Lakes", "5 miles", "Biggleswade", true, true),
-    ResultInfo("Manor Farm Lakes", "5 miles", "Biggleswade", true, true),
-    ResultInfo("Bluebell Lakes", "2.45 miles", "Oundle", true, false),
-    ResultInfo("Cawcutts Lakes", "120 miles", "Impington", true, true),
-    ResultInfo("Manor Farm Lakes", "5 miles", "Biggleswade", true, true),
-    ResultInfo("Manor Farm Lakes", "5 miles", "Biggleswade", true, true),
-    ResultInfo("Bluebell Lakes", "2.45 miles", "Oundle", true, false),
-    ResultInfo("Cawcutts Lakes", "120 miles", "Impington", true, true),
-    ResultInfo("Manor Farm Lakes", "5 miles", "Biggleswade", true, true),
-    ResultInfo("Manor Farm Lakes", "5 miles", "Biggleswade", true, true),
-    ResultInfo("Bluebell Lakes", "2.45 miles", "Oundle", true, false),
-    ResultInfo("Cawcutts Lakes", "120 miles", "Impington", true, true),
-    ResultInfo("Manor Farm Lakes", "5 miles", "Biggleswade", true, true),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 4, vsync: this);
+  }
 
-  void _incrementTab(int index) {
+  @override
+  void dispose() {
+    super.dispose();
+    _tabController.dispose();
+  }
+
+  void _tabSelected(int newIndex) {
     setState(() {
-      _selectedIndex = index;
+      _selectedTab = newIndex;
+      _tabController.index = newIndex;
     });
   }
 
-  static final CameraPosition _kLake = CameraPosition(
-      bearing: 192.8334901395799,
-      target: LatLng(37.43296265331129, -122.08832357078792),
-      tilt: 59.440717697143555,
-      zoom: 19.151926040649414);
+  Widget _buildTabContent() {
+    return Positioned.fill(
+      child: TabBarView(
+        controller: _tabController,
+        children: [
+          AuthScreen(),
+          SearchScreen(_controller),
+          SearchResultsScreen(MockResultInfo.searchResults),
+          DetailScreen(false, HouseColors.primaryGreen)
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    Color color = Theme.of(context).primaryColor;
-
-    final List<Widget> _children = [
-      AuthScreen(),
-      SearchScreen(_controller),
-      SearchResultsScreen(_searchResults),
-      DetailScreen(false, color)
-    ];
-
-    BottomNavigationBar _bottomTabBar = BottomNavigationBar(
-      currentIndex: _selectedIndex,
-      type: BottomNavigationBarType.shifting,
-      backgroundColor: HouseColors.primaryGreen,
-      items: [
-        BottomNavigationBarItem(
-            activeIcon: Icon(Icons.explore),
-            backgroundColor: HouseColors.primaryGreen,
-            icon: Icon(Icons.explore, color: HouseColors.white),
-            title: Text(
-              'Login',
-              style: TextStyle(color: HouseColors.white),
-            )),
-        BottomNavigationBarItem(
-            activeIcon: Icon(Icons.search),
-            backgroundColor: HouseColors.primaryGreen,
-            icon: Icon(Icons.search, color: HouseColors.white),
-            title: Text(
-              'Search',
-              style: TextStyle(color: HouseColors.white),
-            )),
-        BottomNavigationBarItem(
-            backgroundColor: HouseColors.primaryGreen,
-            icon: Icon(Icons.star, color: HouseColors.white),
-            title: Text(
-              'Results',
-              style: TextStyle(color: HouseColors.white),
-            )),
-        BottomNavigationBarItem(
-            backgroundColor: HouseColors.primaryGreen,
-            icon: Icon(Icons.account_circle, color: HouseColors.white),
-            title: Text(
-              'Venue',
-              style: TextStyle(color: HouseColors.white),
-            ))
-      ],
-      onTap: (index) {
-        _incrementTab(index);
-      },
-    );
-
     AppBar _appBar = AppBar(
         title: Text(
           "Fisheri",
@@ -124,34 +78,20 @@ class MapSampleState extends State<MapSample>
         backgroundColor: HouseColors.primaryGreen,
         centerTitle: true);
 
-    FloatingActionButton _floatingActionButton = FloatingActionButton.extended(
-      onPressed: _goToTheLake,
-      label: Text(
-        'To the lake!',
-        style: TextStyle(color: HouseColors.primaryGreen),
-      ),
-      icon: Icon(
-        Icons.directions_boat,
-        color: HouseColors.primaryGreen,
-      ),
-      backgroundColor: Color(0xffC7D648),
-    );
-
     return new MaterialApp(
-      home: DefaultTabController(
-          length: 3,
-          child: Scaffold(
-              appBar: _appBar,
-              bottomNavigationBar: _bottomTabBar,
-              body: Center(
-                child: _children[_selectedIndex],
-              ),
-              // floatingActionButton: _floatingActionButton)),
+      home: Scaffold(
+          appBar: _appBar,
+          body: Stack(
+            children: [
+              _buildTabContent(),
+              BottomTabs(
+                selectedTab: _selectedTab,
+                onTap: _tabSelected,
+              )
+          ])
+        ),
+      // ), // floatingActionButton: _floatingActionButton)),
     );
   }
-
-  Future<void> _goToTheLake() async {
-    final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
-  }
+  
 }

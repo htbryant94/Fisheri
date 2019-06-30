@@ -253,6 +253,5 @@ class _AmenetiesSection extends StatelessWidget {
             ),
           ],
         ));
-    ;
   }
 }

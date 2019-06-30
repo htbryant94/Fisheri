@@ -1,69 +1,65 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'house_colors.dart';
 
-class BottomTabBar extends StatefulWidget {
-  BottomTabBar(this.selectedIndex);
+class BottomTabs extends StatelessWidget {
+  BottomTabs({
+    Key key,
+    this.selectedTab,
+    this.onTap,
+  }) : super(key: key);
 
-  final int selectedIndex;
+  final int selectedTab;
+  final ValueChanged<int> onTap;
 
-  @override
-  State<StatefulWidget> createState() {
-    return _BottomTabBarState(selectedIndex);
-  }
-}
-
-class _BottomTabBarState extends State<BottomTabBar> {
-  _BottomTabBarState(this.selectedIndex);
-
-  int selectedIndex;
-
-  void _incrementTab(int index) {
-    setState(() {
-      selectedIndex = index;
-    });
+  BottomNavigationBarItem _tabItem(Icon icon, String title) {
+    return BottomNavigationBarItem(
+      backgroundColor: HouseColors.primaryGreen,
+      icon: icon,
+      title: Text('$title', style: TextStyle(fontSize: 12))
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      currentIndex: selectedIndex,
-      type: BottomNavigationBarType.shifting,
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: FisheriBottomBar(
+        currentIndex: selectedTab,
+        onTap: onTap,
+        items: [
+          _tabItem(Icon(Icons.explore), 'Login'),
+          _tabItem(Icon(Icons.search), 'Search'),
+          _tabItem(Icon(Icons.star), 'Results'),
+          _tabItem(Icon(Icons.account_circle), 'Venue')
+        ],
+      ),
+    );
+  }
+}
+
+class FisheriBottomBar extends StatelessWidget {
+  FisheriBottomBar({
+    Key key,
+    this.currentIndex,
+    this.onTap,
+    this.items,
+  }) : super(key: key);
+
+  final int currentIndex;
+  final ValueChanged<int> onTap;
+  final List<BottomNavigationBarItem> items;
+
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoTabBar(
       backgroundColor: HouseColors.primaryGreen,
-      items: [
-        BottomNavigationBarItem(
-            activeIcon: Icon(Icons.explore),
-            backgroundColor: HouseColors.primaryGreen,
-            icon: Icon(Icons.explore, color: HouseColors.white),
-            title: Text(
-              'Login',
-              style: TextStyle(color: HouseColors.white),
-            )),
-        BottomNavigationBarItem(
-            activeIcon: Icon(Icons.search),
-            backgroundColor: HouseColors.primaryGreen,
-            icon: Icon(Icons.search, color: HouseColors.white),
-            title: Text(
-              'Search',
-              style: TextStyle(color: HouseColors.white),
-            )),
-        BottomNavigationBarItem(
-            backgroundColor: HouseColors.primaryGreen,
-            icon: Icon(Icons.star, color: HouseColors.white),
-            title: Text(
-              'Results',
-              style: TextStyle(color: HouseColors.white),
-            )),
-        BottomNavigationBarItem(
-            backgroundColor: HouseColors.primaryGreen,
-            icon: Icon(Icons.account_circle, color: HouseColors.white),
-            title: Text(
-              'Venue',
-              style: TextStyle(color: HouseColors.white),
-            ))
-      ],
-      onTap: (index) {
-        _incrementTab(index);
-      },
+      inactiveColor: Colors.white30,
+      activeColor: HouseColors.accentGreen,
+      iconSize: 22,
+      currentIndex: currentIndex,
+      onTap: onTap,
+      items: items,
     );
   }
 }
