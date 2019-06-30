@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:my_first_flutter_project/search_result_cell.dart';
-import 'package:my_first_flutter_project/result_info.dart';
+import 'package:fisheri/search_result_cell.dart';
+import 'package:fisheri/result_info.dart';
 
 class SearchResultsScreen extends StatelessWidget {
   SearchResultsScreen(this.searchResults);

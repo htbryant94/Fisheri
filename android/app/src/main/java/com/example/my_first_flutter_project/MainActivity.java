@@ -1,4 +1,4 @@
-package com.example.my_first_flutter_project;
+package com.app.fisheri;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;

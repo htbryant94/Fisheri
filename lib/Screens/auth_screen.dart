@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_first_flutter_project/house_colors.dart';
+import 'package:fisheri/house_colors.dart';
 
 class AuthScreen extends StatelessWidget {
   AuthScreen();
