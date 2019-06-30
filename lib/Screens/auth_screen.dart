@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_first_flutter_project/house_colors.dart';
 
 class AuthScreen extends StatelessWidget {
   AuthScreen();
@@ -15,8 +16,8 @@ class AuthScreen extends StatelessWidget {
               children: [
                 _Button(title: 'Log In With Google', backgroundColor: Colors.red, textColor: Colors.white),
                 _Button(title: 'Log In With Facebook', backgroundColor: Colors.blue, textColor: Colors.white),
-                _Button(title: 'Log In With Email'),
-                _Button(title: 'Sign Up', backgroundColor: Colors.green, textColor: Colors.white),
+                _Button(title: 'Log In With Email', backgroundColor: HouseColors.accentGreen, textColor: HouseColors.primaryGreen),
+                _Button(title: 'Sign Up', backgroundColor: HouseColors.primaryGreen, textColor: HouseColors.accentGreen),
               ],
             )),
           ],

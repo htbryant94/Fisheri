@@ -28,13 +28,13 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => HomePageState();
 }
 
-class HomePageState extends State<HomePage>
-    with SingleTickerProviderStateMixin {
+class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
+  
+  Completer<GoogleMapController> _controller = Completer();
 
   TabController _tabController;
   int _selectedTab = 0;
-  Completer<GoogleMapController> _controller = Completer();
-
+ 
   @override
   void initState() {
     super.initState();
