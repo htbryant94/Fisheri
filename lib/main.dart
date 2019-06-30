@@ -18,17 +18,17 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Google Maps Demo',
-      home: MapSample(),
+      home: HomePage(),
     );
   }
 }
 
-class MapSample extends StatefulWidget {
+class HomePage extends StatefulWidget {
   @override
-  State<MapSample> createState() => MapSampleState();
+  State<HomePage> createState() => HomePageState();
 }
 
-class MapSampleState extends State<MapSample>
+class HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
 
   TabController _tabController;
@@ -68,13 +68,15 @@ class MapSampleState extends State<MapSample>
     );
   }
 
+  Text _appBarTitle = Text(
+    "Fisheri",
+    style: TextStyle(color: HouseColors.white, fontSize: 24.0),
+  );
+
   @override
   Widget build(BuildContext context) {
     AppBar _appBar = AppBar(
-        title: Text(
-          "Fisheri",
-          style: TextStyle(color: HouseColors.white, fontSize: 24.0),
-        ),
+        title: _appBarTitle,
         backgroundColor: HouseColors.primaryGreen,
         centerTitle: true);
 
@@ -83,15 +85,13 @@ class MapSampleState extends State<MapSample>
           appBar: _appBar,
           body: Stack(
             children: [
-              _buildTabContent(),
-              BottomTabs(
-                selectedTab: _selectedTab,
-                onTap: _tabSelected,
-              )
+            _buildTabContent(),
+            BottomTabBar(
+              selectedTab: _selectedTab,
+              onTap: _tabSelected,
+            )
           ])
-        ),
-      // ), // floatingActionButton: _floatingActionButton)),
+          )
     );
   }
-  
 }

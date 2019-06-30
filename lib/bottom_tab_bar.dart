@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'house_colors.dart';
 
-class BottomTabs extends StatelessWidget {
-  BottomTabs({
+class BottomTabBar extends StatelessWidget {
+  BottomTabBar({
     Key key,
     this.selectedTab,
     this.onTap,
