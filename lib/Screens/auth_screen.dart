@@ -10,7 +10,7 @@ class AuthScreen extends StatelessWidget {
         alignment: Alignment.center,
         child: Column(
           children: [
-            _Logo('images/lake.jpg'),
+            _Logo('images/fisheri_logo.jpg'),
             Expanded(
                 child: Column(
               children: [
@@ -36,8 +36,8 @@ class _Logo extends StatelessWidget {
       flex: 1,
       child: Image.asset(
         imageURL,
-        height: MediaQuery.of(context).size.height / 3,
-        width: MediaQuery.of(context).size.width / 3,
+        height: MediaQuery.of(context).size.height / 2,
+        width: MediaQuery.of(context).size.width / 2,
       ),
     );
   }
