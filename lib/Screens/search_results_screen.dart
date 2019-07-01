@@ -8,37 +8,17 @@ class SearchResultsScreen extends StatelessWidget {
 
   final List<ResultInfo> searchResults;
 
-  // @override
-  // Widget build(BuildContext context) {
-  //   return Align(
-  //       alignment: Alignment.center,
-  //       child: ListView.separated(
-  //         itemCount: searchResults.length,
-  //         separatorBuilder: (BuildContext context, int index) => Divider(
-  //               height: 1,
-  //               color: Colors.grey[700],
-  //             ),
-  //         itemBuilder: (context, index) {
-  //           final _lakeToString = searchResults[index].isLake ? "LAKE" : "SHOP";
-  //           return SearchResultCell(
-  //             imageURL: 'images/lake.jpg',
-  //             title: '${searchResults[index].title}',
-  //             venueType: _lakeToString,
-  //             distance: '${searchResults[index].distance}',
-  //             isOpen: searchResults[index].isOpen,
-  //           );
-  //         },
-  //       ));
-  // }
-   @override
+  @override
   Widget build(BuildContext context) {
     return StreamBuilder(
       stream: Firestore.instance.collection('venues_search').snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (!snapshot.hasData) return CircularProgressIndicator(); // Add a loading screen here
+        if (!snapshot.hasData)
+          return CircularProgressIndicator(); // Add a loading screen here
         return ListView.separated(
           itemCount: snapshot.data.documents.length,
-          separatorBuilder: (BuildContext context, int index) => Divider(height: 1, color: Colors.grey[700]),
+          separatorBuilder: (BuildContext context, int index) =>
+              Divider(height: 1, color: Colors.grey[700]),
           itemBuilder: (context, index) {
             final _venueType = snapshot.data.documents[index]['isLake'] ? 'LAKE' : 'SHOP';
             return SearchResultCell(
@@ -49,7 +29,7 @@ class SearchResultsScreen extends StatelessWidget {
               isOpen: true,
             );
           },
-          );
+        );
       },
     );
   }
