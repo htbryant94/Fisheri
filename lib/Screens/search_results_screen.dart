@@ -30,36 +30,27 @@ class SearchResultsScreen extends StatelessWidget {
   //         },
   //       ));
   // }
-
-  // Widget _buildBody(BuildContext context) {
-  //   return StreamBuilder<QuerySnapshot>(
-  //     stream: Firestore.instance.collection("venues_search").snapshots(),
-  //     builder: (context, snapshot) {
-  //       if (!snapshot.hasData) return LinearProgressIndicator();
-  //       return _
-  //     }
-  // }
-
-    @override
+   @override
   Widget build(BuildContext context) {
-    return Align(
-        alignment: Alignment.center,
-        child: ListView.separated(
-          itemCount: searchResults.length,
-          separatorBuilder: (BuildContext context, int index) => Divider(
-                height: 1,
-                color: Colors.grey[700],
-              ),
+    return StreamBuilder(
+      stream: Firestore.instance.collection('venues_search').snapshots(),
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (!snapshot.hasData) return CircularProgressIndicator(); // Add a loading screen here
+        return ListView.separated(
+          itemCount: snapshot.data.documents.length,
+          separatorBuilder: (BuildContext context, int index) => Divider(height: 1, color: Colors.grey[700]),
           itemBuilder: (context, index) {
-            final _lakeToString = searchResults[index].isLake ? "LAKE" : "SHOP";
+            final _venueType = snapshot.data.documents[index]['isLake'] ? 'LAKE' : 'SHOP';
             return SearchResultCell(
               imageURL: 'images/lake.jpg',
-              title: '${searchResults[index].title}',
-              venueType: _lakeToString,
-              distance: '${searchResults[index].distance}',
-              isOpen: searchResults[index].isOpen,
+              title: snapshot.data.documents[index]['name'],
+              venueType: _venueType,
+              distance: '5 miles',
+              isOpen: true,
             );
           },
-        ));
+          );
+      },
+    );
   }
 }
