@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "11078451944",
+    "firebase_url": "https://fishing-finder-594f0.firebaseio.com",
+    "project_id": "fishing-finder-594f0",
+    "storage_bucket": "fishing-finder-594f0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:11078451944:android:6c6b423608e18035",
+        "android_client_info": {
+          "package_name": "com.app.fisheri"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "11078451944-fo80u64rolhjpahl0unl7um70eq1kqrd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5J_G1-NQWY4PWPVRFjq92JLsJKq2I9Rg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "11078451944-fo80u64rolhjpahl0unl7um70eq1kqrd.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "11078451944-i44m3529je37gfogbpjmulrjvqk67rb4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.app.fisheri"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
