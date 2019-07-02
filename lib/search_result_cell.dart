@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'Screens/detail_screen.dart';
+import 'house_colors.dart';
 
 class SearchResultCell extends StatelessWidget {
   SearchResultCell({
@@ -16,21 +18,67 @@ class SearchResultCell extends StatelessWidget {
   final bool isOpen;
   final String distance;
 
+  // @override
+  // Widget build(BuildContext context) {
+  //   return Container(
+  //     height: 120,
+  //     child: Row(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         _SearchResultCellImage(imageURL),
+  //         _SearchResultCellInfo(
+  //           title: title,
+  //           venueType: venueType,
+  //           isOpen: isOpen,
+  //           distance: distance,
+  //         )
+  //       ],
+  //     ),
+  //   );
+  // }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 120,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _SearchResultCellImage(imageURL),
-          _SearchResultCellInfo(
-            title: title,
-            venueType: venueType,
-            isOpen: isOpen,
-            distance: distance,
-          )
-        ],
+    return GestureDetector(
+      onTap: () {
+        print("Tapped");
+        Navigator.push(context, 
+        MaterialPageRoute(builder: (context) => SecondRoute(title))
+        );
+      },
+      child: Container(
+        height: 120,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _SearchResultCellImage(imageURL),
+            _SearchResultCellInfo(
+              title: title,
+              venueType: venueType,
+              isOpen: isOpen,
+              distance: distance,
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class SecondRoute extends StatelessWidget {
+  SecondRoute(this.title);
+
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(title),
+        backgroundColor: HouseColors.primaryGreen,
+      ),
+      body: Center(
+        child: DetailScreen(true, title),
       ),
     );
   }

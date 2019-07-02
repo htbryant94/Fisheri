@@ -31,7 +31,7 @@ class BottomTabBar extends StatelessWidget {
           _tabItem(Icon(Icons.explore), 'Login'),
           _tabItem(Icon(Icons.search), 'Search'),
           _tabItem(Icon(Icons.star), 'Results'),
-          _tabItem(Icon(Icons.account_circle), 'Venue')
+          // _tabItem(Icon(Icons.account_circle), 'Venue')
         ],
       ),
     );

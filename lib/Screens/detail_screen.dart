@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class DetailScreen extends StatelessWidget {
-  DetailScreen(this.descriptionExpanded, this.color);
+  DetailScreen(this.descriptionExpanded, this.title);
 
   final bool descriptionExpanded;
-  final Color color;
+  final String title;
 
   @override
   Widget build(BuildContext context) {
@@ -12,10 +12,10 @@ class DetailScreen extends StatelessWidget {
       children: [
         _ImageCarousel('images/lake.jpg'),
         _TitleSection(
-          title: 'Manor Farm Lakes',
+          title: title,
           subtitle: 'Biggleswade, Hertfordshire'),
         _DescriptionSection(descriptionExpanded),
-        _ButtonSection(color),
+        _ButtonSection(Colors.blue),
         SizedBox(height: 16),
         _OverviewSection(),
         _AmenetiesSection(descriptionExpanded),

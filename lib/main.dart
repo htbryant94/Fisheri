@@ -38,7 +38,7 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
   }
 
   @override
@@ -62,7 +62,7 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin 
           AuthScreen(),
           SearchScreen(_controller),
           SearchResultsScreen(MockResultInfo.searchResults),
-          DetailScreen(false, HouseColors.primaryGreen)
+          // DetailScreen(false, HouseColors.primaryGreen)
         ],
       ),
     );
