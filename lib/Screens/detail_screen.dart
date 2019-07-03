@@ -1,3 +1,4 @@
+import 'package:fisheri/house_colors.dart';
 import 'package:flutter/material.dart';
 
 class DetailScreen extends StatelessWidget {
@@ -11,16 +12,16 @@ class DetailScreen extends StatelessWidget {
     return ListView(
       children: [
         _ImageCarousel('images/lake.jpg'),
-        _TitleSection(
-          title: title,
-          subtitle: 'Biggleswade, Hertfordshire'),
+        _TitleSection(title: title, subtitle: 'Biggleswade, Hertfordshire'),
         _DescriptionSection(descriptionExpanded),
         _ButtonSection(Colors.blue),
         SizedBox(height: 16),
         // _OverviewSection(),
-        _FishTypes(),
+        _FishStocked(),
         _FishingTypes(),
-        _AmenitiesSection(descriptionExpanded),
+        _AmenitiesSection(),
+        _Tickets(),
+        _OpeningHours()
       ],
     );
   }
@@ -259,8 +260,8 @@ class _FishingTypes extends StatelessWidget {
   }
 }
 
-class _FishTypes extends StatelessWidget {
-  _FishTypes();
+class _FishStocked extends StatelessWidget {
+  _FishStocked();
 
   @override
   Widget build(BuildContext context) {
@@ -301,49 +302,168 @@ class _Amenity extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      children: [
-        Icon(Icons.person),
-        Text('Toilets')
-      ],
+      children: [Icon(Icons.person), Text('Toilets')],
     );
   }
 }
 
 class _AmenitiesSection extends StatelessWidget {
-  _AmenitiesSection(this.descriptionExpanded);
-
-  final bool descriptionExpanded;
+  _AmenitiesSection();
 
   @override
   Widget build(BuildContext context) {
     return Container(
         padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
-        child: 
-        Column(children: <Widget>[
-          Text(
-            'Amenities',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          const Padding(padding: EdgeInsets.only(bottom: 16)),
-          Row(
+        child: Column(
           children: <Widget>[
-            Column(
-              children: <Widget>[ 
-                _Amenity(),
-                _Amenity(),
-                _Amenity(),
-              ],
+            Text(
+              'Amenities',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            Column(children: <Widget>[
-              _Amenity(),
-              _Amenity(),
-              _Amenity(),
-            ],)
+            const Padding(padding: EdgeInsets.only(bottom: 16)),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    _Amenity(),
+                    _Amenity(),
+                    _Amenity(),
+                  ],
+                ),
+                Column(
+                  children: <Widget>[
+                    _Amenity(),
+                    _Amenity(),
+                    _Amenity(),
+                  ],
+                )
+              ],
+            )
           ],
-        )
-        ],
-        )
-        );
+        ));
   }
 }
 
+class _Tickets extends StatelessWidget {
+  _Tickets();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
+        child: Column(
+          children: <Widget>[
+            Text(
+              'Tickets',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8),
+            Row(
+              children: <Widget>[
+                Text('Day', style: TextStyle(fontWeight: FontWeight.bold)),
+                SizedBox(width: 16),
+                Text('Price from: £39'),
+                Spacer(),
+                RaisedButton(
+                    child: Text(
+                      "See more",
+                      style: TextStyle(color: HouseColors.primaryGreen),
+                    ),
+                    color: HouseColors.accentGreen,
+                    onPressed: () {})
+              ],
+            ),
+            Row(
+              children: <Widget>[
+                Text('Syndicate',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+                SizedBox(width: 16),
+                Text('Price from: £39'),
+                Spacer(),
+                RaisedButton(
+                    child: Text(
+                      "See more",
+                      style: TextStyle(color: HouseColors.primaryGreen),
+                    ),
+                    color: HouseColors.accentGreen,
+                    onPressed: () {})
+              ],
+            ),
+            Row(
+              children: <Widget>[
+                Text('Season', style: TextStyle(fontWeight: FontWeight.bold)),
+                SizedBox(width: 16),
+                Text('Price from: £39'),
+                Spacer(),
+                RaisedButton(
+                    child: Text(
+                      "See more",
+                      style: TextStyle(color: HouseColors.primaryGreen),
+                    ),
+                    color: HouseColors.accentGreen,
+                    onPressed: () {})
+              ],
+            ),
+            Row(
+              children: <Widget>[
+                Text('Club', style: TextStyle(fontWeight: FontWeight.bold)),
+                SizedBox(width: 16),
+                Text('Price from: £39'),
+                Spacer(),
+                RaisedButton(
+                    child: Text(
+                      "See more",
+                      style: TextStyle(color: HouseColors.primaryGreen),
+                    ),
+                    color: HouseColors.accentGreen,
+                    onPressed: () {})
+              ],
+            )
+          ],
+        ));
+  }
+}
+
+class _OpeningHoursRow extends StatelessWidget {
+  _OpeningHoursRow(this.day, this.openTime, this.closeTime);
+
+  final String day;
+  final String openTime;
+  final String closeTime;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget> [
+        Text(day),
+        Text('$openTime - $closeTime'),
+    ]);
+  }
+}
+
+class _OpeningHours extends StatelessWidget {
+  _OpeningHours();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
+      child: Column(children: <Widget>[
+        Text(
+          'Opening Hours',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(height: 16),
+        _OpeningHoursRow('Monday', '09:00', '22:00'),
+        _OpeningHoursRow('Tuesday', '09:00', '22:00'),
+        _OpeningHoursRow('Wednesday', '09:00', '22:00'),
+        _OpeningHoursRow('Thursday', '09:00', '22:00'),
+        _OpeningHoursRow('Friday', '09:00', '22:00'),
+        _OpeningHoursRow('Saturday', '09:00', '22:00'),
+        _OpeningHoursRow('Sunday', '09:00', '22:00'),
+      ]),
+    );
+  }
+}
