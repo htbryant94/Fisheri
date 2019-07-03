@@ -17,7 +17,9 @@ class DetailScreen extends StatelessWidget {
         _DescriptionSection(descriptionExpanded),
         _ButtonSection(Colors.blue),
         SizedBox(height: 16),
-        _OverviewSection(),
+        // _OverviewSection(),
+        _FishTypes(),
+        _FishingTypes(),
         _AmenitiesSection(descriptionExpanded),
       ],
     );
@@ -211,6 +213,78 @@ class _OverviewSection extends StatelessWidget {
         children: [
           Text(
             'Overview',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 16),
+          overviewGrid
+        ],
+      ),
+    );
+  }
+}
+
+class _FishingTypes extends StatelessWidget {
+  _FishingTypes();
+
+  @override
+  Widget build(BuildContext context) {
+    Widget overviewBox = SizedBox(
+      width: 75,
+      height: 75,
+      child: DecoratedBox(decoration: const BoxDecoration(color: Colors.green)),
+    );
+
+    Widget overviewRow = Row(
+      children: [overviewBox, overviewBox, overviewBox],
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    );
+
+    Widget overviewGrid = Column(
+      children: [overviewRow, SizedBox(height: 16), overviewRow],
+    );
+
+    return Container(
+      padding: const EdgeInsets.fromLTRB(64, 8, 64, 8),
+      child: Column(
+        children: [
+          Text(
+            'Types of Fishing',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 16),
+          overviewGrid
+        ],
+      ),
+    );
+  }
+}
+
+class _FishTypes extends StatelessWidget {
+  _FishTypes();
+
+  @override
+  Widget build(BuildContext context) {
+    Widget overviewBox = SizedBox(
+      width: 50,
+      height: 50,
+      child: DecoratedBox(decoration: const BoxDecoration(color: Colors.green)),
+    );
+
+    Widget overviewRow = Row(
+      children: [overviewBox, overviewBox, overviewBox, overviewBox],
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    );
+
+    Widget overviewGrid = Column(
+      children: [overviewRow, SizedBox(height: 32), overviewRow],
+    );
+
+    return Container(
+      padding: const EdgeInsets.fromLTRB(64, 8, 64, 8),
+      child: Column(
+        children: [
+          Text(
+            'Fish Stocked',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
