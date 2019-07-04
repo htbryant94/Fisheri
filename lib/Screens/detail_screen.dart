@@ -237,13 +237,46 @@ class _ButtonSection extends StatelessWidget {
 //   }
 // }
 
+class _FishStocked extends StatelessWidget {
+  _FishStocked();
+
+  @override
+  Widget build(BuildContext context) {
+    Widget overviewBox = SizedBox(
+      width: 60,
+      height: 60,
+      child: DecoratedBox(decoration: const BoxDecoration(color: Colors.green)),
+    );
+
+    Widget overviewRow = Row(
+      children: [overviewBox, overviewBox, overviewBox, overviewBox],
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    );
+
+    Widget overviewGrid = Column(
+      children: [overviewRow, SizedBox(height: 16), overviewRow],
+    );
+
+    return Container(
+      padding: const EdgeInsets.fromLTRB(32, 8, 32, 8),
+      child: Column(
+        children: [
+          _Header('Fish Stocked'),
+          const SizedBox(height: 16),
+          overviewGrid
+        ],
+      ),
+    );
+  }
+}
+
 class _FishingTypes extends StatelessWidget {
   _FishingTypes();
 
   @override
   Widget build(BuildContext context) {
     Widget _box = SizedBox(
-      width: 75,
+      width: 90,
       height: 75,
       child: DecoratedBox(decoration: const BoxDecoration(color: Colors.green)),
     );
@@ -258,45 +291,12 @@ class _FishingTypes extends StatelessWidget {
     );
 
     return Container(
-      padding: const EdgeInsets.fromLTRB(64, 8, 64, 8),
+      padding: const EdgeInsets.fromLTRB(32, 8, 32, 8),
       child: Column(
         children: [
           _Header('Types of Fishing'),
           const SizedBox(height: 16),
           _grid
-        ],
-      ),
-    );
-  }
-}
-
-class _FishStocked extends StatelessWidget {
-  _FishStocked();
-
-  @override
-  Widget build(BuildContext context) {
-    Widget overviewBox = SizedBox(
-      width: 50,
-      height: 50,
-      child: DecoratedBox(decoration: const BoxDecoration(color: Colors.green)),
-    );
-
-    Widget overviewRow = Row(
-      children: [overviewBox, overviewBox, overviewBox, overviewBox],
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    );
-
-    Widget overviewGrid = Column(
-      children: [overviewRow, SizedBox(height: 32), overviewRow],
-    );
-
-    return Container(
-      padding: const EdgeInsets.fromLTRB(64, 8, 64, 8),
-      child: Column(
-        children: [
-          _Header('Fish Stocked'),
-          const SizedBox(height: 16),
-          overviewGrid
         ],
       ),
     );
