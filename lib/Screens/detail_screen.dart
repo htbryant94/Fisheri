@@ -51,8 +51,10 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(header,
-        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold));
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Text(header,
+        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)));
   }
 }
 
@@ -148,7 +150,8 @@ class _DescriptionSection extends StatelessWidget {
 
     return Container(
         padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
-        child: Column(children: [
+        child: Column(
+          children: [
           _Header('Description'),
           SizedBox(height: 16),
           textBody,
