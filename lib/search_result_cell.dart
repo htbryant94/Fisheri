@@ -18,25 +18,6 @@ class SearchResultCell extends StatelessWidget {
   final bool isOpen;
   final String distance;
 
-  // @override
-  // Widget build(BuildContext context) {
-  //   return Container(
-  //     height: 120,
-  //     child: Row(
-  //       crossAxisAlignment: CrossAxisAlignment.start,
-  //       children: [
-  //         _SearchResultCellImage(imageURL),
-  //         _SearchResultCellInfo(
-  //           title: title,
-  //           venueType: venueType,
-  //           isOpen: isOpen,
-  //           distance: distance,
-  //         )
-  //       ],
-  //     ),
-  //   );
-  // }
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -122,7 +103,7 @@ class _SearchResultCellInfo extends StatelessWidget {
           children: [
             Expanded(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   _Title(title),
