@@ -18,6 +18,8 @@ class SearchResultCell extends StatelessWidget {
   final bool isOpen;
   final String distance;
 
+  
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
