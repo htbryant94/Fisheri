@@ -52,9 +52,9 @@ class _Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: Alignment.centerLeft,
-      child: Text(header,
-        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)));
+        alignment: Alignment.centerLeft,
+        child: Text(header,
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)));
   }
 }
 
@@ -150,8 +150,7 @@ class _DescriptionSection extends StatelessWidget {
 
     return Container(
         padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
-        child: Column(
-          children: [
+        child: Column(children: [
           _Header('Description'),
           SizedBox(height: 16),
           textBody,
@@ -273,16 +272,22 @@ class _FishStocked extends StatelessWidget {
 class _FishingTypes extends StatelessWidget {
   _FishingTypes();
 
+  // Implement with list and install via wrap
+  
   @override
   Widget build(BuildContext context) {
-    Widget _box = SizedBox(
-      width: 90,
-      height: 75,
-      child: DecoratedBox(decoration: const BoxDecoration(color: Colors.green)),
-    );
+    SizedBox _box(String title) {
+      return SizedBox(
+          width: 90,
+          height: 75,
+          child: DecoratedBox(
+              decoration: const BoxDecoration(color: Colors.green),
+              child: Align(
+                  child: Text(title), alignment: Alignment.bottomCenter)));
+    }
 
     Widget _row = Row(
-      children: [_box, _box, _box],
+      children: [_box('1'), _box('2'), _box('3')],
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
     );
 
