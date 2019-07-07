@@ -27,19 +27,13 @@ class SearchResultsScreen extends StatelessWidget {
             final _venueType = snapshot.data.documents[index]['isLake'] ? 'LAKE' : 'SHOP';
             final _fishStock = snapshot.data.documents[index]['fish_stock'];
             final _address = snapshot.data.documents[index]['address'];
-            final _addressSerializer = VenueAddressJSONSerializer();
-            VenueAddress _myAddress = _addressSerializer.fromMap(_address);
-            print(_myAddress.town);
-            print(_myAddress.street);
-            print(_myAddress.county);
-            print(_myAddress.postcode);
             return SearchResultCell(
               imageURL: 'images/lake.jpg',
               title: snapshot.data.documents[index]['name'],
               venueType: _venueType,
               distance: '5 miles',
               isOpen: true,
-              // address: VenueAddress.fromJson(_address),
+              address: VenueAddressJSONSerializer().fromMap(_address),
             );
           },
         );
