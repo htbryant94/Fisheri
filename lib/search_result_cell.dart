@@ -1,5 +1,5 @@
-import 'package:fisheri/result_info.dart';
 import 'package:fisheri/models/venue_address.dart';
+import 'package:fisheri/models/fish_stock.dart';
 import 'package:flutter/material.dart';
 import 'Screens/detail_screen.dart';
 import 'house_colors.dart';
@@ -69,7 +69,7 @@ class SecondRoute extends StatelessWidget {
         backgroundColor: HouseColors.primaryGreen,
       ),
       body: Center(
-        child: DetailScreen(true, title),
+        child: DetailScreen(true, title, fishStock),
       ),
     );
   }

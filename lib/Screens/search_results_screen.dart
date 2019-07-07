@@ -4,6 +4,7 @@ import 'package:fisheri/result_info.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:fisheri/models/venue_address.dart';
+import 'package:fisheri/models/fish_stock.dart';
 
 class SearchResultsScreen extends StatelessWidget {
   SearchResultsScreen(this.searchResults);
@@ -33,6 +34,7 @@ class SearchResultsScreen extends StatelessWidget {
               distance: '5 miles',
               isOpen: true,
               address: VenueAddressJSONSerializer().fromMap(_address),
+              fishStock: VenueFishStockJSONSerializer().fromMap(_fishStock),
             );
           },
         );

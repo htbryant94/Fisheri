@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'models/venue_address.dart';
+import 'models/fish_stock.dart';
 
 class ResultInfo {
   ResultInfo(String title, String distance, String location, bool isLake,
@@ -94,21 +95,6 @@ class VenueDetail {
   List<HoursOfOperationDay> hoursOfOperation;
 }
 
-// @JsonSerializable()
-// class VenueAddress {
-//   VenueAddress(String street, String town, String county, String postcode) {
-//     this.street = street;
-//     this.town = town;
-//     this.county = county;
-//     this.postcode = postcode;
-//   }
-
-//   String street;
-//   String town;
-//   String county;
-//   String postcode;
-// }
-
 class VenueAmenities {
   VenueAmenities(
       bool toilets,
@@ -194,88 +180,6 @@ class VenueSocial {
   String twitter;
   String instagram;
   String youtube;
-}
-
-class VenueFishStock {
-  VenueFishStock(
-      FishWithWeight carp,
-      FishWithWeight catfish,
-      FishWithWeight tench,
-      FishWithWeight pike,
-      FishWithWeight bream,
-      FishWithWeight barbel,
-      bool brownTrout,
-      bool chub,
-      bool crucianCarp,
-      bool dace,
-      bool eel,
-      bool grassCarp,
-      bool grayling,
-      bool gudgeon,
-      bool koiCarp,
-      bool orfe,
-      bool perch,
-      bool rainbowTrout,
-      bool roach,
-      bool rudd,
-      bool ruffe,
-      bool salmon,
-      bool zander) {
-    this.carp = carp;
-    this.catfish = catfish;
-    this.tench = tench;
-    this.pike = pike;
-    this.bream = bream;
-    this.barbel = barbel;
-    this.brownTrout = brownTrout;
-    this.chub = chub;
-    this.crucianCarp = crucianCarp;
-    this.dace = dace;
-    this.eel = eel;
-    this.grassCarp = grassCarp;
-    this.grayling = grayling;
-    this.gudgeon = gudgeon;
-    this.koiCarp = koiCarp;
-    this.orfe = orfe;
-    this.perch = perch;
-    this.rainbowTrout = rainbowTrout;
-    this.roach = roach;
-    this.rudd = rudd;
-    this.ruffe = ruffe;
-    this.salmon = salmon;
-    this.zander = zander;
-  }
-
-  FishWithWeight carp;
-  FishWithWeight catfish;
-  FishWithWeight tench;
-  FishWithWeight pike;
-  FishWithWeight bream;
-  FishWithWeight barbel;
-  bool brownTrout;
-  bool chub;
-  bool crucianCarp;
-  bool dace;
-  bool eel;
-  bool grassCarp;
-  bool grayling;
-  bool gudgeon;
-  bool koiCarp;
-  bool orfe;
-  bool perch;
-  bool rainbowTrout;
-  bool roach;
-  bool rudd;
-  bool ruffe;
-  bool salmon;
-  bool zander;
-}
-
-class FishWithWeight {
-  FishWithWeight(String name, int maxWeight);
-
-  String name;
-  int maxWeight;
 }
 
 class FishingTypes {

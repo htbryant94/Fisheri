@@ -1,14 +1,18 @@
 import 'package:fisheri/house_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:fisheri/models/fish_stock.dart';
 
 class DetailScreen extends StatelessWidget {
-  DetailScreen(this.descriptionExpanded, this.title);
+  DetailScreen(this.descriptionExpanded, this.title, this.fishStock);
 
   final bool descriptionExpanded;
   final String title;
+  final VenueFishStock fishStock;
 
   @override
   Widget build(BuildContext context) {
+    print('With Weight: ${fishStock.withWeight.first.isStocked}');
+    print('Crucian Carp in Stock: ${fishStock.crucianCarp}');
     return ListView(
       children: [
         _ImageCarousel('images/lake.jpg'),
