@@ -1,3 +1,5 @@
+import 'package:fisheri/result_info.dart';
+import 'package:fisheri/venue_address.dart';
 import 'package:flutter/material.dart';
 import 'Screens/detail_screen.dart';
 import 'house_colors.dart';
@@ -10,6 +12,8 @@ class SearchResultCell extends StatelessWidget {
     this.venueType,
     this.isOpen,
     this.distance,
+    this.fishStock,
+    this.address
   }) : super(key: key);
 
   final String imageURL;
@@ -17,6 +21,8 @@ class SearchResultCell extends StatelessWidget {
   final String venueType;
   final bool isOpen;
   final String distance;
+  final VenueFishStock fishStock;
+  final VenueAddress address;
 
   
 
@@ -26,7 +32,7 @@ class SearchResultCell extends StatelessWidget {
       onTap: () {
         print("Tapped");
         Navigator.push(context, 
-        MaterialPageRoute(builder: (context) => SecondRoute(title))
+        MaterialPageRoute(builder: (context) => SecondRoute(title, fishStock))
         );
       },
       child: Container(
@@ -49,12 +55,14 @@ class SearchResultCell extends StatelessWidget {
 }
 
 class SecondRoute extends StatelessWidget {
-  SecondRoute(this.title);
+  SecondRoute(this.title, this.fishStock);
 
   final String title;
+  final VenueFishStock fishStock; 
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         title: Text(title),

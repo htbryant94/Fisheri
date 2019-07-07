@@ -235,6 +235,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.3"
+  jaguar_serializer:
+    dependency: "direct main"
+    description:
+      name: jaguar_serializer
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.2.12"
+  jaguar_serializer_cli:
+    dependency: "direct dev"
+    description:
+      name: jaguar_serializer_cli
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.2.8"
   js:
     dependency: transitive
     description:
@@ -243,12 +257,12 @@ packages:
     source: hosted
     version: "0.6.1+1"
   json_annotation:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: json_annotation
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.3.0"
+    version: "2.4.0"
   json_serializable:
     dependency: "direct main"
     description:

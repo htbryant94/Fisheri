@@ -1,7 +1,10 @@
+import 'package:fisheri/venue_address.dart';
 import 'package:flutter/material.dart';
 import 'package:fisheri/search_result_cell.dart';
 import 'package:fisheri/result_info.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'package:jaguar_serializer/jaguar_serializer.dart';
 
 class SearchResultsScreen extends StatelessWidget {
   SearchResultsScreen(this.searchResults);
@@ -11,7 +14,8 @@ class SearchResultsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: Firestore.instance.collection('venues_search').snapshots(),
+      // stream: Firestore.instance.collection('venues_search').snapshots(),
+      stream: Firestore.instance.collection('venues_detail').snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (!snapshot.hasData)
           return CircularProgressIndicator(); // Add a loading screen here
@@ -21,12 +25,21 @@ class SearchResultsScreen extends StatelessWidget {
               Divider(height: 1, color: Colors.grey[700]),
           itemBuilder: (context, index) {
             final _venueType = snapshot.data.documents[index]['isLake'] ? 'LAKE' : 'SHOP';
+            final _fishStock = snapshot.data.documents[index]['fish_stock'];
+            final _address = snapshot.data.documents[index]['address'];
+            final _addressSerializer = VenueAddressJSONSerializer();
+            VenueAddress _myAddress = _addressSerializer.fromMap(_address);
+            print(_myAddress.town);
+            print(_myAddress.street);
+            print(_myAddress.county);
+            print(_myAddress.postcode);
             return SearchResultCell(
               imageURL: 'images/lake.jpg',
               title: snapshot.data.documents[index]['name'],
               venueType: _venueType,
               distance: '5 miles',
               isOpen: true,
+              // address: VenueAddress.fromJson(_address),
             );
           },
         );

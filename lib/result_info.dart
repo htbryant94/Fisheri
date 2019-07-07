@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'venue_address.dart';
 
 class ResultInfo {
   ResultInfo(String title, String distance, String location, bool isLake,
@@ -93,19 +94,20 @@ class VenueDetail {
   List<HoursOfOperationDay> hoursOfOperation;
 }
 
-class VenueAddress {
-  VenueAddress(String street, String town, String county, String postcode) {
-    this.street = street;
-    this.town = town;
-    this.county = county;
-    this.postcode = postcode;
-  }
+// @JsonSerializable()
+// class VenueAddress {
+//   VenueAddress(String street, String town, String county, String postcode) {
+//     this.street = street;
+//     this.town = town;
+//     this.county = county;
+//     this.postcode = postcode;
+//   }
 
-  String street;
-  String town;
-  String county;
-  String postcode;
-}
+//   String street;
+//   String town;
+//   String county;
+//   String postcode;
+// }
 
 class VenueAmenities {
   VenueAmenities(

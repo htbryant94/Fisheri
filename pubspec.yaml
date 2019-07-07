@@ -22,9 +22,11 @@ dependencies:
   google_maps_flutter:
   http: ^0.12.0+2
   json_serializable: ^3.0.0
+  json_annotation: ^2.4.0
   firebase_core: 
   cloud_firestore: 
-
+  jaguar_serializer: ^2.2.12
+  
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
@@ -34,6 +36,7 @@ dev_dependencies:
     sdk: flutter
   pedantic: ^1.5.0
   build_runner: ^1.2.7
+  jaguar_serializer_cli: ^2.2.8
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
