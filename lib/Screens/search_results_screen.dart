@@ -1,10 +1,9 @@
-import 'package:fisheri/venue_address.dart';
 import 'package:flutter/material.dart';
 import 'package:fisheri/search_result_cell.dart';
 import 'package:fisheri/result_info.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'package:jaguar_serializer/jaguar_serializer.dart';
+import 'package:fisheri/models/venue_address.dart';
 
 class SearchResultsScreen extends StatelessWidget {
   SearchResultsScreen(this.searchResults);
