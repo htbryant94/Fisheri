@@ -21,7 +21,7 @@ class SearchResultCell extends StatelessWidget {
   final String venueType;
   final bool isOpen;
   final String distance;
-  final VenueFishStock fishStock;
+  final List<dynamic> fishStock;
   final VenueAddress address;
 
   
@@ -58,7 +58,7 @@ class SecondRoute extends StatelessWidget {
   SecondRoute(this.title, this.fishStock);
 
   final String title;
-  final VenueFishStock fishStock; 
+  final List<dynamic> fishStock; 
 
   @override
   Widget build(BuildContext context) {

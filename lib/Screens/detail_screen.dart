@@ -7,12 +7,12 @@ class DetailScreen extends StatelessWidget {
 
   final bool descriptionExpanded;
   final String title;
-  final VenueFishStock fishStock;
+  final List<dynamic> fishStock;
 
   @override
   Widget build(BuildContext context) {
-    print('With Weight: ${fishStock.withWeight.first.isStocked}');
-    print('Crucian Carp in Stock: ${fishStock.crucianCarp}');
+    // print('With Weight: ${fishStock.withWeight.first.isStocked}');
+    // print('Crucian Carp in Stock: ${fishStock.crucianCarp}');
     return ListView(
       children: [
         _ImageCarousel('images/lake.jpg'),
@@ -20,7 +20,7 @@ class DetailScreen extends StatelessWidget {
         _DescriptionSection(descriptionExpanded),
         _ButtonSection(Colors.blue),
         SizedBox(height: 16),
-        _FishStocked(),
+        _FishStocked(fishStock),
         _FishingTypes(),
         _AmenitiesSection(),
         _Tickets(),
@@ -240,33 +240,39 @@ class _ButtonSection extends StatelessWidget {
 //   }
 // }
 
-class _FishStocked extends StatelessWidget {
-  _FishStocked();
+class _FishStockedGridItem extends StatelessWidget {
+  _FishStockedGridItem(this.fish);
+
+  final String fish;
 
   @override
   Widget build(BuildContext context) {
-    Widget overviewBox = SizedBox(
-      width: 60,
-      height: 60,
-      child: DecoratedBox(decoration: const BoxDecoration(color: Colors.green)),
-    );
+    return SizedBox(
+        width: 60,
+        height: 60,
+        child: DecoratedBox(
+            decoration: const BoxDecoration(color: Colors.green),
+            child: Align(child: Text(fish), alignment: Alignment.bottomCenter)));
+  }
+}
 
-    Widget overviewRow = Row(
-      children: [overviewBox, overviewBox, overviewBox, overviewBox],
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    );
+class _FishStocked extends StatelessWidget {
+  _FishStocked(this.fishStock);
 
-    Widget overviewGrid = Column(
-      children: [overviewRow, SizedBox(height: 16), overviewRow],
-    );
+  final List<dynamic> fishStock;
 
+  @override
+  Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.fromLTRB(32, 8, 32, 8),
       child: Column(
         children: [
           _Header('Fish Stocked'),
           const SizedBox(height: 16),
-          overviewGrid
+          Wrap(
+              spacing: 16,
+              runSpacing: 16,
+              children: fishStock.map((fish) => _FishStockedGridItem(fish)).toList())
         ],
       ),
     );
@@ -277,7 +283,7 @@ class _FishingTypes extends StatelessWidget {
   _FishingTypes();
 
   // Implement with list and install via wrap
-  
+
   @override
   Widget build(BuildContext context) {
     SizedBox _box(String title) {
