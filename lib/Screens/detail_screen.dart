@@ -248,11 +248,11 @@ class _FishStockedGridItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-        width: 60,
-        height: 60,
+        width: 65,
+        height: 65,
         child: DecoratedBox(
             decoration: const BoxDecoration(color: Colors.green),
-            child: Align(child: Text(fish), alignment: Alignment.bottomCenter)));
+            child: Align(child: Text(fish, textAlign: TextAlign.center), alignment: Alignment.center)));
   }
 }
 
