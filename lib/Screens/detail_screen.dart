@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:fisheri/house_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:fisheri/models/fish_stock.dart';
@@ -247,12 +249,15 @@ class _FishStockedGridItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    var random = Random()
     return SizedBox(
         width: 65,
         height: 65,
-        child: DecoratedBox(
-            decoration: const BoxDecoration(color: Colors.green),
-            child: Align(child: Text(fish, textAlign: TextAlign.center), alignment: Alignment.center)));
+        child: Image.asset('images/fish_2.png',fit: BoxFit.contain));
+        // child: DecoratedBox(
+        //     decoration: const BoxDecoration(color: Colors.green),
+        //     child: Align(child: Text(fish, textAlign: TextAlign.center), alignment: Alignment.center)));
   }
 }
 
@@ -290,10 +295,11 @@ class _FishingTypes extends StatelessWidget {
       return SizedBox(
           width: 90,
           height: 75,
-          child: DecoratedBox(
-              decoration: const BoxDecoration(color: Colors.green),
-              child: Align(
-                  child: Text(title), alignment: Alignment.bottomCenter)));
+          child: Image.asset('images/fish_6.png',fit: BoxFit.contain));
+          // child: DecoratedBox(
+          //     decoration: const BoxDecoration(color: Colors.green),
+          //     child: Align(
+          //         child: Text(title), alignment: Alignment.bottomCenter)));
     }
 
     Widget _row = Row(
