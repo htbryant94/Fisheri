@@ -250,11 +250,11 @@ class _FishStockedGridItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    var random = Random()
+    final random = Random().nextInt(10) + 1;
     return SizedBox(
         width: 65,
         height: 65,
-        child: Image.asset('images/fish_2.png',fit: BoxFit.contain));
+        child: Image.asset('images/fish_$random.png',fit: BoxFit.contain));
         // child: DecoratedBox(
         //     decoration: const BoxDecoration(color: Colors.green),
         //     child: Align(child: Text(fish, textAlign: TextAlign.center), alignment: Alignment.center)));
@@ -291,11 +291,12 @@ class _FishingTypes extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var random = Random().nextInt(10) + 1;
     SizedBox _box(String title) {
       return SizedBox(
           width: 90,
           height: 75,
-          child: Image.asset('images/fish_6.png',fit: BoxFit.contain));
+          child: Image.asset('images/fish_$random.png',fit: BoxFit.contain));
           // child: DecoratedBox(
           //     decoration: const BoxDecoration(color: Colors.green),
           //     child: Align(
