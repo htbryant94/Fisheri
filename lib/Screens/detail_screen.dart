@@ -41,12 +41,14 @@ class _ImageCarousel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Image.asset(
-      imageURL,
-      width: 600,
-      height: 240,
-      fit: BoxFit.cover,
-    );
+    return Hero(
+        tag: 'HeroImage',
+        child: Image.asset(
+          imageURL,
+          width: 600,
+          height: 240,
+          fit: BoxFit.cover,
+        ));
   }
 }
 
@@ -80,7 +82,7 @@ class _TitleSection extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _TitleHeader(title),
+                _TitleHeader(title), 
                 SizedBox(height: 8),
                 _TitleSubHeader(subtitle)
               ],
@@ -249,15 +251,14 @@ class _FishStockedGridItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final random = Random().nextInt(10) + 1;
     return SizedBox(
         width: 65,
         height: 65,
-        child: Image.asset('images/fish_$random.png',fit: BoxFit.contain));
-        // child: DecoratedBox(
-        //     decoration: const BoxDecoration(color: Colors.green),
-        //     child: Align(child: Text(fish, textAlign: TextAlign.center), alignment: Alignment.center)));
+        child: Image.asset('images/fish_$random.png', fit: BoxFit.contain));
+    // child: DecoratedBox(
+    //     decoration: const BoxDecoration(color: Colors.green),
+    //     child: Align(child: Text(fish, textAlign: TextAlign.center), alignment: Alignment.center)));
   }
 }
 
@@ -277,7 +278,8 @@ class _FishStocked extends StatelessWidget {
           Wrap(
               spacing: 16,
               runSpacing: 16,
-              children: fishStock.map((fish) => _FishStockedGridItem(fish)).toList())
+              children:
+                  fishStock.map((fish) => _FishStockedGridItem(fish)).toList())
         ],
       ),
     );
@@ -296,11 +298,11 @@ class _FishingTypes extends StatelessWidget {
       return SizedBox(
           width: 90,
           height: 75,
-          child: Image.asset('images/fish_$random.png',fit: BoxFit.contain));
-          // child: DecoratedBox(
-          //     decoration: const BoxDecoration(color: Colors.green),
-          //     child: Align(
-          //         child: Text(title), alignment: Alignment.bottomCenter)));
+          child: Image.asset('images/fish_$random.png', fit: BoxFit.contain));
+      // child: DecoratedBox(
+      //     decoration: const BoxDecoration(color: Colors.green),
+      //     child: Align(
+      //         child: Text(title), alignment: Alignment.bottomCenter)));
     }
 
     Widget _row = Row(
