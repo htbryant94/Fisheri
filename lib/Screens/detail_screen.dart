@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:fisheri/house_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:fisheri/models/fish_stock.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class DetailScreen extends StatelessWidget {
   DetailScreen(this.descriptionExpanded, this.title, this.fishStock);
@@ -15,6 +16,7 @@ class DetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // print('With Weight: ${fishStock.withWeight.first.isStocked}');
     // print('Crucian Carp in Stock: ${fishStock.crucianCarp}');
+    print("FISH STOCKED: $fishStock");
     return ListView(
       children: [
         _ImageCarousel('images/lake.jpg'),
@@ -242,22 +244,59 @@ class _ButtonSection extends StatelessWidget {
 //   }
 // }
 
+class FishStockedGridItem2 extends StatefulWidget {
+
+  @override
+  State<StatefulWidget> createState() {
+    return _FishStockedGridItemState();
+  }
+}
+
+class _FishStockedGridItemState extends State<FishStockedGridItem2> {
+
+  String downloadURL;
+
+  @override
+  Widget build(BuildContext context) {
+    return null;
+  }
+}
+
 class _FishStockedGridItem extends StatelessWidget {
   _FishStockedGridItem(this.fish);
 
   final String fish;
+  String downloadURL;
 
   @override
   Widget build(BuildContext context) {
 
-    final random = Random().nextInt(10) + 1;
+    Future<String> downloadImageURL() async {
+      StorageReference ref = FirebaseStorage.instance.ref().child('fish/stock');
+      final fishURL = fish.replaceAll(" ", "_").toLowerCase();
+      final finalURL = ref.child('$fishURL.png');
+      String asyncURL = await finalURL.getDownloadURL().toString();
+      print('FINAL URL: $asyncURL');
+    }
+
+    downloadURL;
+
+    final storageURL = 'gs://fishing-finder-594f0.appspot.com/fish/stock/';
+    final storageRef = FirebaseStorage.instance.ref().child('fish/stock');
+    final fishURL = fish.replaceAll(" ", "_").toLowerCase();
+    // final actualURL = "$storageURL$fishURL.png";
+    final storageImage = storageRef.child('$fishURL.png');
+
     return SizedBox(
         width: 65,
-        height: 65,
-        child: Image.asset('images/fish_$random.png',fit: BoxFit.contain));
-        // child: DecoratedBox(
-        //     decoration: const BoxDecoration(color: Colors.green),
-        //     child: Align(child: Text(fish, textAlign: TextAlign.center), alignment: Alignment.center)));
+        // height: 120,
+        child: Column(
+          children: [
+            // FadeInImage(image: NetworkImage(storageImage),)
+          // Image(image: FirebaseStorageImage(actualURL), loadingBuilder: ImageLoadingBuilder(context, child, loadingProgress),),
+          SizedBox(height: 8),
+          Text(fish, textAlign: TextAlign.center)
+        ]));
   }
 }
 
@@ -277,7 +316,8 @@ class _FishStocked extends StatelessWidget {
           Wrap(
               spacing: 16,
               runSpacing: 16,
-              children: fishStock.map((fish) => _FishStockedGridItem(fish)).toList())
+              children:
+                  fishStock.map((fish) => _FishStockedGridItem(fish)).toList())
         ],
       ),
     );
@@ -296,11 +336,11 @@ class _FishingTypes extends StatelessWidget {
       return SizedBox(
           width: 90,
           height: 75,
-          child: Image.asset('images/fish_$random.png',fit: BoxFit.contain));
-          // child: DecoratedBox(
-          //     decoration: const BoxDecoration(color: Colors.green),
-          //     child: Align(
-          //         child: Text(title), alignment: Alignment.bottomCenter)));
+          child: Image.asset('images/fish_$random.png', fit: BoxFit.contain));
+      // child: DecoratedBox(
+      //     decoration: const BoxDecoration(color: Colors.green),
+      //     child: Align(
+      //         child: Text(title), alignment: Alignment.bottomCenter)));
     }
 
     Widget _row = Row(

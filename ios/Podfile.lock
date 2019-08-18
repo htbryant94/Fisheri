@@ -17,8 +17,14 @@ PODS:
   - Firebase/Firestore (6.5.0):
     - Firebase/CoreOnly
     - FirebaseFirestore (~> 1.4.2)
+  - Firebase/Storage (6.5.0):
+    - Firebase/CoreOnly
+    - FirebaseStorage (~> 3.4.0)
   - firebase_core (0.0.1):
     - Firebase/Core
+    - Flutter
+  - firebase_storage (0.0.1):
+    - Firebase/Storage
     - Flutter
   - FirebaseAnalytics (6.0.4):
     - FirebaseCore (~> 6.1)
@@ -52,6 +58,10 @@ PODS:
     - FirebaseCore (~> 6.0)
     - GoogleUtilities/Environment (~> 6.0)
     - GoogleUtilities/UserDefaults (~> 6.0)
+  - FirebaseStorage (3.4.0):
+    - FirebaseAuthInterop (~> 1.0)
+    - FirebaseCore (~> 6.0)
+    - GTMSessionFetcher/Core (~> 1.1)
   - Flutter (1.0.0)
   - google_maps_flutter (0.0.1):
     - Flutter
@@ -101,6 +111,7 @@ PODS:
     - gRPC-Core/Interface (= 1.21.0)
     - nanopb (~> 0.3)
   - gRPC-Core/Interface (1.21.0)
+  - GTMSessionFetcher/Core (1.2.2)
   - leveldb-library (1.20)
   - nanopb (0.3.901):
     - nanopb/decode (= 0.3.901)
@@ -112,6 +123,7 @@ PODS:
 DEPENDENCIES:
   - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
+  - firebase_storage (from `.symlinks/plugins/firebase_storage/ios`)
   - Flutter (from `.symlinks/flutter/ios`)
   - google_maps_flutter (from `.symlinks/plugins/google_maps_flutter/ios`)
 
@@ -124,11 +136,13 @@ SPEC REPOS:
     - FirebaseCore
     - FirebaseFirestore
     - FirebaseInstanceID
+    - FirebaseStorage
     - GoogleAppMeasurement
     - GoogleMaps
     - GoogleUtilities
     - "gRPC-C++"
     - gRPC-Core
+    - GTMSessionFetcher
     - leveldb-library
     - nanopb
     - Protobuf
@@ -138,6 +152,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/cloud_firestore/ios"
   firebase_core:
     :path: ".symlinks/plugins/firebase_core/ios"
+  firebase_storage:
+    :path: ".symlinks/plugins/firebase_storage/ios"
   Flutter:
     :path: ".symlinks/flutter/ios"
   google_maps_flutter:
@@ -148,11 +164,13 @@ SPEC CHECKSUMS:
   cloud_firestore: 5698a9bd01b94fd31e7b7b56d8fe1665f4fb43cb
   Firebase: dedc9e48ea3f3649ad5f6b982f8a0c73508a14b5
   firebase_core: bae884ab4513092d80d01406455054a5af5482dd
+  firebase_storage: ad2e96fb734b0254a42adba43f9aafb77de84d0a
   FirebaseAnalytics: 3fb375bc9d13779add4039716f868d233a473fad
   FirebaseAuthInterop: 0ffa57668be100582bb7643d4fcb7615496c41fc
   FirebaseCore: aecf02fb2274ec361b9bebeac112f5daa18273bd
   FirebaseFirestore: 41a035642eb017fc7206318985501626993840bd
   FirebaseInstanceID: 662b8108a09fe9ed01aafdedba100fde8536b0f6
+  FirebaseStorage: 618dd8fd886b30adf6e5d1915b1f5c18cb5c3944
   Flutter: 58dd7d1b27887414a370fcccb9e645c08ffd7a6a
   google_maps_flutter: 78a52114c898b42ea647919679a4c58b70abe876
   GoogleAppMeasurement: 183bd916af7f80deb67c01888368f1108d641832
@@ -160,6 +178,7 @@ SPEC CHECKSUMS:
   GoogleUtilities: d2b0e277a95962e09bb27f5cd42f5f0b6a506c7d
   "gRPC-C++": 9dfe7b44821e7b3e44aacad2af29d2c21f7cde83
   gRPC-Core: c9aef9a261a1247e881b18059b84d597293c9947
+  GTMSessionFetcher: 61bb0f61a4cb560030f1222021178008a5727a23
   leveldb-library: 08cba283675b7ed2d99629a4bc5fd052cd2bb6a5
   nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
   Protobuf: 1097ca58584c8d9be81bfbf2c5ff5975648dd87a
