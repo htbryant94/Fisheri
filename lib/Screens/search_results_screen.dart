@@ -27,6 +27,7 @@ class SearchResultsScreen extends StatelessWidget {
             final _venueType = snapshot.data.documents[index]['isLake'] ? 'LAKE' : 'SHOP';
             // final _fishStock = snapshot.data.documents[index]['fish_stock'];
             final List<dynamic> _fishStockArray = snapshot.data.documents[index]['fish_stock_array'];
+            final List<dynamic> _amenities = snapshot.data.documents[index]['amenities_array'];
             final _address = snapshot.data.documents[index]['address'];
             return SearchResultCell(
               imageURL: 'images/lake.jpg',
@@ -35,6 +36,7 @@ class SearchResultsScreen extends StatelessWidget {
               distance: '5 miles',
               isOpen: true,
               address: VenueAddressJSONSerializer().fromMap(_address),
+              amenities: _amenities,
               // fishStock: VenueFishStockJSONSerializer().fromMap(_fishStock),
               fishStock: _fishStockArray,
             );

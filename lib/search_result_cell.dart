@@ -5,16 +5,17 @@ import 'Screens/detail_screen.dart';
 import 'house_colors.dart';
 
 class SearchResultCell extends StatelessWidget {
-  SearchResultCell({
-    Key key,
-    this.imageURL,
-    this.title,
-    this.venueType,
-    this.isOpen,
-    this.distance,
-    this.fishStock,
-    this.address
-  }) : super(key: key);
+  SearchResultCell(
+      {Key key,
+      this.imageURL,
+      this.title,
+      this.venueType,
+      this.isOpen,
+      this.distance,
+      this.fishStock,
+      this.address,
+      this.amenities})
+      : super(key: key);
 
   final String imageURL;
   final String title;
@@ -23,17 +24,17 @@ class SearchResultCell extends StatelessWidget {
   final String distance;
   final List<dynamic> fishStock;
   final VenueAddress address;
-
-  
+  final List<dynamic> amenities;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         print("Tapped");
-        Navigator.push(context, 
-        MaterialPageRoute(builder: (context) => SecondRoute(title, fishStock))
-        );
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => SecondRoute(title, fishStock, amenities)));
       },
       child: Container(
         height: 120,
@@ -55,21 +56,21 @@ class SearchResultCell extends StatelessWidget {
 }
 
 class SecondRoute extends StatelessWidget {
-  SecondRoute(this.title, this.fishStock);
+  SecondRoute(this.title, this.fishStock, this.amenities);
 
   final String title;
-  final List<dynamic> fishStock; 
+  final List<dynamic> fishStock;
+  final List<dynamic> amenities;
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
         backgroundColor: HouseColors.primaryGreen,
       ),
       body: Center(
-        child: DetailScreen(true, title, fishStock),
+        child: DetailScreen(true, title, fishStock, amenities),
       ),
     );
   }
@@ -82,10 +83,12 @@ class _SearchResultCellImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AspectRatio(
-      child: Image.asset(imageURL, fit: BoxFit.fill),
-      aspectRatio: 1.0,
-    );
+    return Hero(
+        tag: 'HeroImage',
+        child: AspectRatio(
+          child: Image.asset(imageURL, fit: BoxFit.fill),
+          aspectRatio: 1.0,
+        ));
     // return Image.asset(imageURL, fit: BoxFit.fill);
   }
 }
@@ -116,7 +119,8 @@ class _SearchResultCellInfo extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  _Title(title),
+                  Hero(child: _Title(title), tag: 'HeroTitle'),
+                  // _Title(title),
                   _VenueType(venueType),
                   _VenueOperational(isOpen),
                   Row(

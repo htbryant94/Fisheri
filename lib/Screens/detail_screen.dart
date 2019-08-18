@@ -4,13 +4,16 @@ import 'package:fisheri/house_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:fisheri/models/fish_stock.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_storage_image/firebase_storage_image.dart';
 
 class DetailScreen extends StatelessWidget {
-  DetailScreen(this.descriptionExpanded, this.title, this.fishStock);
+  DetailScreen(
+      this.descriptionExpanded, this.title, this.fishStock, this.amenities);
 
   final bool descriptionExpanded;
   final String title;
   final List<dynamic> fishStock;
+  final List<dynamic> amenities;
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +28,9 @@ class DetailScreen extends StatelessWidget {
         _ButtonSection(Colors.blue),
         SizedBox(height: 16),
         _FishStocked(fishStock),
-        _FishingTypes(),
-        _AmenitiesSection(),
+        // _FishingTypes(),
+        _AmenitiesStack(amenities),
+        // _AmenitiesSection(),
         _Tickets(),
         _OpeningHours(),
         _FishingRules(true),
@@ -43,12 +47,14 @@ class _ImageCarousel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Image.asset(
-      imageURL,
-      width: 600,
-      height: 240,
-      fit: BoxFit.cover,
-    );
+    return Hero(
+        tag: 'HeroImage',
+        child: Image.asset(
+          imageURL,
+          width: 600,
+          height: 240,
+          fit: BoxFit.cover,
+        ));
   }
 }
 
@@ -245,7 +251,6 @@ class _ButtonSection extends StatelessWidget {
 // }
 
 class FishStockedGridItem2 extends StatefulWidget {
-
   @override
   State<StatefulWidget> createState() {
     return _FishStockedGridItemState();
@@ -253,7 +258,6 @@ class FishStockedGridItem2 extends StatefulWidget {
 }
 
 class _FishStockedGridItemState extends State<FishStockedGridItem2> {
-
   String downloadURL;
 
   @override
@@ -270,7 +274,6 @@ class _FishStockedGridItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     Future<String> downloadImageURL() async {
       StorageReference ref = FirebaseStorage.instance.ref().child('fish/stock');
       final fishURL = fish.replaceAll(" ", "_").toLowerCase();
@@ -284,19 +287,56 @@ class _FishStockedGridItem extends StatelessWidget {
     final storageURL = 'gs://fishing-finder-594f0.appspot.com/fish/stock/';
     final storageRef = FirebaseStorage.instance.ref().child('fish/stock');
     final fishURL = fish.replaceAll(" ", "_").toLowerCase();
-    // final actualURL = "$storageURL$fishURL.png";
+    final actualURL = "$storageURL$fishURL.png";
     final storageImage = storageRef.child('$fishURL.png');
+    print('storage image $actualURL');
 
     return SizedBox(
         width: 65,
         // height: 120,
-        child: Column(
-          children: [
-            // FadeInImage(image: NetworkImage(storageImage),)
-          // Image(image: FirebaseStorageImage(actualURL), loadingBuilder: ImageLoadingBuilder(context, child, loadingProgress),),
+        child: Column(children: [
+          AspectRatio(
+              aspectRatio: 1.0,
+              child: Image(image: FirebaseStorageImage(actualURL))),
           SizedBox(height: 8),
           Text(fish, textAlign: TextAlign.center)
         ]));
+  }
+}
+
+class _AmenitiesGridItem extends StatelessWidget {
+  _AmenitiesGridItem(this.amenity);
+
+  final String amenity;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(child: _Amenity(amenity));
+  }
+}
+
+class _AmenitiesStack extends StatelessWidget {
+  _AmenitiesStack(this.amenities);
+
+  final List<dynamic> amenities;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(32, 8, 32, 8),
+      child: Column(
+        children: [
+          _Header('Amenities'),
+          const SizedBox(height: 16),
+          Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: amenities
+                  .map((amenity) => _AmenitiesGridItem(amenity))
+                  .toList())
+        ],
+      ),
+    );
   }
 }
 
@@ -324,60 +364,63 @@ class _FishStocked extends StatelessWidget {
   }
 }
 
-class _FishingTypes extends StatelessWidget {
-  _FishingTypes();
+// class _FishingTypes extends StatelessWidget {
+//   _FishingTypes();
 
-  // Implement with list and install via wrap
+//   // Implement with list and install via wrap
 
-  @override
-  Widget build(BuildContext context) {
-    var random = Random().nextInt(10) + 1;
-    SizedBox _box(String title) {
-      return SizedBox(
-          width: 90,
-          height: 75,
-          child: Image.asset('images/fish_$random.png', fit: BoxFit.contain));
-      // child: DecoratedBox(
-      //     decoration: const BoxDecoration(color: Colors.green),
-      //     child: Align(
-      //         child: Text(title), alignment: Alignment.bottomCenter)));
-    }
+//   @override
+//   Widget build(BuildContext context) {
+//     var random = Random().nextInt(10) + 1;
+//     SizedBox _box(String title) {
+//       return SizedBox(
+//           width: 90,
+//           height: 75,
+//           child: Image.asset('images/fish_$random.png', fit: BoxFit.contain));
+//       // child: DecoratedBox(
+//       //     decoration: const BoxDecoration(color: Colors.green),
+//       //     child: Align(
+//       //         child: Text(title), alignment: Alignment.bottomCenter)));
+//     }
 
-    Widget _row = Row(
-      children: [_box('1'), _box('2'), _box('3')],
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    );
+//     Widget _row = Row(
+//       children: [_box('1'), _box('2'), _box('3')],
+//       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//     );
 
-    Widget _grid = Column(
-      children: [_row, SizedBox(height: 16), _row],
-    );
+//     Widget _grid = Column(
+//       children: [_row, SizedBox(height: 16), _row],
 
-    return Container(
-      padding: const EdgeInsets.fromLTRB(32, 8, 32, 8),
-      child: Column(
-        children: [
-          _Header('Types of Fishing'),
-          const SizedBox(height: 16),
-          _grid
-        ],
-      ),
-    );
-  }
-}
+//     return Container(
+//       padding: const EdgeInsets.fromLTRB(32, 8, 32, 8),
+//       child: Column(
+//         children: [
+//           _Header('Types of Fishing'),
+//           const SizedBox(height: 16),
+//           _grid
+//         ],
+//       ),
+//     );
+//   }
+// }
 
 class _Amenity extends StatelessWidget {
-  _Amenity();
+  _Amenity(this.amenity);
+
+  final String amenity;
 
   @override
   Widget build(BuildContext context) {
     return Row(
-      children: [Icon(Icons.person), Text('Toilets')],
+      children: [Icon(Icons.person), Text(amenity)],
     );
   }
 }
 
 class _AmenitiesSection extends StatelessWidget {
-  _AmenitiesSection();
+  _AmenitiesSection(this.amenities);
+
+  final List<dynamic> amenities;
 
   @override
   Widget build(BuildContext context) {
@@ -392,16 +435,17 @@ class _AmenitiesSection extends StatelessWidget {
               children: <Widget>[
                 Column(
                   children: <Widget>[
-                    _Amenity(),
-                    _Amenity(),
-                    _Amenity(),
+                    _AmenitiesStack(amenities)
+                    // _Amenity(),
+                    // _Amenity(),
+                    // _Amenity(),
                   ],
                 ),
                 Column(
                   children: <Widget>[
-                    _Amenity(),
-                    _Amenity(),
-                    _Amenity(),
+                    // _Amenity(),
+                    // _Amenity(),
+                    // _Amenity(),
                   ],
                 )
               ],
