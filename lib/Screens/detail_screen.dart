@@ -5,11 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:fisheri/models/fish_stock.dart';
 
 class DetailScreen extends StatelessWidget {
-  DetailScreen(this.descriptionExpanded, this.title, this.fishStock);
+  DetailScreen(
+      this.descriptionExpanded, this.title, this.fishStock, this.amenities);
 
   final bool descriptionExpanded;
   final String title;
   final List<dynamic> fishStock;
+  final List<dynamic> amenities;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +26,8 @@ class DetailScreen extends StatelessWidget {
         SizedBox(height: 16),
         _FishStocked(fishStock),
         _FishingTypes(),
-        _AmenitiesSection(),
+        _AmenitiesStack(amenities),
+        // _AmenitiesSection(),
         _Tickets(),
         _OpeningHours(),
         _FishingRules(true),
@@ -82,7 +85,7 @@ class _TitleSection extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _TitleHeader(title), 
+                _TitleHeader(title),
                 SizedBox(height: 8),
                 _TitleSubHeader(subtitle)
               ],
@@ -262,6 +265,42 @@ class _FishStockedGridItem extends StatelessWidget {
   }
 }
 
+class _AmenitiesGridItem extends StatelessWidget {
+  _AmenitiesGridItem(this.amenity);
+
+  final String amenity;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(child: _Amenity(amenity));
+  }
+}
+
+class _AmenitiesStack extends StatelessWidget {
+  _AmenitiesStack(this.amenities);
+
+  final List<dynamic> amenities;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(32, 8, 32, 8),
+      child: Column(
+        children: [
+          _Header('Amenities'),
+          const SizedBox(height: 16),
+          Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: amenities
+                  .map((amenity) => _AmenitiesGridItem(amenity))
+                  .toList())
+        ],
+      ),
+    );
+  }
+}
+
 class _FishStocked extends StatelessWidget {
   _FishStocked(this.fishStock);
 
@@ -328,18 +367,22 @@ class _FishingTypes extends StatelessWidget {
 }
 
 class _Amenity extends StatelessWidget {
-  _Amenity();
+  _Amenity(this.amenity);
+
+  final String amenity;
 
   @override
   Widget build(BuildContext context) {
     return Row(
-      children: [Icon(Icons.person), Text('Toilets')],
+      children: [Icon(Icons.person), Text(amenity)],
     );
   }
 }
 
 class _AmenitiesSection extends StatelessWidget {
-  _AmenitiesSection();
+  _AmenitiesSection(this.amenities);
+
+  final List<dynamic> amenities;
 
   @override
   Widget build(BuildContext context) {
@@ -354,16 +397,17 @@ class _AmenitiesSection extends StatelessWidget {
               children: <Widget>[
                 Column(
                   children: <Widget>[
-                    _Amenity(),
-                    _Amenity(),
-                    _Amenity(),
+                    _AmenitiesStack(amenities)
+                    // _Amenity(),
+                    // _Amenity(),
+                    // _Amenity(),
                   ],
                 ),
                 Column(
                   children: <Widget>[
-                    _Amenity(),
-                    _Amenity(),
-                    _Amenity(),
+                    // _Amenity(),
+                    // _Amenity(),
+                    // _Amenity(),
                   ],
                 )
               ],

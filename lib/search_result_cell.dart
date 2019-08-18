@@ -13,7 +13,8 @@ class SearchResultCell extends StatelessWidget {
       this.isOpen,
       this.distance,
       this.fishStock,
-      this.address})
+      this.address,
+      this.amenities})
       : super(key: key);
 
   final String imageURL;
@@ -23,6 +24,7 @@ class SearchResultCell extends StatelessWidget {
   final String distance;
   final List<dynamic> fishStock;
   final VenueAddress address;
+  final List<dynamic> amenities;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +34,7 @@ class SearchResultCell extends StatelessWidget {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => SecondRoute(title, fishStock)));
+                builder: (context) => SecondRoute(title, fishStock, amenities)));
       },
       child: Container(
         height: 120,
@@ -54,10 +56,11 @@ class SearchResultCell extends StatelessWidget {
 }
 
 class SecondRoute extends StatelessWidget {
-  SecondRoute(this.title, this.fishStock);
+  SecondRoute(this.title, this.fishStock, this.amenities);
 
   final String title;
   final List<dynamic> fishStock;
+  final List<dynamic> amenities;
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +70,7 @@ class SecondRoute extends StatelessWidget {
         backgroundColor: HouseColors.primaryGreen,
       ),
       body: Center(
-        child: DetailScreen(true, title, fishStock),
+        child: DetailScreen(true, title, fishStock, amenities),
       ),
     );
   }
