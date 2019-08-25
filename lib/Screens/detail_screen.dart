@@ -10,6 +10,7 @@ import 'package:fisheri/Screens/detail_screen/image_carousel.dart';
 import 'package:fisheri/Screens/detail_screen/amenities_section.dart';
 import 'package:fisheri/Screens/detail_screen/fishing_types_section.dart';
 import 'package:fisheri/Screens/detail_screen/fish_stocked_section.dart';
+import 'package:fisheri/Screens/detail_screen/tickets_section.dart';
 
 class DetailScreen extends StatelessWidget {
   DetailScreen(this.descriptionExpanded, this.title, this.fishStock,
@@ -36,7 +37,7 @@ class DetailScreen extends StatelessWidget {
         FishStockedSection(fishStock),
         FishingTypesSection(fishTypes),
         AmenitiesSection(amenities),
-        _Tickets(),
+        TicketsSection(),
         _OpeningHours(),
         _FishingRules(true),
       ],
@@ -58,82 +59,7 @@ class _Header extends StatelessWidget {
   }
 }
 
-class _Tickets extends StatelessWidget {
-  _Tickets();
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
-        child: Column(
-          children: <Widget>[
-            _Header('Tickets'),
-            SizedBox(height: 8),
-            Row(
-              children: <Widget>[
-                Text('Day', style: TextStyle(fontWeight: FontWeight.bold)),
-                SizedBox(width: 16),
-                Text('Price from: £39'),
-                Spacer(),
-                RaisedButton(
-                    child: Text(
-                      "See more",
-                      style: TextStyle(color: HouseColors.primaryGreen),
-                    ),
-                    color: HouseColors.accentGreen,
-                    onPressed: () {})
-              ],
-            ),
-            Row(
-              children: <Widget>[
-                Text('Syndicate',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
-                SizedBox(width: 16),
-                Text('Price from: £39'),
-                Spacer(),
-                RaisedButton(
-                    child: Text(
-                      "See more",
-                      style: TextStyle(color: HouseColors.primaryGreen),
-                    ),
-                    color: HouseColors.accentGreen,
-                    onPressed: () {})
-              ],
-            ),
-            Row(
-              children: <Widget>[
-                Text('Season', style: TextStyle(fontWeight: FontWeight.bold)),
-                SizedBox(width: 16),
-                Text('Price from: £39'),
-                Spacer(),
-                RaisedButton(
-                    child: Text(
-                      "See more",
-                      style: TextStyle(color: HouseColors.primaryGreen),
-                    ),
-                    color: HouseColors.accentGreen,
-                    onPressed: () {})
-              ],
-            ),
-            Row(
-              children: <Widget>[
-                Text('Club', style: TextStyle(fontWeight: FontWeight.bold)),
-                SizedBox(width: 16),
-                Text('Price from: £39'),
-                Spacer(),
-                RaisedButton(
-                    child: Text(
-                      "See more",
-                      style: TextStyle(color: HouseColors.primaryGreen),
-                    ),
-                    color: HouseColors.accentGreen,
-                    onPressed: () {})
-              ],
-            )
-          ],
-        ));
-  }
-}
 
 class _OpeningHoursRow extends StatelessWidget {
   _OpeningHoursRow(this.day, this.openTime, this.closeTime);
