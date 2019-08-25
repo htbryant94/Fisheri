@@ -11,6 +11,7 @@ import 'package:fisheri/Screens/detail_screen/amenities_section.dart';
 import 'package:fisheri/Screens/detail_screen/fishing_types_section.dart';
 import 'package:fisheri/Screens/detail_screen/fish_stocked_section.dart';
 import 'package:fisheri/Screens/detail_screen/tickets_section.dart';
+import 'package:fisheri/Screens/detail_screen/opening_hours_section.dart';
 
 class DetailScreen extends StatelessWidget {
   DetailScreen(this.descriptionExpanded, this.title, this.fishStock,
@@ -38,7 +39,7 @@ class DetailScreen extends StatelessWidget {
         FishingTypesSection(fishTypes),
         AmenitiesSection(amenities),
         TicketsSection(),
-        _OpeningHours(),
+        OpeningHoursSection(),
         _FishingRules(true),
       ],
     );
@@ -56,48 +57,6 @@ class _Header extends StatelessWidget {
         alignment: Alignment.centerLeft,
         child: Text(header,
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)));
-  }
-}
-
-
-
-class _OpeningHoursRow extends StatelessWidget {
-  _OpeningHoursRow(this.day, this.openTime, this.closeTime);
-
-  final String day;
-  final String openTime;
-  final String closeTime;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Text(day),
-          Text('$openTime - $closeTime'),
-        ]);
-  }
-}
-
-class _OpeningHours extends StatelessWidget {
-  _OpeningHours();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
-      child: Column(children: <Widget>[
-        _Header('Opening Hours'),
-        SizedBox(height: 16),
-        _OpeningHoursRow('Monday', '09:00', '22:00'),
-        _OpeningHoursRow('Tuesday', '09:00', '22:00'),
-        _OpeningHoursRow('Wednesday', '09:00', '22:00'),
-        _OpeningHoursRow('Thursday', '09:00', '22:00'),
-        _OpeningHoursRow('Friday', '09:00', '22:00'),
-        _OpeningHoursRow('Saturday', '09:00', '22:00'),
-        _OpeningHoursRow('Sunday', '09:00', '22:00'),
-      ]),
-    );
   }
 }
 
