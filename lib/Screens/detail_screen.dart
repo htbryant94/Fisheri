@@ -5,6 +5,7 @@ import 'package:firebase_storage_image/firebase_storage_image.dart';
 
 import 'package:fisheri/Screens/detail_screen/title_section.dart';
 import 'package:fisheri/Screens/detail_screen/description_section.dart';
+import 'package:fisheri/Screens/detail_screen/button_section.dart';
 
 class DetailScreen extends StatelessWidget {
   DetailScreen(this.descriptionExpanded, this.title, this.fishStock,
@@ -26,7 +27,7 @@ class DetailScreen extends StatelessWidget {
           subtitle: 'Biggleswade, Hertfordshire',
         ),
         DescriptionSection(descriptionExpanded),
-        _ButtonSection(Colors.blue),
+        ButtonSection(Colors.blue),
         SizedBox(height: 16),
         _FishStockedSection(fishStock),
         _FishingTypesSection(fishTypes),
@@ -71,46 +72,7 @@ class _Header extends StatelessWidget {
   }
 }
 
-class _ButtonSection extends StatelessWidget {
-  _ButtonSection(this.color);
 
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    Column _buildButtonColumn(Color color, IconData icon, String label) {
-      return Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, color: color),
-          Container(
-            margin: const EdgeInsets.only(top: 8),
-            child: Text(
-              label,
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w400,
-                color: color,
-              ),
-            ),
-          ),
-        ],
-      );
-    }
-
-    return Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          _buildButtonColumn(color, Icons.call, 'Call'),
-          _buildButtonColumn(color, Icons.language, 'Website'),
-          _buildButtonColumn(color, Icons.email, 'Email'),
-        ],
-      ),
-    );
-  }
-}
 
 class _GridItem extends StatelessWidget {
   _GridItem({this.item, this.image, this.width});
