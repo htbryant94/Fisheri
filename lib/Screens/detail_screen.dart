@@ -1,8 +1,9 @@
 import 'package:fisheri/house_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:fisheri/models/fish_stock.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_storage_image/firebase_storage_image.dart';
+
+import 'package:fisheri/Screens/detail_screen/title_section.dart';
 
 class DetailScreen extends StatelessWidget {
   DetailScreen(this.descriptionExpanded, this.title, this.fishStock,
@@ -16,12 +17,13 @@ class DetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // print('With Weight: ${fishStock.withWeight.first.isStocked}');
-    // print('Crucian Carp in Stock: ${fishStock.crucianCarp}');
     return ListView(
       children: [
         _ImageCarousel('images/lake.jpg'),
-        _TitleSection(title: title, subtitle: 'Biggleswade, Hertfordshire'),
+        TitleSection(
+          title: title,
+          subtitle: 'Biggleswade, Hertfordshire',
+        ),
         _DescriptionSection(descriptionExpanded),
         _ButtonSection(Colors.blue),
         SizedBox(height: 16),
@@ -31,7 +33,6 @@ class DetailScreen extends StatelessWidget {
         _Tickets(),
         _OpeningHours(),
         _FishingRules(true),
-        // _OverviewSection(),
       ],
     );
   }
@@ -66,52 +67,6 @@ class _Header extends StatelessWidget {
         alignment: Alignment.centerLeft,
         child: Text(header,
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)));
-  }
-}
-
-class _TitleSection extends StatelessWidget {
-  _TitleSection({Key key, this.title, this.subtitle}) : super(key: key);
-
-  final String title;
-  final String subtitle;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _TitleHeader(title),
-          SizedBox(height: 8),
-          _TitleSubHeader(subtitle)
-        ],
-      )
-    );
-  }
-}
-
-class _TitleHeader extends StatelessWidget {
-  _TitleHeader(this.title);
-
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(title,
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22));
-  }
-}
-
-class _TitleSubHeader extends StatelessWidget {
-  _TitleSubHeader(this.subtitle);
-
-  final String subtitle;
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(subtitle,
-        style: TextStyle(color: Colors.grey[500], fontSize: 18));
   }
 }
 
@@ -339,7 +294,6 @@ class _FishStockedGridItem extends StatelessWidget {
       image: Image(image: FirebaseStorageImage(actualURL)),
       width: 65,
     );
-
   }
 }
 

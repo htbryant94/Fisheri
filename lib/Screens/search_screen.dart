@@ -8,7 +8,7 @@ class SearchScreen extends StatelessWidget {
   SearchScreen(this.mapController);
 
   // Geoflutterfire _geo = Geoflutterfire();
-  Firestore _firestore = Firestore.instance;
+  final Firestore _firestore = Firestore.instance;
 
   final Completer<GoogleMapController> mapController;
 
