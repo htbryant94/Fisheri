@@ -1,8 +1,6 @@
 import 'package:fisheri/Screens/detail_screen/fishing_rules_section.dart';
-import 'package:fisheri/house_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:fisheri/models/fish_stock.dart';
-import 'package:firebase_storage_image/firebase_storage_image.dart';
 
 import 'package:fisheri/Screens/detail_screen/title_section.dart';
 import 'package:fisheri/Screens/detail_screen/description_section.dart';

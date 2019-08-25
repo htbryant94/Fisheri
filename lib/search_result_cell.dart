@@ -1,7 +1,7 @@
 import 'package:fisheri/models/venue_address.dart';
 import 'package:fisheri/models/fish_stock.dart';
 import 'package:flutter/material.dart';
-import 'Screens/detail_screen.dart';
+import 'Screens/detail_screen/detail_screen.dart';
 import 'house_colors.dart';
 
 class SearchResultCell extends StatelessWidget {
