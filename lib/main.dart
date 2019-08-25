@@ -28,13 +28,13 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => HomePageState();
 }
 
-class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
-  
+class HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
   Completer<GoogleMapController> _controller = Completer();
 
   TabController _tabController;
   int _selectedTab = 0;
- 
+
   @override
   void initState() {
     super.initState();
@@ -81,17 +81,14 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin 
         centerTitle: true);
 
     return new MaterialApp(
-      home: Scaffold(
-          appBar: _appBar,
-          body: Stack(
-            children: [
-            _buildTabContent(),
-            BottomTabBar(
-              selectedTab: _selectedTab,
-              onTap: _tabSelected,
-            )
-          ])
-          )
-    );
+        home: Scaffold(
+            appBar: _appBar,
+            body: Stack(children: [
+              _buildTabContent(),
+              BottomTabBar(
+                selectedTab: _selectedTab,
+                onTap: _tabSelected,
+              )
+            ])));
   }
 }

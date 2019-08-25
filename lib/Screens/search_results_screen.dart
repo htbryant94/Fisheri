@@ -17,16 +17,17 @@ class SearchResultsScreen extends StatelessWidget {
       // stream: Firestore.instance.collection('venues_search').snapshots(),
       stream: Firestore.instance.collection('venues_detail').snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (!snapshot.hasData)
+        if (!snapshot.hasData) {
           return CircularProgressIndicator(); // Add a loading screen here
+        }
         return ListView.separated(
           itemCount: snapshot.data.documents.length,
           separatorBuilder: (BuildContext context, int index) =>
               Divider(height: 1, color: Colors.grey[700]),
           itemBuilder: (context, index) {
             final _venueType = snapshot.data.documents[index]['isLake'] ? 'LAKE' : 'SHOP';
-            // final _fishStock = snapshot.data.documents[index]['fish_stock'];
             final List<dynamic> _fishStockArray = snapshot.data.documents[index]['fish_stock_array'];
+            final List<dynamic> _fishingTypes = snapshot.data.documents[index]['fishing_types_array'];
             final List<dynamic> _amenities = snapshot.data.documents[index]['amenities_array'];
             final _address = snapshot.data.documents[index]['address'];
             return SearchResultCell(
@@ -39,10 +40,13 @@ class SearchResultsScreen extends StatelessWidget {
               amenities: _amenities,
               // fishStock: VenueFishStockJSONSerializer().fromMap(_fishStock),
               fishStock: _fishStockArray,
+              fishTypes: _fishingTypes,
             );
           },
         );
       },
     );
   }
+
+
 }
