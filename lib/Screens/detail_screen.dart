@@ -8,6 +8,8 @@ import 'package:fisheri/Screens/detail_screen/description_section.dart';
 import 'package:fisheri/Screens/detail_screen/button_section.dart';
 import 'package:fisheri/Screens/detail_screen/image_carousel.dart';
 import 'package:fisheri/Screens/detail_screen/amenities_section.dart';
+import 'package:fisheri/Screens/detail_screen/fishing_types_section.dart';
+import 'package:fisheri/Screens/detail_screen/grid_item.dart';
 
 class DetailScreen extends StatelessWidget {
   DetailScreen(this.descriptionExpanded, this.title, this.fishStock,
@@ -32,7 +34,7 @@ class DetailScreen extends StatelessWidget {
         ButtonSection(Colors.blue),
         SizedBox(height: 16),
         _FishStockedSection(fishStock),
-        _FishingTypesSection(fishTypes),
+        FishingTypesSection(fishTypes),
         AmenitiesSection(amenities),
         _Tickets(),
         _OpeningHours(),
@@ -53,68 +55,6 @@ class _Header extends StatelessWidget {
         alignment: Alignment.centerLeft,
         child: Text(header,
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)));
-  }
-}
-
-class _GridItem extends StatelessWidget {
-  _GridItem({this.item, this.image, this.width});
-
-  final String item;
-  final Image image;
-  final double width;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-        width: width,
-        child: Column(children: [
-          AspectRatio(aspectRatio: 1.5, child: image),
-          SizedBox(height: 8),
-          Text(item, textAlign: TextAlign.center)
-        ]));
-  }
-}
-
-class _FishingTypesSection extends StatelessWidget {
-  _FishingTypesSection(this.fishTypes);
-
-  final List<dynamic> fishTypes;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(32, 8, 32, 8),
-      child: Column(
-        children: [
-          _Header('Fishing Types'),
-          const SizedBox(height: 16),
-          Wrap(
-              spacing: 16,
-              runSpacing: 16,
-              children: fishTypes
-                  .map((types) => _FishingTypeGridItem(types))
-                  .toList())
-        ],
-      ),
-    );
-  }
-}
-
-class _FishingTypeGridItem extends StatelessWidget {
-  _FishingTypeGridItem(this.type);
-
-  final String type;
-
-  @override
-  Widget build(BuildContext context) {
-    final storageURL = 'gs://fishing-finder-594f0.appspot.com/fishing/types/';
-    final actualURL = "$storageURL$type.jpg";
-
-    return _GridItem(
-      item: type,
-      image: Image(image: FirebaseStorageImage(actualURL)),
-      width: 120,
-    );
   }
 }
 
@@ -153,7 +93,7 @@ class _FishStockedGridItem extends StatelessWidget {
     final fishURL = fish.replaceAll(" ", "_").toLowerCase();
     final actualURL = "$storageURL$fishURL.png";
 
-    return _GridItem(
+    return GridItem(
       item: fish,
       image: Image(image: FirebaseStorageImage(actualURL)),
       width: 65,
