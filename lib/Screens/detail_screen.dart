@@ -9,7 +9,7 @@ import 'package:fisheri/Screens/detail_screen/button_section.dart';
 import 'package:fisheri/Screens/detail_screen/image_carousel.dart';
 import 'package:fisheri/Screens/detail_screen/amenities_section.dart';
 import 'package:fisheri/Screens/detail_screen/fishing_types_section.dart';
-import 'package:fisheri/Screens/detail_screen/grid_item.dart';
+import 'package:fisheri/Screens/detail_screen/fish_stocked_section.dart';
 
 class DetailScreen extends StatelessWidget {
   DetailScreen(this.descriptionExpanded, this.title, this.fishStock,
@@ -33,7 +33,7 @@ class DetailScreen extends StatelessWidget {
         DescriptionSection(descriptionExpanded),
         ButtonSection(Colors.blue),
         SizedBox(height: 16),
-        _FishStockedSection(fishStock),
+        FishStockedSection(fishStock),
         FishingTypesSection(fishTypes),
         AmenitiesSection(amenities),
         _Tickets(),
@@ -55,49 +55,6 @@ class _Header extends StatelessWidget {
         alignment: Alignment.centerLeft,
         child: Text(header,
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)));
-  }
-}
-
-class _FishStockedSection extends StatelessWidget {
-  _FishStockedSection(this.fishStock);
-
-  final List<dynamic> fishStock;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(32, 8, 32, 8),
-      child: Column(
-        children: [
-          _Header('Fish Stocked'),
-          const SizedBox(height: 16),
-          Wrap(
-              spacing: 16,
-              runSpacing: 16,
-              children:
-                  fishStock.map((fish) => _FishStockedGridItem(fish)).toList())
-        ],
-      ),
-    );
-  }
-}
-
-class _FishStockedGridItem extends StatelessWidget {
-  _FishStockedGridItem(this.fish);
-
-  final String fish;
-
-  @override
-  Widget build(BuildContext context) {
-    final storageURL = 'gs://fishing-finder-594f0.appspot.com/fish/stock/';
-    final fishURL = fish.replaceAll(" ", "_").toLowerCase();
-    final actualURL = "$storageURL$fishURL.png";
-
-    return GridItem(
-      item: fish,
-      image: Image(image: FirebaseStorageImage(actualURL)),
-      width: 65,
-    );
   }
 }
 
