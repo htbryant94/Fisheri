@@ -4,6 +4,7 @@ import 'package:fisheri/models/fish_stock.dart';
 import 'package:firebase_storage_image/firebase_storage_image.dart';
 
 import 'package:fisheri/Screens/detail_screen/title_section.dart';
+import 'package:fisheri/Screens/detail_screen/description_section.dart';
 
 class DetailScreen extends StatelessWidget {
   DetailScreen(this.descriptionExpanded, this.title, this.fishStock,
@@ -24,7 +25,7 @@ class DetailScreen extends StatelessWidget {
           title: title,
           subtitle: 'Biggleswade, Hertfordshire',
         ),
-        _DescriptionSection(descriptionExpanded),
+        DescriptionSection(descriptionExpanded),
         _ButtonSection(Colors.blue),
         SizedBox(height: 16),
         _FishStockedSection(fishStock),
@@ -67,38 +68,6 @@ class _Header extends StatelessWidget {
         alignment: Alignment.centerLeft,
         child: Text(header,
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)));
-  }
-}
-
-class _DescriptionSection extends StatelessWidget {
-  _DescriptionSection(this.descriptionExpanded);
-
-  final bool descriptionExpanded;
-
-  @override
-  Widget build(BuildContext context) {
-    FlatButton readMoreButton = FlatButton(
-        child: Text("Read More", style: TextStyle(color: Colors.blue)),
-        onPressed: () {
-          print(descriptionExpanded);
-          // descriptionExpanded = !descriptionExpanded;
-        });
-
-    Text textBody = Text(
-      'Manor Farm Lakes is an extensive 100 acre fishery based in the heart of Central Bedfordshire, with easy access from the A1. Manor Farm Lakes consists of a range of 7 different fishing lakes with an 18 van touring caravan site with electric hook-ups. A range of fishing experiences are catered for at Manor Farm Lakes including carp fishing for pleasure anglers and specialists, night fishing, fly fishing for carp, match and coarse angling as well as predator spinning, lure and deadbait fishing in the winter months. The River Ivel acts as the boundary along our eastern edge and is also available to fish with a good head of chub, barbel, pike and bream.',
-      softWrap: true,
-      overflow: TextOverflow.fade,
-      maxLines: descriptionExpanded ? 8 : 4,
-    );
-
-    return Container(
-        padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
-        child: Column(children: [
-          _Header('Description'),
-          SizedBox(height: 16),
-          textBody,
-          readMoreButton
-        ]));
   }
 }
 
