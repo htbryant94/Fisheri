@@ -7,6 +7,7 @@ import 'package:fisheri/Screens/detail_screen/title_section.dart';
 import 'package:fisheri/Screens/detail_screen/description_section.dart';
 import 'package:fisheri/Screens/detail_screen/button_section.dart';
 import 'package:fisheri/Screens/detail_screen/image_carousel.dart';
+import 'package:fisheri/Screens/detail_screen/amenities_section.dart';
 
 class DetailScreen extends StatelessWidget {
   DetailScreen(this.descriptionExpanded, this.title, this.fishStock,
@@ -32,7 +33,7 @@ class DetailScreen extends StatelessWidget {
         SizedBox(height: 16),
         _FishStockedSection(fishStock),
         _FishingTypesSection(fishTypes),
-        _AmenitiesSection(amenities),
+        AmenitiesSection(amenities),
         _Tickets(),
         _OpeningHours(),
         _FishingRules(true),
@@ -55,8 +56,6 @@ class _Header extends StatelessWidget {
   }
 }
 
-
-
 class _GridItem extends StatelessWidget {
   _GridItem({this.item, this.image, this.width});
 
@@ -73,55 +72,6 @@ class _GridItem extends StatelessWidget {
           SizedBox(height: 8),
           Text(item, textAlign: TextAlign.center)
         ]));
-  }
-}
-
-class _AmenitiesSection extends StatelessWidget {
-  _AmenitiesSection(this.amenities);
-
-  final List<dynamic> amenities;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(32, 8, 32, 8),
-      child: Column(
-        children: [
-          _Header('Amenities'),
-          const SizedBox(height: 16),
-          Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: amenities
-                  .map((amenity) => _AmenitiesGridItem(amenity))
-                  .toList())
-        ],
-      ),
-    );
-  }
-}
-
-class _AmenitiesGridItem extends StatelessWidget {
-  _AmenitiesGridItem(this.amenity);
-
-  final String amenity;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(child: _Amenity(amenity));
-  }
-}
-
-class _Amenity extends StatelessWidget {
-  _Amenity(this.amenity);
-
-  final String amenity;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [Icon(Icons.person), Text(amenity)],
-    );
   }
 }
 
