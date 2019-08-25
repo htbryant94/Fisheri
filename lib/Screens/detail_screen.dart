@@ -6,6 +6,7 @@ import 'package:firebase_storage_image/firebase_storage_image.dart';
 import 'package:fisheri/Screens/detail_screen/title_section.dart';
 import 'package:fisheri/Screens/detail_screen/description_section.dart';
 import 'package:fisheri/Screens/detail_screen/button_section.dart';
+import 'package:fisheri/Screens/detail_screen/image_carousel.dart';
 
 class DetailScreen extends StatelessWidget {
   DetailScreen(this.descriptionExpanded, this.title, this.fishStock,
@@ -21,7 +22,7 @@ class DetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       children: [
-        _ImageCarousel('images/lake.jpg'),
+        ImageCarousel('images/lake.jpg'),
         TitleSection(
           title: title,
           subtitle: 'Biggleswade, Hertfordshire',
@@ -37,24 +38,6 @@ class DetailScreen extends StatelessWidget {
         _FishingRules(true),
       ],
     );
-  }
-}
-
-class _ImageCarousel extends StatelessWidget {
-  _ImageCarousel(this.imageURL);
-
-  final String imageURL;
-
-  @override
-  Widget build(BuildContext context) {
-    return Hero(
-        tag: 'HeroImage',
-        child: Image.asset(
-          imageURL,
-          width: 600,
-          height: 240,
-          fit: BoxFit.cover,
-        ));
   }
 }
 
