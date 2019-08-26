@@ -1,5 +1,6 @@
 import 'package:fisheri/Screens/detail_screen/fishing_rules_section.dart';
 import 'package:fisheri/models/hours_of_operation.dart';
+import 'package:fisheri/models/venue_address.dart';
 import 'package:flutter/material.dart';
 import 'package:fisheri/models/fish_stock.dart';
 
@@ -22,6 +23,7 @@ class DetailScreen extends StatelessWidget {
     this.amenities,
     this.fishTypes,
     this.openingHours,
+    this.address,
   });
 
   final bool descriptionExpanded;
@@ -32,6 +34,7 @@ class DetailScreen extends StatelessWidget {
   final List<dynamic> amenities;
   final List<dynamic> fishTypes;
   final HoursOfOperation openingHours;
+  final VenueAddress address;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +43,8 @@ class DetailScreen extends StatelessWidget {
         ImageCarousel('images/lake.jpg'),
         TitleSection(
           title: title,
-          subtitle: 'Biggleswade, Hertfordshire',
+          town:  address.town,
+          county: address.county,
         ),
         DescriptionSection(
           text: descriptionText,

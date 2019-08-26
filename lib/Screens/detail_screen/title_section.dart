@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 
 class TitleSection extends StatelessWidget {
-  TitleSection({Key key, this.title, this.subtitle}) : super(key: key);
+  TitleSection({
+    this.title,
+    this.town,
+    this.county,
+  });
 
   final String title;
-  final String subtitle;
+  final String town;
+  final String county;
 
   @override
   Widget build(BuildContext context) {
@@ -15,10 +20,12 @@ class TitleSection extends StatelessWidget {
           children: [
             _TitleHeader(title),
             SizedBox(height: 8),
-            _TitleSubHeader(subtitle)
+            _TitleSubHeader(
+              town: town,
+              county: county,
+            ),
           ],
-        )
-    );
+        ));
   }
 }
 
@@ -35,13 +42,22 @@ class _TitleHeader extends StatelessWidget {
 }
 
 class _TitleSubHeader extends StatelessWidget {
-  _TitleSubHeader(this.subtitle);
+  _TitleSubHeader({
+    this.town,
+    this.county,
+  });
 
-  final String subtitle;
+  final String town;
+  final String county;
 
   @override
   Widget build(BuildContext context) {
-    return Text(subtitle,
-        style: TextStyle(color: Colors.grey[500], fontSize: 18));
+    return Text(
+      '$town, $county',
+      style: TextStyle(
+        color: Colors.grey[500],
+        fontSize: 18,
+      ),
+    );
   }
 }

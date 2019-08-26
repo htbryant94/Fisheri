@@ -34,7 +34,6 @@ class SearchResultCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(openingHours);
     return GestureDetector(
       onTap: () {
         print("Tapped");
@@ -48,6 +47,7 @@ class SearchResultCell extends StatelessWidget {
                       fishTypes: fishTypes,
                       amenities: amenities,
                       openingHours: openingHours,
+                      address: address,
                     )));
       },
       child: Container(
@@ -77,6 +77,7 @@ class SecondRoute extends StatelessWidget {
     this.amenities,
     this.fishTypes,
     this.openingHours,
+    this.address,
   });
 
   final String title;
@@ -85,6 +86,7 @@ class SecondRoute extends StatelessWidget {
   final List<dynamic> amenities;
   final List<dynamic> fishTypes;
   final HoursOfOperation openingHours;
+  final VenueAddress address;
 
   @override
   Widget build(BuildContext context) {
@@ -102,6 +104,7 @@ class SecondRoute extends StatelessWidget {
           amenities: amenities,
           openingHours: openingHours,
           descriptionExpanded: true,
+          address: address,
         ),
       ),
     );
