@@ -5,21 +5,22 @@ import 'Screens/detail_screen/detail_screen.dart';
 import 'house_colors.dart';
 
 class SearchResultCell extends StatelessWidget {
-  SearchResultCell(
-      {Key key,
-      this.imageURL,
-      this.title,
-      this.venueType,
-      this.isOpen,
-      this.distance,
-      this.fishStock,
-      this.address,
-      this.amenities,
-      this.fishTypes})
-      : super(key: key);
+  SearchResultCell({
+    this.imageURL,
+    this.title,
+    this.descriptionText,
+    this.venueType,
+    this.isOpen,
+    this.distance,
+    this.fishStock,
+    this.address,
+    this.amenities,
+    this.fishTypes,
+  });
 
   final String imageURL;
   final String title;
+  final String descriptionText;
   final String venueType;
   final bool isOpen;
   final String distance;
@@ -36,7 +37,13 @@ class SearchResultCell extends StatelessWidget {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => SecondRoute(title, fishStock, amenities, fishTypes)));
+                builder: (context) => SecondRoute(
+                      title: title,
+                      descriptionText: descriptionText,
+                      fishStock: fishStock,
+                      fishTypes: fishTypes,
+                      amenities: amenities,
+                    )));
       },
       child: Container(
         height: 120,
@@ -58,9 +65,16 @@ class SearchResultCell extends StatelessWidget {
 }
 
 class SecondRoute extends StatelessWidget {
-  SecondRoute(this.title, this.fishStock, this.amenities, this.fishTypes);
+  SecondRoute({
+    this.title,
+    this.descriptionText,
+    this.fishStock,
+    this.amenities,
+    this.fishTypes,
+  });
 
   final String title;
+  final String descriptionText;
   final List<dynamic> fishStock;
   final List<dynamic> amenities;
   final List<dynamic> fishTypes;
@@ -73,7 +87,14 @@ class SecondRoute extends StatelessWidget {
         backgroundColor: HouseColors.primaryGreen,
       ),
       body: Center(
-        child: DetailScreen(true, title, fishStock, amenities, fishTypes),
+        child: DetailScreen(
+          title: title,
+          descriptionText: descriptionText,
+          fishTypes: fishTypes,
+          fishStock: fishStock,
+          amenities: amenities,
+          descriptionExpanded: true,
+        ),
       ),
     );
   }

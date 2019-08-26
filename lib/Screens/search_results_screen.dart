@@ -33,6 +33,7 @@ class SearchResultsScreen extends StatelessWidget {
             return SearchResultCell(
               imageURL: 'images/lake.jpg',
               title: snapshot.data.documents[index]['name'],
+              descriptionText: snapshot.data.documents[index]['description'],
               venueType: _venueType,
               distance: '5 miles',
               isOpen: true,

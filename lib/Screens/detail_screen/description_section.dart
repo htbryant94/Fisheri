@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'header.dart';
 
 class DescriptionSection extends StatelessWidget {
-  DescriptionSection(this.descriptionExpanded);
+  DescriptionSection({this.text, this.descriptionExpanded});
 
+  final String text;
   final bool descriptionExpanded;
 
   @override
@@ -16,10 +17,10 @@ class DescriptionSection extends StatelessWidget {
         });
 
     Text textBody = Text(
-      'Manor Farm Lakes is an extensive 100 acre fishery based in the heart of Central Bedfordshire, with easy access from the A1. Manor Farm Lakes consists of a range of 7 different fishing lakes with an 18 van touring caravan site with electric hook-ups. A range of fishing experiences are catered for at Manor Farm Lakes including carp fishing for pleasure anglers and specialists, night fishing, fly fishing for carp, match and coarse angling as well as predator spinning, lure and deadbait fishing in the winter months. The River Ivel acts as the boundary along our eastern edge and is also available to fish with a good head of chub, barbel, pike and bream.',
+      text,
       softWrap: true,
-      overflow: TextOverflow.fade,
-      maxLines: descriptionExpanded ? 8 : 4,
+//      overflow: TextOverflow.fade,
+//      maxLines: descriptionExpanded ? 8 : 4,
     );
 
     return Container(
@@ -28,7 +29,7 @@ class DescriptionSection extends StatelessWidget {
           Header('Description'),
           SizedBox(height: 16),
           textBody,
-          readMoreButton
+//          readMoreButton
         ]));
   }
 }

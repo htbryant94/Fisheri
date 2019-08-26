@@ -13,11 +13,19 @@ import 'package:fisheri/Screens/detail_screen/tickets_section.dart';
 import 'package:fisheri/Screens/detail_screen/opening_hours_section.dart';
 
 class DetailScreen extends StatelessWidget {
-  DetailScreen(this.descriptionExpanded, this.title, this.fishStock,
-      this.amenities, this.fishTypes);
+  DetailScreen({
+    this.descriptionExpanded,
+    this.title,
+    this.descriptionText,
+    this.fishStock,
+    this.amenities,
+    this.fishTypes,
+  });
 
   final bool descriptionExpanded;
   final String title;
+  final String descriptionText;
+
   final List<dynamic> fishStock;
   final List<dynamic> amenities;
   final List<dynamic> fishTypes;
@@ -31,7 +39,11 @@ class DetailScreen extends StatelessWidget {
           title: title,
           subtitle: 'Biggleswade, Hertfordshire',
         ),
-        DescriptionSection(descriptionExpanded),
+        DescriptionSection(
+          text: descriptionText,
+          descriptionExpanded: descriptionExpanded,
+        ),
+        SizedBox(height: 16),
         ButtonSection(Colors.blue),
         SizedBox(height: 16),
         FishStockedSection(fishStock),
