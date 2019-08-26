@@ -1,8 +1,13 @@
+import 'package:fisheri/models/hours_of_operation.dart';
 import 'package:flutter/material.dart';
 import 'header.dart';
 
 class OpeningHoursSection extends StatelessWidget {
-  OpeningHoursSection();
+  OpeningHoursSection({
+    this.openingHours,
+  });
+
+  final HoursOfOperation openingHours;
 
   @override
   Widget build(BuildContext context) {
@@ -11,20 +16,48 @@ class OpeningHoursSection extends StatelessWidget {
       child: Column(children: [
         Header('Opening Hours'),
         SizedBox(height: 16),
-        _OpeningHoursRow('Monday', '09:00', '22:00'),
-        _OpeningHoursRow('Tuesday', '09:00', '22:00'),
-        _OpeningHoursRow('Wednesday', '09:00', '22:00'),
-        _OpeningHoursRow('Thursday', '09:00', '22:00'),
-        _OpeningHoursRow('Friday', '09:00', '22:00'),
-        _OpeningHoursRow('Saturday', '09:00', '22:00'),
-        _OpeningHoursRow('Sunday', '09:00', '22:00'),
+        _OpeningHoursRow(
+          day: 'Monday',
+          openTime: openingHours.monday.open,
+          closeTime: openingHours.monday.close,
+        ),
+        _OpeningHoursRow(
+          day: 'Tuesday',
+          openTime: openingHours.tuesday.open,
+          closeTime: openingHours.tuesday.close,
+        ),
+        _OpeningHoursRow(
+          day: 'Wednesday',
+          openTime: openingHours.wednesday.open,
+          closeTime: openingHours.wednesday.close,
+        ),
+        _OpeningHoursRow(
+          day: 'Thursday',
+          openTime: openingHours.thursday.open,
+          closeTime: openingHours.thursday.close,
+        ),
+        _OpeningHoursRow(
+          day: 'Friday',
+          openTime: openingHours.friday.open,
+          closeTime: openingHours.friday.close,
+        ),
+        _OpeningHoursRow(
+          day: 'Saturday',
+          openTime: openingHours.saturday.open,
+          closeTime: openingHours.saturday.close,
+        ),
+        _OpeningHoursRow(
+          day: 'Sunday',
+          openTime: openingHours.sunday.open,
+          closeTime: openingHours.sunday.close,
+        ),
       ]),
     );
   }
 }
 
 class _OpeningHoursRow extends StatelessWidget {
-  _OpeningHoursRow(this.day, this.openTime, this.closeTime);
+  _OpeningHoursRow({this.day, this.openTime, this.closeTime});
 
   final String day;
   final String openTime;
@@ -34,7 +67,7 @@ class _OpeningHoursRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
+        children: [
           Text(day),
           Text('$openTime - $closeTime'),
         ]);

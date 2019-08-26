@@ -1,4 +1,5 @@
 import 'package:fisheri/Screens/detail_screen/fishing_rules_section.dart';
+import 'package:fisheri/models/hours_of_operation.dart';
 import 'package:flutter/material.dart';
 import 'package:fisheri/models/fish_stock.dart';
 
@@ -20,6 +21,7 @@ class DetailScreen extends StatelessWidget {
     this.fishStock,
     this.amenities,
     this.fishTypes,
+    this.openingHours,
   });
 
   final bool descriptionExpanded;
@@ -29,6 +31,7 @@ class DetailScreen extends StatelessWidget {
   final List<dynamic> fishStock;
   final List<dynamic> amenities;
   final List<dynamic> fishTypes;
+  final HoursOfOperation openingHours;
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +53,9 @@ class DetailScreen extends StatelessWidget {
         FishingTypesSection(fishTypes),
         AmenitiesSection(amenities),
         TicketsSection(),
-        OpeningHoursSection(),
+        OpeningHoursSection(
+          openingHours: openingHours,
+        ),
         FishingRulesSection(true),
       ],
     );

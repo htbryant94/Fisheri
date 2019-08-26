@@ -4,6 +4,7 @@ import 'package:fisheri/result_info.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:fisheri/models/venue_address.dart';
+import 'package:fisheri/models/hours_of_operation.dart';
 import 'package:fisheri/models/fish_stock.dart';
 
 class SearchResultsScreen extends StatelessWidget {
@@ -29,6 +30,7 @@ class SearchResultsScreen extends StatelessWidget {
             final List<dynamic> _fishStockArray = snapshot.data.documents[index]['fish_stock_array'];
             final List<dynamic> _fishingTypes = snapshot.data.documents[index]['fishing_types_array'];
             final List<dynamic> _amenities = snapshot.data.documents[index]['amenities_array'];
+            final Map _openingHours = snapshot.data.documents[index]['hours_of_operation_map'];
             final _address = snapshot.data.documents[index]['address'];
             return SearchResultCell(
               imageURL: 'images/lake.jpg',
@@ -38,6 +40,7 @@ class SearchResultsScreen extends StatelessWidget {
               distance: '5 miles',
               isOpen: true,
               address: VenueAddressJSONSerializer().fromMap(_address),
+              openingHours: HoursOfOperationJSONSerializer().fromMap(_openingHours),
               amenities: _amenities,
               // fishStock: VenueFishStockJSONSerializer().fromMap(_fishStock),
               fishStock: _fishStockArray,

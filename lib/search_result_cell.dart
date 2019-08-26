@@ -1,3 +1,4 @@
+import 'package:fisheri/models/hours_of_operation.dart';
 import 'package:fisheri/models/venue_address.dart';
 import 'package:fisheri/models/fish_stock.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,7 @@ class SearchResultCell extends StatelessWidget {
     this.distance,
     this.fishStock,
     this.address,
+    this.openingHours,
     this.amenities,
     this.fishTypes,
   });
@@ -26,11 +28,13 @@ class SearchResultCell extends StatelessWidget {
   final String distance;
   final List<dynamic> fishStock;
   final VenueAddress address;
+  final HoursOfOperation openingHours;
   final List<dynamic> amenities;
   final List<dynamic> fishTypes;
 
   @override
   Widget build(BuildContext context) {
+    print(openingHours);
     return GestureDetector(
       onTap: () {
         print("Tapped");
@@ -43,6 +47,7 @@ class SearchResultCell extends StatelessWidget {
                       fishStock: fishStock,
                       fishTypes: fishTypes,
                       amenities: amenities,
+                      openingHours: openingHours,
                     )));
       },
       child: Container(
@@ -71,6 +76,7 @@ class SecondRoute extends StatelessWidget {
     this.fishStock,
     this.amenities,
     this.fishTypes,
+    this.openingHours,
   });
 
   final String title;
@@ -78,6 +84,7 @@ class SecondRoute extends StatelessWidget {
   final List<dynamic> fishStock;
   final List<dynamic> amenities;
   final List<dynamic> fishTypes;
+  final HoursOfOperation openingHours;
 
   @override
   Widget build(BuildContext context) {
@@ -93,6 +100,7 @@ class SecondRoute extends StatelessWidget {
           fishTypes: fishTypes,
           fishStock: fishStock,
           amenities: amenities,
+          openingHours: openingHours,
           descriptionExpanded: true,
         ),
       ),
