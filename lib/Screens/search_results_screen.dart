@@ -32,6 +32,7 @@ class SearchResultsScreen extends StatelessWidget {
             final List<dynamic> _amenities = snapshot.data.documents[index]['amenities_array'];
             final Map _openingHours = snapshot.data.documents[index]['hours_of_operation_map'];
             final _address = snapshot.data.documents[index]['address'];
+            final List<dynamic> _tickets = snapshot.data.documents[index]['tickets_array'];
             return SearchResultCell(
               imageURL: 'images/lake.jpg',
               title: snapshot.data.documents[index]['name'],
@@ -45,6 +46,7 @@ class SearchResultsScreen extends StatelessWidget {
               // fishStock: VenueFishStockJSONSerializer().fromMap(_fishStock),
               fishStock: _fishStockArray,
               fishTypes: _fishingTypes,
+              tickets: _tickets,
             );
           },
         );

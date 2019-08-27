@@ -24,6 +24,7 @@ class DetailScreen extends StatelessWidget {
     this.fishTypes,
     this.openingHours,
     this.address,
+    this.tickets,
   });
 
   final bool descriptionExpanded;
@@ -35,6 +36,7 @@ class DetailScreen extends StatelessWidget {
   final List<dynamic> fishTypes;
   final HoursOfOperation openingHours;
   final VenueAddress address;
+  final List<dynamic> tickets;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +45,7 @@ class DetailScreen extends StatelessWidget {
         ImageCarousel('images/lake.jpg'),
         TitleSection(
           title: title,
-          town:  address.town,
+          town: address.town,
           county: address.county,
         ),
         DescriptionSection(
@@ -56,7 +58,9 @@ class DetailScreen extends StatelessWidget {
         FishStockedSection(fishStock),
         FishingTypesSection(fishTypes),
         AmenitiesSection(amenities),
-        TicketsSection(),
+        TicketsSection(
+          tickets: tickets,
+        ),
         OpeningHoursSection(
           openingHours: openingHours,
         ),

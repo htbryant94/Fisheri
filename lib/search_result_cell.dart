@@ -1,7 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:fisheri/models/hours_of_operation.dart';
 import 'package:fisheri/models/venue_address.dart';
 import 'package:fisheri/models/fish_stock.dart';
-import 'package:flutter/material.dart';
 import 'Screens/detail_screen/detail_screen.dart';
 import 'house_colors.dart';
 
@@ -18,6 +18,7 @@ class SearchResultCell extends StatelessWidget {
     this.openingHours,
     this.amenities,
     this.fishTypes,
+    this.tickets,
   });
 
   final String imageURL;
@@ -31,6 +32,7 @@ class SearchResultCell extends StatelessWidget {
   final HoursOfOperation openingHours;
   final List<dynamic> amenities;
   final List<dynamic> fishTypes;
+  final List<dynamic> tickets;
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +50,7 @@ class SearchResultCell extends StatelessWidget {
                       amenities: amenities,
                       openingHours: openingHours,
                       address: address,
+                      tickets: tickets,
                     )));
       },
       child: Container(
@@ -78,6 +81,7 @@ class SecondRoute extends StatelessWidget {
     this.fishTypes,
     this.openingHours,
     this.address,
+    this.tickets,
   });
 
   final String title;
@@ -87,6 +91,7 @@ class SecondRoute extends StatelessWidget {
   final List<dynamic> fishTypes;
   final HoursOfOperation openingHours;
   final VenueAddress address;
+  final List<dynamic> tickets;
 
   @override
   Widget build(BuildContext context) {
@@ -105,6 +110,7 @@ class SecondRoute extends StatelessWidget {
           openingHours: openingHours,
           descriptionExpanded: true,
           address: address,
+          tickets: tickets,
         ),
       ),
     );
