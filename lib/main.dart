@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:fisheri/Screens/venue_form_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'Screens/auth_screen.dart';
@@ -37,7 +38,7 @@ class HomePageState extends State<HomePage>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
   }
 
   @override
@@ -61,7 +62,7 @@ class HomePageState extends State<HomePage>
           AuthScreen(),
           SearchScreen(_controller),
           SearchResultsScreen(MockResultInfo.searchResults),
-          // DetailScreen(false, HouseColors.primaryGreen)
+          VenueFormScreen(),
         ],
       ),
     );
