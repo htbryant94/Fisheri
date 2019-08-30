@@ -27,184 +27,14 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
               autovalidate: true,
               child: Column(
                 children: <Widget>[
-                  _Header('Add a Venue'),
-                  FormBuilderTextField(
-                    attribute: "age",
-                    decoration: InputDecoration(labelText: "Name of Venue"),
-                    validators: [
-                      FormBuilderValidators.required(),
-                      FormBuilderValidators.minLength(4),
-                    ],
-                  ),
-                  FormBuilderCheckboxList(
-                    decoration: InputDecoration(labelText: "Venue Type"),
-                    attribute: "languages",
-                    initialValue: ["Dart"],
-                    options: [
-                      FormBuilderFieldOption(value: "Lake"),
-                      FormBuilderFieldOption(value: "Shop"),
-                    ],
-                  ),
-                  FormBuilderTextField(
-                    attribute: "age",
-                    decoration: InputDecoration(labelText: "Description"),
-                    validators: [
-                      FormBuilderValidators.required(),
-                      FormBuilderValidators.minLength(4),
-                    ],
-                  ),
-                  _Header('Address'),
-                  FormBuilderTextField(
-                    attribute: "age",
-                    decoration: InputDecoration(labelText: "Street"),
-                    validators: [
-                      FormBuilderValidators.required(),
-                      FormBuilderValidators.minLength(4),
-                    ],
-                  ),
-                  FormBuilderTextField(
-                    attribute: "age",
-                    decoration: InputDecoration(labelText: "Town"),
-                    validators: [
-                      FormBuilderValidators.required(),
-                      FormBuilderValidators.minLength(4),
-                    ],
-                  ),
-                  FormBuilderTextField(
-                    attribute: "age",
-                    decoration: InputDecoration(labelText: "County"),
-                    validators: [
-                      FormBuilderValidators.required(),
-                      FormBuilderValidators.minLength(4),
-                    ],
-                  ),
-                  FormBuilderTextField(
-                    attribute: "age",
-                    decoration: InputDecoration(labelText: "Postcode"),
-                    validators: [
-                      FormBuilderValidators.required(),
-                      FormBuilderValidators.minLength(4),
-                    ],
-                  ),
-                  _Header('Amenities'),
-                  FormBuilderTextField(
-                    attribute: "age",
-                    decoration: InputDecoration(labelText: "Number of Lakes"),
-                    validators: [
-                      FormBuilderValidators.required(),
-                      FormBuilderValidators.numeric()
-                    ],
-                  ),
-                  FormBuilderCheckboxList(
-                    attribute: "languages",
-                    initialValue: ["Dart"],
-                    options: [
-                      FormBuilderFieldOption(value: "Toilets"),
-                      FormBuilderFieldOption(value: "Showers"),
-                      FormBuilderFieldOption(value: "Food & Drink"),
-                      FormBuilderFieldOption(value: "Night Fishing"),
-                      FormBuilderFieldOption(value: "Wheelchair Access"),
-                      FormBuilderFieldOption(value: "Guests Allowed"),
-                      FormBuilderFieldOption(value: "Trolley Hire"),
-                      FormBuilderFieldOption(value: "Takeaway Friendly"),
-                      FormBuilderFieldOption(value: "Animal Friendly"),
-                      FormBuilderFieldOption(value: "Tuition"),
-                      FormBuilderFieldOption(value: "Electricity"),
-                      FormBuilderFieldOption(value: "Equipment Hire"),
-                      FormBuilderFieldOption(value: "Wifi"),
-                      FormBuilderFieldOption(value: "Camping"),
-                    ],
-                  ),
-                  _Header('Contact Details'),
-                  FormBuilderTextField(
-                    attribute: "age",
-                    decoration: InputDecoration(labelText: "Email"),
-                    validators: [
-                      FormBuilderValidators.email(),
-                    ],
-                  ),
-                  FormBuilderTextField(
-                    attribute: "age",
-                    decoration: InputDecoration(labelText: "Phone"),
-                    validators: [
-                      // TODO: Add validation for phone number
-                    ],
-                  ),
-                  FormBuilderTextField(
-                    attribute: "age",
-                    decoration: InputDecoration(labelText: "Website URL"),
-                    validators: [
-                      FormBuilderValidators.url(),
-                    ],
-                  ),
-                  _Header('Social Links'),
-                  FormBuilderTextField(
-                    attribute: "age",
-                    decoration: InputDecoration(labelText: "Facebook"),
-                    validators: [],
-                  ),
-                  FormBuilderTextField(
-                    attribute: "age",
-                    decoration: InputDecoration(labelText: "Instagram"),
-                    validators: [],
-                  ),
-                  FormBuilderTextField(
-                    attribute: "age",
-                    decoration: InputDecoration(labelText: "Twitter"),
-                    validators: [],
-                  ),
-                  FormBuilderTextField(
-                    attribute: "age",
-                    decoration: InputDecoration(labelText: "Youtube"),
-                    validators: [],
-                  ),
-                  _Header('Fish Stocked'),
-                  FormBuilderCheckboxList(
-                    attribute: "languages",
-                    initialValue: ["Dart"],
-                    options: [
-                      FormBuilderFieldOption(value: "Crucian Carp"),
-                      FormBuilderFieldOption(value: "Chub"),
-                      FormBuilderFieldOption(value: "Roach"),
-                      FormBuilderFieldOption(value: "Grass Carp"),
-                      FormBuilderFieldOption(value: "Perch"),
-                      FormBuilderFieldOption(value: "Rudd"),
-                      FormBuilderFieldOption(value: "Rainbow Trout"),
-                      FormBuilderFieldOption(value: "Brown Trout"),
-                      FormBuilderFieldOption(value: "Salmon"),
-                      FormBuilderFieldOption(value: "Koi Carp"),
-                      FormBuilderFieldOption(value: "Grayling"),
-                      FormBuilderFieldOption(value: "Zander"),
-                      FormBuilderFieldOption(value: "Eel"),
-                      FormBuilderFieldOption(value: "Orfe"),
-                      FormBuilderFieldOption(value: "Dace"),
-                      FormBuilderFieldOption(value: "Gudgeon"),
-                      FormBuilderFieldOption(value: "Ruffe"),
-                    ],
-                  ),
-                  _Header('Fishing Types'),
-                  FormBuilderCheckboxList(
-                    attribute: "languages",
-                    initialValue: ["Dart"],
-                    options: [
-                      FormBuilderFieldOption(value: "Coarse"),
-                      FormBuilderFieldOption(value: "Match"),
-                      FormBuilderFieldOption(value: "Fly"),
-                      FormBuilderFieldOption(value: "Carp"),
-                      FormBuilderFieldOption(value: "Catfish"),
-                    ],
-                  ),
-                  _Header('Tickets Available'),
-                  FormBuilderCheckboxList(
-                    attribute: "languages",
-                    initialValue: ["Dart"],
-                    options: [
-                      FormBuilderFieldOption(value: "Day"),
-                      FormBuilderFieldOption(value: "Season"),
-                      FormBuilderFieldOption(value: "Syndicate"),
-                      FormBuilderFieldOption(value: "Club Water"),
-                    ],
-                  ),
+                  _OverviewSection(),
+                  _AddressSection(),
+                  _AmenitiesSection(),
+                  _ContactDetailsSection(),
+                  _SocialLinksSection(),
+                  _FishStockedSection(),
+                  _FishingTypesSection(),
+                  _TicketsSection(),
                 ],
               ),
             ),
@@ -252,6 +82,264 @@ class _Header extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _OverviewSection extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        _Header('Add a Venue'),
+        FormBuilderTextField(
+          attribute: "age",
+          decoration: InputDecoration(labelText: "Name of Venue"),
+          validators: [
+            FormBuilderValidators.required(),
+            FormBuilderValidators.minLength(4),
+          ],
+        ),
+        FormBuilderCheckboxList(
+          decoration: InputDecoration(labelText: "Venue Type"),
+          attribute: "languages",
+          initialValue: ["Dart"],
+          options: [
+            FormBuilderFieldOption(value: "Lake"),
+            FormBuilderFieldOption(value: "Shop"),
+          ],
+        ),
+        FormBuilderTextField(
+          attribute: "age",
+          decoration: InputDecoration(labelText: "Description"),
+          validators: [
+            FormBuilderValidators.required(),
+            FormBuilderValidators.minLength(4),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _AddressSection extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        _Header('Address'),
+        FormBuilderTextField(
+          attribute: "age",
+          decoration: InputDecoration(labelText: "Street"),
+          validators: [
+            FormBuilderValidators.required(),
+            FormBuilderValidators.minLength(4),
+          ],
+        ),
+        FormBuilderTextField(
+          attribute: "age",
+          decoration: InputDecoration(labelText: "Town"),
+          validators: [
+            FormBuilderValidators.required(),
+            FormBuilderValidators.minLength(4),
+          ],
+        ),
+        FormBuilderTextField(
+          attribute: "age",
+          decoration: InputDecoration(labelText: "County"),
+          validators: [
+            FormBuilderValidators.required(),
+            FormBuilderValidators.minLength(4),
+          ],
+        ),
+        FormBuilderTextField(
+          attribute: "age",
+          decoration: InputDecoration(labelText: "Postcode"),
+          validators: [
+            FormBuilderValidators.required(),
+            FormBuilderValidators.minLength(4),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _AmenitiesSection extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        _Header('Amenities'),
+        FormBuilderTextField(
+          attribute: "age",
+          decoration: InputDecoration(labelText: "Number of Lakes"),
+          validators: [
+            FormBuilderValidators.required(),
+            FormBuilderValidators.numeric()
+          ],
+        ),
+        FormBuilderCheckboxList(
+          attribute: "languages",
+          initialValue: ["Dart"],
+          options: [
+            FormBuilderFieldOption(value: "Toilets"),
+            FormBuilderFieldOption(value: "Showers"),
+            FormBuilderFieldOption(value: "Food & Drink"),
+            FormBuilderFieldOption(value: "Night Fishing"),
+            FormBuilderFieldOption(value: "Wheelchair Access"),
+            FormBuilderFieldOption(value: "Guests Allowed"),
+            FormBuilderFieldOption(value: "Trolley Hire"),
+            FormBuilderFieldOption(value: "Takeaway Friendly"),
+            FormBuilderFieldOption(value: "Animal Friendly"),
+            FormBuilderFieldOption(value: "Tuition"),
+            FormBuilderFieldOption(value: "Electricity"),
+            FormBuilderFieldOption(value: "Equipment Hire"),
+            FormBuilderFieldOption(value: "Wifi"),
+            FormBuilderFieldOption(value: "Camping"),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _ContactDetailsSection extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        _Header('Contact Details'),
+        FormBuilderTextField(
+          attribute: "age",
+          decoration: InputDecoration(labelText: "Email"),
+          validators: [
+            FormBuilderValidators.email(),
+          ],
+        ),
+        FormBuilderTextField(
+          attribute: "age",
+          decoration: InputDecoration(labelText: "Phone"),
+          validators: [
+            // TODO: Add validation for phone number
+          ],
+        ),
+        FormBuilderTextField(
+          attribute: "age",
+          decoration: InputDecoration(labelText: "Website URL"),
+          validators: [
+            FormBuilderValidators.url(),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _SocialLinksSection extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        _Header('Social Links'),
+        FormBuilderTextField(
+          attribute: "age",
+          decoration: InputDecoration(labelText: "Facebook"),
+          validators: [],
+        ),
+        FormBuilderTextField(
+          attribute: "age",
+          decoration: InputDecoration(labelText: "Instagram"),
+          validators: [],
+        ),
+        FormBuilderTextField(
+          attribute: "age",
+          decoration: InputDecoration(labelText: "Twitter"),
+          validators: [],
+        ),
+        FormBuilderTextField(
+          attribute: "age",
+          decoration: InputDecoration(labelText: "Youtube"),
+          validators: [],
+        ),
+      ],
+    );
+  }
+}
+
+class _FishStockedSection extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        _Header('Fish Stocked'),
+        FormBuilderCheckboxList(
+          attribute: "languages",
+          initialValue: ["Dart"],
+          options: [
+            FormBuilderFieldOption(value: "Crucian Carp"),
+            FormBuilderFieldOption(value: "Chub"),
+            FormBuilderFieldOption(value: "Roach"),
+            FormBuilderFieldOption(value: "Grass Carp"),
+            FormBuilderFieldOption(value: "Perch"),
+            FormBuilderFieldOption(value: "Rudd"),
+            FormBuilderFieldOption(value: "Rainbow Trout"),
+            FormBuilderFieldOption(value: "Brown Trout"),
+            FormBuilderFieldOption(value: "Salmon"),
+            FormBuilderFieldOption(value: "Koi Carp"),
+            FormBuilderFieldOption(value: "Grayling"),
+            FormBuilderFieldOption(value: "Zander"),
+            FormBuilderFieldOption(value: "Eel"),
+            FormBuilderFieldOption(value: "Orfe"),
+            FormBuilderFieldOption(value: "Dace"),
+            FormBuilderFieldOption(value: "Gudgeon"),
+            FormBuilderFieldOption(value: "Ruffe"),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _FishingTypesSection extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        _Header('Fishing Types'),
+        FormBuilderCheckboxList(
+          attribute: "languages",
+          initialValue: ["Dart"],
+          options: [
+            FormBuilderFieldOption(value: "Coarse"),
+            FormBuilderFieldOption(value: "Match"),
+            FormBuilderFieldOption(value: "Fly"),
+            FormBuilderFieldOption(value: "Carp"),
+            FormBuilderFieldOption(value: "Catfish"),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _TicketsSection extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        _Header('Tickets Available'),
+        FormBuilderCheckboxList(
+          attribute: "languages",
+          initialValue: ["Dart"],
+          options: [
+            FormBuilderFieldOption(value: "Day"),
+            FormBuilderFieldOption(value: "Season"),
+            FormBuilderFieldOption(value: "Syndicate"),
+            FormBuilderFieldOption(value: "Club Water"),
+          ],
+        ),
+      ],
     );
   }
 }
