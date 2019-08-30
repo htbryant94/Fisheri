@@ -14,7 +14,7 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      padding: EdgeInsets.fromLTRB(16, 16, 16, 100),
+      padding: EdgeInsets.fromLTRB(24, 24, 24, 100),
       children: <Widget>[
         Column(
           children: <Widget>[
@@ -27,19 +27,7 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
               autovalidate: true,
               child: Column(
                 children: <Widget>[
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 16, bottom: 16),
-                      child: Text(
-                        'Add a Venue',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ),
-                  ),
+                  _Header('Add a Venue'),
                   FormBuilderTextField(
                     attribute: "age",
                     decoration: InputDecoration(labelText: "Name of Venue"),
@@ -65,19 +53,7 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
                       FormBuilderValidators.minLength(4),
                     ],
                   ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 16, bottom: 16),
-                      child: Text(
-                        'Address',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ),
-                  ),
+                  _Header('Address'),
                   FormBuilderTextField(
                     attribute: "age",
                     decoration: InputDecoration(labelText: "Street"),
@@ -110,19 +86,7 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
                       FormBuilderValidators.minLength(4),
                     ],
                   ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 16, bottom: 16),
-                      child: Text(
-                        'Amenities',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ),
-                  ),
+                  _Header('Amenities'),
                   FormBuilderTextField(
                     attribute: "age",
                     decoration: InputDecoration(labelText: "Number of Lakes"),
@@ -151,19 +115,7 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
                       FormBuilderFieldOption(value: "Camping"),
                     ],
                   ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 16, bottom: 16),
-                      child: Text(
-                        'Contact Details',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ),
-                  ),
+                  _Header('Contact Details'),
                   FormBuilderTextField(
                     attribute: "age",
                     decoration: InputDecoration(labelText: "Email"),
@@ -185,56 +137,28 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
                       FormBuilderValidators.url(),
                     ],
                   ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 16, bottom: 16),
-                      child: Text(
-                        'Social Links',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ),
-                  ),
+                  _Header('Social Links'),
                   FormBuilderTextField(
                     attribute: "age",
                     decoration: InputDecoration(labelText: "Facebook"),
-                    validators: [
-                    ],
+                    validators: [],
                   ),
                   FormBuilderTextField(
                     attribute: "age",
                     decoration: InputDecoration(labelText: "Instagram"),
-                    validators: [
-                    ],
+                    validators: [],
                   ),
                   FormBuilderTextField(
                     attribute: "age",
                     decoration: InputDecoration(labelText: "Twitter"),
-                    validators: [
-                    ],
+                    validators: [],
                   ),
                   FormBuilderTextField(
                     attribute: "age",
                     decoration: InputDecoration(labelText: "Youtube"),
-                    validators: [
-                    ],
+                    validators: [],
                   ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 16, bottom: 16),
-                      child: Text(
-                        'Fish Stocked',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ),
-                  ),
+                  _Header('Fish Stocked'),
                   FormBuilderCheckboxList(
                     attribute: "languages",
                     initialValue: ["Dart"],
@@ -258,19 +182,7 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
                       FormBuilderFieldOption(value: "Ruffe"),
                     ],
                   ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 16, bottom: 16),
-                      child: Text(
-                        'Fishing Types',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ),
-                  ),
+                  _Header('Fishing Types'),
                   FormBuilderCheckboxList(
                     attribute: "languages",
                     initialValue: ["Dart"],
@@ -282,19 +194,7 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
                       FormBuilderFieldOption(value: "Catfish"),
                     ],
                   ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 16, bottom: 16),
-                      child: Text(
-                        'Tickets Available',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ),
-                  ),
+                  _Header('Tickets Available'),
                   FormBuilderCheckboxList(
                     attribute: "languages",
                     initialValue: ["Dart"],
@@ -329,6 +229,29 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
           ],
         ),
       ],
+    );
+  }
+}
+
+class _Header extends StatelessWidget {
+  _Header(this.title);
+
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 16, bottom: 16),
+        child: Text(
+          title,
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+      ),
     );
   }
 }
