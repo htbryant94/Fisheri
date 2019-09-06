@@ -1,3 +1,5 @@
+import 'package:fisheri/house_colors.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
@@ -93,28 +95,37 @@ class _OverviewSection extends StatelessWidget {
       children: <Widget>[
         _Header('Add a Venue'),
         FormBuilderTextField(
-          attribute: "age",
-          decoration: InputDecoration(labelText: "Name of Venue"),
+          attribute: "name",
+          decoration: InputDecoration(labelText: "Name of Venue *"),
           validators: [
             FormBuilderValidators.required(),
             FormBuilderValidators.minLength(4),
+            FormBuilderValidators.maxLength(50),
           ],
         ),
         FormBuilderCheckboxList(
-          decoration: InputDecoration(labelText: "Venue Type"),
-          attribute: "languages",
-          initialValue: ["Dart"],
+          decoration: InputDecoration(labelText: "Venue Type *"),
+          activeColor: HouseColors.accentGreen,
+          checkColor: HouseColors.primaryGreen,
+          attribute: "venue_type",
           options: [
             FormBuilderFieldOption(value: "Lake"),
             FormBuilderFieldOption(value: "Shop"),
           ],
         ),
         FormBuilderTextField(
-          attribute: "age",
-          decoration: InputDecoration(labelText: "Description"),
+          keyboardType: TextInputType.multiline,
+          minLines: 5,
+          maxLines: null,
+          attribute: "description",
+          decoration: InputDecoration(
+              labelText: "Description",
+              helperText:
+                  "Include pricing information or details on how to get to your venue here",
+              border: OutlineInputBorder()),
           validators: [
-            FormBuilderValidators.required(),
             FormBuilderValidators.minLength(4),
+            FormBuilderValidators.maxLength(1000),
           ],
         ),
       ],
@@ -129,35 +140,40 @@ class _AddressSection extends StatelessWidget {
       children: <Widget>[
         _Header('Address'),
         FormBuilderTextField(
-          attribute: "age",
-          decoration: InputDecoration(labelText: "Street"),
+          attribute: "address_street",
+          decoration: InputDecoration(labelText: "Street *"),
           validators: [
             FormBuilderValidators.required(),
             FormBuilderValidators.minLength(4),
+            FormBuilderValidators.maxLength(100),
           ],
         ),
         FormBuilderTextField(
-          attribute: "age",
-          decoration: InputDecoration(labelText: "Town"),
+          attribute: "address_town",
+          decoration: InputDecoration(labelText: "Town *"),
           validators: [
             FormBuilderValidators.required(),
             FormBuilderValidators.minLength(4),
+            FormBuilderValidators.maxLength(100),
           ],
         ),
         FormBuilderTextField(
-          attribute: "age",
-          decoration: InputDecoration(labelText: "County"),
+          attribute: "address_county",
+          decoration: InputDecoration(labelText: "County *"),
           validators: [
             FormBuilderValidators.required(),
             FormBuilderValidators.minLength(4),
+            FormBuilderValidators.maxLength(100),
           ],
         ),
         FormBuilderTextField(
-          attribute: "age",
-          decoration: InputDecoration(labelText: "Postcode"),
+          attribute: "address_postcode",
+          textCapitalization: TextCapitalization.words,
+          decoration: InputDecoration(labelText: "Postcode *"),
           validators: [
             FormBuilderValidators.required(),
-            FormBuilderValidators.minLength(4),
+            FormBuilderValidators.minLength(6),
+            FormBuilderValidators.maxLength(8),
           ],
         ),
       ],
@@ -172,16 +188,12 @@ class _AmenitiesSection extends StatelessWidget {
       children: <Widget>[
         _Header('Amenities'),
         FormBuilderTextField(
-          attribute: "age",
+          attribute: "amenities_num_lakes",
           decoration: InputDecoration(labelText: "Number of Lakes"),
-          validators: [
-            FormBuilderValidators.required(),
-            FormBuilderValidators.numeric()
-          ],
+          validators: [FormBuilderValidators.numeric()],
         ),
         FormBuilderCheckboxList(
-          attribute: "languages",
-          initialValue: ["Dart"],
+          attribute: "amenities_list",
           options: [
             FormBuilderFieldOption(value: "Toilets"),
             FormBuilderFieldOption(value: "Showers"),
@@ -209,24 +221,34 @@ class _ContactDetailsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        _Header('Contact Details'),
+        _Header('Venue Contact Details'),
         FormBuilderTextField(
-          attribute: "age",
-          decoration: InputDecoration(labelText: "Email"),
+          attribute: "contact_email",
+          decoration: InputDecoration(
+            labelText: "Email",
+            icon: Icon(Icons.email),
+          ),
           validators: [
             FormBuilderValidators.email(),
           ],
         ),
         FormBuilderTextField(
-          attribute: "age",
-          decoration: InputDecoration(labelText: "Phone"),
+          attribute: "contact_phone",
+          decoration: InputDecoration(
+            labelText: "Phone",
+            icon: Icon(Icons.phone),
+          ),
           validators: [
             // TODO: Add validation for phone number
           ],
         ),
         FormBuilderTextField(
-          attribute: "age",
-          decoration: InputDecoration(labelText: "Website URL"),
+          attribute: "contact_url",
+          decoration: InputDecoration(
+            labelText: "Website URL",
+            icon: Icon(Icons.language),
+            hintText: "https://www.add_this_part_here",
+          ),
           validators: [
             FormBuilderValidators.url(),
           ],
@@ -243,22 +265,28 @@ class _SocialLinksSection extends StatelessWidget {
       children: <Widget>[
         _Header('Social Links'),
         FormBuilderTextField(
-          attribute: "age",
-          decoration: InputDecoration(labelText: "Facebook"),
+          attribute: "social_facebook",
+          decoration: InputDecoration(
+            labelText: "Facebook",
+            helperText: "www.facebook.com/your_page_here",
+          ),
           validators: [],
         ),
         FormBuilderTextField(
-          attribute: "age",
-          decoration: InputDecoration(labelText: "Instagram"),
+          attribute: "social_instagram",
+          decoration: InputDecoration(
+            labelText: "Instagram",
+            helperText: "@your_handle_here",
+          ),
           validators: [],
         ),
         FormBuilderTextField(
-          attribute: "age",
+          attribute: "social_twitter",
           decoration: InputDecoration(labelText: "Twitter"),
           validators: [],
         ),
         FormBuilderTextField(
-          attribute: "age",
+          attribute: "social_youtube",
           decoration: InputDecoration(labelText: "Youtube"),
           validators: [],
         ),
@@ -274,8 +302,7 @@ class _FishStockedSection extends StatelessWidget {
       children: <Widget>[
         _Header('Fish Stocked'),
         FormBuilderCheckboxList(
-          attribute: "languages",
-          initialValue: ["Dart"],
+          attribute: "fish_stocked",
           options: [
             FormBuilderFieldOption(value: "Crucian Carp"),
             FormBuilderFieldOption(value: "Chub"),
@@ -308,8 +335,7 @@ class _FishingTypesSection extends StatelessWidget {
       children: <Widget>[
         _Header('Fishing Types'),
         FormBuilderCheckboxList(
-          attribute: "languages",
-          initialValue: ["Dart"],
+          attribute: "fishing_types",
           options: [
             FormBuilderFieldOption(value: "Coarse"),
             FormBuilderFieldOption(value: "Match"),
@@ -330,10 +356,10 @@ class _TicketsSection extends StatelessWidget {
       children: <Widget>[
         _Header('Tickets Available'),
         FormBuilderCheckboxList(
-          attribute: "languages",
-          initialValue: ["Dart"],
+          attribute: "tickets",
           options: [
             FormBuilderFieldOption(value: "Day"),
+            FormBuilderFieldOption(value: "Night"),
             FormBuilderFieldOption(value: "Season"),
             FormBuilderFieldOption(value: "Syndicate"),
             FormBuilderFieldOption(value: "Club Water"),
