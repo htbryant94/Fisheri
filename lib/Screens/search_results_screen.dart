@@ -1,3 +1,5 @@
+import 'package:fisheri/models/venue_detailed.dart';
+import 'package:fisheri/models/venue_detailed.dart' as prefix0;
 import 'package:flutter/material.dart';
 import 'package:fisheri/search_result_cell.dart';
 import 'package:fisheri/result_info.dart';
@@ -26,13 +28,22 @@ class SearchResultsScreen extends StatelessWidget {
           separatorBuilder: (BuildContext context, int index) =>
               Divider(height: 1, color: Colors.grey[700]),
           itemBuilder: (context, index) {
+            final _venue = snapshot.data.documents[index];
+            final _venueDetailed = VenueDetailed(
+              name: _venue['name'],
+              isLake: _venue['isLake'],
+              isShop: _venue['isShop'],
+              description: _venue['description'],
+              social: SocialJSONSerializer().fromMap(_venue['social']),
+              address: VenueAddressJSONSerializer().fromMap(_venue['address']),
+              fishingTypes: _venue['fishing_types_array'],
+              fishStocked: _venue['fish_stock_array'],
+              amenities: _venue['amenities_array'],
+              tickets: _venue['tickets_array'],
+            );
+
             final _venueType = snapshot.data.documents[index]['isLake'] ? 'LAKE' : 'SHOP';
-            final List<dynamic> _fishStockArray = snapshot.data.documents[index]['fish_stock_array'];
-            final List<dynamic> _fishingTypes = snapshot.data.documents[index]['fishing_types_array'];
-            final List<dynamic> _amenities = snapshot.data.documents[index]['amenities_array'];
             final Map _openingHours = snapshot.data.documents[index]['hours_of_operation_map'];
-            final _address = snapshot.data.documents[index]['address'];
-            final List<dynamic> _tickets = snapshot.data.documents[index]['tickets_array'];
             return SearchResultCell(
               imageURL: 'images/lake.jpg',
               title: snapshot.data.documents[index]['name'],
@@ -40,13 +51,12 @@ class SearchResultsScreen extends StatelessWidget {
               venueType: _venueType,
               distance: '5 miles',
               isOpen: true,
-              address: VenueAddressJSONSerializer().fromMap(_address),
+              address: _venueDetailed.address,
               openingHours: HoursOfOperationJSONSerializer().fromMap(_openingHours),
-              amenities: _amenities,
-              // fishStock: VenueFishStockJSONSerializer().fromMap(_fishStock),
-              fishStock: _fishStockArray,
-              fishTypes: _fishingTypes,
-              tickets: _tickets,
+              amenities: _venueDetailed.amenities,
+              fishStock: _venueDetailed.fishStocked,
+              fishTypes: _venueDetailed.fishingTypes,
+              tickets: _venueDetailed.tickets,
             );
           },
         );
