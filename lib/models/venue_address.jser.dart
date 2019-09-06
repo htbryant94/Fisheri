@@ -22,8 +22,7 @@ abstract class _$VenueAddressJSONSerializer
   @override
   VenueAddress fromMap(Map map) {
     if (map == null) return null;
-    final obj = VenueAddress(getJserDefault('street'), getJserDefault('town'),
-        getJserDefault('county'), getJserDefault('postcode'));
+    final obj = VenueAddress();
     obj.street = map['street'] as String;
     obj.town = map['town'] as String;
     obj.county = map['county'] as String;

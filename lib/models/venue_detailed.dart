@@ -1,5 +1,6 @@
 import 'package:fisheri/models/venue_address.dart';
 import 'package:jaguar_serializer/jaguar_serializer.dart';
+
 part 'venue_detailed.jser.dart';
 
 @GenSerializer(
@@ -56,6 +57,11 @@ class ContactDetailsJSONSerializer extends Serializer<ContactDetails>
     with _$ContactDetailsJSONSerializer {}
 
 class ContactDetails {
+  ContactDetails({
+    this.email,
+    this.phone,
+  });
+
   String email;
   String phone;
 }
@@ -65,6 +71,13 @@ class SocialJSONSerializer extends Serializer<Social>
     with _$SocialJSONSerializer {}
 
 class Social {
+  Social({
+    this.facebook,
+    this.instagram,
+    this.twitter,
+    this.youtube,
+  });
+
   String facebook;
   String instagram;
   String twitter;

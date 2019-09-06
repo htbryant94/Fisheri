@@ -1,4 +1,6 @@
 import 'package:fisheri/house_colors.dart';
+import 'package:fisheri/models/venue_address.dart';
+import 'package:fisheri/models/venue_detailed.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -45,6 +47,38 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
                 MaterialButton(
                   child: Text("Submit"),
                   onPressed: () {
+
+                    Function _valueFor = ({String attribute}) {
+                      return _fbKey.currentState.fields[attribute].currentState.value;
+                    };
+
+                    final _venue = VenueDetailed(
+                      name: _valueFor(attribute: 'name'),
+                      isLake: _valueFor(attribute: 'venue_type').toString().contains('Lake'),
+                      isShop: _valueFor(attribute: 'venue_type').toString().contains('Shop'),
+                      description: _valueFor(attribute: 'description'),
+                      address: VenueAddress(
+                        street: _valueFor(attribute: 'address_street'),
+                        town: _valueFor(attribute: 'address_town'),
+                        county: _valueFor(attribute: 'address_county'),
+                        postcode: _valueFor(attribute: 'postcode'),
+                      ),
+                      amenities: _valueFor(attribute: 'amenities'),
+                      contactDetails: ContactDetails(
+                        email: _valueFor(attribute: 'contact_email'),
+                        phone: _valueFor(attribute: 'contact_phone'),
+                      ),
+                      social: Social(
+                        facebook: _valueFor(attribute: 'social_facebook'),
+                        instagram: _valueFor(attribute: 'social_instagram'),
+                        twitter: _valueFor(attribute: 'social_twitter'),
+                        youtube: _valueFor(attribute: 'social_youtube'),
+                      ),
+                      fishStocked: _valueFor(attribute: 'fish_stocked'),
+                      fishingTypes: _valueFor(attribute: 'fishing_types'),
+                      tickets: _valueFor(attribute: 'tickets'),
+                    );
+                    print(_venue.isLake);
                     if (_fbKey.currentState.saveAndValidate()) {
                       print(_fbKey.currentState.value);
                     }
