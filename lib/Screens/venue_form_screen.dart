@@ -4,6 +4,26 @@ import 'package:fisheri/models/venue_detailed.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:fisheri/search_result_cell.dart';
+
+class VenueDetailedConstants {
+
+  static const String name = "name";
+  static const String isLake = "is_lake";
+  static const String isShop = "is_shop";
+  static const String address = "address";
+  static const String amenities = "amenities_array";
+  static const String assetsPath = "assets_path";
+  static const String contactDetails = "contact_details";
+  static const String coordinates = "coordinates";
+  static const String description = "description";
+  static const String fishStocked = "fish_stock_array";
+  static const String fishingTypes = "fishing_types_array";
+  static const String hoursOfOperation = "hours_of_operation";
+  static const String social = "social";
+  static const String tickets = "tickets_array";
+
+}
 
 class VenueFormScreen extends StatefulWidget {
   VenueFormScreen();
@@ -47,23 +67,22 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
                 MaterialButton(
                   child: Text("Submit"),
                   onPressed: () {
-
                     Function _valueFor = ({String attribute}) {
                       return _fbKey.currentState.fields[attribute].currentState.value;
                     };
 
                     final _venue = VenueDetailed(
-                      name: _valueFor(attribute: 'name'),
-                      isLake: _valueFor(attribute: 'venue_type').toString().contains('Lake'),
+                      name: _valueFor(attribute: VenueDetailedConstants.name),
                       isShop: _valueFor(attribute: 'venue_type').toString().contains('Shop'),
-                      description: _valueFor(attribute: 'description'),
+                      isLake: _valueFor(attribute: 'venue_type').toString().contains('Lake'),
+                      description: _valueFor(attribute: VenueDetailedConstants.description),
                       address: VenueAddress(
                         street: _valueFor(attribute: 'address_street'),
                         town: _valueFor(attribute: 'address_town'),
                         county: _valueFor(attribute: 'address_county'),
-                        postcode: _valueFor(attribute: 'postcode'),
+                        postcode: _valueFor(attribute: 'address_postcode'),
                       ),
-                      amenities: _valueFor(attribute: 'amenities'),
+                      amenities: _valueFor(attribute: 'amenities_list'),
                       contactDetails: ContactDetails(
                         email: _valueFor(attribute: 'contact_email'),
                         phone: _valueFor(attribute: 'contact_phone'),
@@ -78,9 +97,21 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
                       fishingTypes: _valueFor(attribute: 'fishing_types'),
                       tickets: _valueFor(attribute: 'tickets'),
                     );
-                    print(_venue.isLake);
+                    print(_venue.name);
                     if (_fbKey.currentState.saveAndValidate()) {
-                      print(_fbKey.currentState.value);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SecondRoute(
+                                title: _venue.name,
+                                descriptionText: _venue.description,
+                                fishStock: _venue.fishStocked,
+                                fishTypes: _venue.fishingTypes,
+                                amenities: _venue.amenities,
+//                                openingHours: _venue.op,
+                                address: _venue.address,
+                                tickets: _venue.tickets,
+                              )));
                     }
                   },
                 ),
