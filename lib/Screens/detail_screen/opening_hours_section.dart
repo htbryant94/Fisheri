@@ -55,7 +55,14 @@ class OpeningHoursSection extends StatelessWidget {
         ]),
       );
     } else {
-      return Container();
+      return Container(
+        padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
+        child: Column(children: [
+          Header('Opening Hours'),
+          SizedBox(height: 16),
+          Text("Couldn't retrieve information"),
+        ]),
+      );
     }
   }
 }
