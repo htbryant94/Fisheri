@@ -252,11 +252,14 @@ class _AmenitiesSection extends StatelessWidget {
     return Column(
       children: <Widget>[
         _Header('Amenities'),
-        FormBuilderTextField(
-          attribute: "amenities_num_lakes",
-          decoration: InputDecoration(labelText: "Number of Lakes"),
-          validators: [FormBuilderValidators.numeric()],
-        ),
+      FormBuilderStepper(
+        attribute: "amenities_num_lakes",
+        decoration: InputDecoration(labelText: "Number of Lakes"),
+        initialValue: 0,
+        min: 0,
+        max: 100,
+        step: 1,
+      ),
         FormBuilderCheckboxList(
           attribute: "amenities_list",
           options: [
