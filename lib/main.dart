@@ -80,15 +80,20 @@ class HomePageState extends State<HomePage>
         backgroundColor: HouseColors.primaryGreen,
         centerTitle: true);
 
-    return new MaterialApp(
-        home: Scaffold(
-            appBar: _appBar,
-            body: Stack(children: [
-              _buildTabContent(),
-              BottomTabBar(
-                selectedTab: _selectedTab,
-                onTap: _tabSelected,
-              )
-            ])));
+    return MaterialApp(
+      home: Scaffold(
+        appBar: _appBar,
+        body: Stack(
+          children: [
+            _buildTabContent(),
+            BottomTabBar(
+              selectedTab: _selectedTab,
+              onTap: _tabSelected,
+            ),
+          ],
+        ),
+        resizeToAvoidBottomInset: false,
+      ),
+    );
   }
 }
