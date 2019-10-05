@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:fisheri/search_result_cell.dart';
+import 'package:intl/intl.dart';
 
 class VenueDetailedConstants {
   static const String name = "name";
@@ -57,6 +58,7 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
                   _FishStockedSection(),
                   _FishingTypesSection(),
                   _TicketsSection(),
+                  _OperationalHoursSection(),
                 ],
               ),
             ),
@@ -435,6 +437,73 @@ class _TicketsSection extends StatelessWidget {
             FormBuilderFieldOption(value: "Season"),
             FormBuilderFieldOption(value: "Syndicate"),
             FormBuilderFieldOption(value: "Club Water"),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _OperationalHoursSection extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        _Header('Operational Hours'),
+        _OperationalHoursDay(day: 'Monday'),
+        SizedBox(height: 8),
+        _OperationalHoursDay(day: 'Tuesday'),
+        SizedBox(height: 8),
+        _OperationalHoursDay(day: 'Wednesday'),
+        SizedBox(height: 8),
+        _OperationalHoursDay(day: 'Thursday'),
+        SizedBox(height: 8),
+        _OperationalHoursDay(day: 'Friday'),
+        SizedBox(height: 8),
+        _OperationalHoursDay(day: 'Saturday'),
+        SizedBox(height: 8),
+        _OperationalHoursDay(day: 'Sunday'),
+      ],
+    );
+  }
+}
+
+class _OperationalHoursDay extends StatelessWidget {
+  _OperationalHoursDay({this.day});
+
+  final String day;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Align(
+          child: Text('$day'),
+          alignment: Alignment.centerLeft,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            Container(
+              width: 150,
+              child: FormBuilderDateTimePicker(
+                attribute: "date",
+                autofocus: false,
+                inputType: InputType.time,
+                format: DateFormat.Hm(),
+                decoration: InputDecoration(labelText: "Open"),
+              ),
+            ),
+            Container(
+              width: 150,
+              child: FormBuilderDateTimePicker(
+                attribute: "date",
+                autofocus: false,
+                inputType: InputType.time,
+                format: DateFormat.Hm(),
+                decoration: InputDecoration(labelText: "Close"),
+              ),
+            ),
           ],
         ),
       ],
