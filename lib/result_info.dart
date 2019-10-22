@@ -222,7 +222,11 @@ class VenueTickets {
 }
 
 class HoursOfOperationDay {
-  HoursOfOperationDay(String day, String open, String close) {
+  HoursOfOperationDay({
+    String day,
+    String open,
+    String close,
+  }) {
     this.day = day;
     this.open = open;
     this.close = close;

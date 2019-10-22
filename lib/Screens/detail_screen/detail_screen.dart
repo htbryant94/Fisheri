@@ -2,7 +2,6 @@ import 'package:fisheri/Screens/detail_screen/fishing_rules_section.dart';
 import 'package:fisheri/models/hours_of_operation.dart';
 import 'package:fisheri/models/venue_address.dart';
 import 'package:flutter/material.dart';
-import 'package:fisheri/models/fish_stock.dart';
 
 import 'package:fisheri/Screens/detail_screen/title_section.dart';
 import 'package:fisheri/Screens/detail_screen/description_section.dart';

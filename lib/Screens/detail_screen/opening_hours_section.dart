@@ -11,7 +11,7 @@ class OpeningHoursSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if(openingHours != null) {
+    if (openingHours != null) {
       return Container(
         padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
         child: Column(children: [
@@ -74,13 +74,22 @@ class _OpeningHoursRow extends StatelessWidget {
   final String openTime;
   final String closeTime;
 
+  Text _timeInfo() {
+    if (openTime != null && closeTime != null) {
+      return Text('$openTime - $closeTime');
+    } else {
+      return Text(
+        'Not Specified',
+        style: TextStyle(color: Colors.grey),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(day),
-          Text('$openTime - $closeTime'),
-        ]);
+    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+      Text(day),
+      _timeInfo(),
+    ]);
   }
 }

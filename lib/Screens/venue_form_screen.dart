@@ -1,11 +1,11 @@
 import 'package:fisheri/house_colors.dart';
+import 'package:fisheri/models/hours_of_operation.dart';
 import 'package:fisheri/models/venue_address.dart';
 import 'package:fisheri/models/venue_detailed.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:fisheri/search_result_cell.dart';
-import 'package:intl/intl.dart';
 
 class VenueDetailedConstants {
   static const String name = "name";
@@ -71,7 +71,36 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
                       return _fbKey
                           .currentState.fields[attribute].currentState.value;
                     };
-
+                    HoursOfOperation operationalHours = HoursOfOperation(
+                      monday: OpeningHoursDay(
+                          open: _valueFor(attribute: 'monday_open'),
+                          close: _valueFor(attribute: 'monday_close'),
+                      ),
+                      tuesday: OpeningHoursDay(
+                        open: _valueFor(attribute: 'tuesday_open'),
+                        close: _valueFor(attribute: 'tuesday_close'),
+                      ),
+                      wednesday: OpeningHoursDay(
+                        open: _valueFor(attribute: 'wednesday_open'),
+                        close: _valueFor(attribute: 'wednesday_close'),
+                      ),
+                      thursday: OpeningHoursDay(
+                        open: _valueFor(attribute: 'thursday_open'),
+                        close: _valueFor(attribute: 'thursday_close'),
+                      ),
+                      friday: OpeningHoursDay(
+                        open: _valueFor(attribute: 'friday_open'),
+                        close: _valueFor(attribute: 'friday_close'),
+                      ),
+                      saturday: OpeningHoursDay(
+                        open: _valueFor(attribute: 'saturday_open'),
+                        close: _valueFor(attribute: 'saturday_close'),
+                      ),
+                      sunday: OpeningHoursDay(
+                        open: _valueFor(attribute: 'sunday_open'),
+                        close: _valueFor(attribute: 'sunday_close'),
+                      ),
+                    );
                     final _venue = VenueDetailed(
                       name: _valueFor(attribute: VenueDetailedConstants.name),
                       isShop: _valueFor(attribute: 'venue_type')
@@ -102,8 +131,8 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
                       fishStocked: _valueFor(attribute: 'fish_stocked'),
                       fishingTypes: _valueFor(attribute: 'fishing_types'),
                       tickets: _valueFor(attribute: 'tickets'),
+                      operationalHours: operationalHours
                     );
-                    print(_venue.name);
                     if (_fbKey.currentState.saveAndValidate()) {
                       Navigator.push(
                           context,
@@ -114,7 +143,7 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
                                     fishStock: _venue.fishStocked,
                                     fishTypes: _venue.fishingTypes,
                                     amenities: _venue.amenities,
-//                                openingHours: _venue.op,
+                                    openingHours: _venue.operationalHours,
                                     address: _venue.address,
                                     tickets: _venue.tickets,
                                   )));
@@ -475,41 +504,84 @@ class _OperationalHoursDay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final List<String> times = ['00:00', '00:30', '01:00', '01:30', '02:00', '02:30',
+      '03:00', '03:30', '04:00', '04:30', '05:00', '05:30', '06:00', '06:30', '07:00',
+      '07:30', '08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
+      '12:00', '12:30', '13:00', '13:30', '14:00', '14:20', '15:00', '15:30',
+      '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30',
+      '20:00', '20:30', '21:00', '21:30', '22:00', '22:30', '23:00', '23:30'
+    ];
     return Column(
       children: <Widget>[
         Align(
-          child: Text('$day'),
           alignment: Alignment.centerLeft,
+          child: Text("$day"),
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            Container(
-              width: 150,
-              child: FormBuilderDateTimePicker(
-                attribute: "date",
-                autofocus: false,
-                inputType: InputType.time,
-                format: DateFormat.Hm(),
-                decoration: InputDecoration(labelText: "Open"),
-              ),
-            ),
-            Container(
-              width: 150,
-              child: FormBuilderDateTimePicker(
-                attribute: "date",
-                autofocus: false,
-                inputType: InputType.time,
-                format: DateFormat.Hm(),
-                decoration: InputDecoration(labelText: "Close"),
-              ),
-            ),
-          ],
+        FormBuilderDropdown(
+          attribute: "${day.toLowerCase()}_open",
+          decoration: InputDecoration(labelText: "Open"),
+          hint: Text('Open'),
+          items: times.map((time) => DropdownMenuItem(
+              value: time,
+              child: Text("$time")
+          )).toList(),
+        ),
+        FormBuilderDropdown(
+          attribute: "${day.toLowerCase()}_close",
+          decoration: InputDecoration(labelText: "Close"),
+          hint: Text('Close'),
+          items: times.map((time) => DropdownMenuItem(
+              value: time,
+              child: Text("$time")
+          )).toList(),
         ),
       ],
     );
   }
 }
+
+//class _OperationalHoursDay extends StatelessWidget {
+//  _OperationalHoursDay({this.day});
+//
+//  final String day;
+//
+//  @override
+//  Widget build(BuildContext context) {
+//    return Column(
+//      children: <Widget>[
+//        Align(
+//          child: Text('$day'),
+//          alignment: Alignment.centerLeft,
+//        ),
+//        Row(
+//          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//          children: <Widget>[
+//            Container(
+//              width: 150,
+//              child: FormBuilderDateTimePicker(
+//                attribute: "monday_open",
+//                autofocus: false,
+//                inputType: InputType.time,
+//                format: DateFormat.Hm(),
+//                decoration: InputDecoration(labelText: "Open"),
+//              ),
+//            ),
+//            Container(
+//              width: 150,
+//              child: FormBuilderDateTimePicker(
+//                attribute: "monday_close",
+//                autofocus: false,
+//                inputType: InputType.time,
+//                format: DateFormat.Hm(),
+//                decoration: InputDecoration(labelText: "Close"),
+//              ),
+//            ),
+//          ],
+//        ),
+//      ],
+//    );
+//  }
+//}
 
 //class VenueFormScreen extends StatefulWidget {
 //  @override
