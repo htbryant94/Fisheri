@@ -75,7 +75,9 @@ class _OpeningHoursRow extends StatelessWidget {
   final String closeTime;
 
   Text _timeInfo() {
-    if (openTime != null && closeTime != null) {
+    if (openTime == "Closed" || closeTime == "Closed") {
+      return Text("Closed", style: TextStyle(color: Colors.red),);
+    } else if (openTime != null && closeTime != null) {
       return Text('$openTime - $closeTime');
     } else {
       return Text(

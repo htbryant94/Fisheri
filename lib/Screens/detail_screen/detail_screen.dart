@@ -24,6 +24,7 @@ class DetailScreen extends StatelessWidget {
     this.openingHours,
     this.address,
     this.tickets,
+    this.fishingRules,
     this.index,
   });
 
@@ -37,6 +38,7 @@ class DetailScreen extends StatelessWidget {
   final HoursOfOperation openingHours;
   final VenueAddress address;
   final List<dynamic> tickets;
+  final String fishingRules;
   final int index;
 
   @override
@@ -68,7 +70,7 @@ class DetailScreen extends StatelessWidget {
         OpeningHoursSection(
           openingHours: openingHours,
         ),
-        FishingRulesSection(true),
+        FishingRulesSection(fishingRules),
       ],
     );
   }

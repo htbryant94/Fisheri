@@ -37,6 +37,7 @@ class SearchResultsScreen extends StatelessWidget {
               fishStocked: _venue['fish_stock_array'],
               amenities: _venue['amenities_array'],
               tickets: _venue['tickets_array'],
+              fishingRules: _venue['fishing_rules'],
             );
 
             final _venueType = snapshot.data.documents[index]['isLake'] ? 'LAKE' : 'SHOP';
@@ -54,6 +55,7 @@ class SearchResultsScreen extends StatelessWidget {
               fishStock: _venueDetailed.fishStocked,
               fishTypes: _venueDetailed.fishingTypes,
               tickets: _venueDetailed.tickets,
+              fishingRules: _venueDetailed.fishingRules,
               index: index,
             );
           },

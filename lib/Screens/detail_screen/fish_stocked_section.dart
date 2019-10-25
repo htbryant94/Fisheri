@@ -1,5 +1,5 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_storage_image/firebase_storage_image.dart';
 import 'header.dart';
 import 'grid_item.dart';
 
@@ -27,21 +27,50 @@ class FishStockedSection extends StatelessWidget {
   }
 }
 
-class _FishStockedGridItem extends StatelessWidget {
+class _FishStockedGridItem extends StatefulWidget {
   _FishStockedGridItem(this.fish);
 
   final String fish;
 
   @override
-  Widget build(BuildContext context) {
-    final storageURL = 'gs://fishing-finder-594f0.appspot.com/fish/stock/';
-    final fishURL = fish.replaceAll(" ", "_").toLowerCase();
-    final actualURL = "$storageURL$fishURL.png";
+  __FishStockedGridItemState createState() => __FishStockedGridItemState();
+}
 
-    return GridItem(
-      item: fish,
-      image: Image(image: FirebaseStorageImage(actualURL)),
-      width: 65,
+class __FishStockedGridItemState extends State<_FishStockedGridItem> {
+  @override
+  Widget build(BuildContext context) {
+    final fishURL = widget.fish.replaceAll(" ", "_").toLowerCase();
+
+    Future<Image> _getImage() async {
+      String imageURL = await FirebaseStorage.instance.ref().child('fish').child('stock').child(('$fishURL.png')).getDownloadURL();
+      return await Image.network(imageURL);
+    }
+
+    return FutureBuilder<Image>(
+      future: _getImage(),
+      builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return GridItem(
+            item: widget.fish,
+            image: Image.asset('images/question_mark.png'),
+            width: 65,
+          );
+        } else {
+          if (snapshot.hasError) {
+            return GridItem(
+              item: widget.fish,
+              image: Image.asset('images/question_mark.png'),
+              width: 65,
+            );
+          } else {
+            return GridItem(
+              item: widget.fish,
+              image: snapshot.data,
+              width: 65,
+            );
+          }
+        }
+      },
     );
   }
 }

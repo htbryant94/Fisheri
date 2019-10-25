@@ -5,10 +5,9 @@ import 'package:fisheri/models/venue_detailed.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:fisheri/search_result_cell.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:jaguar_serializer/jaguar_serializer.dart';
-import 'dart:convert';
+import 'package:fisheri/opening_hours_list.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
 
 class VenueDetailedConstants {
   static const String name = "name";
@@ -54,6 +53,7 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
               child: Column(
                 children: <Widget>[
                   _OverviewSection(),
+                  _CoordinatesSection(),
                   _AddressSection(),
                   _AmenitiesSection(),
                   _ContactDetailsSection(),
@@ -61,6 +61,7 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
                   _FishStockedSection(),
                   _FishingTypesSection(),
                   _TicketsSection(),
+                  _FishingRulesSection(),
                   _OperationalHoursSection(),
                 ],
               ),
@@ -74,6 +75,7 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
                         return _fbKey
                             .currentState.fields[attribute].currentState.value;
                       };
+
                       HoursOfOperation operationalHours = HoursOfOperation(
                         monday: OpeningHoursDay(
                           open: _valueFor(attribute: 'monday_open'),
@@ -105,60 +107,138 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
                         ),
                       );
                       final _venue = VenueDetailed(
-                          name:
-                              _valueFor(attribute: VenueDetailedConstants.name),
-                          isShop: _valueFor(attribute: 'venue_type')
-                              .toString()
-                              .contains('Shop'),
-                          isLake: _valueFor(attribute: 'venue_type')
-                              .toString()
-                              .contains('Lake'),
-                          description: _valueFor(
-                              attribute: VenueDetailedConstants.description),
-                          address: VenueAddress(
-                            street: _valueFor(attribute: 'address_street'),
-                            town: _valueFor(attribute: 'address_town'),
-                            county: _valueFor(attribute: 'address_county'),
-                            postcode: _valueFor(attribute: 'address_postcode'),
-                          ),
-                          amenities: _valueFor(attribute: 'amenities_list'),
-                          contactDetails: ContactDetails(
-                            email: _valueFor(attribute: 'contact_email'),
-                            phone: _valueFor(attribute: 'contact_phone'),
-                          ),
-                          social: Social(
-                            facebook: _valueFor(attribute: 'social_facebook'),
-                            instagram: _valueFor(attribute: 'social_instagram'),
-                            twitter: _valueFor(attribute: 'social_twitter'),
-                            youtube: _valueFor(attribute: 'social_youtube'),
-                          ),
-                          fishStocked: _valueFor(attribute: 'fish_stocked'),
-                          fishingTypes: _valueFor(attribute: 'fishing_types'),
-                          tickets: _valueFor(attribute: 'tickets'),
-                          operationalHours: operationalHours);
+                        name: _valueFor(attribute: VenueDetailedConstants.name),
+                        isShop: _valueFor(attribute: 'venue_type')
+                            .toString()
+                            .contains('Shop'),
+                        isLake: _valueFor(attribute: 'venue_type')
+                            .toString()
+                            .contains('Lake'),
+                        description: _valueFor(
+                            attribute: VenueDetailedConstants.description),
+                        address: VenueAddress(
+                          street: _valueFor(attribute: 'address_street'),
+                          town: _valueFor(attribute: 'address_town'),
+                          county: _valueFor(attribute: 'address_county'),
+                          postcode: _valueFor(attribute: 'address_postcode'),
+                        ),
+                        amenities: _valueFor(attribute: 'amenities_list'),
+                        contactDetails: ContactDetails(
+                          email: _valueFor(attribute: 'contact_email'),
+                          phone: _valueFor(attribute: 'contact_phone'),
+                        ),
+                        social: Social(
+                          facebook: _valueFor(attribute: 'social_facebook'),
+                          instagram: _valueFor(attribute: 'social_instagram'),
+                          twitter: _valueFor(attribute: 'social_twitter'),
+                          youtube: _valueFor(attribute: 'social_youtube'),
+                        ),
+                        fishStocked: _valueFor(attribute: 'fish_stocked'),
+                        fishingTypes: _valueFor(attribute: 'fishing_types'),
+                        tickets: _valueFor(attribute: 'tickets'),
+                        operationalHours: operationalHours,
+                        fishingRules: _valueFor(attribute: 'fishing_rules'),
+                      );
                       if (_fbKey.currentState.saveAndValidate()) {
                         final result =
                             VenueDetailedJSONSerializer().toMap(_venue);
-                        final jsonResult = jsonEncode(result);
-                        print(result);
-                        print(jsonResult);
-                        Firestore.instance
-                            .collection('venues_detail')
-                            .document()
-                            .setData(result);
-//                      Navigator.push(
-//                          context,
-//                          MaterialPageRoute(
-//                              builder: (context) => SecondRoute(
-//                                    title: _venue.name,
-//                                    descriptionText: _venue.description,
-//                                    fishStock: _venue.fishStocked,
-//                                    fishTypes: _venue.fishingTypes,
-//                                    amenities: _venue.amenities,
-//                                    openingHours: _venue.operationalHours,
-//                                    address: _venue.address,
-//                                    tickets: _venue.tickets,
-//                                  )));
+                        final _latitude =
+                            _valueFor(attribute: 'coordinates_latitude');
+                        final _longitude =
+                            _valueFor(attribute: 'coordinates_longitude');
+
+                        if (_latitude != null && _longitude != null) {
+                          final double _latitude = double.parse(
+                              _valueFor(attribute: 'coordinates_latitude'));
+                          assert(_latitude is double);
+                          final double _longitude = double.parse(
+                              _valueFor(attribute: 'coordinates_longitude'));
+                          assert(_longitude is double);
+                          result["coordinates"] = GeoPoint(
+                            _latitude,
+                            _longitude,
+                          );
+                        }
+
+                        void _addPoint({String name, String id, double lat, double long}) {
+                          print('adding point');
+                          final _geo = Geoflutterfire();
+                          GeoFirePoint geoFirePoint =
+                              _geo.point(latitude: lat, longitude: long);
+                          Firestore.instance
+                              .collection('venues_locations')
+                              .add({
+                            'name': name,
+                            'id': id,
+                            'position': geoFirePoint.data
+                          }).whenComplete(() {
+                            print('added ${geoFirePoint.hash} successfully');
+                            showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text('Form successfully submitted'),
+                                    content: SingleChildScrollView(
+                                      child: Text(
+                                          'Tap Return to dismiss this page.'),
+                                    ),
+                                    actions: <Widget>[
+                                      FlatButton(
+                                        child: Text('Return'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                          _fbKey.currentState.reset();
+                                        },
+                                      )
+                                    ],
+                                  );
+                                });
+                          });
+                        }
+
+                        Future postNewVenue() async {
+                           await Firestore.instance
+                              .collection('venues_detail')
+                              .add(result).then((doc) {
+                             final double _latitude = double.parse(
+                                 _valueFor(attribute: 'coordinates_latitude'));
+                             assert(_latitude is double);
+                             final double _longitude = double.parse(
+                                 _valueFor(attribute: 'coordinates_longitude'));
+                             assert(_longitude is double);
+                             _addPoint(
+                               name: result['name'],
+                               id: doc.documentID,
+                               lat: _latitude,
+                               long: _longitude,
+                             );
+                          });
+                        }
+
+                        postNewVenue();
+                      } else {
+                        showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text(
+                                    'There was an issue trying to submit your form'),
+                                content: SingleChildScrollView(
+                                  child: Text(
+                                      'Please correct any incorrect entries and try again.'),
+                                ),
+                                actions: <Widget>[
+                                  FlatButton(
+                                    child: Text('OK'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  )
+                                ],
+                              );
+                            });
                       }
                     }),
                 MaterialButton(
@@ -238,6 +318,28 @@ class _OverviewSection extends StatelessWidget {
             FormBuilderValidators.minLength(4),
             FormBuilderValidators.maxLength(1000),
           ],
+        ),
+      ],
+    );
+  }
+}
+
+class _FishingRulesSection extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        _Header('Fishing Rules'),
+        FormBuilderTextField(
+          keyboardType: TextInputType.multiline,
+          minLines: 5,
+          maxLines: null,
+          attribute: "fishing_rules",
+          decoration: InputDecoration(
+              labelText: "Fishing Rules",
+              helperText:
+                  "Information on fishing rules and regulations for this venue",
+              border: OutlineInputBorder()),
         ),
       ],
     );
@@ -484,6 +586,35 @@ class _TicketsSection extends StatelessWidget {
   }
 }
 
+class _CoordinatesSection extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        _Header('Coordinates'),
+        FormBuilderTextField(
+          attribute: "coordinates_latitude",
+          decoration: InputDecoration(
+            labelText: "Latitude *",
+          ),
+          validators: [
+            FormBuilderValidators.required(),
+            FormBuilderValidators.numeric(),
+          ],
+        ),
+        FormBuilderTextField(
+          attribute: "coordinates_longitude",
+          decoration: InputDecoration(labelText: "Longitude *"),
+          validators: [
+            FormBuilderValidators.required(),
+            FormBuilderValidators.numeric(),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
 class _OperationalHoursSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -515,56 +646,6 @@ class _OperationalHoursDay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<String> times = [
-      '00:00',
-      '00:30',
-      '01:00',
-      '01:30',
-      '02:00',
-      '02:30',
-      '03:00',
-      '03:30',
-      '04:00',
-      '04:30',
-      '05:00',
-      '05:30',
-      '06:00',
-      '06:30',
-      '07:00',
-      '07:30',
-      '08:00',
-      '08:30',
-      '09:00',
-      '09:30',
-      '10:00',
-      '10:30',
-      '11:00',
-      '11:30',
-      '12:00',
-      '12:30',
-      '13:00',
-      '13:30',
-      '14:00',
-      '14:20',
-      '15:00',
-      '15:30',
-      '16:00',
-      '16:30',
-      '17:00',
-      '17:30',
-      '18:00',
-      '18:30',
-      '19:00',
-      '19:30',
-      '20:00',
-      '20:30',
-      '21:00',
-      '21:30',
-      '22:00',
-      '22:30',
-      '23:00',
-      '23:30'
-    ];
     return Column(
       children: <Widget>[
         Align(
@@ -575,7 +656,7 @@ class _OperationalHoursDay extends StatelessWidget {
           attribute: "${day.toLowerCase()}_open",
           decoration: InputDecoration(labelText: "Open"),
           hint: Text('Open'),
-          items: times
+          items: OpeningHoursList.thirtyIntervalFromMorning
               .map(
                   (time) => DropdownMenuItem(value: time, child: Text("$time")))
               .toList(),
@@ -584,7 +665,7 @@ class _OperationalHoursDay extends StatelessWidget {
           attribute: "${day.toLowerCase()}_close",
           decoration: InputDecoration(labelText: "Close"),
           hint: Text('Close'),
-          items: times
+          items: OpeningHoursList.thirtyIntervalFromAfternoon
               .map(
                   (time) => DropdownMenuItem(value: time, child: Text("$time")))
               .toList(),

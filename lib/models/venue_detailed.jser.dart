@@ -8,6 +8,7 @@ part of 'venue_detailed.dart';
 
 abstract class _$VenueDetailedJSONSerializer
     implements Serializer<VenueDetailed> {
+  final _passProcessor = const PassProcessor();
   Serializer<VenueAddress> __venueAddressJSONSerializer;
   Serializer<VenueAddress> get _venueAddressJSONSerializer =>
       __venueAddressJSONSerializer ??= VenueAddressJSONSerializer();
@@ -24,6 +25,8 @@ abstract class _$VenueDetailedJSONSerializer
   Map<String, dynamic> toMap(VenueDetailed model) {
     if (model == null) return null;
     Map<String, dynamic> ret = <String, dynamic>{};
+    setMapValue(
+        ret, 'coordinates', _passProcessor.serialize(model.coordinates));
     setMapValue(ret, 'name', model.name);
     setMapValue(ret, 'isLake', model.isLake);
     setMapValue(ret, 'isShop', model.isShop);
@@ -48,6 +51,7 @@ abstract class _$VenueDetailedJSONSerializer
         codeIterable(model.tickets, (val) => passProcessor.serialize(val)));
     setMapValue(ret, 'hours_of_operation_map',
         _hoursOfOperationJSONSerializer.toMap(model.operationalHours));
+    setMapValue(ret, 'fishing_rules', model.fishingRules);
     return ret;
   }
 
@@ -55,6 +59,8 @@ abstract class _$VenueDetailedJSONSerializer
   VenueDetailed fromMap(Map map) {
     if (map == null) return null;
     final obj = VenueDetailed();
+    obj.coordinates =
+        _passProcessor.deserialize(map['coordinates']) as GeoPoint;
     obj.name = map['name'] as String;
     obj.isLake = map['isLake'] as bool;
     obj.isShop = map['isShop'] as bool;
@@ -76,6 +82,7 @@ abstract class _$VenueDetailedJSONSerializer
         (val) => passProcessor.deserialize(val));
     obj.operationalHours = _hoursOfOperationJSONSerializer
         .fromMap(map['hours_of_operation_map'] as Map);
+    obj.fishingRules = map['fishing_rules'] as String;
     return obj;
   }
 }

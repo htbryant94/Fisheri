@@ -1,4 +1,6 @@
+import 'package:fisheri/house_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class TitleSection extends StatelessWidget {
   TitleSection({
@@ -14,7 +16,7 @@ class TitleSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -37,7 +39,12 @@ class _TitleHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(title,
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22));
+        style: GoogleFonts.raleway(
+          fontSize: 22,
+          fontWeight: FontWeight.w600,
+          fontStyle: FontStyle.normal,
+          color: HouseColors.midnightBlue,
+        ));
   }
 }
 
@@ -52,12 +59,15 @@ class _TitleSubHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      '$town, $county',
-      style: TextStyle(
-        color: Colors.grey[500],
-        fontSize: 18,
-      ),
-    );
+    if (town != null && county != null) {
+      return Text('$town, $county',
+          style: GoogleFonts.raleway(
+            fontSize: 18,
+            fontWeight: FontWeight.w400,
+            fontStyle: FontStyle.normal,
+            color: HouseColors.asbestos,
+          ));
+    }
+    return Container();
   }
 }

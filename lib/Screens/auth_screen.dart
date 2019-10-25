@@ -10,7 +10,7 @@ class AuthScreen extends StatelessWidget {
         alignment: Alignment.center,
         child: Column(
           children: [
-            _Logo('images/fisheri_logo.jpg'),
+            _Logo('images/logo.png'),
             Expanded(
                 child: Column(
               children: [

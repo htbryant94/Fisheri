@@ -29,6 +29,7 @@ class BottomTabBar extends StatelessWidget {
         onTap: onTap,
         items: [
           _tabItem(Icon(Icons.explore), 'Login'),
+          _tabItem(Icon(Icons.description), 'Catch'),
           _tabItem(Icon(Icons.search), 'Search'),
           _tabItem(Icon(Icons.star), 'Results'),
           _tabItem(Icon(Icons.assignment), 'Add Venue'),
