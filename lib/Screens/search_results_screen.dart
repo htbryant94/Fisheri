@@ -1,13 +1,10 @@
 import 'package:fisheri/models/venue_detailed.dart';
-import 'package:fisheri/models/venue_detailed.dart' as prefix0;
 import 'package:flutter/material.dart';
 import 'package:fisheri/search_result_cell.dart';
 import 'package:fisheri/result_info.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'package:fisheri/models/venue_address.dart';
 import 'package:fisheri/models/hours_of_operation.dart';
-import 'package:fisheri/models/fish_stock.dart';
 
 class SearchResultsScreen extends StatelessWidget {
   SearchResultsScreen(this.searchResults);
@@ -57,6 +54,7 @@ class SearchResultsScreen extends StatelessWidget {
               fishStock: _venueDetailed.fishStocked,
               fishTypes: _venueDetailed.fishingTypes,
               tickets: _venueDetailed.tickets,
+              index: index,
             );
           },
         );

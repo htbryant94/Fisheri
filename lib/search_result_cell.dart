@@ -19,6 +19,7 @@ class SearchResultCell extends StatelessWidget {
     this.amenities,
     this.fishTypes,
     this.tickets,
+    this.index,
   });
 
   final String imageURL;
@@ -33,6 +34,7 @@ class SearchResultCell extends StatelessWidget {
   final List<dynamic> amenities;
   final List<dynamic> fishTypes;
   final List<dynamic> tickets;
+  final int index;
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +53,7 @@ class SearchResultCell extends StatelessWidget {
                       openingHours: openingHours,
                       address: address,
                       tickets: tickets,
+                      index: index,
                     )));
       },
       child: Container(
@@ -58,12 +61,15 @@ class SearchResultCell extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _SearchResultCellImage(imageURL),
+            _SearchResultCellImage(
+              imageURL: imageURL,
+              index: index,),
             _SearchResultCellInfo(
               title: title,
               venueType: venueType,
               isOpen: isOpen,
               distance: distance,
+              index: index,
             )
           ],
         ),
@@ -82,6 +88,7 @@ class SecondRoute extends StatelessWidget {
     this.openingHours,
     this.address,
     this.tickets,
+    this.index,
   });
 
   final String title;
@@ -92,6 +99,7 @@ class SecondRoute extends StatelessWidget {
   final HoursOfOperation openingHours;
   final VenueAddress address;
   final List<dynamic> tickets;
+  final int index;
 
   @override
   Widget build(BuildContext context) {
@@ -111,6 +119,7 @@ class SecondRoute extends StatelessWidget {
           descriptionExpanded: true,
           address: address,
           tickets: tickets,
+          index: index,
         ),
       ),
     );
@@ -118,14 +127,18 @@ class SecondRoute extends StatelessWidget {
 }
 
 class _SearchResultCellImage extends StatelessWidget {
-  _SearchResultCellImage(this.imageURL);
+  _SearchResultCellImage({
+    this.imageURL,
+    this.index,
+  });
 
   final String imageURL;
+  final int index;
 
   @override
   Widget build(BuildContext context) {
     return Hero(
-        tag: 'HeroImage',
+        tag: 'HeroImage_$index',
         child: AspectRatio(
           child: Image.asset(imageURL, fit: BoxFit.fill),
           aspectRatio: 1.0,
@@ -141,12 +154,14 @@ class _SearchResultCellInfo extends StatelessWidget {
     this.venueType,
     this.distance,
     this.isOpen,
+    this.index,
   }) : super(key: key);
 
   final String title;
   final String venueType;
   final String distance;
   final bool isOpen;
+  final int index;
 
   @override
   Widget build(BuildContext context) {
@@ -160,8 +175,7 @@ class _SearchResultCellInfo extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Hero(child: _Title(title), tag: 'HeroTitle'),
-                  // _Title(title),
+                  Hero(child: _Title(title), tag: 'HeroTitle_$index'),
                   _VenueType(venueType),
                   _VenueOperational(isOpen),
                   Row(

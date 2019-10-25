@@ -24,6 +24,7 @@ class DetailScreen extends StatelessWidget {
     this.openingHours,
     this.address,
     this.tickets,
+    this.index,
   });
 
   final bool descriptionExpanded;
@@ -36,12 +37,16 @@ class DetailScreen extends StatelessWidget {
   final HoursOfOperation openingHours;
   final VenueAddress address;
   final List<dynamic> tickets;
+  final int index;
 
   @override
   Widget build(BuildContext context) {
     return ListView(
       children: [
-        ImageCarousel('images/lake.jpg'),
+        ImageCarousel(
+          imageURL:'images/lake.jpg',
+          index: index,
+        ),
         TitleSection(
           title: title,
           town: address.town,

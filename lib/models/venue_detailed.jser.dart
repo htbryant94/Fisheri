@@ -17,6 +17,9 @@ abstract class _$VenueDetailedJSONSerializer
   Serializer<Social> __socialJSONSerializer;
   Serializer<Social> get _socialJSONSerializer =>
       __socialJSONSerializer ??= SocialJSONSerializer();
+  Serializer<HoursOfOperation> __hoursOfOperationJSONSerializer;
+  Serializer<HoursOfOperation> get _hoursOfOperationJSONSerializer =>
+      __hoursOfOperationJSONSerializer ??= HoursOfOperationJSONSerializer();
   @override
   Map<String, dynamic> toMap(VenueDetailed model) {
     if (model == null) return null;
@@ -41,8 +44,10 @@ abstract class _$VenueDetailedJSONSerializer
         'fishing_types_array',
         codeIterable(
             model.fishingTypes, (val) => passProcessor.serialize(val)));
-    setMapValue(ret, 'tickets',
+    setMapValue(ret, 'tickets_array',
         codeIterable(model.tickets, (val) => passProcessor.serialize(val)));
+    setMapValue(ret, 'hours_of_operation_map',
+        _hoursOfOperationJSONSerializer.toMap(model.operationalHours));
     return ret;
   }
 
@@ -67,8 +72,10 @@ abstract class _$VenueDetailedJSONSerializer
     obj.fishingTypes = codeIterable<dynamic>(
         map['fishing_types_array'] as Iterable,
         (val) => passProcessor.deserialize(val));
-    obj.tickets = codeIterable<dynamic>(
-        map['tickets'] as Iterable, (val) => passProcessor.deserialize(val));
+    obj.tickets = codeIterable<dynamic>(map['tickets_array'] as Iterable,
+        (val) => passProcessor.deserialize(val));
+    obj.operationalHours = _hoursOfOperationJSONSerializer
+        .fromMap(map['hours_of_operation_map'] as Map);
     return obj;
   }
 }

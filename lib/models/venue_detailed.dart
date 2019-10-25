@@ -17,6 +17,7 @@ part 'venue_detailed.jser.dart';
     'fishStocked': EnDecode(alias: 'fish_stock_array'),
     'fishingTypes': EnDecode(alias: 'fishing_types_array'),
     'operationalHours': EnDecode(alias: 'hours_of_operation_map'),
+    'tickets': EnDecode(alias: 'tickets_array'),
   },
 )
 class VenueDetailedJSONSerializer extends Serializer<VenueDetailed>
