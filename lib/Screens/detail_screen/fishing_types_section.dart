@@ -11,7 +11,7 @@ class FishingTypesSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+      padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
       child: Column(
         children: [
           Header('Fishing Types'),
@@ -20,8 +20,10 @@ class FishingTypesSection extends StatelessWidget {
               spacing: 16,
               runSpacing: 16,
               children: fishTypes
-                  .map((types) => _FishingTypeGridItem(types))
-                  .toList())
+                  .map((types) => _FishingTypeGridItem(
+                type: types,
+                itemWidth: MediaQuery.of(context).size.width / 2.5,
+              )).toList())
         ],
       ),
     );
@@ -29,9 +31,13 @@ class FishingTypesSection extends StatelessWidget {
 }
 
 class _FishingTypeGridItem extends StatefulWidget {
-  _FishingTypeGridItem(this.type);
+  _FishingTypeGridItem({
+    this.type,
+    this.itemWidth,
+});
 
   final String type;
+  final double itemWidth;
 
   @override
   __FishingTypeGridItemState createState() => __FishingTypeGridItemState();
@@ -53,20 +59,27 @@ class __FishingTypeGridItemState extends State<_FishingTypeGridItem> {
           return GridItem(
             item: widget.type,
             image: Image.asset('images/question_mark.png'),
-            width: 120,
+            width: widget.itemWidth,
           );
         } else {
           if (snapshot.hasError) {
             return GridItem(
               item: widget.type,
               image: Image.asset('images/question_mark.png'),
-              width: 120,
+              width: widget.itemWidth,
             );
           } else {
-            return GridItem(
-              item: widget.type,
-              image: snapshot.data,
-              width: 120,
+            return Card(
+              elevation: 5,
+              clipBehavior: Clip.antiAliasWithSaveLayer,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
+                child: GridItem(
+                  item: widget.type,
+                  image: snapshot.data,
+                  width: widget.itemWidth,
+                ),
+              ),
             );
           }
         }
