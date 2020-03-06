@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_storage_image/firebase_storage_image.dart';
 import 'grid_item.dart';
 import 'header.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class FishingTypesSection extends StatelessWidget {
   FishingTypesSection(this.fishTypes);
@@ -28,20 +28,49 @@ class FishingTypesSection extends StatelessWidget {
   }
 }
 
-class _FishingTypeGridItem extends StatelessWidget {
+class _FishingTypeGridItem extends StatefulWidget {
   _FishingTypeGridItem(this.type);
 
   final String type;
 
   @override
-  Widget build(BuildContext context) {
-    final storageURL = 'gs://fishing-finder-594f0.appspot.com/fishing/types/';
-    final actualURL = "$storageURL$type.jpg";
+  __FishingTypeGridItemState createState() => __FishingTypeGridItemState();
+}
 
-    return GridItem(
-      item: type,
-      image: Image(image: FirebaseStorageImage(actualURL)),
-      width: 120,
+class __FishingTypeGridItemState extends State<_FishingTypeGridItem> {
+  @override
+  Widget build(BuildContext context) {
+
+    Future<Image> _getImage() async {
+      String imageURL = await FirebaseStorage.instance.ref().child('fishing').child('types').child(('${widget.type}.jpg')).getDownloadURL();
+      return await Image.network(imageURL);
+    }
+
+    return FutureBuilder<Image>(
+      future: _getImage(),
+      builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return GridItem(
+            item: widget.type,
+            image: Image.asset('images/question_mark.png'),
+            width: 120,
+          );
+        } else {
+          if (snapshot.hasError) {
+            return GridItem(
+              item: widget.type,
+              image: Image.asset('images/question_mark.png'),
+              width: 120,
+            );
+          } else {
+            return GridItem(
+              item: widget.type,
+              image: snapshot.data,
+              width: 120,
+            );
+          }
+        }
+      },
     );
   }
 }

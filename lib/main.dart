@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:fisheri/Screens/catch_reports_screen.dart';
 import 'package:fisheri/Screens/venue_form_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -30,7 +31,6 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
-  Completer<GoogleMapController> _controller = Completer();
 
   TabController _tabController;
   int _selectedTab = 0;
@@ -38,7 +38,7 @@ class HomePageState extends State<HomePage>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 5, vsync: this);
   }
 
   @override
@@ -60,7 +60,8 @@ class HomePageState extends State<HomePage>
         controller: _tabController,
         children: [
           AuthScreen(),
-          SearchScreen(_controller),
+          CatchReportsScreen(),
+          SearchScreen(),
           SearchResultsScreen(MockResultInfo.searchResults),
           VenueFormScreen(),
         ],
@@ -82,6 +83,7 @@ class HomePageState extends State<HomePage>
 
     return MaterialApp(
       home: Scaffold(
+        backgroundColor: Colors.grey[300],
         appBar: _appBar,
         body: Stack(
           children: [

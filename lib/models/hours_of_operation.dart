@@ -3,7 +3,7 @@ import 'package:jaguar_serializer/jaguar_serializer.dart';
 part 'hours_of_operation.jser.dart';
 
 @GenSerializer(
-  serializers: const [OpeningHoursDayJSONSerializer],
+  serializers: [OpeningHoursDayJSONSerializer],
 )
 class HoursOfOperationJSONSerializer extends Serializer<HoursOfOperation>
     with _$HoursOfOperationJSONSerializer {}

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fisheri/models/hours_of_operation.dart';
 import 'package:fisheri/models/venue_address.dart';
 import 'package:jaguar_serializer/jaguar_serializer.dart';
@@ -18,6 +19,7 @@ part 'venue_detailed.jser.dart';
     'fishingTypes': EnDecode(alias: 'fishing_types_array'),
     'operationalHours': EnDecode(alias: 'hours_of_operation_map'),
     'tickets': EnDecode(alias: 'tickets_array'),
+    'fishingRules': EnDecode(alias: 'fishing_rules'),
   },
 )
 class VenueDetailedJSONSerializer extends Serializer<VenueDetailed>
@@ -25,6 +27,7 @@ class VenueDetailedJSONSerializer extends Serializer<VenueDetailed>
 
 class VenueDetailed {
   VenueDetailed({
+    this.coordinates,
     this.name,
     this.isLake,
     this.isShop,
@@ -39,8 +42,11 @@ class VenueDetailed {
     this.fishingTypes,
     this.tickets,
     this.operationalHours,
+    this.fishingRules,
   });
 
+  @pass
+  GeoPoint coordinates;
   String name;
   bool isLake;
   bool isShop;
@@ -55,6 +61,7 @@ class VenueDetailed {
   List<dynamic> fishingTypes;
   List<dynamic> tickets;
   HoursOfOperation operationalHours;
+  String fishingRules;
 }
 
 @GenSerializer()

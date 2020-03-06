@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Header extends StatelessWidget {
   Header(this.header);
@@ -10,9 +11,10 @@ class Header extends StatelessWidget {
     return Align(
         alignment: Alignment.centerLeft,
         child: Text(header,
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
+            style: GoogleFonts.raleway(
+              fontSize: 18,
+              fontWeight: FontWeight.w400,
+              fontStyle: FontStyle.normal,
             )));
   }
 }

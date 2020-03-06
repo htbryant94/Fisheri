@@ -23,11 +23,14 @@ dependencies:
   http: ^0.12.0+2
   json_serializable: ^3.0.0
   json_annotation: ^2.4.0
-  firebase_core: ^0.4.0+5 
-  firebase_storage_image: ^0.4.0
-  cloud_firestore: ^0.12.7
+  firebase_core: ^0.4.0+5
+  firebase_storage: ^3.1.1
+  cloud_firestore: ^0.13.0+1
   jaguar_serializer: ^2.2.12
   flutter_form_builder: ^3.5.0
+  geoflutterfire: ^2.1.0
+  google_fonts: ^0.3.9
+  cached_network_image: ^2.0.0-rc
   
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -54,6 +57,7 @@ flutter:
   assets:
     - images/lake.jpg
     - images/fisheri_logo.jpg
+    - images/logo.png
     - images/fish_1.png
     - images/fish_2.png
     - images/fish_3.png
@@ -66,6 +70,7 @@ flutter:
     - images/fish_10.png
     - images/fish_11.png
     - images/question_mark.png
+    - images/galaxy.jpg
 
   # To add assets to your application, add an assets section, like this:
   # assets:

@@ -19,6 +19,7 @@ class SearchResultCell extends StatelessWidget {
     this.amenities,
     this.fishTypes,
     this.tickets,
+    this.fishingRules,
     this.index,
   });
 
@@ -34,6 +35,7 @@ class SearchResultCell extends StatelessWidget {
   final List<dynamic> amenities;
   final List<dynamic> fishTypes;
   final List<dynamic> tickets;
+  final String fishingRules;
   final int index;
 
   @override
@@ -53,6 +55,7 @@ class SearchResultCell extends StatelessWidget {
                       openingHours: openingHours,
                       address: address,
                       tickets: tickets,
+                      fishingRules: fishingRules,
                       index: index,
                     )));
       },
@@ -88,6 +91,7 @@ class SecondRoute extends StatelessWidget {
     this.openingHours,
     this.address,
     this.tickets,
+    this.fishingRules,
     this.index,
   });
 
@@ -99,6 +103,7 @@ class SecondRoute extends StatelessWidget {
   final HoursOfOperation openingHours;
   final VenueAddress address;
   final List<dynamic> tickets;
+  final String fishingRules;
   final int index;
 
   @override
@@ -119,6 +124,7 @@ class SecondRoute extends StatelessWidget {
           descriptionExpanded: true,
           address: address,
           tickets: tickets,
+          fishingRules: fishingRules,
           index: index,
         ),
       ),
