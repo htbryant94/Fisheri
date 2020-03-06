@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:basic_utils/basic_utils.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:fisheri/house_colors.dart';
 
 class GridItem extends StatelessWidget {
   GridItem({this.item, this.image, this.width});
@@ -18,7 +21,13 @@ class GridItem extends StatelessWidget {
           ),
           SizedBox(height: 8),
           Text(
-            item,
+            StringUtils.capitalize(item),
+            style: GoogleFonts.raleway(
+              fontSize: 16,
+              fontWeight: FontWeight.w200,
+              fontStyle: FontStyle.normal,
+              color: HouseColors.wetAsphalt,
+            ),
             textAlign: TextAlign.center,
           )
         ]));
