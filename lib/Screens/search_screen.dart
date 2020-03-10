@@ -27,6 +27,9 @@ class _SearchScreenState extends State<SearchScreen> {
   double _radiusSliderValue = 0;
   final _latitude = 51.979900;
   final _longitude = -0.214280;
+  String _selectedVenueName;
+  String _selectedVenueType;
+  String _selectedVenueID;
 
   @override
   void initState() {
@@ -63,6 +66,13 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    bool shouldShowVenueCard() {
+      return _selectedVenueID != null &&
+             _selectedVenueType != null &&
+             _selectedVenueName != null;
+    }
+
     return Stack(children: <Widget>[
       GoogleMap(
         mapType: MapType.normal,
@@ -81,14 +91,52 @@ class _SearchScreenState extends State<SearchScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
+            if (shouldShowVenueCard())
             DecoratedBox(
               child: Container(
                 width: MediaQuery.of(context).size.width - 8,
                 height: 100,
-                child: BaseCell(
-                  title: 'some title',
-                  subtitle: 'some subtitle',
-                  image: Image.asset('images/lake.jpg'),
+                child: GestureDetector(
+                  onTap: () {
+                    _firestore.collection('venues_detail').document(_selectedVenueID).get().then((DocumentSnapshot document) {
+                      final _venue = document;
+                      final _venueDetailed = VenueDetailed(
+                        name: _venue['name'],
+                        isLake: _venue['isLake'],
+                        isShop: _venue['isShop'],
+                        description: _venue['description'],
+                        social: SocialJSONSerializer().fromMap(_venue['social']),
+                        address: VenueAddressJSONSerializer().fromMap(_venue['address']),
+                        fishingTypes: _venue['fishing_types_array'],
+                        fishStocked: _venue['fish_stock_array'],
+                        amenities: _venue['amenities_array'],
+                        tickets: _venue['tickets_array'],
+                        fishingRules: _venue['fishing_rules'],
+                      );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SecondRoute(
+                            title: _venueDetailed.name,
+                            descriptionText: _venueDetailed.description,
+                            fishStock: _venueDetailed.fishStocked,
+                            fishTypes: _venueDetailed.fishingTypes,
+                            amenities: _venueDetailed.amenities,
+                            openingHours: _venueDetailed.operationalHours,
+                            address: _venueDetailed.address,
+                            tickets: _venueDetailed.tickets,
+                            fishingRules: _venueDetailed.fishingRules,
+                            index: 0,
+                          ),
+                        ),
+                      );
+                    });
+                  },
+                  child: BaseCell(
+                    title: _selectedVenueName,
+                    subtitle: _selectedVenueType,
+                    image: Image.asset('images/lake.jpg'),
+                  ),
                 )
               ),
               decoration: BoxDecoration(
@@ -182,48 +230,16 @@ class _SearchScreenState extends State<SearchScreen> {
     _markerIdCounter++;
     final MarkerId markerId = MarkerId(markerIdVal);
     var _marker = Marker(
+      onTap: () {
+        setState(() {
+          _selectedVenueName = name;
+          _selectedVenueType = venueType;
+          _selectedVenueID = id;
+        });
+      },
       markerId: markerId,
       position: LatLng(lat, long),
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-      infoWindow: InfoWindow(
-        title: name,
-        snippet: venueType,
-        onTap: () {
-          _firestore.collection('venues_detail').document(id).get().then((DocumentSnapshot document) {
-            final _venue = document;
-            final _venueDetailed = VenueDetailed(
-              name: _venue['name'],
-              isLake: _venue['isLake'],
-              isShop: _venue['isShop'],
-              description: _venue['description'],
-              social: SocialJSONSerializer().fromMap(_venue['social']),
-              address: VenueAddressJSONSerializer().fromMap(_venue['address']),
-              fishingTypes: _venue['fishing_types_array'],
-              fishStocked: _venue['fish_stock_array'],
-              amenities: _venue['amenities_array'],
-              tickets: _venue['tickets_array'],
-              fishingRules: _venue['fishing_rules'],
-            );
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => SecondRoute(
-                      title: _venueDetailed.name,
-                      descriptionText: _venueDetailed.description,
-                      fishStock: _venueDetailed.fishStocked,
-                      fishTypes: _venueDetailed.fishingTypes,
-                      amenities: _venueDetailed.amenities,
-                      openingHours: _venueDetailed.operationalHours,
-                      address: _venueDetailed.address,
-                      tickets: _venueDetailed.tickets,
-                      fishingRules: _venueDetailed.fishingRules,
-                      index: 0,
-                    ),
-                ),
-            );
-          });
-        },
-      ),
     );
     setState(() {
       markers[markerId] = _marker;

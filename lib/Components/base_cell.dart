@@ -29,7 +29,7 @@ class BaseCell extends StatelessWidget {
 
   Text _subtitle() {
     return Text(
-      subtitle,
+      '$subtitle',
       style: GoogleFonts.raleway(
         fontSize: 16,
         fontWeight: FontWeight.w400,
