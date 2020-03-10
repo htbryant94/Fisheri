@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fisheri/models/hours_of_operation.dart';
 import 'package:fisheri/models/venue_address.dart';
-import 'package:fisheri/models/fish_stock.dart';
 import 'Screens/detail_screen/detail_screen.dart';
+import 'Components/base_cell.dart';
 import 'house_colors.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class SearchResultCell extends StatelessWidget {
   SearchResultCell({
@@ -42,41 +43,37 @@ class SearchResultCell extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        print("Tapped");
         Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) => SecondRoute(
-                      title: title,
-                      descriptionText: descriptionText,
-                      fishStock: fishStock,
-                      fishTypes: fishTypes,
-                      amenities: amenities,
-                      openingHours: openingHours,
-                      address: address,
-                      tickets: tickets,
-                      fishingRules: fishingRules,
-                      index: index,
-                    )));
+                  title: title,
+                  descriptionText: descriptionText,
+                  fishStock: fishStock,
+                  fishTypes: fishTypes,
+                  amenities: amenities,
+                  openingHours: openingHours,
+                  address: address,
+                  tickets: tickets,
+                  fishingRules: fishingRules,
+                  index: index,
+                )));
       },
-      child: Container(
-        height: 120,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _SearchResultCellImage(
-              imageURL: imageURL,
-              index: index,),
-            _SearchResultCellInfo(
-              title: title,
-              venueType: venueType,
-              isOpen: isOpen,
-              distance: distance,
-              index: index,
-            )
-          ],
-        ),
-      ),
+      child: BaseCell(
+        title: title,
+        subtitle: venueType,
+        image: Image.asset('images/lake.jpg'),
+        elements: <Widget>[
+          _VenueOperational(true),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _VenueFeatures(),
+              _VenueDistance(distance),
+            ],
+          )
+        ],
+      )
     );
   }
 }
@@ -132,108 +129,6 @@ class SecondRoute extends StatelessWidget {
   }
 }
 
-class _SearchResultCellImage extends StatelessWidget {
-  _SearchResultCellImage({
-    this.imageURL,
-    this.index,
-  });
-
-  final String imageURL;
-  final int index;
-
-  @override
-  Widget build(BuildContext context) {
-    return Hero(
-        tag: 'HeroImage_$index',
-        child: AspectRatio(
-          child: Image.asset(imageURL, fit: BoxFit.fill),
-          aspectRatio: 1.0,
-        ));
-    // return Image.asset(imageURL, fit: BoxFit.fill);
-  }
-}
-
-class _SearchResultCellInfo extends StatelessWidget {
-  _SearchResultCellInfo({
-    Key key,
-    this.title,
-    this.venueType,
-    this.distance,
-    this.isOpen,
-    this.index,
-  }) : super(key: key);
-
-  final String title;
-  final String venueType;
-  final String distance;
-  final bool isOpen;
-  final int index;
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-        child: Column(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Hero(child: _Title(title), tag: 'HeroTitle_$index'),
-                  _VenueType(venueType),
-                  _VenueOperational(isOpen),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      _VenueFeatures(),
-                      _VenueDistance(distance),
-                    ],
-                  )
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _Title extends StatelessWidget {
-  _Title(this.title);
-
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      '$title',
-      maxLines: 2,
-      overflow: TextOverflow.ellipsis,
-      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-    );
-  }
-}
-
-class _VenueType extends StatelessWidget {
-  _VenueType(this.venueType);
-
-  final String venueType;
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      '$venueType',
-      maxLines: 2,
-      overflow: TextOverflow.ellipsis,
-      style: TextStyle(fontSize: 14, color: Colors.black87),
-    );
-  }
-}
-
 class _VenueOperational extends StatelessWidget {
   _VenueOperational(this.isOpen);
 
@@ -243,10 +138,11 @@ class _VenueOperational extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       '${isOpen ? "Open" : "Closed"}',
-      style: TextStyle(
-        fontSize: 12,
-        fontWeight: FontWeight.bold,
-        color: isOpen ? Colors.green : Colors.red,
+      style: GoogleFonts.raleway(
+        fontSize: 14,
+        fontWeight: FontWeight.w300,
+        fontStyle: FontStyle.normal,
+        color:isOpen ? Colors.green : Colors.red,
       ),
     );
   }
@@ -283,10 +179,11 @@ class _VenueDistance extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       '$distance',
-      style: const TextStyle(
-        fontSize: 12,
+      style: GoogleFonts.raleway(
+        fontSize: 14,
+        fontWeight: FontWeight.w300,
         fontStyle: FontStyle.italic,
-        color: Colors.black87,
+        color: Colors.black,
       ),
     );
   }

@@ -1,12 +1,11 @@
 import 'package:fisheri/Screens/catch_detail_screen.dart';
 import 'package:fisheri/Screens/catch_form_screen.dart';
-import 'package:fisheri/Screens/detail_screen/header.dart';
 import 'package:fisheri/house_colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:fisheri/Components/base_cell.dart';
 
 class CatchReportScreen extends StatelessWidget {
   CatchReportScreen({
@@ -154,72 +153,13 @@ class CatchCell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        _openCatchScreen(context);
-      },
-      child: Card(
-        clipBehavior: Clip.antiAliasWithSaveLayer,
-        elevation: 3,
-//        margin: EdgeInsets.only(top: 8, bottom: 8),
-        child: Container(
-          height: 120,
-          color: Colors.white,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                AspectRatio(
-                  aspectRatio: 1.0,
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                        shape: BoxShape.rectangle,
-                        borderRadius: BorderRadius.circular(0),
-                        image: DecorationImage(
-                            image: AssetImage('images/lake.jpg'),
-                            fit: BoxFit.fill),
-                        color: HouseColors.primaryGreen),
-                  ),
-                ),
-                SizedBox(width: 8),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '$typeOfFish',
-                      style: GoogleFonts.raleway(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        fontStyle: FontStyle.normal,
-                        color: HouseColors.wetAsphalt,
-                      ),
-                    ),
-                    Text(
-                      type,
-                      style: GoogleFonts.raleway(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                        fontStyle: FontStyle.normal,
-                        color: HouseColors.concrete,
-                      ),
-                    ),
-                    Text(
-                      'id: $name',
-                      style: GoogleFonts.raleway(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w300,
-                        fontStyle: FontStyle.normal,
-                        color: HouseColors.wetAsphalt,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+        onTap: () {
+          _openCatchScreen(context);
+        },
+        child: BaseCell(
+          title: typeOfFish,
+          subtitle: catchType,
+          image: Image.asset('images/lake.jpg'),
+        ));
   }
 }

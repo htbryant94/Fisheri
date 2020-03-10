@@ -20,11 +20,9 @@ class SearchResultsScreen extends StatelessWidget {
         if (!snapshot.hasData) {
           return CircularProgressIndicator(); // Add a loading screen here
         }
-        return ListView.separated(
+        return ListView.builder(
           itemCount: snapshot.data.documents.length,
-          separatorBuilder: (BuildContext context, int index) =>
-              Divider(height: 1, color: Colors.grey[700]),
-          itemBuilder: (context, index) {
+          itemBuilder: (context, int index) {
             final _venue = snapshot.data.documents[index];
             final _venueDetailed = VenueDetailed(
               name: _venue['name'],

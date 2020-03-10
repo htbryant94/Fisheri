@@ -7,6 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:fisheri/models/venue_detailed.dart';
 import 'package:fisheri/models/venue_address.dart';
+import 'package:fisheri/Components/base_cell.dart';
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -84,11 +85,10 @@ class _SearchScreenState extends State<SearchScreen> {
               child: Container(
                 width: MediaQuery.of(context).size.width - 8,
                 height: 100,
-                child: SearchResultCell(
+                child: BaseCell(
                   title: 'some title',
-                  imageURL: 'images/lake.jpg',
-                  isOpen: true,
-
+                  subtitle: 'some subtitle',
+                  image: Image.asset('images/lake.jpg'),
                 )
               ),
               decoration: BoxDecoration(
