@@ -38,220 +38,224 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: EdgeInsets.fromLTRB(24, 24, 24, 100),
-      children: <Widget>[
-        Column(
+    return Scaffold(
+      body: SafeArea(
+        child: ListView(
+          padding: EdgeInsets.fromLTRB(24, 24, 24, 100),
           children: <Widget>[
-            FormBuilder(
-              key: _fbKey,
-              initialValue: {
-                'date': DateTime.now(),
-                'accept_terms': false,
-              },
-              autovalidate: true,
-              child: Column(
-                children: <Widget>[
-                  _OverviewSection(),
-                  _CoordinatesSection(),
-                  _AddressSection(),
-                  _AmenitiesSection(),
-                  _ContactDetailsSection(),
-                  _SocialLinksSection(),
-                  _FishStockedSection(),
-                  _FishingTypesSection(),
-                  _TicketsSection(),
-                  _FishingRulesSection(),
-                  _OperationalHoursSection(),
-                ],
-              ),
-            ),
-            Row(
+            Column(
               children: <Widget>[
-                MaterialButton(
-                    child: Text("Submit"),
-                    onPressed: () {
-                      Function _valueFor = ({String attribute}) {
-                        return _fbKey
-                            .currentState.fields[attribute].currentState.value;
-                      };
+                FormBuilder(
+                  key: _fbKey,
+                  initialValue: {
+                    'date': DateTime.now(),
+                    'accept_terms': false,
+                  },
+                  autovalidate: true,
+                  child: Column(
+                    children: <Widget>[
+                      _OverviewSection(),
+                      _CoordinatesSection(),
+                      _AddressSection(),
+                      _AmenitiesSection(),
+                      _ContactDetailsSection(),
+                      _SocialLinksSection(),
+                      _FishStockedSection(),
+                      _FishingTypesSection(),
+                      _TicketsSection(),
+                      _FishingRulesSection(),
+                      _OperationalHoursSection(),
+                    ],
+                  ),
+                ),
+                Row(
+                  children: <Widget>[
+                    MaterialButton(
+                        child: Text("Submit"),
+                        onPressed: () {
+                          Function _valueFor = ({String attribute}) {
+                            return _fbKey
+                                .currentState.fields[attribute].currentState.value;
+                          };
 
-                      HoursOfOperation operationalHours = HoursOfOperation(
-                        monday: OpeningHoursDay(
-                          open: _valueFor(attribute: 'monday_open'),
-                          close: _valueFor(attribute: 'monday_close'),
-                        ),
-                        tuesday: OpeningHoursDay(
-                          open: _valueFor(attribute: 'tuesday_open'),
-                          close: _valueFor(attribute: 'tuesday_close'),
-                        ),
-                        wednesday: OpeningHoursDay(
-                          open: _valueFor(attribute: 'wednesday_open'),
-                          close: _valueFor(attribute: 'wednesday_close'),
-                        ),
-                        thursday: OpeningHoursDay(
-                          open: _valueFor(attribute: 'thursday_open'),
-                          close: _valueFor(attribute: 'thursday_close'),
-                        ),
-                        friday: OpeningHoursDay(
-                          open: _valueFor(attribute: 'friday_open'),
-                          close: _valueFor(attribute: 'friday_close'),
-                        ),
-                        saturday: OpeningHoursDay(
-                          open: _valueFor(attribute: 'saturday_open'),
-                          close: _valueFor(attribute: 'saturday_close'),
-                        ),
-                        sunday: OpeningHoursDay(
-                          open: _valueFor(attribute: 'sunday_open'),
-                          close: _valueFor(attribute: 'sunday_close'),
-                        ),
-                      );
-                      final _venue = VenueDetailed(
-                        name: _valueFor(attribute: VenueDetailedConstants.name),
-                        isShop: _valueFor(attribute: 'venue_type')
-                            .toString()
-                            .contains('Shop'),
-                        isLake: _valueFor(attribute: 'venue_type')
-                            .toString()
-                            .contains('Lake'),
-                        description: _valueFor(
-                            attribute: VenueDetailedConstants.description),
-                        address: VenueAddress(
-                          street: _valueFor(attribute: 'address_street'),
-                          town: _valueFor(attribute: 'address_town'),
-                          county: _valueFor(attribute: 'address_county'),
-                          postcode: _valueFor(attribute: 'address_postcode'),
-                        ),
-                        amenities: _valueFor(attribute: 'amenities_list'),
-                        contactDetails: ContactDetails(
-                          email: _valueFor(attribute: 'contact_email'),
-                          phone: _valueFor(attribute: 'contact_phone'),
-                        ),
-                        social: Social(
-                          facebook: _valueFor(attribute: 'social_facebook'),
-                          instagram: _valueFor(attribute: 'social_instagram'),
-                          twitter: _valueFor(attribute: 'social_twitter'),
-                          youtube: _valueFor(attribute: 'social_youtube'),
-                        ),
-                        fishStocked: _valueFor(attribute: 'fish_stocked'),
-                        fishingTypes: _valueFor(attribute: 'fishing_types'),
-                        tickets: _valueFor(attribute: 'tickets'),
-                        operationalHours: operationalHours,
-                        fishingRules: _valueFor(attribute: 'fishing_rules'),
-                      );
-                      if (_fbKey.currentState.saveAndValidate()) {
-                        final result =
-                            VenueDetailedJSONSerializer().toMap(_venue);
-                        final _latitude =
-                            _valueFor(attribute: 'coordinates_latitude');
-                        final _longitude =
-                            _valueFor(attribute: 'coordinates_longitude');
-
-                        if (_latitude != null && _longitude != null) {
-                          final double _latitude = double.parse(
-                              _valueFor(attribute: 'coordinates_latitude'));
-                          assert(_latitude is double);
-                          final double _longitude = double.parse(
-                              _valueFor(attribute: 'coordinates_longitude'));
-                          assert(_longitude is double);
-                          result["coordinates"] = GeoPoint(
-                            _latitude,
-                            _longitude,
+                          HoursOfOperation operationalHours = HoursOfOperation(
+                            monday: OpeningHoursDay(
+                              open: _valueFor(attribute: 'monday_open'),
+                              close: _valueFor(attribute: 'monday_close'),
+                            ),
+                            tuesday: OpeningHoursDay(
+                              open: _valueFor(attribute: 'tuesday_open'),
+                              close: _valueFor(attribute: 'tuesday_close'),
+                            ),
+                            wednesday: OpeningHoursDay(
+                              open: _valueFor(attribute: 'wednesday_open'),
+                              close: _valueFor(attribute: 'wednesday_close'),
+                            ),
+                            thursday: OpeningHoursDay(
+                              open: _valueFor(attribute: 'thursday_open'),
+                              close: _valueFor(attribute: 'thursday_close'),
+                            ),
+                            friday: OpeningHoursDay(
+                              open: _valueFor(attribute: 'friday_open'),
+                              close: _valueFor(attribute: 'friday_close'),
+                            ),
+                            saturday: OpeningHoursDay(
+                              open: _valueFor(attribute: 'saturday_open'),
+                              close: _valueFor(attribute: 'saturday_close'),
+                            ),
+                            sunday: OpeningHoursDay(
+                              open: _valueFor(attribute: 'sunday_open'),
+                              close: _valueFor(attribute: 'sunday_close'),
+                            ),
                           );
-                        }
+                          final _venue = VenueDetailed(
+                            name: _valueFor(attribute: VenueDetailedConstants.name),
+                            isShop: _valueFor(attribute: 'venue_type')
+                                .toString()
+                                .contains('Shop'),
+                            isLake: _valueFor(attribute: 'venue_type')
+                                .toString()
+                                .contains('Lake'),
+                            description: _valueFor(
+                                attribute: VenueDetailedConstants.description),
+                            address: VenueAddress(
+                              street: _valueFor(attribute: 'address_street'),
+                              town: _valueFor(attribute: 'address_town'),
+                              county: _valueFor(attribute: 'address_county'),
+                              postcode: _valueFor(attribute: 'address_postcode'),
+                            ),
+                            amenities: _valueFor(attribute: 'amenities_list'),
+                            contactDetails: ContactDetails(
+                              email: _valueFor(attribute: 'contact_email'),
+                              phone: _valueFor(attribute: 'contact_phone'),
+                            ),
+                            social: Social(
+                              facebook: _valueFor(attribute: 'social_facebook'),
+                              instagram: _valueFor(attribute: 'social_instagram'),
+                              twitter: _valueFor(attribute: 'social_twitter'),
+                              youtube: _valueFor(attribute: 'social_youtube'),
+                            ),
+                            fishStocked: _valueFor(attribute: 'fish_stocked'),
+                            fishingTypes: _valueFor(attribute: 'fishing_types'),
+                            tickets: _valueFor(attribute: 'tickets'),
+                            operationalHours: operationalHours,
+                            fishingRules: _valueFor(attribute: 'fishing_rules'),
+                          );
+                          if (_fbKey.currentState.saveAndValidate()) {
+                            final result =
+                                VenueDetailedJSONSerializer().toMap(_venue);
+                            final _latitude =
+                                _valueFor(attribute: 'coordinates_latitude');
+                            final _longitude =
+                                _valueFor(attribute: 'coordinates_longitude');
 
-                        void _addPoint({String name, String id, double lat, double long}) {
-                          print('adding point');
-                          final _geo = Geoflutterfire();
-                          GeoFirePoint geoFirePoint =
-                              _geo.point(latitude: lat, longitude: long);
-                          Firestore.instance
-                              .collection('venues_locations')
-                              .add({
-                            'name': name,
-                            'id': id,
-                            'position': geoFirePoint.data
-                          }).whenComplete(() {
-                            print('added ${geoFirePoint.hash} successfully');
+                            if (_latitude != null && _longitude != null) {
+                              final double _latitude = double.parse(
+                                  _valueFor(attribute: 'coordinates_latitude'));
+                              assert(_latitude is double);
+                              final double _longitude = double.parse(
+                                  _valueFor(attribute: 'coordinates_longitude'));
+                              assert(_longitude is double);
+                              result["coordinates"] = GeoPoint(
+                                _latitude,
+                                _longitude,
+                              );
+                            }
+
+                            void _addPoint({String name, String id, double lat, double long}) {
+                              print('adding point');
+                              final _geo = Geoflutterfire();
+                              GeoFirePoint geoFirePoint =
+                                  _geo.point(latitude: lat, longitude: long);
+                              Firestore.instance
+                                  .collection('venues_locations')
+                                  .add({
+                                'name': name,
+                                'id': id,
+                                'position': geoFirePoint.data
+                              }).whenComplete(() {
+                                print('added ${geoFirePoint.hash} successfully');
+                                showDialog(
+                                    context: context,
+                                    barrierDismissible: false,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: Text('Form successfully submitted'),
+                                        content: SingleChildScrollView(
+                                          child: Text(
+                                              'Tap Return to dismiss this page.'),
+                                        ),
+                                        actions: <Widget>[
+                                          FlatButton(
+                                            child: Text('Return'),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                              _fbKey.currentState.reset();
+                                            },
+                                          )
+                                        ],
+                                      );
+                                    });
+                              });
+                            }
+
+                            Future postNewVenue() async {
+                               await Firestore.instance
+                                  .collection('venues_detail')
+                                  .add(result).then((doc) {
+                                 final double _latitude = double.parse(
+                                     _valueFor(attribute: 'coordinates_latitude'));
+                                 assert(_latitude is double);
+                                 final double _longitude = double.parse(
+                                     _valueFor(attribute: 'coordinates_longitude'));
+                                 assert(_longitude is double);
+                                 _addPoint(
+                                   name: result['name'],
+                                   id: doc.documentID,
+                                   lat: _latitude,
+                                   long: _longitude,
+                                 );
+                              });
+                            }
+
+                            postNewVenue();
+                          } else {
                             showDialog(
                                 context: context,
                                 barrierDismissible: false,
                                 builder: (BuildContext context) {
                                   return AlertDialog(
-                                    title: Text('Form successfully submitted'),
+                                    title: Text(
+                                        'There was an issue trying to submit your form'),
                                     content: SingleChildScrollView(
                                       child: Text(
-                                          'Tap Return to dismiss this page.'),
+                                          'Please correct any incorrect entries and try again.'),
                                     ),
                                     actions: <Widget>[
                                       FlatButton(
-                                        child: Text('Return'),
+                                        child: Text('OK'),
                                         onPressed: () {
                                           Navigator.of(context).pop();
-                                          _fbKey.currentState.reset();
                                         },
                                       )
                                     ],
                                   );
                                 });
-                          });
-                        }
-
-                        Future postNewVenue() async {
-                           await Firestore.instance
-                              .collection('venues_detail')
-                              .add(result).then((doc) {
-                             final double _latitude = double.parse(
-                                 _valueFor(attribute: 'coordinates_latitude'));
-                             assert(_latitude is double);
-                             final double _longitude = double.parse(
-                                 _valueFor(attribute: 'coordinates_longitude'));
-                             assert(_longitude is double);
-                             _addPoint(
-                               name: result['name'],
-                               id: doc.documentID,
-                               lat: _latitude,
-                               long: _longitude,
-                             );
-                          });
-                        }
-
-                        postNewVenue();
-                      } else {
-                        showDialog(
-                            context: context,
-                            barrierDismissible: false,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Text(
-                                    'There was an issue trying to submit your form'),
-                                content: SingleChildScrollView(
-                                  child: Text(
-                                      'Please correct any incorrect entries and try again.'),
-                                ),
-                                actions: <Widget>[
-                                  FlatButton(
-                                    child: Text('OK'),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  )
-                                ],
-                              );
-                            });
-                      }
-                    }),
-                MaterialButton(
-                  child: Text("Reset"),
-                  onPressed: () {
-                    _fbKey.currentState.reset();
-                  },
+                          }
+                        }),
+                    MaterialButton(
+                      child: Text("Reset"),
+                      onPressed: () {
+                        _fbKey.currentState.reset();
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),
           ],
         ),
-      ],
+      ),
     );
   }
 }

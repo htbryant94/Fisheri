@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:fisheri/Screens/catch_report_form_screen.dart';
 import 'package:fisheri/Screens/catch_report_screen.dart';
 import 'package:fisheri/house_colors.dart';
@@ -10,19 +12,15 @@ import 'package:google_fonts/google_fonts.dart';
 class CatchReportsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        SizedBox(height: 8),
-        Container(
-          padding: EdgeInsets.all(8),
-          child: Align(
-            alignment: Alignment.center,
-            child: MaterialButton(
-              height: 50,
-              minWidth: 50,
-              color: Colors.green[400],
-              onPressed: () {
-                Firestore.instance
+    return Scaffold(
+        body: SafeArea(
+            child: Flex(
+              direction: Axis.vertical,
+              children: <Widget>[
+                Expanded(child: CatchReportListBuilder()),
+                CupertinoButton(
+                  onPressed: () {
+                    Firestore.instance
                     .collection('venues_locations')
                     .getDocuments()
                     .then((documents) {
@@ -32,17 +30,32 @@ class CatchReportsScreen extends StatelessWidget {
                           builder: (context) => CatchReportFormScreen(
                               availableLakes: documents)));
                 });
-              },
-              child: Icon(
-                Icons.add,
-                color: Colors.white,
-              ),
+                  },
+                  padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
+                  child: Row(
+                    children: <Widget>[
+                      Container(
+                        child: Icon(Icons.add, color: Colors.white),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.blue,
+                        ),
+                      ),
+                      SizedBox(width: 8),
+                      Text(
+                          'Add a new Catch Report',
+                          style: GoogleFonts.raleway(
+                            color: HouseColors.midnightBlue,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400
+                      ))
+                    ],
+                  ),
+                )
+            ],
             ),
-          ),
         ),
-        Expanded(child: CatchReportListBuilder()),
-      ],
-    );
+      );
   }
 }
 

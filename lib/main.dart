@@ -1,16 +1,13 @@
-import 'dart:async';
-
 import 'package:fisheri/Screens/catch_reports_screen.dart';
 import 'package:fisheri/Screens/venue_form_screen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'Screens/auth_screen.dart';
 import 'Screens/search_results_screen.dart';
 import 'Screens/search_screen.dart';
 
 import 'result_info.dart';
 import 'house_colors.dart';
-import 'bottom_tab_bar.dart';
 
 void main() => runApp(MyApp());
 
@@ -55,17 +52,15 @@ class HomePageState extends State<HomePage>
   }
 
   Widget _buildTabContent() {
-    return Positioned.fill(
-      child: TabBarView(
-        controller: _tabController,
-        children: [
-          AuthScreen(),
-          CatchReportsScreen(),
-          SearchScreen(),
-          SearchResultsScreen(MockResultInfo.searchResults),
-          VenueFormScreen(),
-        ],
-      ),
+    return TabBarView(
+      controller: _tabController,
+      children: [
+        AuthScreen(),
+        CatchReportsScreen(),
+        SearchScreen(),
+        SearchResultsScreen(MockResultInfo.searchResults),
+        VenueFormScreen(),
+      ],
     );
   }
 
@@ -81,21 +76,55 @@ class HomePageState extends State<HomePage>
         backgroundColor: HouseColors.primaryGreen,
         centerTitle: true);
 
-    return MaterialApp(
-      home: Scaffold(
-        backgroundColor: Colors.grey[300],
-        appBar: _appBar,
-        body: Stack(
-          children: [
-            _buildTabContent(),
-            BottomTabBar(
-              selectedTab: _selectedTab,
-              onTap: _tabSelected,
-            ),
-          ],
-        ),
-        resizeToAvoidBottomInset: false,
+    return CupertinoTabScaffold(
+      tabBar: CupertinoTabBar(
+        items: [
+          BottomNavigationBarItem(icon: Icon(Icons.explore), title: Text('Login')),
+          BottomNavigationBarItem(icon: Icon(Icons.description), title: Text('Catch')),
+          BottomNavigationBarItem(icon: Icon(Icons.search), title: Text('Search')),
+          BottomNavigationBarItem(icon: Icon(Icons.star), title: Text('Results')),
+          BottomNavigationBarItem(icon: Icon(Icons.assignment), title: Text('Venue')),
+        ],
       ),
+      tabBuilder: (context, index) {
+        switch (index) {
+          case 0:
+            return CupertinoTabView(builder: (context) {
+              return CupertinoPageScaffold(
+                child: AuthScreen(),
+              );
+            });
+          case 1:
+            return CupertinoTabView(builder: (context) {
+              return CupertinoPageScaffold(
+                navigationBar: CupertinoNavigationBar(
+                  middle: Text('Your Catch Reports'),
+                ),
+                child: CatchReportsScreen(),
+              );
+            });
+          case 2:
+            return CupertinoTabView(builder: (context) {
+              return CupertinoPageScaffold(
+                child: SearchScreen(),
+              );
+            });
+          case 3:
+            return CupertinoTabView(builder: (context) {
+              return CupertinoPageScaffold(
+                child: SearchResultsScreen(MockResultInfo.searchResults),
+              );
+            });
+          case 4:
+            return CupertinoTabView(builder: (context) {
+              return CupertinoPageScaffold(
+                child: VenueFormScreen(),
+              );
+            });
+          default:
+            return Container();
+        };
+      },
     );
   }
 }

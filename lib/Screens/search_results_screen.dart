@@ -13,54 +13,53 @@ class SearchResultsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      // stream: Firestore.instance.collection('venues_search').snapshots(),
-      stream: Firestore.instance.collection('venues_detail').snapshots(),
-      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (!snapshot.hasData) {
-          return CircularProgressIndicator(); // Add a loading screen here
-        }
-        return ListView.builder(
-          itemCount: snapshot.data.documents.length,
-          itemBuilder: (context, int index) {
-            final _venue = snapshot.data.documents[index];
-            final _venueDetailed = VenueDetailed(
-              name: _venue['name'],
-              isLake: _venue['isLake'],
-              isShop: _venue['isShop'],
-              description: _venue['description'],
-              social: SocialJSONSerializer().fromMap(_venue['social']),
-              address: VenueAddressJSONSerializer().fromMap(_venue['address']),
-              fishingTypes: _venue['fishing_types_array'],
-              fishStocked: _venue['fish_stock_array'],
-              amenities: _venue['amenities_array'],
-              tickets: _venue['tickets_array'],
-              fishingRules: _venue['fishing_rules'],
-            );
+    return SafeArea(
+      child: StreamBuilder(
+        stream: Firestore.instance.collection('venues_detail').snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (!snapshot.hasData) {
+            return CircularProgressIndicator(); // Add a loading screen here
+          }
+          return ListView.builder(
+            itemCount: snapshot.data.documents.length,
+            itemBuilder: (context, int index) {
+              final _venue = snapshot.data.documents[index];
+              final _venueDetailed = VenueDetailed(
+                name: _venue['name'],
+                isLake: _venue['isLake'],
+                isShop: _venue['isShop'],
+                description: _venue['description'],
+                social: SocialJSONSerializer().fromMap(_venue['social']),
+                address: VenueAddressJSONSerializer().fromMap(_venue['address']),
+                fishingTypes: _venue['fishing_types_array'],
+                fishStocked: _venue['fish_stock_array'],
+                amenities: _venue['amenities_array'],
+                tickets: _venue['tickets_array'],
+                fishingRules: _venue['fishing_rules'],
+              );
 
-            final _venueType = snapshot.data.documents[index]['isLake'] ? 'LAKE' : 'SHOP';
-            final Map _openingHours = snapshot.data.documents[index]['hours_of_operation_map'];
-            return SearchResultCell(
-              imageURL: 'images/lake.jpg',
-              title: snapshot.data.documents[index]['name'],
-              descriptionText: snapshot.data.documents[index]['description'],
-              venueType: _venueType,
-              distance: '5 miles',
-              isOpen: true,
-              address: _venueDetailed.address,
-              openingHours: HoursOfOperationJSONSerializer().fromMap(_openingHours),
-              amenities: _venueDetailed.amenities,
-              fishStock: _venueDetailed.fishStocked,
-              fishTypes: _venueDetailed.fishingTypes,
-              tickets: _venueDetailed.tickets,
-              fishingRules: _venueDetailed.fishingRules,
-              index: index,
-            );
-          },
-        );
-      },
+              final _venueType = snapshot.data.documents[index]['isLake'] ? 'LAKE' : 'SHOP';
+              final Map _openingHours = snapshot.data.documents[index]['hours_of_operation_map'];
+              return SearchResultCell(
+                imageURL: 'images/lake.jpg',
+                title: snapshot.data.documents[index]['name'],
+                descriptionText: snapshot.data.documents[index]['description'],
+                venueType: _venueType,
+                distance: '5 miles',
+                isOpen: true,
+                address: _venueDetailed.address,
+                openingHours: HoursOfOperationJSONSerializer().fromMap(_openingHours),
+                amenities: _venueDetailed.amenities,
+                fishStock: _venueDetailed.fishStocked,
+                fishTypes: _venueDetailed.fishingTypes,
+                tickets: _venueDetailed.tickets,
+                fishingRules: _venueDetailed.fishingRules,
+                index: index,
+              );
+            },
+          );
+        },
+      ),
     );
   }
-
-
 }

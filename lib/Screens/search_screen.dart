@@ -73,124 +73,122 @@ class _SearchScreenState extends State<SearchScreen> {
              _selectedVenueName != null;
     }
 
-    return Stack(children: <Widget>[
-      GoogleMap(
-        mapType: MapType.normal,
-        initialCameraPosition: const CameraPosition(
-          target: LatLng(51.979900, -0.214280),
-          zoom: 8.0,
-        ),
-        compassEnabled: false,
-        myLocationButtonEnabled: false,
-        onMapCreated: _onMapCreated,
-        markers: Set<Marker>.of(markers.values),
-        circles: circles,
-      ),
-      Align(
-        alignment: Alignment.bottomCenter,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            if (shouldShowVenueCard())
-            DecoratedBox(
-              child: Container(
-                width: MediaQuery.of(context).size.width - 8,
-                height: 100,
-                child: GestureDetector(
-                  onTap: () {
-                    _firestore.collection('venues_detail').document(_selectedVenueID).get().then((DocumentSnapshot document) {
-                      final _venue = document;
-                      final _venueDetailed = VenueDetailed(
-                        name: _venue['name'],
-                        isLake: _venue['isLake'],
-                        isShop: _venue['isShop'],
-                        description: _venue['description'],
-                        social: SocialJSONSerializer().fromMap(_venue['social']),
-                        address: VenueAddressJSONSerializer().fromMap(_venue['address']),
-                        fishingTypes: _venue['fishing_types_array'],
-                        fishStocked: _venue['fish_stock_array'],
-                        amenities: _venue['amenities_array'],
-                        tickets: _venue['tickets_array'],
-                        fishingRules: _venue['fishing_rules'],
-                      );
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SecondRoute(
-                            title: _venueDetailed.name,
-                            descriptionText: _venueDetailed.description,
-                            fishStock: _venueDetailed.fishStocked,
-                            fishTypes: _venueDetailed.fishingTypes,
-                            amenities: _venueDetailed.amenities,
-                            openingHours: _venueDetailed.operationalHours,
-                            address: _venueDetailed.address,
-                            tickets: _venueDetailed.tickets,
-                            fishingRules: _venueDetailed.fishingRules,
-                            index: 0,
-                          ),
-                        ),
-                      );
-                    });
-                  },
-                  child: BaseCell(
-                    title: _selectedVenueName,
-                    subtitle: _selectedVenueType,
-                    image: Image.asset('images/lake.jpg'),
-                  ),
-                )
-              ),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8.0),
-                  color: Colors.green[400].withOpacity(0.85)),
+    return Scaffold(
+      body: SafeArea(
+        child: Stack(children: <Widget>[
+          GoogleMap(
+            mapType: MapType.normal,
+            initialCameraPosition: const CameraPosition(
+              target: LatLng(51.979900, -0.214280),
+              zoom: 8.0,
             ),
-            SizedBox(height: 90),
-          ],
-        ),
-      ),
-      Align(
-        alignment: Alignment.topRight,
-        child: RotatedBox(
-          quarterTurns: 3,
-          child: Container(
-              padding: EdgeInsets.only(left: 8, right: 8, bottom: 8),
-              height: 50,
-              width: 250,
-              child: Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8.0),
-                    color: Colors.green[400].withOpacity(0.85)),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: <Widget>[
-                    RotatedBox(child: Text('km'), quarterTurns: 1),
-                    RotatedBox(child: Text('${radius.value.round()}'), quarterTurns: 1),
-                    Slider(
-                      value: _radiusSliderValue,
-                      max: 100,
-                      onChanged: (value) {
-                        setState(() {
-                          radius.value = value;
-                          circles = null;
-                          circles = Set.from([
-                            Circle(
-                              circleId: CircleId("123"),
-                              center: LatLng(_latitude, _longitude),
-                              radius: (value * 1000),
-                              strokeWidth: 2,
-                              fillColor: Colors.greenAccent.withOpacity(0.6),
-                              strokeColor: Colors.green[200],
-                            )
-                          ]);
-                          _radiusSliderValue = value;
-                        });
-                      },
+            compassEnabled: false,
+            myLocationButtonEnabled: false,
+            onMapCreated: _onMapCreated,
+            markers: Set<Marker>.of(markers.values),
+            circles: circles,
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                if (shouldShowVenueCard())
+                Container(
+                  width: MediaQuery.of(context).size.width - 8,
+                  height: 100,
+                  child: GestureDetector(
+                    onTap: () {
+                      _firestore.collection('venues_detail').document(_selectedVenueID).get().then((DocumentSnapshot document) {
+                        final _venue = document;
+                        final _venueDetailed = VenueDetailed(
+                          name: _venue['name'],
+                          isLake: _venue['isLake'],
+                          isShop: _venue['isShop'],
+                          description: _venue['description'],
+                          social: SocialJSONSerializer().fromMap(_venue['social']),
+                          address: VenueAddressJSONSerializer().fromMap(_venue['address']),
+                          fishingTypes: _venue['fishing_types_array'],
+                          fishStocked: _venue['fish_stock_array'],
+                          amenities: _venue['amenities_array'],
+                          tickets: _venue['tickets_array'],
+                          fishingRules: _venue['fishing_rules'],
+                        );
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SecondRoute(
+                              title: _venueDetailed.name,
+                              descriptionText: _venueDetailed.description,
+                              fishStock: _venueDetailed.fishStocked,
+                              fishTypes: _venueDetailed.fishingTypes,
+                              amenities: _venueDetailed.amenities,
+                              openingHours: _venueDetailed.operationalHours,
+                              address: _venueDetailed.address,
+                              tickets: _venueDetailed.tickets,
+                              fishingRules: _venueDetailed.fishingRules,
+                              index: 0,
+                            ),
+                          ),
+                        );
+                      });
+                    },
+                    child: BaseCell(
+                      title: _selectedVenueName,
+                      subtitle: _selectedVenueType,
+                      image: Image.asset('images/lake.jpg'),
                     ),
-                  ],
+                  )
                 ),
-              )),
-        ),
+              ],
+            ),
+          ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: RotatedBox(
+              quarterTurns: 3,
+              child: Container(
+                  padding: EdgeInsets.only(left: 8, right: 8, bottom: 8),
+                  height: 50,
+                  width: 250,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8.0),
+                        color: Colors.white),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: <Widget>[
+                        RotatedBox(child: Text('km'), quarterTurns: 1),
+                        RotatedBox(child: Text('${radius.value.round()}'), quarterTurns: 1),
+                        Slider(
+                          value: _radiusSliderValue,
+                          max: 100,
+                          onChanged: (value) {
+                            setState(() {
+                              radius.value = value;
+                              circles = null;
+                              circles = Set.from([
+                                Circle(
+                                  circleId: CircleId("123"),
+                                  center: LatLng(_latitude, _longitude),
+                                  radius: (value * 1000),
+                                  strokeWidth: 2,
+                                  fillColor: Colors.greenAccent.withOpacity(0.6),
+                                  strokeColor: Colors.green[200],
+                                )
+                              ]);
+                              _radiusSliderValue = value;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  )),
+            ),
+          ),
+        ]),
       ),
-    ]);
+    );
   }
 
   void _updateMarkers(List<DocumentSnapshot> documentList) {

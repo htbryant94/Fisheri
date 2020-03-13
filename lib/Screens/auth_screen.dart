@@ -6,22 +6,24 @@ class AuthScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Align(
-        alignment: Alignment.center,
-        child: Column(
-          children: [
-            _Logo('images/logo.png'),
-            Expanded(
-                child: Column(
-              children: [
-                _Button(title: 'Log In With Google', backgroundColor: Colors.red, textColor: Colors.white),
-                _Button(title: 'Log In With Facebook', backgroundColor: Colors.blue, textColor: Colors.white),
-                _Button(title: 'Log In With Email', backgroundColor: HouseColors.accentGreen, textColor: HouseColors.primaryGreen),
-                _Button(title: 'Sign Up', backgroundColor: HouseColors.primaryGreen, textColor: HouseColors.accentGreen),
-              ],
-            )),
-          ],
-        ));
+    return SafeArea(
+      child: Align(
+          alignment: Alignment.center,
+          child: Column(
+            children: [
+              _Logo('images/logo.png'),
+              Expanded(
+                  child: Column(
+                children: [
+                  _Button(title: 'Log In With Google', backgroundColor: Colors.red, textColor: Colors.white),
+                  _Button(title: 'Log In With Facebook', backgroundColor: Colors.blue, textColor: Colors.white),
+                  _Button(title: 'Log In With Email', backgroundColor: HouseColors.accentGreen, textColor: HouseColors.primaryGreen),
+                  _Button(title: 'Sign Up', backgroundColor: HouseColors.primaryGreen, textColor: HouseColors.accentGreen),
+                ],
+              )),
+            ],
+          )),
+    );
   }
 }
 
