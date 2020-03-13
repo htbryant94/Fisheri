@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:fisheri/search_result_cell.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
@@ -8,6 +9,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:fisheri/models/venue_detailed.dart';
 import 'package:fisheri/models/venue_address.dart';
 import 'package:fisheri/Components/base_cell.dart';
+import 'package:fisheri/coordinator.dart';
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -87,6 +89,13 @@ class _SearchScreenState extends State<SearchScreen> {
             onMapCreated: _onMapCreated,
             markers: Set<Marker>.of(markers.values),
             circles: circles,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Align(
+              alignment: Alignment.topRight,
+              child: _ListViewButton(),
+            ),
           ),
           Align(
             alignment: Alignment.bottomCenter,
@@ -272,3 +281,23 @@ class _SearchScreenState extends State<SearchScreen> {
     });
   }
 }
+
+class _ListViewButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.circular(8),
+          color: Colors.blue
+      ),
+      child: CupertinoButton(
+        child: Icon(Icons.apps, color: Colors.white),
+        onPressed: () {
+          Coordinator.pushSearchResultsScreen(context, 'Map');
+        },
+      ),
+    );
+  }
+}
+

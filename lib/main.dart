@@ -58,7 +58,7 @@ class HomePageState extends State<HomePage>
         AuthScreen(),
         CatchReportsScreen(),
         SearchScreen(),
-        SearchResultsScreen(MockResultInfo.searchResults),
+        SearchResultsScreen(),
         VenueFormScreen(),
       ],
     );
@@ -82,7 +82,6 @@ class HomePageState extends State<HomePage>
           BottomNavigationBarItem(icon: Icon(Icons.explore), title: Text('Login')),
           BottomNavigationBarItem(icon: Icon(Icons.description), title: Text('Catch')),
           BottomNavigationBarItem(icon: Icon(Icons.search), title: Text('Search')),
-          BottomNavigationBarItem(icon: Icon(Icons.star), title: Text('Results')),
           BottomNavigationBarItem(icon: Icon(Icons.assignment), title: Text('Venue')),
         ],
       ),
@@ -110,12 +109,6 @@ class HomePageState extends State<HomePage>
               );
             });
           case 3:
-            return CupertinoTabView(builder: (context) {
-              return CupertinoPageScaffold(
-                child: SearchResultsScreen(MockResultInfo.searchResults),
-              );
-            });
-          case 4:
             return CupertinoTabView(builder: (context) {
               return CupertinoPageScaffold(
                 child: VenueFormScreen(),
