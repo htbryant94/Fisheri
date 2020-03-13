@@ -2,6 +2,7 @@ import 'package:fisheri/house_colors.dart';
 import 'package:fisheri/models/hours_of_operation.dart';
 import 'package:fisheri/models/venue_address.dart';
 import 'package:fisheri/models/venue_detailed.dart';
+import 'package:fisheri/models/venue_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -162,18 +163,31 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
                               );
                             }
 
-                            void _addPoint({String name, String id, double lat, double long}) {
+                            void _addPoint({VenueDetailed venue, String name, String id, double lat, double long}) {
                               print('adding point');
                               final _geo = Geoflutterfire();
+
+                              VenueSearch venueSearch = VenueSearch(
+                                name: venue.name,
+                                id: id,
+                                imageURL: null,
+                                isLake: venue.isLake,
+                                isShop: venue.isShop,
+                                address: venue.address,
+                                amenities: venue.amenities,
+                                fishStocked: venue.fishStocked,
+                                fishingTypes: venue.fishingTypes,
+                              );
+
                               GeoFirePoint geoFirePoint =
-                                  _geo.point(latitude: lat, longitude: long);
+                              _geo.point(latitude: lat, longitude: long);
+
+                              final result = VenueSearchJSONSerializer().toMap(venueSearch);
+                              result['position'] = geoFirePoint.data;
+
                               Firestore.instance
                                   .collection('venues_locations')
-                                  .add({
-                                'name': name,
-                                'id': id,
-                                'position': geoFirePoint.data
-                              }).whenComplete(() {
+                                  .add(result).whenComplete(() {
                                 print('added ${geoFirePoint.hash} successfully');
                                 showDialog(
                                     context: context,
@@ -210,6 +224,7 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
                                      _valueFor(attribute: 'coordinates_longitude'));
                                  assert(_longitude is double);
                                  _addPoint(
+                                   venue: _venue,
                                    name: result['name'],
                                    id: doc.documentID,
                                    lat: _latitude,
