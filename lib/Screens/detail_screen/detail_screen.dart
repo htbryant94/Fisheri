@@ -1,6 +1,5 @@
 import 'package:fisheri/Screens/detail_screen/fishing_rules_section.dart';
-import 'package:fisheri/models/hours_of_operation.dart';
-import 'package:fisheri/models/venue_address.dart';
+import 'package:fisheri/models/venue_detailed.dart';
 import 'package:flutter/material.dart';
 
 import 'package:fisheri/Screens/detail_screen/title_section.dart';
@@ -15,63 +14,49 @@ import 'package:fisheri/Screens/detail_screen/opening_hours_section.dart';
 
 class DetailScreen extends StatelessWidget {
   DetailScreen({
+    @required
+    this.venue,
     this.descriptionExpanded,
-    this.title,
-    this.descriptionText,
-    this.fishStock,
-    this.amenities,
-    this.fishTypes,
-    this.openingHours,
-    this.address,
-    this.tickets,
-    this.fishingRules,
     this.index,
   });
 
+  final VenueDetailed venue;
   final bool descriptionExpanded;
-  final String title;
-  final String descriptionText;
-
-  final List<dynamic> fishStock;
-  final List<dynamic> amenities;
-  final List<dynamic> fishTypes;
-  final HoursOfOperation openingHours;
-  final VenueAddress address;
-  final List<dynamic> tickets;
-  final String fishingRules;
   final int index;
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        ImageCarousel(
-          imageURL:'images/lake.jpg',
-          index: index,
-        ),
-        TitleSection(
-          title: title,
-          town: address.town,
-          county: address.county,
-        ),
-        DescriptionSection(
-          text: descriptionText,
-          descriptionExpanded: descriptionExpanded,
-        ),
-        SizedBox(height: 16),
-        ButtonSection(Colors.blue),
-        SizedBox(height: 16),
-        FishStockedSection(fishStock),
-        FishingTypesSection(fishTypes),
-        AmenitiesSection(amenities),
-        TicketsSection(
-          tickets: tickets,
-        ),
-        OpeningHoursSection(
-          openingHours: openingHours,
-        ),
-        FishingRulesSection(fishingRules),
-      ],
+    return Scaffold(
+      body: ListView(
+        children: [
+          ImageCarousel(
+            imageURL:'images/lake.jpg',
+            index: index,
+          ),
+          TitleSection(
+            title: venue.name,
+            town: venue.address.town,
+            county: venue.address.county,
+          ),
+          DescriptionSection(
+            text: venue.description,
+            descriptionExpanded: descriptionExpanded,
+          ),
+          SizedBox(height: 16),
+          ButtonSection(Colors.blue),
+          SizedBox(height: 16),
+          FishStockedSection(venue.fishStocked),
+          FishingTypesSection(venue.fishingTypes),
+          AmenitiesSection(venue.amenities),
+          TicketsSection(
+            tickets: venue.tickets,
+          ),
+          OpeningHoursSection(
+            openingHours: venue.operationalHours,
+          ),
+          FishingRulesSection(venue.fishingRules),
+        ],
+      ),
     );
   }
 }

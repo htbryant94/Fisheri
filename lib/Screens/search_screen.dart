@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:fisheri/search_result_cell.dart';
+import 'package:fisheri/models/venue_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -7,9 +7,9 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:fisheri/models/venue_detailed.dart';
-import 'package:fisheri/models/venue_address.dart';
 import 'package:fisheri/Components/base_cell.dart';
 import 'package:fisheri/coordinator.dart';
+import 'package:fisheri/firestore_request_service.dart';
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -32,6 +32,7 @@ class _SearchScreenState extends State<SearchScreen> {
   String _selectedVenueName;
   String _selectedVenueType;
   String _selectedVenueID;
+  List<VenueSearch> _venues = [];
 
   @override
   void initState() {
@@ -68,11 +69,10 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     bool shouldShowVenueCard() {
       return _selectedVenueID != null &&
-             _selectedVenueType != null &&
-             _selectedVenueName != null;
+          _selectedVenueType != null &&
+          _selectedVenueName != null;
     }
 
     return Scaffold(
@@ -94,7 +94,7 @@ class _SearchScreenState extends State<SearchScreen> {
             padding: const EdgeInsets.all(8),
             child: Align(
               alignment: Alignment.topRight,
-              child: _ListViewButton(),
+              child: _ListViewButton(venues: _venues),
             ),
           ),
           Align(
@@ -103,52 +103,23 @@ class _SearchScreenState extends State<SearchScreen> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 if (shouldShowVenueCard())
-                Container(
-                  width: MediaQuery.of(context).size.width - 8,
-                  height: 100,
-                  child: GestureDetector(
-                    onTap: () {
-                      _firestore.collection('venues_detail').document(_selectedVenueID).get().then((DocumentSnapshot document) {
-                        final _venue = document;
-                        final _venueDetailed = VenueDetailed(
-                          name: _venue['name'],
-                          isLake: _venue['isLake'],
-                          isShop: _venue['isShop'],
-                          description: _venue['description'],
-                          social: SocialJSONSerializer().fromMap(_venue['social']),
-                          address: VenueAddressJSONSerializer().fromMap(_venue['address']),
-                          fishingTypes: _venue['fishing_types_array'],
-                          fishStocked: _venue['fish_stock_array'],
-                          amenities: _venue['amenities_array'],
-                          tickets: _venue['tickets_array'],
-                          fishingRules: _venue['fishing_rules'],
-                        );
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SecondRoute(
-                              title: _venueDetailed.name,
-                              descriptionText: _venueDetailed.description,
-                              fishStock: _venueDetailed.fishStocked,
-                              fishTypes: _venueDetailed.fishingTypes,
-                              amenities: _venueDetailed.amenities,
-                              openingHours: _venueDetailed.operationalHours,
-                              address: _venueDetailed.address,
-                              tickets: _venueDetailed.tickets,
-                              fishingRules: _venueDetailed.fishingRules,
-                              index: 0,
-                            ),
-                          ),
-                        );
-                      });
-                    },
-                    child: BaseCell(
-                      title: _selectedVenueName,
-                      subtitle: _selectedVenueType,
-                      image: Image.asset('images/lake.jpg'),
-                    ),
-                  )
-                ),
+                  Container(
+                      width: MediaQuery.of(context).size.width - 8,
+                      height: 100,
+                      child: GestureDetector(
+                        onTap: () async {
+                          await FirestoreRequestService.defaultService().getVenueDetailed(_selectedVenueID).then((venue) {
+                            if (venue != null) {
+                              Coordinator.pushVenueDetailScreen(context, 'Map', venue);
+                            }
+                          });
+                        },
+                        child: BaseCell(
+                          title: _selectedVenueName,
+                          subtitle: _selectedVenueType,
+                          image: Image.asset('images/lake.jpg'),
+                        ),
+                      )),
               ],
             ),
           ),
@@ -168,7 +139,9 @@ class _SearchScreenState extends State<SearchScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: <Widget>[
                         RotatedBox(child: Text('km'), quarterTurns: 1),
-                        RotatedBox(child: Text('${radius.value.round()}'), quarterTurns: 1),
+                        RotatedBox(
+                            child: Text('${radius.value.round()}'),
+                            quarterTurns: 1),
                         Slider(
                           value: _radiusSliderValue,
                           max: 100,
@@ -182,7 +155,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                   center: LatLng(_latitude, _longitude),
                                   radius: (value * 1000),
                                   strokeWidth: 2,
-                                  fillColor: Colors.greenAccent.withOpacity(0.6),
+                                  fillColor:
+                                      Colors.greenAccent.withOpacity(0.6),
                                   strokeColor: Colors.green[200],
                                 )
                               ]);
@@ -203,36 +177,44 @@ class _SearchScreenState extends State<SearchScreen> {
   void _updateMarkers(List<DocumentSnapshot> documentList) {
     setState(() {
       markers = {};
+      _venues = [];
     });
+
     documentList.forEach((DocumentSnapshot document) {
-      GeoPoint point = document.data['position']['geopoint'];
-      String name = document.data['name'];
-      String id = document.data['id'];
-      bool isLake = document.data['isLake'];
-      bool isShop = document.data['isShop'];
-      List<String> venueTypes = [];
-      venueTypes.add(isLake == true ? 'Lake' : null);
-      venueTypes.add(isShop == true ? 'Shop' : null);
+      final VenueSearch result =
+          VenueSearchJSONSerializer().fromMap(document.data);
+      if (result != null) {
+        GeoPoint point = document.data['position']['geopoint'];
+        List<String> venueTypes = [];
+        venueTypes.add(result.isLake == true ? 'Lake' : null);
+        venueTypes.add(result.isShop == true ? 'Shop' : null);
 
-      String venueType;
-      venueTypes.where((venue) => venue != null).forEach((venue) {
-        if (venueType == null || venueType.isEmpty) {
-          venueType = venue;
-        } else {
-          venueType += ', $venue';
-        }
-      });
+        String venueType;
+        venueTypes.where((venue) => venue != null).forEach((venue) {
+          if (venueType == null || venueType.isEmpty) {
+            venueType = venue;
+          } else {
+            venueType += ', $venue';
+          }
+        });
 
-      _addMarker(
-          name: name,
-          id: id,
+        setState(() {
+          _venues.add(result);
+        });
+
+        _addMarker(
+          name: result.name,
+          id: result.id,
           lat: point.latitude,
           long: point.longitude,
-          venueType: venueType);
+          venueType: venueType,
+        );
+      }
     });
   }
 
-  void _addMarker({String name, String id, double lat, double long, String venueType}) {
+  void _addMarker(
+      {String name, String id, double lat, double long, String venueType}) {
     final String markerIdVal = 'marker_id_$_markerIdCounter';
     _markerIdCounter++;
     final MarkerId markerId = MarkerId(markerIdVal);
@@ -283,21 +265,20 @@ class _SearchScreenState extends State<SearchScreen> {
 }
 
 class _ListViewButton extends StatelessWidget {
+  _ListViewButton({this.venues});
+
+  @required
+  final List<VenueSearch> venues;
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-          shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.circular(8),
-          color: Colors.blue
-      ),
-      child: CupertinoButton(
-        child: Icon(Icons.apps, color: Colors.white),
-        onPressed: () {
-          Coordinator.pushSearchResultsScreen(context, 'Map');
-        },
-      ),
-    );
+        return CupertinoButton(
+          disabledColor: Colors.grey,
+          color: Colors.blue,
+          child: Icon(Icons.apps, color: Colors.white),
+          onPressed: venues != null ? () {
+            Coordinator.pushSearchResultsScreen(context, 'Map', venues);
+          } : null,
+      );
   }
 }
-

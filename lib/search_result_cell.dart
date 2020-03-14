@@ -1,67 +1,38 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fisheri/models/venue_search.dart';
 import 'package:flutter/material.dart';
-import 'package:fisheri/models/hours_of_operation.dart';
-import 'package:fisheri/models/venue_address.dart';
-import 'Screens/detail_screen/detail_screen.dart';
 import 'Components/base_cell.dart';
-import 'house_colors.dart';
+import 'coordinator.dart';
+import 'models/venue_detailed.dart';
+
 import 'package:google_fonts/google_fonts.dart';
 
 class SearchResultCell extends StatelessWidget {
   SearchResultCell({
-    this.imageURL,
-    this.title,
-    this.descriptionText,
-    this.venueType,
-    this.isOpen,
-    this.distance,
-    this.fishStock,
-    this.address,
-    this.openingHours,
-    this.amenities,
-    this.fishTypes,
-    this.tickets,
-    this.fishingRules,
+    @required
+    this.venue,
     this.index,
   });
 
-  final String imageURL;
-  final String title;
-  final String descriptionText;
-  final String venueType;
-  final bool isOpen;
-  final String distance;
-  final List<dynamic> fishStock;
-  final VenueAddress address;
-  final HoursOfOperation openingHours;
-  final List<dynamic> amenities;
-  final List<dynamic> fishTypes;
-  final List<dynamic> tickets;
-  final String fishingRules;
+  final VenueSearch venue;
   final int index;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => SecondRoute(
-                  title: title,
-                  descriptionText: descriptionText,
-                  fishStock: fishStock,
-                  fishTypes: fishTypes,
-                  amenities: amenities,
-                  openingHours: openingHours,
-                  address: address,
-                  tickets: tickets,
-                  fishingRules: fishingRules,
-                  index: index,
-                )));
-      },
+        onTap: () {
+          Firestore.instance
+              .collection('venues_detail')
+              .document(venue.id)
+              .get()
+              .then((DocumentSnapshot document) {
+            final _venue = VenueDetailedJSONSerializer().fromMap(document.data);
+            Coordinator.pushVenueDetailScreen(context, 'Map', _venue);
+          });
+        },
       child: BaseCell(
-        title: title,
-        subtitle: venueType,
+        title: venue.name,
+        subtitle: 'TODO',
         image: Image.asset('images/lake.jpg'),
         elements: <Widget>[
           _VenueOperational(true),
@@ -69,62 +40,11 @@ class SearchResultCell extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _VenueFeatures(),
-              _VenueDistance(distance),
+              _VenueDistance('5 miles'),
             ],
           )
         ],
       )
-    );
-  }
-}
-
-class SecondRoute extends StatelessWidget {
-  SecondRoute({
-    this.title,
-    this.descriptionText,
-    this.fishStock,
-    this.amenities,
-    this.fishTypes,
-    this.openingHours,
-    this.address,
-    this.tickets,
-    this.fishingRules,
-    this.index,
-  });
-
-  final String title;
-  final String descriptionText;
-  final List<dynamic> fishStock;
-  final List<dynamic> amenities;
-  final List<dynamic> fishTypes;
-  final HoursOfOperation openingHours;
-  final VenueAddress address;
-  final List<dynamic> tickets;
-  final String fishingRules;
-  final int index;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-        backgroundColor: HouseColors.primaryGreen,
-      ),
-      body: Center(
-        child: DetailScreen(
-          title: title,
-          descriptionText: descriptionText,
-          fishTypes: fishTypes,
-          fishStock: fishStock,
-          amenities: amenities,
-          openingHours: openingHours,
-          descriptionExpanded: true,
-          address: address,
-          tickets: tickets,
-          fishingRules: fishingRules,
-          index: index,
-        ),
-      ),
     );
   }
 }
