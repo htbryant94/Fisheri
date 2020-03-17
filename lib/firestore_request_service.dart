@@ -1,3 +1,5 @@
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fisheri/models/venue_detailed.dart';
 
@@ -26,3 +28,23 @@ class FirestoreRequestService {
     });
   }
 }
+
+class FireStorageRequestService {
+  FireStorageRequestService({
+    this.firebaseStorage,
+});
+
+  final FirebaseStorage firebaseStorage;
+
+  static FireStorageRequestService defaultService() {
+    return FireStorageRequestService(firebaseStorage: FirebaseStorage.instance);
+  }
+
+  Future<String> getVenueHeroImageURL(String assetPath) async {
+    String imageURL = await firebaseStorage.ref().child('venues').child(assetPath).child('images').child('hero.jpg').getDownloadURL();
+    print('IMAGE URL: $imageURL');
+    return await imageURL;
+  }
+
+}
+

@@ -30,10 +30,10 @@ class SearchResultCell extends StatelessWidget {
             Coordinator.pushVenueDetailScreen(context, 'Map', _venue);
           });
         },
-      child: BaseCell(
+      child: RemoteImageBaseCell(
         title: venue.name,
         subtitle: 'TODO',
-        image: Image.asset('images/lake.jpg'),
+        imageURL: venue.imageURL,
         elements: <Widget>[
           _VenueOperational(true),
           Row(

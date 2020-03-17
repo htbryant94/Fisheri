@@ -156,7 +156,7 @@ class CatchCell extends StatelessWidget {
         onTap: () {
           _openCatchScreen(context);
         },
-        child: BaseCell(
+        child: LocalImageBaseCell(
           title: typeOfFish,
           subtitle: catchType,
           image: Image.asset('images/lake.jpg'),

@@ -6,7 +6,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:fisheri/models/venue_detailed.dart';
 import 'package:fisheri/Components/base_cell.dart';
 import 'package:fisheri/coordinator.dart';
 import 'package:fisheri/firestore_request_service.dart';
@@ -29,9 +28,8 @@ class _SearchScreenState extends State<SearchScreen> {
   double _radiusSliderValue = 0;
   final _latitude = 51.979900;
   final _longitude = -0.214280;
-  String _selectedVenueName;
+  VenueSearch _selectedVenue;
   String _selectedVenueType;
-  String _selectedVenueID;
   List<VenueSearch> _venues = [];
 
   @override
@@ -56,11 +54,15 @@ class _SearchScreenState extends State<SearchScreen> {
     stream = radius.switchMap((rad) {
       var collectionReference = _firestore.collection('venues_locations');
       return geo.collection(collectionRef: collectionReference).within(
-          center: center, radius: rad, field: 'position', strictMode: true);
+          center: center,
+          radius: rad,
+          field: 'position',
+          strictMode: true
+      );
     });
 //    _addPoint(51.979900, -0.214280);
   }
-
+  
   @override
   void dispose() {
     super.dispose();
@@ -70,14 +72,12 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     bool shouldShowVenueCard() {
-      return _selectedVenueID != null &&
-          _selectedVenueType != null &&
-          _selectedVenueName != null;
+      return _selectedVenue != null;
     }
 
     return Scaffold(
       body: SafeArea(
-        child: Stack(children: <Widget>[
+        child: Stack(children: <Widget> [
           GoogleMap(
             mapType: MapType.normal,
             initialCameraPosition: const CameraPosition(
@@ -108,18 +108,19 @@ class _SearchScreenState extends State<SearchScreen> {
                       height: 100,
                       child: GestureDetector(
                         onTap: () async {
-                          await FirestoreRequestService.defaultService().getVenueDetailed(_selectedVenueID).then((venue) {
+                          await FirestoreRequestService.defaultService().getVenueDetailed(_selectedVenue.id).then((venue) {
                             if (venue != null) {
                               Coordinator.pushVenueDetailScreen(context, 'Map', venue);
                             }
                           });
                         },
-                        child: BaseCell(
-                          title: _selectedVenueName,
+                        child: RemoteImageBaseCell(
+                          imageURL: _selectedVenue.imageURL,
+                          title: _selectedVenue.name,
                           subtitle: _selectedVenueType,
-                          image: Image.asset('images/lake.jpg'),
                         ),
-                      )),
+                      ),
+                  ),
               ],
             ),
           ),
@@ -203,8 +204,7 @@ class _SearchScreenState extends State<SearchScreen> {
         });
 
         _addMarker(
-          name: result.name,
-          id: result.id,
+          venue: result,
           lat: point.latitude,
           long: point.longitude,
           venueType: venueType,
@@ -214,16 +214,15 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   void _addMarker(
-      {String name, String id, double lat, double long, String venueType}) {
+      {VenueSearch venue, double lat, double long, String venueType}) {
     final String markerIdVal = 'marker_id_$_markerIdCounter';
     _markerIdCounter++;
     final MarkerId markerId = MarkerId(markerIdVal);
     var _marker = Marker(
-      onTap: () {
+      onTap: () async {
         setState(() {
-          _selectedVenueName = name;
+          _selectedVenue = venue;
           _selectedVenueType = venueType;
-          _selectedVenueID = id;
         });
       },
       markerId: markerId,

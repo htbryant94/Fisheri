@@ -30,7 +30,7 @@ dependencies:
   flutter_form_builder: ^3.5.0
   geoflutterfire: ^2.1.0
   google_fonts: ^0.3.9
-  cached_network_image: ^2.0.0-rc
+  cached_network_image: ^2.0.0
   basic_utils: ^2.5.2
   
   # The following adds the Cupertino Icons font to your application.
