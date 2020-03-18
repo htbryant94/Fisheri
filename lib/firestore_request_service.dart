@@ -40,8 +40,14 @@ class FireStorageRequestService {
     return FireStorageRequestService(firebaseStorage: FirebaseStorage.instance);
   }
 
-  Future<String> getVenueHeroImageURL(String assetPath) async {
-    String imageURL = await firebaseStorage.ref().child('venues').child(assetPath).child('images').child('hero.jpg').getDownloadURL();
+  Future<String> getVenueImageURL(String assetPath, int index) async {
+    String imageURL = await firebaseStorage.ref().child('venues').child(assetPath).child('images').child('$index.jpg').getDownloadURL();
+    print('IMAGE URL: $imageURL');
+    return await imageURL;
+  }
+
+  Future<String> getImages(String assetPath) async {
+    String imageURL = await firebaseStorage.ref().child('venues').child(assetPath).child('images').getDownloadURL();
     print('IMAGE URL: $imageURL');
     return await imageURL;
   }

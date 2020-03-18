@@ -1,3 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
+
 import 'package:fisheri/Screens/detail_screen/fishing_rules_section.dart';
 import 'package:fisheri/models/venue_detailed.dart';
 import 'package:flutter/material.dart';
@@ -16,11 +18,13 @@ class DetailScreen extends StatelessWidget {
   DetailScreen({
     @required
     this.venue,
+    this.imageURL,
     this.descriptionExpanded,
     this.index,
   });
 
   final VenueDetailed venue;
+  final String imageURL;
   final bool descriptionExpanded;
   final int index;
 
@@ -30,8 +34,7 @@ class DetailScreen extends StatelessWidget {
       body: ListView(
         children: [
           ImageCarousel(
-            imageURL:'images/lake.jpg',
-            index: index,
+            imageURL: imageURL,
           ),
           TitleSection(
             title: venue.name,

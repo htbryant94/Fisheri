@@ -11,15 +11,16 @@ part 'venue_detailed.jser.dart';
     SocialJSONSerializer,
   ],
   fields: {
-    'websiteURL': EnDecode(alias: 'website_url'),
+    'amenities': EnDecode(alias: 'amenities_array'),
     'assetsPath': EnDecode(alias: 'assets_path'),
     'contactDetails': EnDecode(alias: 'contact_details'),
-    'amenities': EnDecode(alias: 'amenities_array'),
-    'fishStocked': EnDecode(alias: 'fish_stock_array'),
+    'fishingRules': EnDecode(alias: 'fishing_rules'),
     'fishingTypes': EnDecode(alias: 'fishing_types_array'),
+    'fishStocked': EnDecode(alias: 'fish_stock_array'),
+    'imageURL': EnDecode(alias: 'image_url'),
     'operationalHours': EnDecode(alias: 'hours_of_operation_map'),
     'tickets': EnDecode(alias: 'tickets_array'),
-    'fishingRules': EnDecode(alias: 'fishing_rules'),
+    'websiteURL': EnDecode(alias: 'website_url'),
   },
 )
 class VenueDetailedJSONSerializer extends Serializer<VenueDetailed>
@@ -29,6 +30,7 @@ class VenueDetailed {
   VenueDetailed({
     this.coordinates,
     this.name,
+    this.imageURL,
     this.isLake,
     this.isShop,
     this.description,
@@ -48,6 +50,7 @@ class VenueDetailed {
   @pass
   GeoPoint coordinates;
   String name;
+  String imageURL;
   bool isLake;
   bool isShop;
   String description;

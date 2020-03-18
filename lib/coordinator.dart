@@ -22,14 +22,14 @@ class Coordinator {
         ));
   }
 
-  static void pushVenueDetailScreen(BuildContext context, String currentPageTitle, VenueDetailed venue) {
+  static void pushVenueDetailScreen(BuildContext context, String currentPageTitle, VenueDetailed venue, String imageURL) {
     pushCupertinoPageRoute(context,
     CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
         previousPageTitle: currentPageTitle,
         middle: Text(venue.name),
       ),
-      child: DetailScreen(venue: venue),
+      child: DetailScreen(venue: venue, imageURL: imageURL),
     ));
   }
 

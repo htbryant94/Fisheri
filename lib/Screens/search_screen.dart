@@ -110,7 +110,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         onTap: () async {
                           await FirestoreRequestService.defaultService().getVenueDetailed(_selectedVenue.id).then((venue) {
                             if (venue != null) {
-                              Coordinator.pushVenueDetailScreen(context, 'Map', venue);
+                              Coordinator.pushVenueDetailScreen(context, 'Map', venue, _selectedVenue.imageURL);
                             }
                           });
                         },
