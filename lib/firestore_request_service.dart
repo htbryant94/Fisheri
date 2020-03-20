@@ -1,5 +1,4 @@
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fisheri/models/venue_detailed.dart';
 
@@ -41,7 +40,7 @@ class FireStorageRequestService {
   }
 
   Future<String> getVenueImageURL(String assetPath, int index) async {
-    String imageURL = await firebaseStorage.ref().child('venues').child(assetPath).child('images').child('$index.jpg').getDownloadURL();
+    String imageURL = await firebaseStorage.ref().child('venues').child(assetPath).child('images').child('lake_$index.jpg').getDownloadURL();
     print('IMAGE URL: $imageURL');
     return await imageURL;
   }

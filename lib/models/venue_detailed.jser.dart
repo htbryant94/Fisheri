@@ -28,7 +28,8 @@ abstract class _$VenueDetailedJSONSerializer
     setMapValue(
         ret, 'coordinates', _passProcessor.serialize(model.coordinates));
     setMapValue(ret, 'name', model.name);
-    setMapValue(ret, 'image_url', model.imageURL);
+    setMapValue(
+        ret, 'images', codeIterable(model.images, (val) => val as String));
     setMapValue(ret, 'isLake', model.isLake);
     setMapValue(ret, 'isShop', model.isShop);
     setMapValue(ret, 'description', model.description);
@@ -63,7 +64,8 @@ abstract class _$VenueDetailedJSONSerializer
     obj.coordinates =
         _passProcessor.deserialize(map['coordinates']) as GeoPoint;
     obj.name = map['name'] as String;
-    obj.imageURL = map['image_url'] as String;
+    obj.images =
+        codeIterable<String>(map['images'] as Iterable, (val) => val as String);
     obj.isLake = map['isLake'] as bool;
     obj.isShop = map['isShop'] as bool;
     obj.description = map['description'] as String;

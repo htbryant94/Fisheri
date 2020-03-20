@@ -13,11 +13,11 @@ import 'package:fisheri/Screens/detail_screen/fishing_types_section.dart';
 import 'package:fisheri/Screens/detail_screen/fish_stocked_section.dart';
 import 'package:fisheri/Screens/detail_screen/tickets_section.dart';
 import 'package:fisheri/Screens/detail_screen/opening_hours_section.dart';
+import 'package:flutter/rendering.dart';
 
 class DetailScreen extends StatelessWidget {
   DetailScreen({
-    @required
-    this.venue,
+    @required this.venue,
     this.imageURL,
     this.descriptionExpanded,
     this.index,
@@ -31,34 +31,40 @@ class DetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
-        children: [
-          ImageCarousel(
-            imageURL: imageURL,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ImageCarousel(
+                imageURLs: venue.images,
+              ),
+              TitleSection(
+                title: venue.name,
+                town: venue.address.town,
+                county: venue.address.county,
+              ),
+              DescriptionSection(
+                text: venue.description,
+                descriptionExpanded: descriptionExpanded,
+              ),
+              SizedBox(height: 16),
+              ButtonSection(Colors.blue),
+              SizedBox(height: 16),
+              FishStockedSection(venue.fishStocked),
+              FishingTypesSection(venue.fishingTypes),
+              AmenitiesSection(venue.amenities),
+              TicketsSection(
+                tickets: venue.tickets,
+              ),
+              OpeningHoursSection(
+                openingHours: venue.operationalHours,
+              ),
+              FishingRulesSection(venue.fishingRules),
+            ],
           ),
-          TitleSection(
-            title: venue.name,
-            town: venue.address.town,
-            county: venue.address.county,
-          ),
-          DescriptionSection(
-            text: venue.description,
-            descriptionExpanded: descriptionExpanded,
-          ),
-          SizedBox(height: 16),
-          ButtonSection(Colors.blue),
-          SizedBox(height: 16),
-          FishStockedSection(venue.fishStocked),
-          FishingTypesSection(venue.fishingTypes),
-          AmenitiesSection(venue.amenities),
-          TicketsSection(
-            tickets: venue.tickets,
-          ),
-          OpeningHoursSection(
-            openingHours: venue.operationalHours,
-          ),
-          FishingRulesSection(venue.fishingRules),
-        ],
+        ),
       ),
     );
   }

@@ -17,7 +17,6 @@ part 'venue_detailed.jser.dart';
     'fishingRules': EnDecode(alias: 'fishing_rules'),
     'fishingTypes': EnDecode(alias: 'fishing_types_array'),
     'fishStocked': EnDecode(alias: 'fish_stock_array'),
-    'imageURL': EnDecode(alias: 'image_url'),
     'operationalHours': EnDecode(alias: 'hours_of_operation_map'),
     'tickets': EnDecode(alias: 'tickets_array'),
     'websiteURL': EnDecode(alias: 'website_url'),
@@ -30,7 +29,7 @@ class VenueDetailed {
   VenueDetailed({
     this.coordinates,
     this.name,
-    this.imageURL,
+    this.images,
     this.isLake,
     this.isShop,
     this.description,
@@ -50,7 +49,7 @@ class VenueDetailed {
   @pass
   GeoPoint coordinates;
   String name;
-  String imageURL;
+  List<String> images;
   bool isLake;
   bool isShop;
   String description;

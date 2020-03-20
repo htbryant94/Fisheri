@@ -58,9 +58,7 @@ class CatchDetailScreen extends StatelessWidget {
         ),
         body: ListView(
           children: [
-            ImageCarousel(
-              imageURL: 'images/lake.jpg',
-            ),
+            ImageCarousel(),
             TitleSection(
               title: '$catchType Catch - $fishType',
             ),
