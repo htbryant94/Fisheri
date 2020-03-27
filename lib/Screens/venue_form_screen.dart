@@ -338,6 +338,7 @@ class _FishingRulesSection extends StatelessWidget {
     return Column(
       children: <Widget>[
         HouseTexts.subtitle('Fishing Rules'),
+        SizedBox(height: 16),
         FormBuilderTextField(
           keyboardType: TextInputType.multiline,
           minLines: 5,
@@ -408,7 +409,7 @@ class _AmenitiesSection extends StatelessWidget {
     return Column(
       children: <Widget>[
         HouseTexts.subtitle('Amenities'),
-        FormBuilderStepper(
+        FormBuilderTouchSpin(
           attribute: "amenities_num_lakes",
           decoration: InputDecoration(labelText: "Number of Lakes"),
           initialValue: 0,
@@ -629,6 +630,7 @@ class _OperationalHoursSection extends StatelessWidget {
     return Column(
       children: <Widget>[
         HouseTexts.subtitle('Operational Hours'),
+        SizedBox(height: 16),
         _OperationalHoursDay(day: 'Monday'),
         SizedBox(height: 8),
         _OperationalHoursDay(day: 'Tuesday'),
