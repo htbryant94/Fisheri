@@ -1,6 +1,6 @@
 import 'package:fisheri/models/hours_of_operation.dart';
 import 'package:flutter/material.dart';
-import 'header.dart';
+import 'package:fisheri/house_texts.dart';
 
 class OpeningHoursSection extends StatelessWidget {
   OpeningHoursSection({
@@ -15,7 +15,7 @@ class OpeningHoursSection extends StatelessWidget {
       return Container(
         padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
         child: Column(children: [
-          Header('Opening Hours'),
+          HouseTexts.heading('Opening Hours'),
           SizedBox(height: 16),
           _OpeningHoursRow(
             day: 'Monday',
@@ -58,9 +58,9 @@ class OpeningHoursSection extends StatelessWidget {
       return Container(
         padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
         child: Column(children: [
-          Header('Opening Hours'),
+          HouseTexts.heading('Opening Hours'),
           SizedBox(height: 16),
-          Text("Couldn't retrieve information"),
+          HouseTexts.subheading("Couldn't retrieve information"),
         ]),
       );
     }
@@ -74,23 +74,20 @@ class _OpeningHoursRow extends StatelessWidget {
   final String openTime;
   final String closeTime;
 
-  Text _timeInfo() {
+  Widget _timeInfo() {
     if (openTime == "Closed" || closeTime == "Closed") {
-      return Text("Closed", style: TextStyle(color: Colors.red),);
+      return HouseTexts.custom(text: "Closed", color: Colors.red);
     } else if (openTime != null && closeTime != null) {
-      return Text('$openTime - $closeTime');
+      return HouseTexts.custom(text:'$openTime - $closeTime', fontWeight: FontWeight.w300);
     } else {
-      return Text(
-        'Not Specified',
-        style: TextStyle(color: Colors.grey),
-      );
+      return HouseTexts.custom(text: 'Not Specified', color: Colors.black45);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-      Text(day),
+      HouseTexts.body(day),
       _timeInfo(),
     ]);
   }

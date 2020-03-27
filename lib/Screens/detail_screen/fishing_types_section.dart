@@ -1,6 +1,6 @@
+import 'package:fisheri/house_texts.dart';
 import 'package:flutter/material.dart';
 import 'grid_item.dart';
-import 'header.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class FishingTypesSection extends StatelessWidget {
@@ -14,7 +14,7 @@ class FishingTypesSection extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
       child: Column(
         children: [
-          Header('Fishing Types'),
+          HouseTexts.heading('Fishing Types'),
           const SizedBox(height: 16),
           Wrap(
               spacing: 16,

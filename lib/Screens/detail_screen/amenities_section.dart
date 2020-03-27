@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'header.dart';
+import 'package:fisheri/house_texts.dart';
 
 class AmenitiesSection extends StatelessWidget {
   AmenitiesSection(this.amenities);
@@ -12,7 +12,7 @@ class AmenitiesSection extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(32, 8, 32, 8),
       child: Column(
         children: [
-          Header('Amenities'),
+          HouseTexts.heading('Amenities'),
           const SizedBox(height: 16),
           Wrap(
               spacing: 8,
@@ -45,7 +45,7 @@ class _Amenity extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      children: [Icon(Icons.person), Text(amenity)],
+      children: [Icon(Icons.person), HouseTexts.body(amenity)],
     );
   }
 }

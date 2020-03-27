@@ -1,6 +1,6 @@
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:fisheri/house_texts.dart';
 import 'package:flutter/material.dart';
-import 'header.dart';
 import 'grid_item.dart';
 
 class FishStockedSection extends StatelessWidget {
@@ -14,16 +14,17 @@ class FishStockedSection extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
       child: Column(
         children: [
-          Header('Fish Stocked'),
+          HouseTexts.heading('Fish Stocked'),
           const SizedBox(height: 16),
           Wrap(
               spacing: 16,
               runSpacing: 16,
-              children:
-              fishStock.map((fish) => _FishStockedGridItem(
-                fish: fish,
-                itemWidth: MediaQuery.of(context).size.width / 2.3,
-              )).toList())
+              children: fishStock
+                  .map((fish) => _FishStockedGridItem(
+                        fish: fish,
+                        itemWidth: MediaQuery.of(context).size.width / 2.3,
+                      ))
+                  .toList())
         ],
       ),
     );
@@ -31,10 +32,7 @@ class FishStockedSection extends StatelessWidget {
 }
 
 class _FishStockedGridItem extends StatefulWidget {
-  _FishStockedGridItem({
-    this.fish,
-    this.itemWidth
-  });
+  _FishStockedGridItem({this.fish, this.itemWidth});
 
   final String fish;
   final double itemWidth;
@@ -49,7 +47,12 @@ class __FishStockedGridItemState extends State<_FishStockedGridItem> {
     final fishURL = widget.fish.replaceAll(" ", "_").toLowerCase();
 
     Future<Image> _getImage() async {
-      String imageURL = await FirebaseStorage.instance.ref().child('fish').child('stock_new').child(('$fishURL.png')).getDownloadURL();
+      String imageURL = await FirebaseStorage.instance
+          .ref()
+          .child('fish')
+          .child('stock_new')
+          .child(('$fishURL.png'))
+          .getDownloadURL();
       return await Image.network(imageURL);
     }
 

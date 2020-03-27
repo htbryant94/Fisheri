@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'header.dart';
+import 'package:fisheri/house_texts.dart';
 
 class FishingRulesSection extends StatelessWidget {
   FishingRulesSection(this.content);
@@ -25,7 +25,7 @@ class FishingRulesSection extends StatelessWidget {
       return Container(
           padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
           child: Column(children: [
-            Header('Fishing Rules'),
+            HouseTexts.heading('Fishing Rules'),
             SizedBox(height: 16),
             textBody,
             readMoreButton
@@ -34,7 +34,7 @@ class FishingRulesSection extends StatelessWidget {
       return Container(
         padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
         child: Column(children: [
-          Header('Fishing Rules'),
+          HouseTexts.heading('Fishing Rules'),
           SizedBox(height: 16),
           Text("Couldn't retrieve information. Request the owner of this property to provide this data."),
         ]),

@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:fisheri/Screens/catch_report_form_screen.dart';
 import 'package:fisheri/Screens/catch_report_screen.dart';
 import 'package:fisheri/house_colors.dart';
+import 'package:fisheri/house_texts.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -42,13 +43,7 @@ class CatchReportsScreen extends StatelessWidget {
                         ),
                       ),
                       SizedBox(width: 8),
-                      Text(
-                          'Add a new Catch Report',
-                          style: GoogleFonts.raleway(
-                            color: HouseColors.midnightBlue,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400
-                      ))
+                      HouseTexts.heading('Add a new Catch Report'),
                     ],
                   ),
                 )
@@ -111,20 +106,12 @@ class CatchReportCell extends StatelessWidget {
     return _presentableDate;
   }
 
-  Text dateLabel() {
+  Widget dateLabel() {
     String dateText = formatDatePresentable();
     if (dateText != null) {
-      return Text(
-        dateText,
-        style: GoogleFonts.raleway(
-          fontSize: 16,
-          fontWeight: FontWeight.w400,
-          fontStyle: FontStyle.normal,
-          color: HouseColors.asbestos,
-        ),
-      );
+      return HouseTexts.subheading(dateText);
     } else {
-      return Text('No dates specified');
+      return HouseTexts.subheading('No dates specified');
     }
   }
 
@@ -171,15 +158,7 @@ class CatchReportCell extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text(
-                        name,
-                        style: GoogleFonts.raleway(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                          fontStyle: FontStyle.normal,
-                          color: HouseColors.wetAsphalt,
-                        ),
-                      ),
+                      HouseTexts.heading(name),
                       SizedBox(height: 8),
                       dateLabel(),
                     ],

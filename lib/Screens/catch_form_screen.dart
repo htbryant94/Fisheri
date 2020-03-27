@@ -1,4 +1,4 @@
-import 'package:fisheri/Screens/detail_screen/header.dart';
+import 'package:fisheri/house_texts.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -51,7 +51,7 @@ class _CatchFormScreenState extends State<CatchFormScreen> {
             autovalidate: true,
             child: Column(
               children: <Widget>[
-                Header('Select the type of Catch'),
+                HouseTexts.heading('Select the type of Catch'),
                 SizedBox(height: 16),
                 _CatchTypesListBuilder(
                   catchTypes: catchTypes,

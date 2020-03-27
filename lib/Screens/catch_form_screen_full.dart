@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fisheri/Screens/detail_screen/header.dart';
+import 'package:fisheri/house_texts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:fisheri/house_colors.dart';
@@ -87,7 +87,7 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                 autovalidate: true,
                 child: Column(
                   children: <Widget>[
-                    Header('${widget.catchType.name} Catch'),
+                    HouseTexts.heading('${widget.catchType.name} Catch'),
                     SizedBox(height: 16),
                     _TypeOfFishSection(
                       title: 'Type of Fish *',
@@ -146,7 +146,7 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                           labelText: "Notes", border: OutlineInputBorder()),
                     ),
                     SizedBox(height: 16),
-                    Header('Add Photos - WIP'),
+                    HouseTexts.heading('Add Photos - WIP'),
                     MaterialButton(
                       child: Text('Submit'),
                       onPressed: () {
@@ -274,7 +274,7 @@ class _NumberOfFishSection extends StatelessWidget {
     } else {
       return Column(
         children: [
-          Header('Number of Fish'),
+          HouseTexts.heading('Number of Fish'),
           FormBuilderStepper(
             attribute: "num_of_fish",
             initialValue: 0,
@@ -304,7 +304,7 @@ class _PositionSection extends StatelessWidget {
     if (catchType.name == 'Match') {
       return Column(
         children: [
-          Header(title),
+          HouseTexts.heading(title),
           FormBuilderStepper(
             attribute: attribute,
             min: 0,
@@ -336,7 +336,7 @@ class _TimePickerBuilder extends StatelessWidget {
     } else {
       return Column(
         children: [
-          Header(title),
+          HouseTexts.heading(title),
           FormBuilderDateTimePicker(
             attribute: attribute,
             inputType: InputType.time,
@@ -395,7 +395,7 @@ class _DropDownMenuDatesBuilder extends StatelessWidget {
     } else {
       return Column(
         children: [
-          Header(title),
+          HouseTexts.heading(title),
           FormBuilderDropdown(
               attribute: attribute,
               items: items
@@ -428,7 +428,7 @@ class _DropDownMenuBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Header(title),
+        HouseTexts.heading(title),
         FormBuilderDropdown(
             attribute: attribute,
             validators: isRequired ? [FormBuilderValidators.required()] : [],
@@ -448,7 +448,7 @@ class _TemperatureSlider extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Header('Temperature'),
+        HouseTexts.heading('Temperature'),
         FormBuilderSlider(
           attribute: 'temperature',
           initialValue: 20,
@@ -500,7 +500,7 @@ class _FishWeight extends StatelessWidget {
 
     return Column(
       children: <Widget>[
-        Header('Weight'),
+        HouseTexts.heading('Weight'),
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[

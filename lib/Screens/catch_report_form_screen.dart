@@ -1,4 +1,4 @@
-import 'package:fisheri/Screens/detail_screen/header.dart';
+import 'package:fisheri/house_texts.dart';
 import 'package:fisheri/models/catch_report.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +45,7 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
             autovalidate: true,
             child: Column(
               children: <Widget>[
-                Header('New Report'),
+                HouseTexts.heading('New Report'),
                 SizedBox(height: 16),
                 __LakesDropDownMenu(snapshotLakes: widget.availableLakes),
                 FormBuilderDateTimePicker(

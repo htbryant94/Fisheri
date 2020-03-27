@@ -9,6 +9,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fisheri/opening_hours_list.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:fisheri/house_texts.dart';
 
 class VenueDetailedConstants {
   static const String name = "name";
@@ -56,16 +57,27 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
                   child: Column(
                     children: <Widget>[
                       _OverviewSection(),
+                      SizedBox(height: 16),
                       _CoordinatesSection(),
+                      SizedBox(height: 16),
                       _AddressSection(),
+                      SizedBox(height: 16),
                       _AmenitiesSection(),
+                      SizedBox(height: 16),
                       _ContactDetailsSection(),
+                      SizedBox(height: 16),
                       _SocialLinksSection(),
+                      SizedBox(height: 16),
                       _FishStockedSection(),
+                      SizedBox(height: 16),
                       _FishingTypesSection(),
+                      SizedBox(height: 16),
                       _TicketsSection(),
+                      SizedBox(height: 16),
                       _FishingRulesSection(),
+                      SizedBox(height: 16),
                       _OperationalHoursSection(),
+                      
                     ],
                   ),
                 ),
@@ -275,35 +287,12 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
   }
 }
 
-class _Header extends StatelessWidget {
-  _Header(this.title);
-
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Padding(
-        padding: const EdgeInsets.only(top: 16, bottom: 16),
-        child: Text(
-          title,
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class _OverviewSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        _Header('Add a Venue'),
+        HouseTexts.subtitle('Add a Venue'),
         FormBuilderTextField(
           attribute: "name",
           decoration: InputDecoration(labelText: "Name of Venue *"),
@@ -348,7 +337,7 @@ class _FishingRulesSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        _Header('Fishing Rules'),
+        HouseTexts.subtitle('Fishing Rules'),
         FormBuilderTextField(
           keyboardType: TextInputType.multiline,
           minLines: 5,
@@ -370,7 +359,7 @@ class _AddressSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        _Header('Address'),
+        HouseTexts.subtitle('Address'),
         FormBuilderTextField(
           attribute: "address_street",
           decoration: InputDecoration(labelText: "Street *"),
@@ -418,7 +407,7 @@ class _AmenitiesSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        _Header('Amenities'),
+        HouseTexts.subtitle('Amenities'),
         FormBuilderStepper(
           attribute: "amenities_num_lakes",
           decoration: InputDecoration(labelText: "Number of Lakes"),
@@ -456,7 +445,7 @@ class _ContactDetailsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        _Header('Venue Contact Details'),
+        HouseTexts.subtitle('Venue Contact Details'),
         FormBuilderTextField(
           attribute: "contact_email",
           decoration: InputDecoration(
@@ -498,7 +487,7 @@ class _SocialLinksSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        _Header('Social Links'),
+        HouseTexts.subtitle('Social Links'),
         FormBuilderTextField(
           attribute: "social_facebook",
           decoration: InputDecoration(
@@ -535,7 +524,7 @@ class _FishStockedSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        _Header('Fish Stocked'),
+        HouseTexts.subtitle('Fish Stocked'),
         FormBuilderCheckboxList(
           attribute: "fish_stocked",
           options: [
@@ -568,7 +557,7 @@ class _FishingTypesSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        _Header('Fishing Types'),
+        HouseTexts.subtitle('Fishing Types'),
         FormBuilderCheckboxList(
           attribute: "fishing_types",
           options: [
@@ -589,7 +578,7 @@ class _TicketsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        _Header('Tickets Available'),
+        HouseTexts.subtitle('Tickets Available'),
         FormBuilderCheckboxList(
           attribute: "tickets",
           options: [
@@ -610,7 +599,7 @@ class _CoordinatesSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        _Header('Coordinates'),
+        HouseTexts.subtitle('Coordinates'),
         FormBuilderTextField(
           attribute: "coordinates_latitude",
           decoration: InputDecoration(
@@ -639,7 +628,7 @@ class _OperationalHoursSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        _Header('Operational Hours'),
+        HouseTexts.subtitle('Operational Hours'),
         _OperationalHoursDay(day: 'Monday'),
         SizedBox(height: 8),
         _OperationalHoursDay(day: 'Tuesday'),

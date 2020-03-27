@@ -1,4 +1,4 @@
-import 'package:fisheri/Screens/detail_screen/header.dart';
+import 'package:fisheri/house_texts.dart';
 import 'package:fisheri/Screens/detail_screen/title_section.dart';
 import 'package:flutter/material.dart';
 import 'package:fisheri/house_colors.dart';
@@ -66,19 +66,19 @@ class CatchDetailScreen extends StatelessWidget {
               padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
               child: Column(
                 children: <Widget>[
-                  Header('Weight: ${convertGramsToPoundsAndOunces(weight)}'),
+                  HouseTexts.heading('Weight: ${convertGramsToPoundsAndOunces(weight)}'),
                   SizedBox(height: 16),
-                  Header('Time: $time'),
+                  HouseTexts.heading('Time: $time'),
                   SizedBox(height: 16),
-                  Header('Date: $date'),
+                  HouseTexts.heading('Date: $date'),
                   SizedBox(height: 16),
-                  Header('Weather Condition: $weatherCondition'),
+                  HouseTexts.heading('Weather Condition: $weatherCondition'),
                   SizedBox(height: 16),
-                  Header('Wind Direction: $windDirection'),
+                  HouseTexts.heading('Wind Direction: $windDirection'),
                   SizedBox(height: 16),
-                  Header('Temperature: ${formattedTemperature(temperature)}'),
+                  HouseTexts.heading('Temperature: ${formattedTemperature(temperature)}'),
                   SizedBox(height: 16),
-                  Header('Notes: '),
+                  HouseTexts.heading('Notes: '),
                   SizedBox(height: 16),
                   Text(
                     '$notes',

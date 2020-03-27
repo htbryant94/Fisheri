@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'header.dart';
+import 'package:fisheri/house_texts.dart';
 import 'package:fisheri/house_colors.dart';
 
 class TicketsSection extends StatelessWidget {
@@ -13,7 +13,7 @@ class TicketsSection extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
       child: Column(
         children: [
-          Header('Tickets'),
+          HouseTexts.heading('Tickets'),
           SizedBox(height: 8),
           Column(
             children: tickets.map((ticket) => _Ticket(type: ticket)).toList(),
