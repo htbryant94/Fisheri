@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:fisheri/house_texts.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fisheri/house_colors.dart';
@@ -16,32 +17,8 @@ class LocalImageBaseCell extends StatelessWidget {
   final String subtitle;
   final List<Widget> elements;
 
-  Text _title() {
-    return Text(
-      '$title',
-      style: GoogleFonts.raleway(
-        fontSize: 18,
-        fontWeight: FontWeight.w600,
-        fontStyle: FontStyle.normal,
-        color: HouseColors.wetAsphalt,
-      ),
-    );
-  }
-
-  Text _subtitle() {
-    return Text(
-      '$subtitle',
-      style: GoogleFonts.raleway(
-        fontSize: 16,
-        fontWeight: FontWeight.w400,
-        fontStyle: FontStyle.normal,
-        color: HouseColors.concrete,
-      ),
-    );
-  }
-
   List<Widget> _children() {
-    List<Widget> stuff = [_title(), _subtitle()];
+    List<Widget> stuff = [HouseTexts.heading('$title'), HouseTexts.subheading('$subtitle')];
     if (elements != null && elements.isNotEmpty) {
       stuff += elements;
     }
@@ -103,32 +80,8 @@ class RemoteImageBaseCell extends StatelessWidget {
   final String subtitle;
   final List<Widget> elements;
 
-  Text _title() {
-    return Text(
-      '$title',
-      style: GoogleFonts.raleway(
-        fontSize: 18,
-        fontWeight: FontWeight.w600,
-        fontStyle: FontStyle.normal,
-        color: HouseColors.wetAsphalt,
-      ),
-    );
-  }
-
-  Text _subtitle() {
-    return Text(
-      '$subtitle',
-      style: GoogleFonts.raleway(
-        fontSize: 16,
-        fontWeight: FontWeight.w400,
-        fontStyle: FontStyle.normal,
-        color: HouseColors.concrete,
-      ),
-    );
-  }
-
   List<Widget> _children() {
-    List<Widget> stuff = [_title(), _subtitle()];
+    List<Widget> stuff = [HouseTexts.heading('$title'), HouseTexts.subheading('$subtitle')];
     if (elements != null && elements.isNotEmpty) {
       stuff += elements;
     }

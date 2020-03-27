@@ -4,12 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class HouseTexts {
+  
   static Widget title(String text,
       {AlignmentGeometry alignment = Alignment.centerLeft}) {
     return Align(
       alignment: alignment,
       child: Text(text,
-          style: GoogleFonts.raleway(
+          style: GoogleFonts.openSans(
             fontSize: 22,
             fontWeight: FontWeight.w600,
             fontStyle: FontStyle.normal,
@@ -23,7 +24,7 @@ class HouseTexts {
     return Align(
       alignment: alignment,
       child: Text(text,
-          style: GoogleFonts.raleway(
+          style: GoogleFonts.openSans(
             fontSize: 20,
             fontWeight: FontWeight.w400,
             fontStyle: FontStyle.normal,
@@ -38,7 +39,7 @@ class HouseTexts {
       alignment: alignment,
       child: Text(
         text,
-        style: GoogleFonts.raleway(
+        style: GoogleFonts.openSans(
           fontSize: 18,
           fontWeight: FontWeight.w400,
           color: Colors.black,
@@ -53,9 +54,9 @@ class HouseTexts {
       alignment: alignment,
       child: Text(
         text,
-        style: GoogleFonts.raleway(
+        style: GoogleFonts.openSans(
           fontSize: 16,
-          fontWeight: FontWeight.w300,
+          fontWeight: FontWeight.w400,
           color: Colors.black54,
         ),
       ),
@@ -68,7 +69,7 @@ class HouseTexts {
       alignment: alignment,
       child: Text(
         text,
-        style: GoogleFonts.raleway(
+        style: GoogleFonts.openSans(
           fontSize: 14,
           fontWeight: FontWeight.w400,
           color: Colors.black,
@@ -87,7 +88,7 @@ class HouseTexts {
       alignment: alignment,
       child: Text(
         text,
-        style: GoogleFonts.raleway(
+        style: GoogleFonts.openSans(
           fontSize: fontSize,
           fontWeight: fontWeight,
           color: color,
