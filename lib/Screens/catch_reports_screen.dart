@@ -1,7 +1,5 @@
-import 'dart:ui';
-
 import 'package:fisheri/Screens/catch_report_form_screen.dart';
-import 'package:fisheri/Screens/catch_report_screen.dart';
+import 'package:fisheri/coordinator.dart';
 import 'package:fisheri/house_colors.dart';
 import 'package:fisheri/house_texts.dart';
 import 'package:flutter/cupertino.dart';
@@ -119,17 +117,13 @@ class CatchReportCell extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-//        print('name: $name');
-//        print('start date: $startDate');
-//        print('end date: $endDate');
-//        print('id: $id');
-//        print('------------------------');
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => CatchReportScreen(
-              startDate: startDate,
-              endDate: endDate,
-              id: id,
-            )));
+        Coordinator.pushCatchReportScreen(
+          context,
+          currentPageTitle: 'Catch Reports',
+          id: id,
+          startDate: startDate,
+          endDate: endDate,
+        );
       },
       child: Card(
         clipBehavior: Clip.antiAliasWithSaveLayer,

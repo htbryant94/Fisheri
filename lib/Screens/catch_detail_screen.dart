@@ -1,33 +1,18 @@
 import 'package:fisheri/house_texts.dart';
 import 'package:fisheri/Screens/detail_screen/title_section.dart';
 import 'package:flutter/material.dart';
-import 'package:fisheri/house_colors.dart';
+import 'package:fisheri/models/catch.dart';
 import 'package:fisheri/Screens/detail_screen/image_carousel.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 class CatchDetailScreen extends StatelessWidget {
   CatchDetailScreen({
-    this.catchType,
-    this.date,
-    this.fishType,
-    this.notes,
-    this.temperature,
-    this.time,
-    this.weatherCondition,
-    this.windDirection,
-    this.weight,
+    this.data,
   });
 
-  final String catchType;
-  final String date;
-  final String fishType;
-  final String notes;
-  final double temperature;
-  final String time;
-  final String weatherCondition;
-  final String windDirection;
-  final double weight;
-
+  final Catch data;
+  
   String convertGramsToPoundsAndOunces(double grams) {
     if (grams != null) {
       double ounces = convertGramsToOunces(grams);
@@ -49,49 +34,55 @@ class CatchDetailScreen extends StatelessWidget {
     return "No information";
   }
 
+  String formattedDate(String date) {
+    return date != null
+        ? DateFormat('EEEE, MMM d, yyyy')
+        .format(DateTime.parse(date))
+        : "No Date";
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Your Catch'),
-          backgroundColor: HouseColors.primaryGreen,
-        ),
-        body: ListView(
-          children: [
-            ImageCarousel(),
-            TitleSection(
-              title: '$catchType Catch - $fishType',
-            ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
-              child: Column(
-                children: <Widget>[
-                  HouseTexts.heading('Weight: ${convertGramsToPoundsAndOunces(weight)}'),
-                  SizedBox(height: 16),
-                  HouseTexts.heading('Time: $time'),
-                  SizedBox(height: 16),
-                  HouseTexts.heading('Date: $date'),
-                  SizedBox(height: 16),
-                  HouseTexts.heading('Weather Condition: $weatherCondition'),
-                  SizedBox(height: 16),
-                  HouseTexts.heading('Wind Direction: $windDirection'),
-                  SizedBox(height: 16),
-                  HouseTexts.heading('Temperature: ${formattedTemperature(temperature)}'),
-                  SizedBox(height: 16),
-                  HouseTexts.heading('Notes: '),
-                  SizedBox(height: 16),
-                  Text(
-                    '$notes',
-                    style: GoogleFonts.raleway(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w300,
-                      fontStyle: FontStyle.normal,
-                    ),
-                  ),
-                ],
+        body: SafeArea(
+          child: ListView(
+            children: [
+              ImageCarousel(),
+              TitleSection(
+                title: '${data.catchType} Catch - ${data.typeOfFish}',
               ),
-            )
-          ],
+              Padding(
+                padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
+                child: Column(
+                  children: <Widget>[
+                    HouseTexts.heading('Weight: ${convertGramsToPoundsAndOunces(data.weight)}'),
+                    SizedBox(height: 16),
+                    HouseTexts.heading('Time: ${data.time}'),
+                    SizedBox(height: 16),
+                    HouseTexts.heading('Date: ${formattedDate(data.date)}'),
+                    SizedBox(height: 16),
+                    HouseTexts.heading('Weather Condition: ${data.weatherCondition}'),
+                    SizedBox(height: 16),
+                    HouseTexts.heading('Wind Direction: ${data.windDirection}'),
+                    SizedBox(height: 16),
+                    HouseTexts.heading('Temperature: ${formattedTemperature(data.temperature)}'),
+                    SizedBox(height: 16),
+                    HouseTexts.heading('Notes: '),
+                    SizedBox(height: 16),
+                    Text(
+                      '${data.notes}',
+                      style: GoogleFonts.raleway(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w300,
+                        fontStyle: FontStyle.normal,
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                  ],
+                ),
+              )
+            ],
+          ),
         ));
   }
 }

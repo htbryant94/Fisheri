@@ -1,4 +1,7 @@
+import 'package:fisheri/Screens/catch_detail_screen.dart';
+import 'package:fisheri/Screens/catch_report_screen.dart';
 import 'package:fisheri/Screens/detail_screen/detail_screen.dart';
+import 'package:fisheri/models/catch.dart';
 import 'package:fisheri/models/venue_detailed.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -33,10 +36,40 @@ class Coordinator {
     ));
   }
 
+  static void pushCatchReportScreen(BuildContext context, {String currentPageTitle, DateTime startDate, DateTime endDate, String id }) {
+    pushCupertinoPageRoute(context,
+      CupertinoPageScaffold(
+        navigationBar: CupertinoNavigationBar(
+          previousPageTitle: currentPageTitle,
+          middle: Text('Your Catches'),
+        ),
+        child: CatchReportScreen(
+          startDate: startDate,
+          endDate: endDate,
+          id: id,
+        ),
+      )
+    );
+  }
+
+  static void pushCatchDetailScreen(BuildContext context, {String currentPageTitle, Catch catchData}) {
+    pushCupertinoPageRoute(context,
+        CupertinoPageScaffold(
+          navigationBar: CupertinoNavigationBar(
+            previousPageTitle: currentPageTitle,
+            middle: Text('Your Catches'),
+          ),
+          child: CatchDetailScreen(
+            data: catchData,
+          )
+        )
+    );
+  }
+
   static void pushCupertinoPageRoute(BuildContext context, Widget route) {
     Navigator.push(context, CupertinoPageRoute(
       builder: (context) => route)
     );
   }
-
+  
 }
