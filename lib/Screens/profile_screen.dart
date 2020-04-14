@@ -54,8 +54,6 @@ class ProfileScreen extends StatelessWidget {
         title: "Saved Venues",
         icon: Icon(Icons.backup),
       ),
-
-
     ];
 
     return Scaffold(

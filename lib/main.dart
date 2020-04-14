@@ -1,4 +1,5 @@
 import 'package:fisheri/Screens/catch_reports_screen.dart';
+import 'package:fisheri/Screens/holiday_countries_screen.dart';
 import 'package:fisheri/Screens/profile_screen.dart';
 import 'package:fisheri/Screens/venue_form_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -82,6 +83,7 @@ class HomePageState extends State<HomePage>
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.search), title: Text('Search')),
           BottomNavigationBarItem(icon: Icon(Icons.description), title: Text('Catch')),
+          BottomNavigationBarItem(icon: Icon(Icons.wb_sunny), title: Text('Holidays')),
           BottomNavigationBarItem(icon: Icon(Icons.account_circle), title: Text('Profile')),
 //          BottomNavigationBarItem(icon: Icon(Icons.assignment), title: Text('Venue')),
 //          BottomNavigationBarItem(icon: Icon(Icons.explore), title: Text('Login')),
@@ -105,6 +107,15 @@ class HomePageState extends State<HomePage>
               );
             });
           case 2:
+            return CupertinoTabView(builder: (context) {
+              return CupertinoPageScaffold(
+                navigationBar: CupertinoNavigationBar(
+                  middle: Text('Holidays'),
+                ),
+                child: HolidayCountriesScreen(),
+              );
+            });
+          case 3:
             return CupertinoTabView(builder: (context) {
               return CupertinoPageScaffold(
                 child: ProfileScreen(),

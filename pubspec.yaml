@@ -74,6 +74,12 @@ flutter:
     - images/fish_11.png
     - images/question_mark.png
     - images/galaxy.jpg
+    - images/flags/belgium.png
+    - images/flags/croatia.png
+    - images/flags/france.png
+    - images/flags/germany.png
+    - images/flags/netherlands.png
+    - images/flags/spain.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:
