@@ -30,22 +30,22 @@ class ProfileScreen extends StatelessWidget {
       ProfileListItem(
           screen: VenueFormScreen(),
           title: "Add a Venue",
-          icon: Icon(Icons.add)
+          icon: Icon(Icons.add, color: Colors.green)
       ),
       ProfileListItem(
           screen: AuthScreen(),
           title: "Login",
-          icon: Icon(Icons.account_circle)
+          icon: Icon(Icons.account_circle, color: Colors.blue)
       ),
       ProfileListItem(
         screen: FishingLicenseScreen(),
         title: "Fishing License - WIP",
-        icon: Icon(Icons.description),
+        icon: Icon(Icons.description, color: Colors.green),
       ),
       ProfileListItem(
         screen: EventsCalendarScreen(),
         title: "Events - WIP",
-        icon: Icon(Icons.calendar_today),
+        icon: Icon(Icons.calendar_today, color: Colors.red[600]),
         navBarIcon: CupertinoButton(
           padding: EdgeInsets.only(bottom: 8, top: 8),
           child: Icon(Icons.add),
@@ -61,13 +61,18 @@ class ProfileScreen extends StatelessWidget {
       ),
       ProfileListItem(
         screen: null,
-        title: "Saved Venues",
-        icon: Icon(Icons.backup),
+        title: "My Favourites",
+        icon: Icon(Icons.favorite, color: Colors.pink),
+      ),
+      ProfileListItem(
+          screen: null,
+          title: "Contact Us",
+          icon: Icon(Icons.phone, color: Colors.blue)
       ),
       ProfileListItem(
         screen: null,
         title: "Settings",
-        icon: Icon(Icons.settings),
+        icon: Icon(Icons.settings, color: Colors.blueGrey),
       ),
     ];
 
