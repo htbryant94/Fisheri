@@ -34,6 +34,7 @@ dependencies:
   carousel_slider: ^1.4.1
   page_view_indicators: ^1.3.1
   basic_utils: ^2.5.2
+  webview_flutter: ^0.3.21
   
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -95,6 +96,11 @@ flutter:
     - images/placeholders/events_calendar_create.png
     - images/placeholders/events_calendar_main.png
     - images/placeholders/fishing_license.png
+    - images/icons/social_media/facebook.png
+    - images/icons/social_media/instagram.png
+    - images/icons/social_media/twitter.png
+    - images/icons/social_media/youtube.png
+
 
   # To add assets to your application, add an assets section, like this:
   # assets:

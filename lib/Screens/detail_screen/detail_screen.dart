@@ -1,7 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
-
 import 'package:fisheri/Screens/detail_screen/fishing_rules_section.dart';
 import 'package:fisheri/models/venue_detailed.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:fisheri/Screens/detail_screen/title_section.dart';
@@ -13,6 +12,7 @@ import 'package:fisheri/Screens/detail_screen/fishing_types_section.dart';
 import 'package:fisheri/Screens/detail_screen/fish_stocked_section.dart';
 import 'package:fisheri/Screens/detail_screen/tickets_section.dart';
 import 'package:fisheri/Screens/detail_screen/opening_hours_section.dart';
+import 'social_media_section.dart';
 import 'package:flutter/rendering.dart';
 
 class DetailScreen extends StatelessWidget {
@@ -45,13 +45,12 @@ class DetailScreen extends StatelessWidget {
                 town: venue.address.town,
                 county: venue.address.county,
               ),
+              ButtonSection(Colors.blue),
               DescriptionSection(
                 text: venue.description,
                 descriptionExpanded: descriptionExpanded,
               ),
-              SizedBox(height: 16),
-              ButtonSection(Colors.blue),
-              SizedBox(height: 16),
+              SocialMediaSection(social: venue.social),
               FishStockedSection(venue.fishStocked),
               FishingTypesSection(venue.fishingTypes),
               AmenitiesSection(venue.amenities),
