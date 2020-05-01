@@ -91,7 +91,9 @@ flutter:
     - images/icons/amenities/toilets.png
     - images/icons/amenities/wheelchair_access.png
     - images/icons/amenities/wifi.png
-
+    - images/placeholders/events_calendar_create.png
+    - images/placeholders/events_calendar_main.png
+    - images/placeholders/fishing_license.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

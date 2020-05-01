@@ -1,6 +1,5 @@
-import 'dart:ffi';
-
 import 'package:fisheri/Screens/auth_screen.dart';
+import 'package:fisheri/Screens/fishing_license_screen.dart';
 import 'package:fisheri/Screens/venue_form_screen.dart';
 import 'package:fisheri/coordinator.dart';
 import 'package:fisheri/house_texts.dart';
@@ -40,8 +39,8 @@ class ProfileScreen extends StatelessWidget {
         icon: Icon(Icons.settings),
       ),
       ProfileListItem(
-        screen: null,
-        title: "Fishing Licenses",
+        screen: FishingLicenseScreen(),
+        title: "Fishing License",
         icon: Icon(Icons.description),
       ),
       ProfileListItem(
