@@ -106,12 +106,13 @@ class Coordinator {
     );
   }
 
-  static void push(BuildContext context, {String currentPageTitle, String screenTitle, Widget screen}) {
+  static void push(BuildContext context, {String currentPageTitle, String screenTitle, Widget screen, Widget navBarIcon}) {
     pushCupertinoPageRoute(context,
         CupertinoPageScaffold(
           navigationBar: CupertinoNavigationBar(
             previousPageTitle: currentPageTitle,
             middle: Text(screenTitle),
+            trailing: navBarIcon,
           ),
           child: screen,
         )

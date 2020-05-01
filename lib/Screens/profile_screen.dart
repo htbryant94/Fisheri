@@ -1,4 +1,6 @@
 import 'package:fisheri/Screens/auth_screen.dart';
+import 'package:fisheri/Screens/events_calendar_screen.dart';
+import 'package:fisheri/Screens/create_event_screen.dart';
 import 'package:fisheri/Screens/fishing_license_screen.dart';
 import 'package:fisheri/Screens/venue_form_screen.dart';
 import 'package:fisheri/coordinator.dart';
@@ -11,11 +13,13 @@ class ProfileListItem {
     this.title,
     this.icon,
     this.screen,
+    this.navBarIcon,
 });
 
   final String title;
   final Icon icon;
   final Widget screen;
+  final Widget navBarIcon;
 }
 
 class ProfileScreen extends StatelessWidget {
@@ -34,24 +38,36 @@ class ProfileScreen extends StatelessWidget {
           icon: Icon(Icons.account_circle)
       ),
       ProfileListItem(
-        screen: null,
-        title: "Settings",
-        icon: Icon(Icons.settings),
-      ),
-      ProfileListItem(
         screen: FishingLicenseScreen(),
-        title: "Fishing License",
+        title: "Fishing License - WIP",
         icon: Icon(Icons.description),
       ),
       ProfileListItem(
-        screen: null,
-        title: "Events",
+        screen: EventsCalendarScreen(),
+        title: "Events - WIP",
         icon: Icon(Icons.calendar_today),
+        navBarIcon: CupertinoButton(
+          padding: EdgeInsets.only(bottom: 8, top: 8),
+          child: Icon(Icons.add),
+          onPressed: () {
+            Coordinator.push(
+              context,
+              currentPageTitle: 'Profile',
+              screen: CreateEventScreen(),
+              screenTitle: 'Create Event'
+            );
+          },
+        )
       ),
       ProfileListItem(
         screen: null,
         title: "Saved Venues",
         icon: Icon(Icons.backup),
+      ),
+      ProfileListItem(
+        screen: null,
+        title: "Settings",
+        icon: Icon(Icons.settings),
       ),
     ];
 
@@ -73,7 +89,9 @@ class ProfileScreen extends StatelessWidget {
                     context,
                     currentPageTitle: 'Profile',
                     screenTitle: item.title,
-                    screen: item.screen);
+                    screen: item.screen,
+                    navBarIcon: item.navBarIcon,
+                );
               } : null,
             );
           },
