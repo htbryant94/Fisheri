@@ -22,6 +22,7 @@ class _SearchScreenState extends State<SearchScreen> {
   Stream<List<DocumentSnapshot>> stream;
   Set<Circle> circles;
 
+  BitmapDescriptor pinLocationIcon;
   BehaviorSubject<double> radius = BehaviorSubject();
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
   int _markerIdCounter = 1;
@@ -39,6 +40,9 @@ class _SearchScreenState extends State<SearchScreen> {
     radius.value = 15;
     _radiusSliderValue = radius.value;
     GeoFirePoint center = geo.point(latitude: _latitude, longitude: _longitude);
+    BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(32, 32)), 'images/icons/map_icon.png').then((onValue) {
+      pinLocationIcon = onValue;
+    });
 
     circles = Set.from([
       Circle(
@@ -227,7 +231,7 @@ class _SearchScreenState extends State<SearchScreen> {
       },
       markerId: markerId,
       position: LatLng(lat, long),
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+      icon: pinLocationIcon,
     );
     setState(() {
       markers[markerId] = _marker;

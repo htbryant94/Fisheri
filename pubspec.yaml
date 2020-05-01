@@ -80,6 +80,7 @@ flutter:
     - images/flags/germany.png
     - images/flags/netherlands.png
     - images/flags/spain.png
+    - images/icons/map_icon.png
     - images/icons/amenities/animal_friendly.png
     - images/icons/amenities/camping.png
     - images/icons/amenities/electricity.png
