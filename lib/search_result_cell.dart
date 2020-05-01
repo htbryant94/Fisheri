@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fisheri/models/venue_search.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'Components/base_cell.dart';
 import 'coordinator.dart';
 import 'models/venue_detailed.dart';
@@ -9,8 +10,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 class SearchResultCell extends StatelessWidget {
   SearchResultCell({
-    @required
-    this.venue,
+    @required this.venue,
     this.index,
   });
 
@@ -27,25 +27,27 @@ class SearchResultCell extends StatelessWidget {
               .get()
               .then((DocumentSnapshot document) {
             final _venue = VenueDetailedJSONSerializer().fromMap(document.data);
-            Coordinator.pushVenueDetailScreen(context, 'Map', _venue, venue.imageURL);
+            Coordinator.pushVenueDetailScreen(
+                context, 'Map', _venue, venue.imageURL);
           });
         },
-      child: RemoteImageBaseCell(
-        title: venue.name,
-        subtitle: 'TODO',
-        imageURL: venue.imageURL,
-        elements: <Widget>[
-          _VenueOperational(true),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _VenueFeatures(),
-              _VenueDistance('5 miles'),
-            ],
-          )
-        ],
-      )
-    );
+        child: RemoteImageBaseCell(
+          title: venue.name,
+          subtitle: 'TODO',
+          imageURL: venue.imageURL,
+          elements: <Widget>[
+            _VenueOperational(true),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                if (venue.amenities != null)
+                  _VenueFeatures(features: venue.amenities),
+                SizedBox(width: 16),
+                _VenueDistance('5 miles')
+              ],
+            )
+          ],
+        ));
   }
 }
 
@@ -62,31 +64,37 @@ class _VenueOperational extends StatelessWidget {
         fontSize: 14,
         fontWeight: FontWeight.w300,
         fontStyle: FontStyle.normal,
-        color:isOpen ? Colors.green : Colors.red,
+        color: isOpen ? Colors.green : Colors.red,
       ),
     );
   }
 }
 
 class _VenueFeatures extends StatelessWidget {
-  // _VenueFeatures(this.features);
+  _VenueFeatures({this.features});
 
-  // final List<Icon> features;
+  final List<dynamic> features;
 
   @override
   Widget build(BuildContext context) {
-    const double _spacing = 4;
+    List<dynamic> limitedAmenities() {
+      if (features.length > 5) {
+        return features.sublist(0, 4);
+      }
+      return features;
+    }
+
     return Row(
-      children: [
-        Icon(Icons.directions_boat),
-        SizedBox(width: _spacing),
-        Icon(Icons.directions_bike),
-        SizedBox(width: _spacing),
-        Icon(Icons.add_location),
-        SizedBox(width: _spacing),
-        Icon(Icons.description),
-      ],
-    );
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: limitedAmenities()
+            .map((amenity) => Row(
+                  children: [
+                    Image.asset('images/icons/amenities/$amenity.png',
+                        height: 24, width: 24),
+                    SizedBox(width: 8),
+                  ],
+                ))
+            .toList());
   }
 }
 

@@ -1,8 +1,157 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fisheri/house_texts.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:fisheri/house_colors.dart';
+
+class LocalImageCoverCell extends StatelessWidget {
+  LocalImageCoverCell({
+    @required this.image,
+    @required this.title,
+    @required this.subtitle,
+    this.elements,
+  });
+
+  final Image image;
+  final String title;
+  final String subtitle;
+  final List<Widget> elements;
+
+  List<Widget> _children() {
+    List<Widget> stuff = [
+      HouseTexts.heading('$title'),
+      HouseTexts.subheading('$subtitle')
+    ];
+    if (elements != null && elements.isNotEmpty) {
+      stuff += elements;
+    }
+    return stuff;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      clipBehavior: Clip.antiAliasWithSaveLayer,
+      elevation: 3,
+      child: Container(
+        height: 275,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Flexible(
+              flex: 3,
+              child: Image.asset(
+                'images/lake.jpg',
+                fit: BoxFit.cover,
+              ),
+            ),
+            Flexible(
+              flex: 2,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: _children(),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+enum BaseCellLayout {
+  cover,
+  thumbnail
+}
+
+class NewLocalImageBaseCell extends StatelessWidget {
+  NewLocalImageBaseCell({
+    @required this.image,
+    @required this.title,
+    @required this.subtitle,
+    @required this.height,
+    this.elements,
+    this.layout = BaseCellLayout.cover,
+  });
+
+  final Image image;
+  final String title;
+  final String subtitle;
+  final double height;
+  final List<Widget> elements;
+  final BaseCellLayout layout;
+
+  List<Widget> _children() {
+    List<Widget> stuff = [
+      HouseTexts.heading('$title'),
+      HouseTexts.subheading('$subtitle')
+    ];
+    if (elements != null && elements.isNotEmpty) {
+      stuff += elements;
+    }
+    return stuff;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      clipBehavior: Clip.antiAliasWithSaveLayer,
+      elevation: 3,
+      child: Container(
+        height: layout == BaseCellLayout.cover ? height : height / 2,
+        child: layout == BaseCellLayout.cover ? Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Flexible(
+              flex: 3,
+              child: Image.asset(
+                'images/lake.jpg',
+                fit: BoxFit.cover,
+              ),
+            ),
+            Flexible(
+              flex: 2,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: _children(),
+                ),
+              ),
+            ),
+          ],
+        ) : Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            AspectRatio(
+              aspectRatio: 1,
+              child: Image.asset(
+                'images/lake.jpg',
+                fit: BoxFit.fill,
+              ),
+            ),
+            Flexible(
+              flex: 5,
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: _children(),
+                ),
+              ),
+            ),
+          ],
+        )
+      ),
+    );
+  }
+}
+
 
 class LocalImageBaseCell extends StatelessWidget {
   LocalImageBaseCell({
@@ -18,7 +167,10 @@ class LocalImageBaseCell extends StatelessWidget {
   final List<Widget> elements;
 
   List<Widget> _children() {
-    List<Widget> stuff = [HouseTexts.heading('$title'), HouseTexts.subheading('$subtitle')];
+    List<Widget> stuff = [
+      HouseTexts.heading('$title'),
+      HouseTexts.subheading('$subtitle')
+    ];
     if (elements != null && elements.isNotEmpty) {
       stuff += elements;
     }
@@ -81,7 +233,10 @@ class RemoteImageBaseCell extends StatelessWidget {
   final List<Widget> elements;
 
   List<Widget> _children() {
-    List<Widget> stuff = [HouseTexts.heading('$title'), HouseTexts.subheading('$subtitle')];
+    List<Widget> stuff = [
+      HouseTexts.heading('$title'),
+      HouseTexts.subheading('$subtitle')
+    ];
     if (elements != null && elements.isNotEmpty) {
       stuff += elements;
     }

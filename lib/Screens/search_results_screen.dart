@@ -1,3 +1,5 @@
+import 'package:fisheri/Components/base_cell.dart';
+import 'package:fisheri/house_texts.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fisheri/search_result_cell.dart';
@@ -19,6 +21,65 @@ class SearchResultsScreen extends StatelessWidget {
               venue: venue,
             );
       }),
+    );
+  }
+}
+
+class ListViewItem {
+  ListViewItem({
+    this.title,
+    this.subtitle,
+    this.imageURL,
+    this.image,
+    this.additionalInformation,
+});
+
+  final String title;
+  final String subtitle;
+  final String imageURL;
+  final Image image;
+  final List<String> additionalInformation;
+}
+
+class ListViewScreen extends StatelessWidget {
+  ListViewScreen({
+    this.items
+});
+
+  final List<ListViewItem> items;
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: ListView.builder(
+          itemCount: items.length,
+          itemBuilder: (context, int index) {
+            final item = items[index];
+            if (item.image != null) {
+              return NewLocalImageBaseCell(
+                title: item.title,
+                subtitle: item.subtitle,
+                image: item.image,
+                elements: item.additionalInformation.map((info) => HouseTexts.subheading(info)).toList(),
+              );
+            } else if (item.imageURL != null) {
+              return RemoteImageBaseCell(
+                title: item.title,
+                subtitle: item.subtitle,
+                imageURL: item.imageURL,
+                elements: item.additionalInformation.map((info) => HouseTexts.subheading(info)).toList(),
+              );
+            } else {
+              return NewLocalImageBaseCell(
+                height: 500,
+                title: item.title,
+                subtitle: item.subtitle,
+                image: Image.asset('images/question_mark.png'),
+                elements: item.additionalInformation.map((info) => HouseTexts.subheading(info)).toList(),
+              );
+            }
+          }
+      ),
     );
   }
 }

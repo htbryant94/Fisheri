@@ -27,6 +27,20 @@ class Coordinator {
         ));
   }
 
+  static void pushListViewScreen(BuildContext context, {String currentPageTitle, String nextPageTitle, List<ListViewItem> items}) {
+    Navigator.push(context,
+        CupertinoPageRoute(
+          builder: (context) =>
+              CupertinoPageScaffold(
+                navigationBar: CupertinoNavigationBar(
+                  previousPageTitle: currentPageTitle,
+                  middle: Text(nextPageTitle),
+                ),
+                child: ListViewScreen(items: items),
+              ),
+        ));
+  }
+
   static void pushVenueDetailScreen(BuildContext context, String currentPageTitle, VenueDetailed venue, String imageURL) {
     pushCupertinoPageRoute(context,
     CupertinoPageScaffold(
