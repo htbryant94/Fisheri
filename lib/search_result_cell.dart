@@ -1,4 +1,6 @@
+import 'package:basic_utils/basic_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fisheri/house_texts.dart';
 import 'package:fisheri/models/venue_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -7,6 +9,36 @@ import 'coordinator.dart';
 import 'models/venue_detailed.dart';
 
 import 'package:google_fonts/google_fonts.dart';
+
+class VenueCategoriesSection extends StatelessWidget {
+  VenueCategoriesSection({
+    this.categories,
+  });
+
+  final List<String> categories;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: categories.map((category) =>
+      Row(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+                color: category == 'lake' ? Colors.blue : Colors.orange,
+                borderRadius: BorderRadius.circular(6),
+            ),
+            padding: EdgeInsets.fromLTRB(8, 4, 8, 4),
+            child: HouseTexts.custom(text: StringUtils.capitalize(category), color: Colors.white),
+          ),
+          SizedBox(width: 8),
+        ],
+      )
+      ).toList(),
+    );
+  }
+}
+
 
 class SearchResultCell extends StatelessWidget {
   SearchResultCell({
@@ -33,9 +65,10 @@ class SearchResultCell extends StatelessWidget {
         },
         child: RemoteImageBaseCell(
           title: venue.name,
-          subtitle: 'TODO',
           imageURL: venue.imageURL,
           elements: <Widget>[
+            if (venue.categories != null)
+              VenueCategoriesSection(categories: venue.categories),
             _VenueOperational(true),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

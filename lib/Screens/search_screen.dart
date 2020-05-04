@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:fisheri/models/venue_search.dart';
+import 'package:fisheri/search_result_cell.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -121,7 +122,10 @@ class _SearchScreenState extends State<SearchScreen> {
                         child: RemoteImageBaseCell(
                           imageURL: _selectedVenue.imageURL,
                           title: _selectedVenue.name,
-                          subtitle: _selectedVenueType,
+                          elements: [
+                            if (_selectedVenue.categories != null)
+                            VenueCategoriesSection(categories: _selectedVenue.categories),
+                          ],
                         ),
                       ),
                   ),

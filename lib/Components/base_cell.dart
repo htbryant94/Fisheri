@@ -235,6 +235,7 @@ class RemoteImageBaseCell extends StatelessWidget {
   List<Widget> _children() {
     List<Widget> stuff = [
       HouseTexts.heading('$title'),
+      if (subtitle != null)
       HouseTexts.subheading('$subtitle')
     ];
     if (elements != null && elements.isNotEmpty) {

@@ -2,6 +2,7 @@ import 'package:fisheri/Screens/detail_screen/fishing_rules_section.dart';
 import 'package:fisheri/house_texts.dart';
 import 'package:fisheri/models/venue_address.dart';
 import 'package:fisheri/models/venue_detailed.dart';
+import 'package:fisheri/search_result_cell.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -46,6 +47,10 @@ class DetailScreen extends StatelessWidget {
                 title: venue.name,
                 town: venue.address.town,
                 county: venue.address.county,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 16),
+                child: VenueCategoriesSection(categories: venue.categories),
               ),
               DescriptionSection(
                 text: venue.description,

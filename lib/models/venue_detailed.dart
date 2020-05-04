@@ -30,6 +30,7 @@ class VenueDetailed {
     this.coordinates,
     this.name,
     this.images,
+    this.categories,
     this.isLake,
     this.isShop,
     this.description,
@@ -50,6 +51,7 @@ class VenueDetailed {
   GeoPoint coordinates;
   String name;
   List<String> images;
+  List<String> categories;
   bool isLake;
   bool isShop;
   String description;

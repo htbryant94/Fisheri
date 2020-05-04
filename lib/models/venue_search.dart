@@ -22,6 +22,7 @@ class VenueSearch {
     this.name,
     this.id,
     this.imageURL,
+    this.categories,
     this.isLake,
     this.isShop,
     this.address,
@@ -33,6 +34,7 @@ class VenueSearch {
   String name;
   String id;
   String imageURL;
+  List<String> categories;
   bool isLake;
   bool isShop;
   VenueAddress address;

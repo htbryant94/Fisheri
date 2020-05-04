@@ -17,6 +17,8 @@ abstract class _$VenueSearchJSONSerializer implements Serializer<VenueSearch> {
     setMapValue(ret, 'name', model.name);
     setMapValue(ret, 'id', model.id);
     setMapValue(ret, 'image_url', model.imageURL);
+    setMapValue(ret, 'categories',
+        codeIterable(model.categories, (val) => val as String));
     setMapValue(ret, 'isLake', model.isLake);
     setMapValue(ret, 'isShop', model.isShop);
     setMapValue(
@@ -40,6 +42,8 @@ abstract class _$VenueSearchJSONSerializer implements Serializer<VenueSearch> {
     obj.name = map['name'] as String;
     obj.id = map['id'] as String;
     obj.imageURL = map['image_url'] as String;
+    obj.categories = codeIterable<String>(
+        map['categories'] as Iterable, (val) => val as String);
     obj.isLake = map['isLake'] as bool;
     obj.isShop = map['isShop'] as bool;
     obj.address = _venueAddressJSONSerializer.fromMap(map['address'] as Map);
