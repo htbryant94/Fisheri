@@ -48,6 +48,7 @@ class DetailScreen extends StatelessWidget {
                 town: venue.address.town,
                 county: venue.address.county,
               ),
+              if (venue.categories != null )
               Padding(
                 padding: const EdgeInsets.only(left: 16),
                 child: VenueCategoriesSection(categories: venue.categories),

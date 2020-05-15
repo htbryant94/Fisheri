@@ -24,21 +24,25 @@ class SocialMediaSection extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
+              if (social.facebook != null && social.facebook.isNotEmpty)
               SocialMediaIcon(
                 socialMedia: SocialMedia.facebook,
                 url: social.facebook,
                 scale: scale,
               ),
+              if (social.instagram != null && social.instagram.isNotEmpty)
               SocialMediaIcon(
                 socialMedia: SocialMedia.instagram,
                 url: social.instagram,
                 scale: scale,
               ),
+              if (social.twitter != null && social.twitter.isNotEmpty)
               SocialMediaIcon(
                 socialMedia: SocialMedia.twitter,
                 url: social.twitter,
                 scale: scale,
               ),
+              if (social.youtube != null && social.youtube.isNotEmpty)
               SocialMediaIcon(
                 socialMedia: SocialMedia.youtube,
                 url: social.youtube,

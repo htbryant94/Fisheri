@@ -122,8 +122,14 @@ class _VenueFeatures extends StatelessWidget {
         children: limitedAmenities()
             .map((amenity) => Row(
                   children: [
-                    Image.asset('images/icons/amenities/$amenity.png',
-                        height: 24, width: 24),
+                    Image.asset(
+                      'images/icons/amenities/$amenity.png',
+                      height: 24,
+                      width: 24,
+                      errorBuilder: (BuildContext context, Object exception, StackTrace stackTrace) {
+                        return Text('😢');
+                      }
+                    ),
                     SizedBox(width: 8),
                   ],
                 ))
