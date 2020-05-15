@@ -34,7 +34,7 @@ class VenueSearch {
   String name;
   String id;
   String imageURL;
-  List<String> categories;
+  List<dynamic> categories;
   bool isLake;
   bool isShop;
   VenueAddress address;

@@ -15,6 +15,7 @@ class VenueDetailedConstants {
   static const String name = "name";
   static const String isLake = "is_lake";
   static const String isShop = "is_shop";
+  static const String categories = "categories";
   static const String address = "address";
   static const String amenities = "amenities_array";
   static const String assetsPath = "assets_path";
@@ -77,7 +78,6 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
                       _FishingRulesSection(),
                       SizedBox(height: 16),
                       _OperationalHoursSection(),
-                      
                     ],
                   ),
                 ),
@@ -123,12 +123,7 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
                           );
                           final _venue = VenueDetailed(
                             name: _valueFor(attribute: VenueDetailedConstants.name),
-                            isShop: _valueFor(attribute: 'venue_type')
-                                .toString()
-                                .contains('Shop'),
-                            isLake: _valueFor(attribute: 'venue_type')
-                                .toString()
-                                .contains('Lake'),
+                            categories: _valueFor(attribute: 'categories'),
                             description: _valueFor(
                                 attribute: VenueDetailedConstants.description),
                             address: VenueAddress(
@@ -157,6 +152,7 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
                           if (_fbKey.currentState.saveAndValidate()) {
                             final result =
                                 VenueDetailedJSONSerializer().toMap(_venue);
+                            print(result);
                             final _latitude =
                                 _valueFor(attribute: 'coordinates_latitude');
                             final _longitude =
@@ -181,10 +177,9 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
 
                               VenueSearch venueSearch = VenueSearch(
                                 name: venue.name,
+                                categories: venue.categories,
                                 id: id,
                                 imageURL: null,
-                                isLake: venue.isLake,
-                                isShop: venue.isShop,
                                 address: venue.address,
                                 amenities: venue.amenities,
                                 fishStocked: venue.fishStocked,
@@ -296,6 +291,7 @@ class _OverviewSection extends StatelessWidget {
         FormBuilderTextField(
           attribute: "name",
           decoration: InputDecoration(labelText: "Name of Venue *"),
+          maxLines: 1,
           validators: [
             FormBuilderValidators.required(),
             FormBuilderValidators.minLength(4),
@@ -303,13 +299,13 @@ class _OverviewSection extends StatelessWidget {
           ],
         ),
         FormBuilderCheckboxList(
-          decoration: InputDecoration(labelText: "Venue Type *"),
+          decoration: InputDecoration(labelText: "Categories *"),
           activeColor: HouseColors.accentGreen,
           checkColor: HouseColors.primaryGreen,
-          attribute: "venue_type",
+          attribute: "categories",
           options: [
-            FormBuilderFieldOption(value: "Lake"),
-            FormBuilderFieldOption(value: "Shop"),
+            FormBuilderFieldOption(value: "lake", child: Text('Lake')),
+            FormBuilderFieldOption(value: "shop", child: Text('Shop')),
           ],
         ),
         FormBuilderTextField(
@@ -317,6 +313,7 @@ class _OverviewSection extends StatelessWidget {
           minLines: 5,
           maxLines: null,
           attribute: "description",
+          autocorrect: false,
           decoration: InputDecoration(
               labelText: "Description",
               helperText:
@@ -364,6 +361,7 @@ class _AddressSection extends StatelessWidget {
         FormBuilderTextField(
           attribute: "address_street",
           decoration: InputDecoration(labelText: "Street *"),
+          maxLines: 1,
           validators: [
             FormBuilderValidators.required(),
             FormBuilderValidators.minLength(4),
@@ -373,6 +371,7 @@ class _AddressSection extends StatelessWidget {
         FormBuilderTextField(
           attribute: "address_town",
           decoration: InputDecoration(labelText: "Town *"),
+          maxLines: 1,
           validators: [
             FormBuilderValidators.required(),
             FormBuilderValidators.minLength(4),
@@ -382,6 +381,7 @@ class _AddressSection extends StatelessWidget {
         FormBuilderTextField(
           attribute: "address_county",
           decoration: InputDecoration(labelText: "County *"),
+          maxLines: 1,
           validators: [
             FormBuilderValidators.required(),
             FormBuilderValidators.minLength(4),
@@ -392,6 +392,7 @@ class _AddressSection extends StatelessWidget {
           attribute: "address_postcode",
           textCapitalization: TextCapitalization.words,
           decoration: InputDecoration(labelText: "Postcode *"),
+          maxLines: 1,
           validators: [
             FormBuilderValidators.required(),
             FormBuilderValidators.minLength(6),
@@ -453,6 +454,7 @@ class _ContactDetailsSection extends StatelessWidget {
             labelText: "Email",
             icon: Icon(Icons.email),
           ),
+          maxLines: 1,
           validators: [
             FormBuilderValidators.email(),
           ],
@@ -463,6 +465,7 @@ class _ContactDetailsSection extends StatelessWidget {
             labelText: "Phone",
             icon: Icon(Icons.phone),
           ),
+          maxLines: 1,
           validators: [
             // TODO: Add validation for phone number
           ],
@@ -474,6 +477,7 @@ class _ContactDetailsSection extends StatelessWidget {
             icon: Icon(Icons.language),
             hintText: "https://www.add_this_part_here",
           ),
+          maxLines: 1,
           validators: [
             FormBuilderValidators.url(),
           ],
@@ -495,6 +499,7 @@ class _SocialLinksSection extends StatelessWidget {
             labelText: "Facebook",
             helperText: "www.facebook.com/your_page_here",
           ),
+          maxLines: 1,
           validators: [],
         ),
         FormBuilderTextField(
@@ -503,16 +508,19 @@ class _SocialLinksSection extends StatelessWidget {
             labelText: "Instagram",
             helperText: "@your_handle_here",
           ),
+          maxLines: 1,
           validators: [],
         ),
         FormBuilderTextField(
           attribute: "social_twitter",
           decoration: InputDecoration(labelText: "Twitter"),
+          maxLines: 1,
           validators: [],
         ),
         FormBuilderTextField(
           attribute: "social_youtube",
           decoration: InputDecoration(labelText: "Youtube"),
+          maxLines: 1,
           validators: [],
         ),
       ],
@@ -603,6 +611,7 @@ class _CoordinatesSection extends StatelessWidget {
         HouseTexts.subtitle('Coordinates'),
         FormBuilderTextField(
           attribute: "coordinates_latitude",
+          maxLines: 1,
           decoration: InputDecoration(
             labelText: "Latitude *",
           ),
@@ -613,6 +622,7 @@ class _CoordinatesSection extends StatelessWidget {
         ),
         FormBuilderTextField(
           attribute: "coordinates_longitude",
+          maxLines: 1,
           decoration: InputDecoration(labelText: "Longitude *"),
           validators: [
             FormBuilderValidators.required(),

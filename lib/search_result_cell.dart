@@ -15,7 +15,7 @@ class VenueCategoriesSection extends StatelessWidget {
     this.categories,
   });
 
-  final List<String> categories;
+  final List<dynamic> categories;
 
   @override
   Widget build(BuildContext context) {

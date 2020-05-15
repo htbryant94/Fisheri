@@ -51,7 +51,7 @@ class VenueDetailed {
   GeoPoint coordinates;
   String name;
   List<String> images;
-  List<String> categories;
+  List<dynamic> categories;
   bool isLake;
   bool isShop;
   String description;
