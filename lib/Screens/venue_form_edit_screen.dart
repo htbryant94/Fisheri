@@ -12,6 +12,7 @@ import 'package:fisheri/opening_hours_list.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:fisheri/house_texts.dart';
 import 'package:recase/recase.dart';
+import 'package:fisheri/Components/image_picker_container.dart';
 
 class VenueDetailedConstants {
   static const String name = "name";
@@ -60,9 +61,12 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
                   initialValue: {
                     VenueDetailedConstants.name: widget.venue.name,
                     VenueDetailedConstants.categories: widget.venue.categories,
-                    VenueDetailedConstants.description: widget.venue.description,
-                    'coordinates_latitude': widget.venue.coordinates.latitude.toString(),
-                    'coordinates_longitude': widget.venue.coordinates.longitude.toString(),
+                    VenueDetailedConstants.description:
+                        widget.venue.description,
+                    'coordinates_latitude':
+                        widget.venue.coordinates.latitude.toString(),
+                    'coordinates_longitude':
+                        widget.venue.coordinates.longitude.toString(),
                     'address_street': widget.venue.address.street,
                     'address_town': widget.venue.address.town,
                     'address_county': widget.venue.address.county,
@@ -83,15 +87,22 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
                     'monday_open': widget.venue.operationalHours.monday.open,
                     'monday_close': widget.venue.operationalHours.monday.close,
                     'tuesday_open': widget.venue.operationalHours.tuesday.open,
-                    'tuesday_close': widget.venue.operationalHours.tuesday.close,
-                    'wednesday_open': widget.venue.operationalHours.wednesday.open,
-                    'wednesday_close': widget.venue.operationalHours.wednesday.close,
-                    'thursday_open': widget.venue.operationalHours.thursday.open,
-                    'thursday_close': widget.venue.operationalHours.thursday.close,
+                    'tuesday_close':
+                        widget.venue.operationalHours.tuesday.close,
+                    'wednesday_open':
+                        widget.venue.operationalHours.wednesday.open,
+                    'wednesday_close':
+                        widget.venue.operationalHours.wednesday.close,
+                    'thursday_open':
+                        widget.venue.operationalHours.thursday.open,
+                    'thursday_close':
+                        widget.venue.operationalHours.thursday.close,
                     'friday_open': widget.venue.operationalHours.friday.open,
                     'friday_close': widget.venue.operationalHours.friday.close,
-                    'saturday_open': widget.venue.operationalHours.saturday.open,
-                    'saturday_close': widget.venue.operationalHours.saturday.close,
+                    'saturday_open':
+                        widget.venue.operationalHours.saturday.open,
+                    'saturday_close':
+                        widget.venue.operationalHours.saturday.close,
                     'sunday_open': widget.venue.operationalHours.sunday.open,
                     'sunday_close': widget.venue.operationalHours.sunday.close,
                     VenueDetailedConstants.assetsPath: widget.venue.assetsPath,
@@ -120,6 +131,8 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
                       _FishingRulesSection(),
                       SizedBox(height: 16),
                       _OperationalHoursSection(),
+                      SizedBox(height: 16),
+                      _PhotosSection(),
                     ],
                   ),
                 ),
@@ -129,8 +142,8 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
                         child: Text("Submit"),
                         onPressed: () {
                           Function _valueFor = ({String attribute}) {
-                            return _fbKey
-                                .currentState.fields[attribute].currentState.value;
+                            return _fbKey.currentState.fields[attribute]
+                                .currentState.value;
                           };
 
                           HoursOfOperation operationalHours = HoursOfOperation(
@@ -164,7 +177,8 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
                             ),
                           );
                           final _venue = VenueDetailed(
-                            name: _valueFor(attribute: VenueDetailedConstants.name),
+                            name: _valueFor(
+                                attribute: VenueDetailedConstants.name),
                             categories: _valueFor(attribute: 'categories'),
                             description: _valueFor(
                                 attribute: VenueDetailedConstants.description),
@@ -172,7 +186,8 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
                               street: _valueFor(attribute: 'address_street'),
                               town: _valueFor(attribute: 'address_town'),
                               county: _valueFor(attribute: 'address_county'),
-                              postcode: _valueFor(attribute: 'address_postcode'),
+                              postcode:
+                                  _valueFor(attribute: 'address_postcode'),
                             ),
                             amenities: _valueFor(attribute: 'amenities_list'),
                             contactDetails: ContactDetails(
@@ -181,7 +196,8 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
                             ),
                             social: Social(
                               facebook: _valueFor(attribute: 'social_facebook'),
-                              instagram: _valueFor(attribute: 'social_instagram'),
+                              instagram:
+                                  _valueFor(attribute: 'social_instagram'),
                               twitter: _valueFor(attribute: 'social_twitter'),
                               youtube: _valueFor(attribute: 'social_youtube'),
                             ),
@@ -193,19 +209,19 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
                           );
                           if (_fbKey.currentState.saveAndValidate()) {
                             final result =
-                            VenueDetailedJSONSerializer().toMap(_venue);
+                                VenueDetailedJSONSerializer().toMap(_venue);
                             print(result);
                             final _latitude =
-                            _valueFor(attribute: 'coordinates_latitude');
+                                _valueFor(attribute: 'coordinates_latitude');
                             final _longitude =
-                            _valueFor(attribute: 'coordinates_longitude');
+                                _valueFor(attribute: 'coordinates_longitude');
 
                             if (_latitude != null && _longitude != null) {
                               final double _latitude = double.parse(
                                   _valueFor(attribute: 'coordinates_latitude'));
                               assert(_latitude is double);
-                              final double _longitude = double.parse(
-                                  _valueFor(attribute: 'coordinates_longitude'));
+                              final double _longitude = double.parse(_valueFor(
+                                  attribute: 'coordinates_longitude'));
                               assert(_longitude is double);
                               result["coordinates"] = GeoPoint(
                                 _latitude,
@@ -213,7 +229,12 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
                               );
                             }
 
-                            void _addPoint({VenueDetailed venue, String name, String id, double lat, double long}) {
+                            void _addPoint(
+                                {VenueDetailed venue,
+                                String name,
+                                String id,
+                                double lat,
+                                double long}) {
                               print('adding point');
                               final _geo = Geoflutterfire();
 
@@ -229,22 +250,26 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
                               );
 
                               GeoFirePoint geoFirePoint =
-                              _geo.point(latitude: lat, longitude: long);
+                                  _geo.point(latitude: lat, longitude: long);
 
-                              final result = VenueSearchJSONSerializer().toMap(venueSearch);
+                              final result = VenueSearchJSONSerializer()
+                                  .toMap(venueSearch);
                               result['position'] = geoFirePoint.data;
 
                               Firestore.instance
                                   .collection('venues_locations')
                                   .document(id)
-                                  .setData(result, merge: false).whenComplete(() {
-                                print('added ${geoFirePoint.hash} successfully');
+                                  .setData(result, merge: false)
+                                  .whenComplete(() {
+                                print(
+                                    'added ${geoFirePoint.hash} successfully');
                                 showDialog(
                                     context: context,
                                     barrierDismissible: false,
                                     builder: (BuildContext context) {
                                       return AlertDialog(
-                                        title: Text('Form successfully submitted'),
+                                        title:
+                                            Text('Form successfully submitted'),
                                         content: SingleChildScrollView(
                                           child: Text(
                                               'Tap Return to dismiss this page.'),
@@ -267,12 +292,14 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
                               await Firestore.instance
                                   .collection('venues_detail')
                                   .document(widget.venueID)
-                                  .setData(result, merge: false).then((doc) {
-                                final double _latitude = double.parse(
-                                    _valueFor(attribute: 'coordinates_latitude'));
+                                  .setData(result, merge: false)
+                                  .then((doc) {
+                                final double _latitude = double.parse(_valueFor(
+                                    attribute: 'coordinates_latitude'));
                                 assert(_latitude is double);
                                 final double _longitude = double.parse(
-                                    _valueFor(attribute: 'coordinates_longitude'));
+                                    _valueFor(
+                                        attribute: 'coordinates_longitude'));
                                 assert(_longitude is double);
                                 _addPoint(
                                   venue: _venue,
@@ -379,7 +406,7 @@ class _OverviewSection extends StatelessWidget {
           decoration: InputDecoration(
               labelText: "Description",
               helperText:
-              "Include pricing information or details on how to get to your venue here",
+                  "Include pricing information or details on how to get to your venue here",
               border: OutlineInputBorder()),
           validators: [
             FormBuilderValidators.minLength(4),
@@ -406,7 +433,7 @@ class _FishingRulesSection extends StatelessWidget {
           decoration: InputDecoration(
               labelText: "Fishing Rules",
               helperText:
-              "Information on fishing rules and regulations for this venue",
+                  "Information on fishing rules and regulations for this venue",
               border: OutlineInputBorder()),
         ),
       ],
@@ -484,15 +511,16 @@ enum Amenities {
 }
 
 class _AmenitiesSection extends StatelessWidget {
-
   final ReCase toilets = ReCase(describeEnum(Amenities.toilets));
   final ReCase showers = ReCase(describeEnum(Amenities.showers));
   final ReCase foodAndDrink = ReCase(describeEnum(Amenities.foodAndDrink));
   final ReCase nightFishing = ReCase(describeEnum(Amenities.nightFishing));
-  final ReCase wheelchairAccess = ReCase(describeEnum(Amenities.wheelchairAccess));
+  final ReCase wheelchairAccess =
+      ReCase(describeEnum(Amenities.wheelchairAccess));
   final ReCase guestsAllowed = ReCase(describeEnum(Amenities.guestsAllowed));
   final ReCase trolleyHire = ReCase(describeEnum(Amenities.trolleyHire));
-  final ReCase takeawayFriendly = ReCase(describeEnum(Amenities.takeawayFriendly));
+  final ReCase takeawayFriendly =
+      ReCase(describeEnum(Amenities.takeawayFriendly));
   final ReCase animalFriendly = ReCase(describeEnum(Amenities.animalFriendly));
   final ReCase tuition = ReCase(describeEnum(Amenities.tuition));
   final ReCase electricity = ReCase(describeEnum(Amenities.electricity));
@@ -516,20 +544,43 @@ class _AmenitiesSection extends StatelessWidget {
         FormBuilderCheckboxList(
           attribute: "amenities_list",
           options: [
-            FormBuilderFieldOption(value: toilets.snakeCase, child: Text(toilets.titleCase)),
-            FormBuilderFieldOption(value: showers.snakeCase, child: Text(showers.titleCase)),
-            FormBuilderFieldOption(value: foodAndDrink.snakeCase, child: Text(foodAndDrink.titleCase)),
-            FormBuilderFieldOption(value: nightFishing.snakeCase, child: Text(nightFishing.titleCase)),
-            FormBuilderFieldOption(value: wheelchairAccess.snakeCase, child: Text(wheelchairAccess.titleCase)),
-            FormBuilderFieldOption(value: guestsAllowed.snakeCase, child: Text(guestsAllowed.titleCase)),
-            FormBuilderFieldOption(value: trolleyHire.snakeCase, child: Text(trolleyHire.titleCase)),
-            FormBuilderFieldOption(value: takeawayFriendly.snakeCase, child: Text(takeawayFriendly.titleCase)),
-            FormBuilderFieldOption(value: animalFriendly.snakeCase, child: Text(animalFriendly.titleCase)),
-            FormBuilderFieldOption(value: tuition.snakeCase, child: Text(tuition.titleCase)),
-            FormBuilderFieldOption(value: electricity.snakeCase, child: Text(electricity.titleCase)),
-            FormBuilderFieldOption(value: equipmentHire.snakeCase, child: Text(equipmentHire.titleCase)),
-            FormBuilderFieldOption(value: wifi.snakeCase, child: Text(wifi.titleCase)),
-            FormBuilderFieldOption(value: camping.snakeCase, child: Text(camping.titleCase)),
+            FormBuilderFieldOption(
+                value: toilets.snakeCase, child: Text(toilets.titleCase)),
+            FormBuilderFieldOption(
+                value: showers.snakeCase, child: Text(showers.titleCase)),
+            FormBuilderFieldOption(
+                value: foodAndDrink.snakeCase,
+                child: Text(foodAndDrink.titleCase)),
+            FormBuilderFieldOption(
+                value: nightFishing.snakeCase,
+                child: Text(nightFishing.titleCase)),
+            FormBuilderFieldOption(
+                value: wheelchairAccess.snakeCase,
+                child: Text(wheelchairAccess.titleCase)),
+            FormBuilderFieldOption(
+                value: guestsAllowed.snakeCase,
+                child: Text(guestsAllowed.titleCase)),
+            FormBuilderFieldOption(
+                value: trolleyHire.snakeCase,
+                child: Text(trolleyHire.titleCase)),
+            FormBuilderFieldOption(
+                value: takeawayFriendly.snakeCase,
+                child: Text(takeawayFriendly.titleCase)),
+            FormBuilderFieldOption(
+                value: animalFriendly.snakeCase,
+                child: Text(animalFriendly.titleCase)),
+            FormBuilderFieldOption(
+                value: tuition.snakeCase, child: Text(tuition.titleCase)),
+            FormBuilderFieldOption(
+                value: electricity.snakeCase,
+                child: Text(electricity.titleCase)),
+            FormBuilderFieldOption(
+                value: equipmentHire.snakeCase,
+                child: Text(equipmentHire.titleCase)),
+            FormBuilderFieldOption(
+                value: wifi.snakeCase, child: Text(wifi.titleCase)),
+            FormBuilderFieldOption(
+                value: camping.snakeCase, child: Text(camping.titleCase)),
           ],
         ),
       ],
@@ -641,10 +692,9 @@ enum FishStock {
   dace,
   gudgeon,
   ruffe,
-  }
+}
 
 class _FishStockedSection extends StatelessWidget {
-
   final ReCase crucianCarp = ReCase(describeEnum(FishStock.crucianCarp));
   final ReCase chub = ReCase(describeEnum(FishStock.chub));
   final ReCase roach = ReCase(describeEnum(FishStock.roach));
@@ -671,23 +721,42 @@ class _FishStockedSection extends StatelessWidget {
         FormBuilderCheckboxList(
           attribute: "fish_stocked",
           options: [
-            FormBuilderFieldOption(value: crucianCarp.snakeCase, child: Text(crucianCarp.titleCase)),
-            FormBuilderFieldOption(value: chub.snakeCase, child: Text(chub.titleCase)),
-            FormBuilderFieldOption(value: roach.snakeCase, child: Text(roach.titleCase)),
-            FormBuilderFieldOption(value: grassCarp.snakeCase, child: Text(grassCarp.titleCase)),
-            FormBuilderFieldOption(value: perch.snakeCase, child: Text(perch.titleCase)),
-            FormBuilderFieldOption(value: rudd.snakeCase, child: Text(rudd.titleCase)),
-            FormBuilderFieldOption(value: rainbowTrout.snakeCase, child: Text(rainbowTrout.titleCase)),
-            FormBuilderFieldOption(value: brownTrout.snakeCase, child: Text(brownTrout.titleCase)),
-            FormBuilderFieldOption(value: salmon.snakeCase, child: Text(salmon.titleCase)),
-            FormBuilderFieldOption(value: koiCarp.snakeCase, child: Text(koiCarp.titleCase)),
-            FormBuilderFieldOption(value: grayling.snakeCase, child: Text(grayling.titleCase)),
-            FormBuilderFieldOption(value: zander.snakeCase, child: Text(zander.titleCase)),
-            FormBuilderFieldOption(value: eel.snakeCase, child: Text(eel.titleCase)),
-            FormBuilderFieldOption(value: orfe.snakeCase, child: Text(orfe.titleCase)),
-            FormBuilderFieldOption(value: dace.snakeCase, child: Text(dace.titleCase)),
-            FormBuilderFieldOption(value: gudgeon.snakeCase, child: Text(gudgeon.titleCase)),
-            FormBuilderFieldOption(value: ruffe.snakeCase, child: Text(ruffe.titleCase)),
+            FormBuilderFieldOption(
+                value: crucianCarp.snakeCase,
+                child: Text(crucianCarp.titleCase)),
+            FormBuilderFieldOption(
+                value: chub.snakeCase, child: Text(chub.titleCase)),
+            FormBuilderFieldOption(
+                value: roach.snakeCase, child: Text(roach.titleCase)),
+            FormBuilderFieldOption(
+                value: grassCarp.snakeCase, child: Text(grassCarp.titleCase)),
+            FormBuilderFieldOption(
+                value: perch.snakeCase, child: Text(perch.titleCase)),
+            FormBuilderFieldOption(
+                value: rudd.snakeCase, child: Text(rudd.titleCase)),
+            FormBuilderFieldOption(
+                value: rainbowTrout.snakeCase,
+                child: Text(rainbowTrout.titleCase)),
+            FormBuilderFieldOption(
+                value: brownTrout.snakeCase, child: Text(brownTrout.titleCase)),
+            FormBuilderFieldOption(
+                value: salmon.snakeCase, child: Text(salmon.titleCase)),
+            FormBuilderFieldOption(
+                value: koiCarp.snakeCase, child: Text(koiCarp.titleCase)),
+            FormBuilderFieldOption(
+                value: grayling.snakeCase, child: Text(grayling.titleCase)),
+            FormBuilderFieldOption(
+                value: zander.snakeCase, child: Text(zander.titleCase)),
+            FormBuilderFieldOption(
+                value: eel.snakeCase, child: Text(eel.titleCase)),
+            FormBuilderFieldOption(
+                value: orfe.snakeCase, child: Text(orfe.titleCase)),
+            FormBuilderFieldOption(
+                value: dace.snakeCase, child: Text(dace.titleCase)),
+            FormBuilderFieldOption(
+                value: gudgeon.snakeCase, child: Text(gudgeon.titleCase)),
+            FormBuilderFieldOption(
+                value: ruffe.snakeCase, child: Text(ruffe.titleCase)),
           ],
         ),
       ],
@@ -704,7 +773,6 @@ enum FishingTypes {
 }
 
 class _FishingTypesSection extends StatelessWidget {
-
   final ReCase coarse = ReCase(describeEnum(FishingTypes.coarse));
   final ReCase match = ReCase(describeEnum(FishingTypes.match));
   final ReCase fly = ReCase(describeEnum(FishingTypes.fly));
@@ -719,11 +787,16 @@ class _FishingTypesSection extends StatelessWidget {
         FormBuilderCheckboxList(
           attribute: "fishing_types",
           options: [
-            FormBuilderFieldOption(value: coarse.snakeCase, child: Text(coarse.titleCase)),
-            FormBuilderFieldOption(value: match.snakeCase, child: Text(match.titleCase)),
-            FormBuilderFieldOption(value: fly.snakeCase, child: Text(fly.titleCase)),
-            FormBuilderFieldOption(value: carp.snakeCase, child: Text(carp.titleCase)),
-            FormBuilderFieldOption(value: catfish.snakeCase, child: Text(catfish.titleCase)),
+            FormBuilderFieldOption(
+                value: coarse.snakeCase, child: Text(coarse.titleCase)),
+            FormBuilderFieldOption(
+                value: match.snakeCase, child: Text(match.titleCase)),
+            FormBuilderFieldOption(
+                value: fly.snakeCase, child: Text(fly.titleCase)),
+            FormBuilderFieldOption(
+                value: carp.snakeCase, child: Text(carp.titleCase)),
+            FormBuilderFieldOption(
+                value: catfish.snakeCase, child: Text(catfish.titleCase)),
           ],
         ),
       ],
@@ -746,7 +819,6 @@ class _TicketsSection extends StatelessWidget {
   final ReCase syndicate = ReCase(describeEnum(Tickets.syndicate));
   final ReCase clubWater = ReCase(describeEnum(Tickets.clubWater));
 
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -755,11 +827,16 @@ class _TicketsSection extends StatelessWidget {
         FormBuilderCheckboxList(
           attribute: "tickets",
           options: [
-            FormBuilderFieldOption(value: day.snakeCase, child: Text(day.titleCase)),
-            FormBuilderFieldOption(value: night.snakeCase, child: Text(night.titleCase)),
-            FormBuilderFieldOption(value: season.snakeCase, child: Text(season.titleCase)),
-            FormBuilderFieldOption(value: syndicate.snakeCase, child: Text(syndicate.titleCase)),
-            FormBuilderFieldOption(value: clubWater.snakeCase, child: Text(clubWater.titleCase)),
+            FormBuilderFieldOption(
+                value: day.snakeCase, child: Text(day.titleCase)),
+            FormBuilderFieldOption(
+                value: night.snakeCase, child: Text(night.titleCase)),
+            FormBuilderFieldOption(
+                value: season.snakeCase, child: Text(season.titleCase)),
+            FormBuilderFieldOption(
+                value: syndicate.snakeCase, child: Text(syndicate.titleCase)),
+            FormBuilderFieldOption(
+                value: clubWater.snakeCase, child: Text(clubWater.titleCase)),
           ],
         ),
       ],
@@ -858,3 +935,28 @@ class _OperationalHoursDay extends StatelessWidget {
     );
   }
 }
+
+class _PhotosSection extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        HouseTexts.subtitle('Photos'),
+        SizedBox(height: 16),
+        Wrap(
+          spacing: 16,
+          runSpacing: 16,
+          children: [
+            ImagePickerContainer(),
+            ImagePickerContainer(),
+            ImagePickerContainer(),
+            ImagePickerContainer(),
+            ImagePickerContainer(),
+            ImagePickerContainer(),
+          ],
+        )
+      ],
+    );
+  }
+}
+
