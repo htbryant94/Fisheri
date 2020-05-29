@@ -1,5 +1,6 @@
 import 'package:basic_utils/basic_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fisheri/Screens/venue_form_edit_screen.dart';
 import 'package:fisheri/house_texts.dart';
 import 'package:fisheri/models/venue_search.dart';
 import 'package:flutter/material.dart';
@@ -36,6 +37,49 @@ class VenueCategoriesSection extends StatelessWidget {
       )
       ).toList(),
     );
+  }
+}
+
+class EditVenueCell extends StatelessWidget {
+  EditVenueCell({
+    @required this.venue,
+    this.index,
+  });
+
+  final VenueSearch venue;
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+        onTap: () {
+          Firestore.instance
+              .collection('venues_detail')
+              .document(venue.id)
+              .get()
+              .then((DocumentSnapshot document) {
+            final VenueDetailed _venue = VenueDetailedJSONSerializer().fromMap(document.data);
+              Coordinator.push(context, screenTitle: "Edit Venue", screen: VenueFormEditScreen(venue: _venue, venueID: venue.id));
+          });
+        },
+        child: RemoteImageBaseCell(
+          title: venue.name,
+          imageURL: venue.imageURL,
+          elements: <Widget>[
+            if (venue.categories != null)
+              VenueCategoriesSection(categories: venue.categories),
+            _VenueOperational(true),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                if (venue.amenities != null)
+                  _VenueFeatures(features: venue.amenities),
+                SizedBox(width: 16),
+                _VenueDistance('5 miles')
+              ],
+            )
+          ],
+        ));
   }
 }
 
@@ -127,6 +171,7 @@ class _VenueFeatures extends StatelessWidget {
                       height: 24,
                       width: 24,
                       errorBuilder: (BuildContext context, Object exception, StackTrace stackTrace) {
+                        print("couldn't load asset for $amenity");
                         return Text('😢');
                       }
                     ),

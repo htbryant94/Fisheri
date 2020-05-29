@@ -1,9 +1,39 @@
 import 'package:fisheri/Components/base_cell.dart';
+import 'package:fisheri/firestore_request_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fisheri/house_texts.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fisheri/search_result_cell.dart';
 import 'package:fisheri/models/venue_search.dart';
+
+class AllVenuesListBuilder extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: StreamBuilder(
+          stream: FirestoreRequestService.defaultService().firestore.collection('venues_locations').snapshots(),
+          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (!snapshot.hasData) {
+              return CircularProgressIndicator();
+            }
+            return ListView.builder(
+                padding: EdgeInsets.all(8),
+                itemCount: snapshot.data.documents.length,
+                itemBuilder: (context, int index) {
+                  final result =  snapshot.data.documents[index];
+                  final VenueSearch venue = VenueSearchJSONSerializer().fromMap(result.data);
+                  return EditVenueCell(
+                    venue: venue,
+                  );
+                });
+          },
+        ),
+      ),
+    );
+  }
+}
 
 class SearchResultsScreen extends StatelessWidget {
   SearchResultsScreen({this.searchResults});

@@ -2,6 +2,7 @@ import 'package:fisheri/Screens/auth_screen.dart';
 import 'package:fisheri/Screens/events_calendar_screen.dart';
 import 'package:fisheri/Screens/create_event_screen.dart';
 import 'package:fisheri/Screens/fishing_license_screen.dart';
+import 'package:fisheri/Screens/search_results_screen.dart';
 import 'package:fisheri/Screens/venue_form_screen.dart';
 import 'package:fisheri/coordinator.dart';
 import 'package:fisheri/house_texts.dart';
@@ -31,6 +32,11 @@ class ProfileScreen extends StatelessWidget {
           screen: VenueFormScreen(),
           title: "Add a Venue",
           icon: Icon(Icons.add, color: Colors.green)
+      ),
+      ProfileListItem(
+          screen: AllVenuesListBuilder(),
+          title: "Edit a Venue",
+          icon: Icon(Icons.library_books, color: Colors.green)
       ),
       ProfileListItem(
           screen: AuthScreen(),

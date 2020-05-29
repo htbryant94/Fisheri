@@ -4,39 +4,46 @@ import 'package:fisheri/models/venue_address.dart';
 import 'package:fisheri/models/venue_detailed.dart';
 import 'package:fisheri/models/venue_search.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fisheri/opening_hours_list.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:fisheri/house_texts.dart';
+import 'package:recase/recase.dart';
 
 class VenueDetailedConstants {
   static const String name = "name";
-  static const String isLake = "is_lake";
-  static const String isShop = "is_shop";
   static const String categories = "categories";
-  static const String address = "address";
-  static const String amenities = "amenities_array";
-  static const String assetsPath = "assets_path";
-  static const String contactDetails = "contact_details";
-  static const String coordinates = "coordinates";
   static const String description = "description";
+  static const String coordinates = "coordinates";
+  static const String address = "address";
+  // TODO: Add Number of Lakes
+  static const String amenities = "amenities_array";
+  static const String contactDetails = "contact_details";
+  static const String social = "social";
   static const String fishStocked = "fish_stock_array";
   static const String fishingTypes = "fishing_types_array";
-  static const String hoursOfOperation = "hours_of_operation";
-  static const String social = "social";
   static const String tickets = "tickets_array";
+  static const String hoursOfOperation = "hours_of_operation";
+  static const String assetsPath = "assets_path";
 }
 
-class VenueFormScreen extends StatefulWidget {
-  VenueFormScreen();
+class VenueFormEditScreen extends StatefulWidget {
+  VenueFormEditScreen({
+    @required this.venue,
+    @required this.venueID,
+  });
+
+  final VenueDetailed venue;
+  final String venueID;
 
   @override
-  _VenueFormScreenState createState() => _VenueFormScreenState();
+  _VenueFormEditScreenState createState() => _VenueFormEditScreenState();
 }
 
-class _VenueFormScreenState extends State<VenueFormScreen> {
+class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
   final _fbKey = GlobalKey<FormBuilderState>();
 
   @override
@@ -51,8 +58,43 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
                 FormBuilder(
                   key: _fbKey,
                   initialValue: {
-                    'date': DateTime.now(),
-                    'accept_terms': false,
+                    VenueDetailedConstants.name: widget.venue.name,
+                    VenueDetailedConstants.categories: widget.venue.categories,
+                    VenueDetailedConstants.description: widget.venue.description,
+                    'coordinates_latitude': widget.venue.coordinates.latitude.toString(),
+                    'coordinates_longitude': widget.venue.coordinates.longitude.toString(),
+                    'address_street': widget.venue.address.street,
+                    'address_town': widget.venue.address.town,
+                    'address_county': widget.venue.address.county,
+                    'address_postcode': widget.venue.address.postcode,
+                    // TODO: Number of Lakes,
+                    'amenities_list': widget.venue.amenities,
+                    'contact_email': widget.venue.contactDetails.email,
+                    'contact_phone': widget.venue.contactDetails.phone,
+                    'contact_url': widget.venue.websiteURL,
+                    'social_facebook': widget.venue.social.facebook,
+                    'social_instagram': widget.venue.social.instagram,
+                    'social_twitter': widget.venue.social.twitter,
+                    'social_youtube': widget.venue.social.youtube,
+                    'fish_stocked': widget.venue.fishStocked,
+                    'fishing_types': widget.venue.fishingTypes,
+                    'tickets': widget.venue.tickets,
+                    'fishing_rules': widget.venue.fishingRules,
+                    'monday_open': widget.venue.operationalHours.monday.open,
+                    'monday_close': widget.venue.operationalHours.monday.close,
+                    'tuesday_open': widget.venue.operationalHours.tuesday.open,
+                    'tuesday_close': widget.venue.operationalHours.tuesday.close,
+                    'wednesday_open': widget.venue.operationalHours.wednesday.open,
+                    'wednesday_close': widget.venue.operationalHours.wednesday.close,
+                    'thursday_open': widget.venue.operationalHours.thursday.open,
+                    'thursday_close': widget.venue.operationalHours.thursday.close,
+                    'friday_open': widget.venue.operationalHours.friday.open,
+                    'friday_close': widget.venue.operationalHours.friday.close,
+                    'saturday_open': widget.venue.operationalHours.saturday.open,
+                    'saturday_close': widget.venue.operationalHours.saturday.close,
+                    'sunday_open': widget.venue.operationalHours.sunday.open,
+                    'sunday_close': widget.venue.operationalHours.sunday.close,
+                    VenueDetailedConstants.assetsPath: widget.venue.assetsPath,
                   },
                   autovalidate: true,
                   child: Column(
@@ -151,12 +193,12 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
                           );
                           if (_fbKey.currentState.saveAndValidate()) {
                             final result =
-                                VenueDetailedJSONSerializer().toMap(_venue);
+                            VenueDetailedJSONSerializer().toMap(_venue);
                             print(result);
                             final _latitude =
-                                _valueFor(attribute: 'coordinates_latitude');
+                            _valueFor(attribute: 'coordinates_latitude');
                             final _longitude =
-                                _valueFor(attribute: 'coordinates_longitude');
+                            _valueFor(attribute: 'coordinates_longitude');
 
                             if (_latitude != null && _longitude != null) {
                               final double _latitude = double.parse(
@@ -194,7 +236,8 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
 
                               Firestore.instance
                                   .collection('venues_locations')
-                                  .add(result).whenComplete(() {
+                                  .document(id)
+                                  .setData(result, merge: false).whenComplete(() {
                                 print('added ${geoFirePoint.hash} successfully');
                                 showDialog(
                                     context: context,
@@ -221,23 +264,42 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
                             }
 
                             Future postNewVenue() async {
-                               await Firestore.instance
+                              await Firestore.instance
                                   .collection('venues_detail')
-                                  .add(result).then((doc) {
-                                 final double _latitude = double.parse(
-                                     _valueFor(attribute: 'coordinates_latitude'));
-                                 assert(_latitude is double);
-                                 final double _longitude = double.parse(
-                                     _valueFor(attribute: 'coordinates_longitude'));
-                                 assert(_longitude is double);
-                                 _addPoint(
-                                   venue: _venue,
-                                   name: result['name'],
-                                   id: doc.documentID,
-                                   lat: _latitude,
-                                   long: _longitude,
-                                 );
+                                  .document(widget.venueID)
+                                  .setData(result, merge: false).then((doc) {
+                                final double _latitude = double.parse(
+                                    _valueFor(attribute: 'coordinates_latitude'));
+                                assert(_latitude is double);
+                                final double _longitude = double.parse(
+                                    _valueFor(attribute: 'coordinates_longitude'));
+                                assert(_longitude is double);
+                                _addPoint(
+                                  venue: _venue,
+                                  name: result['name'],
+                                  id: widget.venueID,
+                                  lat: _latitude,
+                                  long: _longitude,
+                                );
                               });
+
+//                              await Firestore.instance
+//                                  .collection('venues_detail')
+//                                  .add(result).then((doc) {
+//                                final double _latitude = double.parse(
+//                                    _valueFor(attribute: 'coordinates_latitude'));
+//                                assert(_latitude is double);
+//                                final double _longitude = double.parse(
+//                                    _valueFor(attribute: 'coordinates_longitude'));
+//                                assert(_longitude is double);
+//                                _addPoint(
+//                                  venue: _venue,
+//                                  name: result['name'],
+//                                  id: doc.documentID,
+//                                  lat: _latitude,
+//                                  long: _longitude,
+//                                );
+//                              });
                             }
 
                             postNewVenue();
@@ -317,7 +379,7 @@ class _OverviewSection extends StatelessWidget {
           decoration: InputDecoration(
               labelText: "Description",
               helperText:
-                  "Include pricing information or details on how to get to your venue here",
+              "Include pricing information or details on how to get to your venue here",
               border: OutlineInputBorder()),
           validators: [
             FormBuilderValidators.minLength(4),
@@ -344,7 +406,7 @@ class _FishingRulesSection extends StatelessWidget {
           decoration: InputDecoration(
               labelText: "Fishing Rules",
               helperText:
-                  "Information on fishing rules and regulations for this venue",
+              "Information on fishing rules and regulations for this venue",
               border: OutlineInputBorder()),
         ),
       ],
@@ -404,7 +466,40 @@ class _AddressSection extends StatelessWidget {
   }
 }
 
+enum Amenities {
+  toilets,
+  showers,
+  foodAndDrink,
+  nightFishing,
+  wheelchairAccess,
+  guestsAllowed,
+  trolleyHire,
+  takeawayFriendly,
+  animalFriendly,
+  tuition,
+  electricity,
+  equipmentHire,
+  wifi,
+  camping,
+}
+
 class _AmenitiesSection extends StatelessWidget {
+
+  final ReCase toilets = ReCase(describeEnum(Amenities.toilets));
+  final ReCase showers = ReCase(describeEnum(Amenities.showers));
+  final ReCase foodAndDrink = ReCase(describeEnum(Amenities.foodAndDrink));
+  final ReCase nightFishing = ReCase(describeEnum(Amenities.nightFishing));
+  final ReCase wheelchairAccess = ReCase(describeEnum(Amenities.wheelchairAccess));
+  final ReCase guestsAllowed = ReCase(describeEnum(Amenities.guestsAllowed));
+  final ReCase trolleyHire = ReCase(describeEnum(Amenities.trolleyHire));
+  final ReCase takeawayFriendly = ReCase(describeEnum(Amenities.takeawayFriendly));
+  final ReCase animalFriendly = ReCase(describeEnum(Amenities.animalFriendly));
+  final ReCase tuition = ReCase(describeEnum(Amenities.tuition));
+  final ReCase electricity = ReCase(describeEnum(Amenities.electricity));
+  final ReCase equipmentHire = ReCase(describeEnum(Amenities.equipmentHire));
+  final ReCase wifi = ReCase(describeEnum(Amenities.wifi));
+  final ReCase camping = ReCase(describeEnum(Amenities.camping));
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -421,20 +516,20 @@ class _AmenitiesSection extends StatelessWidget {
         FormBuilderCheckboxList(
           attribute: "amenities_list",
           options: [
-            FormBuilderFieldOption(value: "Toilets"),
-            FormBuilderFieldOption(value: "Showers"),
-            FormBuilderFieldOption(value: "Food & Drink"),
-            FormBuilderFieldOption(value: "Night Fishing"),
-            FormBuilderFieldOption(value: "Wheelchair Access"),
-            FormBuilderFieldOption(value: "Guests Allowed"),
-            FormBuilderFieldOption(value: "Trolley Hire"),
-            FormBuilderFieldOption(value: "Takeaway Friendly"),
-            FormBuilderFieldOption(value: "Animal Friendly"),
-            FormBuilderFieldOption(value: "Tuition"),
-            FormBuilderFieldOption(value: "Electricity"),
-            FormBuilderFieldOption(value: "Equipment Hire"),
-            FormBuilderFieldOption(value: "Wifi"),
-            FormBuilderFieldOption(value: "Camping"),
+            FormBuilderFieldOption(value: toilets.snakeCase, child: Text(toilets.titleCase)),
+            FormBuilderFieldOption(value: showers.snakeCase, child: Text(showers.titleCase)),
+            FormBuilderFieldOption(value: foodAndDrink.snakeCase, child: Text(foodAndDrink.titleCase)),
+            FormBuilderFieldOption(value: nightFishing.snakeCase, child: Text(nightFishing.titleCase)),
+            FormBuilderFieldOption(value: wheelchairAccess.snakeCase, child: Text(wheelchairAccess.titleCase)),
+            FormBuilderFieldOption(value: guestsAllowed.snakeCase, child: Text(guestsAllowed.titleCase)),
+            FormBuilderFieldOption(value: trolleyHire.snakeCase, child: Text(trolleyHire.titleCase)),
+            FormBuilderFieldOption(value: takeawayFriendly.snakeCase, child: Text(takeawayFriendly.titleCase)),
+            FormBuilderFieldOption(value: animalFriendly.snakeCase, child: Text(animalFriendly.titleCase)),
+            FormBuilderFieldOption(value: tuition.snakeCase, child: Text(tuition.titleCase)),
+            FormBuilderFieldOption(value: electricity.snakeCase, child: Text(electricity.titleCase)),
+            FormBuilderFieldOption(value: equipmentHire.snakeCase, child: Text(equipmentHire.titleCase)),
+            FormBuilderFieldOption(value: wifi.snakeCase, child: Text(wifi.titleCase)),
+            FormBuilderFieldOption(value: camping.snakeCase, child: Text(camping.titleCase)),
           ],
         ),
       ],
@@ -528,7 +623,46 @@ class _SocialLinksSection extends StatelessWidget {
   }
 }
 
+enum FishStock {
+  crucianCarp,
+  chub,
+  roach,
+  grassCarp,
+  perch,
+  rudd,
+  rainbowTrout,
+  brownTrout,
+  salmon,
+  koiCarp,
+  grayling,
+  zander,
+  eel,
+  orfe,
+  dace,
+  gudgeon,
+  ruffe,
+  }
+
 class _FishStockedSection extends StatelessWidget {
+
+  final ReCase crucianCarp = ReCase(describeEnum(FishStock.crucianCarp));
+  final ReCase chub = ReCase(describeEnum(FishStock.chub));
+  final ReCase roach = ReCase(describeEnum(FishStock.roach));
+  final ReCase grassCarp = ReCase(describeEnum(FishStock.grassCarp));
+  final ReCase perch = ReCase(describeEnum(FishStock.perch));
+  final ReCase rudd = ReCase(describeEnum(FishStock.rudd));
+  final ReCase rainbowTrout = ReCase(describeEnum(FishStock.rainbowTrout));
+  final ReCase brownTrout = ReCase(describeEnum(FishStock.brownTrout));
+  final ReCase salmon = ReCase(describeEnum(FishStock.salmon));
+  final ReCase koiCarp = ReCase(describeEnum(FishStock.koiCarp));
+  final ReCase grayling = ReCase(describeEnum(FishStock.grayling));
+  final ReCase zander = ReCase(describeEnum(FishStock.zander));
+  final ReCase eel = ReCase(describeEnum(FishStock.eel));
+  final ReCase orfe = ReCase(describeEnum(FishStock.orfe));
+  final ReCase dace = ReCase(describeEnum(FishStock.dace));
+  final ReCase gudgeon = ReCase(describeEnum(FishStock.gudgeon));
+  final ReCase ruffe = ReCase(describeEnum(FishStock.ruffe));
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -537,23 +671,23 @@ class _FishStockedSection extends StatelessWidget {
         FormBuilderCheckboxList(
           attribute: "fish_stocked",
           options: [
-            FormBuilderFieldOption(value: "Crucian Carp"),
-            FormBuilderFieldOption(value: "Chub"),
-            FormBuilderFieldOption(value: "Roach"),
-            FormBuilderFieldOption(value: "Grass Carp"),
-            FormBuilderFieldOption(value: "Perch"),
-            FormBuilderFieldOption(value: "Rudd"),
-            FormBuilderFieldOption(value: "Rainbow Trout"),
-            FormBuilderFieldOption(value: "Brown Trout"),
-            FormBuilderFieldOption(value: "Salmon"),
-            FormBuilderFieldOption(value: "Koi Carp"),
-            FormBuilderFieldOption(value: "Grayling"),
-            FormBuilderFieldOption(value: "Zander"),
-            FormBuilderFieldOption(value: "Eel"),
-            FormBuilderFieldOption(value: "Orfe"),
-            FormBuilderFieldOption(value: "Dace"),
-            FormBuilderFieldOption(value: "Gudgeon"),
-            FormBuilderFieldOption(value: "Ruffe"),
+            FormBuilderFieldOption(value: crucianCarp.snakeCase, child: Text(crucianCarp.titleCase)),
+            FormBuilderFieldOption(value: chub.snakeCase, child: Text(chub.titleCase)),
+            FormBuilderFieldOption(value: roach.snakeCase, child: Text(roach.titleCase)),
+            FormBuilderFieldOption(value: grassCarp.snakeCase, child: Text(grassCarp.titleCase)),
+            FormBuilderFieldOption(value: perch.snakeCase, child: Text(perch.titleCase)),
+            FormBuilderFieldOption(value: rudd.snakeCase, child: Text(rudd.titleCase)),
+            FormBuilderFieldOption(value: rainbowTrout.snakeCase, child: Text(rainbowTrout.titleCase)),
+            FormBuilderFieldOption(value: brownTrout.snakeCase, child: Text(brownTrout.titleCase)),
+            FormBuilderFieldOption(value: salmon.snakeCase, child: Text(salmon.titleCase)),
+            FormBuilderFieldOption(value: koiCarp.snakeCase, child: Text(koiCarp.titleCase)),
+            FormBuilderFieldOption(value: grayling.snakeCase, child: Text(grayling.titleCase)),
+            FormBuilderFieldOption(value: zander.snakeCase, child: Text(zander.titleCase)),
+            FormBuilderFieldOption(value: eel.snakeCase, child: Text(eel.titleCase)),
+            FormBuilderFieldOption(value: orfe.snakeCase, child: Text(orfe.titleCase)),
+            FormBuilderFieldOption(value: dace.snakeCase, child: Text(dace.titleCase)),
+            FormBuilderFieldOption(value: gudgeon.snakeCase, child: Text(gudgeon.titleCase)),
+            FormBuilderFieldOption(value: ruffe.snakeCase, child: Text(ruffe.titleCase)),
           ],
         ),
       ],
@@ -561,7 +695,22 @@ class _FishStockedSection extends StatelessWidget {
   }
 }
 
+enum FishingTypes {
+  coarse,
+  match,
+  fly,
+  carp,
+  catfish,
+}
+
 class _FishingTypesSection extends StatelessWidget {
+
+  final ReCase coarse = ReCase(describeEnum(FishingTypes.coarse));
+  final ReCase match = ReCase(describeEnum(FishingTypes.match));
+  final ReCase fly = ReCase(describeEnum(FishingTypes.fly));
+  final ReCase carp = ReCase(describeEnum(FishingTypes.carp));
+  final ReCase catfish = ReCase(describeEnum(FishingTypes.catfish));
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -570,11 +719,11 @@ class _FishingTypesSection extends StatelessWidget {
         FormBuilderCheckboxList(
           attribute: "fishing_types",
           options: [
-            FormBuilderFieldOption(value: "Coarse"),
-            FormBuilderFieldOption(value: "Match"),
-            FormBuilderFieldOption(value: "Fly"),
-            FormBuilderFieldOption(value: "Carp"),
-            FormBuilderFieldOption(value: "Catfish"),
+            FormBuilderFieldOption(value: coarse.snakeCase, child: Text(coarse.titleCase)),
+            FormBuilderFieldOption(value: match.snakeCase, child: Text(match.titleCase)),
+            FormBuilderFieldOption(value: fly.snakeCase, child: Text(fly.titleCase)),
+            FormBuilderFieldOption(value: carp.snakeCase, child: Text(carp.titleCase)),
+            FormBuilderFieldOption(value: catfish.snakeCase, child: Text(catfish.titleCase)),
           ],
         ),
       ],
@@ -582,7 +731,22 @@ class _FishingTypesSection extends StatelessWidget {
   }
 }
 
+enum Tickets {
+  day,
+  night,
+  season,
+  syndicate,
+  clubWater,
+}
+
 class _TicketsSection extends StatelessWidget {
+  final ReCase day = ReCase(describeEnum(Tickets.day));
+  final ReCase night = ReCase(describeEnum(Tickets.night));
+  final ReCase season = ReCase(describeEnum(Tickets.season));
+  final ReCase syndicate = ReCase(describeEnum(Tickets.syndicate));
+  final ReCase clubWater = ReCase(describeEnum(Tickets.clubWater));
+
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -591,11 +755,11 @@ class _TicketsSection extends StatelessWidget {
         FormBuilderCheckboxList(
           attribute: "tickets",
           options: [
-            FormBuilderFieldOption(value: "Day"),
-            FormBuilderFieldOption(value: "Night"),
-            FormBuilderFieldOption(value: "Season"),
-            FormBuilderFieldOption(value: "Syndicate"),
-            FormBuilderFieldOption(value: "Club Water"),
+            FormBuilderFieldOption(value: day.snakeCase, child: Text(day.titleCase)),
+            FormBuilderFieldOption(value: night.snakeCase, child: Text(night.titleCase)),
+            FormBuilderFieldOption(value: season.snakeCase, child: Text(season.titleCase)),
+            FormBuilderFieldOption(value: syndicate.snakeCase, child: Text(syndicate.titleCase)),
+            FormBuilderFieldOption(value: clubWater.snakeCase, child: Text(clubWater.titleCase)),
           ],
         ),
       ],

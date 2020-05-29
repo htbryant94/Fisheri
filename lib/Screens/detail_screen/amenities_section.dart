@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fisheri/house_texts.dart';
+import 'package:recase/recase.dart';
 
 class AmenitiesSection extends StatelessWidget {
   AmenitiesSection(this.amenities);
@@ -45,7 +46,7 @@ class _Amenity extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      children: [Icon(Icons.person), HouseTexts.body(amenity)],
+      children: [Icon(Icons.person), HouseTexts.body(ReCase(amenity).titleCase)],
     );
   }
 }
