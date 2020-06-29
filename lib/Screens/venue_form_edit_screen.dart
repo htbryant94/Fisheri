@@ -1,3 +1,4 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fisheri/house_colors.dart';
 import 'package:fisheri/models/hours_of_operation.dart';
 import 'package:fisheri/models/venue_address.dart';
@@ -12,7 +13,21 @@ import 'package:fisheri/opening_hours_list.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:fisheri/house_texts.dart';
 import 'package:recase/recase.dart';
-import 'package:fisheri/Components/image_picker_container.dart';
+import 'package:fisheri/Components/form_builder_image_picker_custom.dart';
+import 'dart:io';
+
+class ImageType {
+  ImageType({
+    this.type,
+    this.url,
+    this.file
+  });
+
+  final String type;
+  final String url;
+  final File file;
+
+}
 
 class VenueDetailedConstants {
   static const String name = "name";
@@ -46,9 +61,272 @@ class VenueFormEditScreen extends StatefulWidget {
 
 class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
   final _fbKey = GlobalKey<FormBuilderState>();
+  List<String> imageURLs = [];
 
   @override
   Widget build(BuildContext context) {
+
+    Function _valueFor = ({String attribute}) {
+      return _fbKey.currentState.fields[attribute]
+          .currentState.value;
+    };
+
+    HoursOfOperation getOperationalHours() {
+      return HoursOfOperation(
+        monday: OpeningHoursDay(
+          open: _valueFor(attribute: 'monday_open'),
+          close: _valueFor(attribute: 'monday_close'),
+        ),
+        tuesday: OpeningHoursDay(
+          open: _valueFor(attribute: 'tuesday_open'),
+          close: _valueFor(attribute: 'tuesday_close'),
+        ),
+        wednesday: OpeningHoursDay(
+          open: _valueFor(attribute: 'wednesday_open'),
+          close: _valueFor(attribute: 'wednesday_close'),
+        ),
+        thursday: OpeningHoursDay(
+          open: _valueFor(attribute: 'thursday_open'),
+          close: _valueFor(attribute: 'thursday_close'),
+        ),
+        friday: OpeningHoursDay(
+          open: _valueFor(attribute: 'friday_open'),
+          close: _valueFor(attribute: 'friday_close'),
+        ),
+        saturday: OpeningHoursDay(
+          open: _valueFor(attribute: 'saturday_open'),
+          close: _valueFor(attribute: 'saturday_close'),
+        ),
+        sunday: OpeningHoursDay(
+          open: _valueFor(attribute: 'sunday_open'),
+          close: _valueFor(attribute: 'sunday_close'),
+        ),
+      );
+    }
+
+    VenueDetailed makeVenueDetailed() {
+      return VenueDetailed(
+          name: _valueFor(
+              attribute: VenueDetailedConstants.name),
+          categories: _valueFor(attribute: 'categories'),
+          description: _valueFor(
+              attribute: VenueDetailedConstants.description),
+          address: VenueAddress(
+            street: _valueFor(attribute: 'address_street'),
+            town: _valueFor(attribute: 'address_town'),
+            county: _valueFor(attribute: 'address_county'),
+            postcode:
+            _valueFor(attribute: 'address_postcode'),
+          ),
+          amenities: _valueFor(attribute: 'amenities_list'),
+          contactDetails: ContactDetails(
+            email: _valueFor(attribute: 'contact_email'),
+            phone: _valueFor(attribute: 'contact_phone'),
+          ),
+          social: Social(
+            facebook: _valueFor(attribute: 'social_facebook'),
+            instagram:
+            _valueFor(attribute: 'social_instagram'),
+            twitter: _valueFor(attribute: 'social_twitter'),
+            youtube: _valueFor(attribute: 'social_youtube'),
+          ),
+          fishStocked: _valueFor(attribute: 'fish_stocked'),
+          fishingTypes: _valueFor(attribute: 'fishing_types'),
+          tickets: _valueFor(attribute: 'tickets'),
+          operationalHours: getOperationalHours(),
+          fishingRules: _valueFor(attribute: 'fishing_rules'),
+          images: imageURLs.isNotEmpty ? imageURLs : null
+      );
+    }
+
+    VenueSearch makeVenueSearch({
+      VenueDetailed venue,
+      String id
+    }) {
+      return VenueSearch(
+        name: venue.name,
+        categories: venue.categories,
+        id: id,
+        imageURL: imageURLs.isNotEmpty ? imageURLs.first : null,
+        address: venue.address,
+        amenities: venue.amenities,
+        fishStocked: venue.fishStocked,
+        fishingTypes: venue.fishingTypes,
+      );
+    }
+
+    Map<String, dynamic> addCoordinatesIfValid(Map<String, dynamic> result) {
+      final _latitude = _valueFor(attribute: 'coordinates_latitude');
+      final _longitude = _valueFor(attribute: 'coordinates_longitude');
+
+      if (_latitude != null && _longitude != null) {
+        final double _latitude = double.parse(_valueFor(attribute: 'coordinates_latitude'));
+        assert(_latitude is double);
+        final double _longitude = double.parse(_valueFor(attribute: 'coordinates_longitude'));
+        assert(_longitude is double);
+        result["coordinates"] = GeoPoint(
+          _latitude,
+          _longitude,
+        );
+      }
+      return result;
+    }
+
+    Future clearFolder(String id, List<String> images) async {
+      if (images != null) {
+        var index = 0;
+
+        await Future.forEach(images, (imageURL) async {
+          await FirebaseStorage.instance.ref().child('venues/$id/images/$index').delete();
+          index += 1;
+        });
+      }
+    }
+
+    Future uploadFile({String id, File file, String name}) async {
+      StorageReference storageReference = FirebaseStorage.instance.ref().child('venues/$id/images/$name');
+      StorageUploadTask uploadTask = storageReference.putFile(file);
+      await uploadTask.onComplete;
+      print('-----FILE UPLOADED-----');
+      await storageReference.getDownloadURL().then((fileURL) {
+        setState(() {
+          // 3. Store URLs globally
+          setState(() {
+            imageURLs.add(fileURL);
+          });
+          print('File URL: $fileURL');
+          print('Total URLS: $imageURLs');
+        });
+      });
+    }
+
+    void _addPoint({
+      VenueSearch venueSearch,
+      double lat,
+      double long,
+    }) {
+      print('adding point');
+      final _geo = Geoflutterfire();
+      GeoFirePoint geoFirePoint = _geo.point(latitude: lat, longitude: long);
+      final result = VenueSearchJSONSerializer().toMap(venueSearch);
+      result['position'] = geoFirePoint.data;
+
+      Firestore.instance
+          .collection('venues_locations')
+          .document(venueSearch.id)
+          .setData(result, merge: false)
+          .whenComplete(() {
+        print('added ${geoFirePoint.hash} successfully');
+        showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title:
+                Text('Form successfully submitted'),
+                content: SingleChildScrollView(
+                  child: Text(
+                      'Tap Return to dismiss this page.'),
+                ),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text('Return'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      _fbKey.currentState.reset();
+                    },
+                  )
+                ],
+              );
+            });
+      });
+    }
+
+    Future amendVenue(String id, VenueDetailed venue) async {
+      var venueJSON = VenueDetailedJSONSerializer().toMap(venue);
+      venueJSON = addCoordinatesIfValid(venueJSON);
+
+      await Firestore.instance
+          .collection('venues_detail')
+          .document(id)
+          .setData(venueJSON, merge: false)
+          .then((doc) {
+        final double _latitude = double.parse(_valueFor(attribute: 'coordinates_latitude'));
+        assert(_latitude is double);
+        final double _longitude = double.parse(_valueFor(attribute: 'coordinates_longitude'));
+        assert(_longitude is double);
+
+        // 5. Create VenueSearch Object with fileURLs added
+        final venueSearch = makeVenueSearch(id: id, venue: venue);
+
+        // 6. setData for node in venues_locations with VenueSearch object
+        _addPoint(venueSearch: venueSearch, lat: _latitude, long: _longitude);
+      });
+    }
+
+    // 2. Upload files to asset path with auto ID
+    Future uploadFiles(VenueDetailed venue) async {
+      print('clearing folder of previous files');
+      await clearFolder(widget.venueID, widget.venue.images).whenComplete(() async {
+
+        print('uploading files started');
+        final List<dynamic> _images = _valueFor(attribute: 'images');
+        final List<ImageType> parsedImageTypes = _images.map((image) {
+          if (image is File) {
+            return ImageType(type: "FILE", file: image);
+          } else if (image is String) {
+            return ImageType(type: "STRING", url: image);
+          } else {
+            return null;
+          }
+        }).toList();
+        print('filesToUpload value -------');
+        parsedImageTypes.forEach((imageType) {
+          if (imageType.type == "URL") {
+            print('imageType is: ${imageType.url}');
+          } else if (imageType.type == "FILE") {
+            print('imageType is: ${imageType.file}');
+          }
+        });
+
+        if (parsedImageTypes != null) {
+          var index = 0;
+          await Future.forEach(parsedImageTypes, (imageType) async {
+            print('----- uploading file: $index');
+
+            final _imageType = imageType as ImageType;
+            if (_imageType.type == "FILE") {
+              await uploadFile(id: widget.venueID, file: _imageType.file, name: '$index').whenComplete(() {
+                index += 1;
+                print('----- uploaded file: $index');
+              });
+            } else if (_imageType.type == "URL") {
+              index += 1;
+              setState(() {
+                imageURLs.add(_imageType.url);
+              });
+            }
+
+
+          }).whenComplete(() {
+            print('uploading files finished');
+            // 4. setData for node in venues_detail with VenueDetailed Object
+            print('AMENDING VENUE');
+
+            venue.images = imageURLs;
+            amendVenue(widget.venueID, venue);
+          }
+          );
+        } else {
+          print('----- no files to upload, amending venue');
+          print('AMENDING VENUE');
+
+          venue.images = imageURLs;
+          await amendVenue(widget.venueID, venue);
+        }
+      });
+    }
+
     return Scaffold(
       body: SafeArea(
         child: ListView(
@@ -105,7 +383,6 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
                         widget.venue.operationalHours.saturday.close,
                     'sunday_open': widget.venue.operationalHours.sunday.open,
                     'sunday_close': widget.venue.operationalHours.sunday.close,
-                    VenueDetailedConstants.assetsPath: widget.venue.assetsPath,
                   },
                   autovalidate: true,
                   child: Column(
@@ -132,7 +409,10 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
                       SizedBox(height: 16),
                       _OperationalHoursSection(),
                       SizedBox(height: 16),
-                      _PhotosSection(),
+                      FormBuilderImagePickerCustom(
+                        attribute: "images",
+                        initialValue: widget.venue.images,
+                      )
                     ],
                   ),
                 ),
@@ -141,195 +421,12 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
                     MaterialButton(
                         child: Text("Submit"),
                         onPressed: () {
-                          Function _valueFor = ({String attribute}) {
-                            return _fbKey.currentState.fields[attribute]
-                                .currentState.value;
-                          };
-
-                          HoursOfOperation operationalHours = HoursOfOperation(
-                            monday: OpeningHoursDay(
-                              open: _valueFor(attribute: 'monday_open'),
-                              close: _valueFor(attribute: 'monday_close'),
-                            ),
-                            tuesday: OpeningHoursDay(
-                              open: _valueFor(attribute: 'tuesday_open'),
-                              close: _valueFor(attribute: 'tuesday_close'),
-                            ),
-                            wednesday: OpeningHoursDay(
-                              open: _valueFor(attribute: 'wednesday_open'),
-                              close: _valueFor(attribute: 'wednesday_close'),
-                            ),
-                            thursday: OpeningHoursDay(
-                              open: _valueFor(attribute: 'thursday_open'),
-                              close: _valueFor(attribute: 'thursday_close'),
-                            ),
-                            friday: OpeningHoursDay(
-                              open: _valueFor(attribute: 'friday_open'),
-                              close: _valueFor(attribute: 'friday_close'),
-                            ),
-                            saturday: OpeningHoursDay(
-                              open: _valueFor(attribute: 'saturday_open'),
-                              close: _valueFor(attribute: 'saturday_close'),
-                            ),
-                            sunday: OpeningHoursDay(
-                              open: _valueFor(attribute: 'sunday_open'),
-                              close: _valueFor(attribute: 'sunday_close'),
-                            ),
-                          );
-                          final _venue = VenueDetailed(
-                            name: _valueFor(
-                                attribute: VenueDetailedConstants.name),
-                            categories: _valueFor(attribute: 'categories'),
-                            description: _valueFor(
-                                attribute: VenueDetailedConstants.description),
-                            address: VenueAddress(
-                              street: _valueFor(attribute: 'address_street'),
-                              town: _valueFor(attribute: 'address_town'),
-                              county: _valueFor(attribute: 'address_county'),
-                              postcode:
-                                  _valueFor(attribute: 'address_postcode'),
-                            ),
-                            amenities: _valueFor(attribute: 'amenities_list'),
-                            contactDetails: ContactDetails(
-                              email: _valueFor(attribute: 'contact_email'),
-                              phone: _valueFor(attribute: 'contact_phone'),
-                            ),
-                            social: Social(
-                              facebook: _valueFor(attribute: 'social_facebook'),
-                              instagram:
-                                  _valueFor(attribute: 'social_instagram'),
-                              twitter: _valueFor(attribute: 'social_twitter'),
-                              youtube: _valueFor(attribute: 'social_youtube'),
-                            ),
-                            fishStocked: _valueFor(attribute: 'fish_stocked'),
-                            fishingTypes: _valueFor(attribute: 'fishing_types'),
-                            tickets: _valueFor(attribute: 'tickets'),
-                            operationalHours: operationalHours,
-                            fishingRules: _valueFor(attribute: 'fishing_rules'),
-                          );
                           if (_fbKey.currentState.saveAndValidate()) {
-                            final result =
-                                VenueDetailedJSONSerializer().toMap(_venue);
-                            print(result);
-                            final _latitude =
-                                _valueFor(attribute: 'coordinates_latitude');
-                            final _longitude =
-                                _valueFor(attribute: 'coordinates_longitude');
 
-                            if (_latitude != null && _longitude != null) {
-                              final double _latitude = double.parse(
-                                  _valueFor(attribute: 'coordinates_latitude'));
-                              assert(_latitude is double);
-                              final double _longitude = double.parse(_valueFor(
-                                  attribute: 'coordinates_longitude'));
-                              assert(_longitude is double);
-                              result["coordinates"] = GeoPoint(
-                                _latitude,
-                                _longitude,
-                              );
-                            }
+                            // 1. Create VenueDetailed Object
+                            var _venue = makeVenueDetailed();
+                            uploadFiles(_venue);
 
-                            void _addPoint(
-                                {VenueDetailed venue,
-                                String name,
-                                String id,
-                                double lat,
-                                double long}) {
-                              print('adding point');
-                              final _geo = Geoflutterfire();
-
-                              VenueSearch venueSearch = VenueSearch(
-                                name: venue.name,
-                                categories: venue.categories,
-                                id: id,
-                                imageURL: null,
-                                address: venue.address,
-                                amenities: venue.amenities,
-                                fishStocked: venue.fishStocked,
-                                fishingTypes: venue.fishingTypes,
-                              );
-
-                              GeoFirePoint geoFirePoint =
-                                  _geo.point(latitude: lat, longitude: long);
-
-                              final result = VenueSearchJSONSerializer()
-                                  .toMap(venueSearch);
-                              result['position'] = geoFirePoint.data;
-
-                              Firestore.instance
-                                  .collection('venues_locations')
-                                  .document(id)
-                                  .setData(result, merge: false)
-                                  .whenComplete(() {
-                                print(
-                                    'added ${geoFirePoint.hash} successfully');
-                                showDialog(
-                                    context: context,
-                                    barrierDismissible: false,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title:
-                                            Text('Form successfully submitted'),
-                                        content: SingleChildScrollView(
-                                          child: Text(
-                                              'Tap Return to dismiss this page.'),
-                                        ),
-                                        actions: <Widget>[
-                                          FlatButton(
-                                            child: Text('Return'),
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                              _fbKey.currentState.reset();
-                                            },
-                                          )
-                                        ],
-                                      );
-                                    });
-                              });
-                            }
-
-                            Future postNewVenue() async {
-                              await Firestore.instance
-                                  .collection('venues_detail')
-                                  .document(widget.venueID)
-                                  .setData(result, merge: false)
-                                  .then((doc) {
-                                final double _latitude = double.parse(_valueFor(
-                                    attribute: 'coordinates_latitude'));
-                                assert(_latitude is double);
-                                final double _longitude = double.parse(
-                                    _valueFor(
-                                        attribute: 'coordinates_longitude'));
-                                assert(_longitude is double);
-                                _addPoint(
-                                  venue: _venue,
-                                  name: result['name'],
-                                  id: widget.venueID,
-                                  lat: _latitude,
-                                  long: _longitude,
-                                );
-                              });
-
-//                              await Firestore.instance
-//                                  .collection('venues_detail')
-//                                  .add(result).then((doc) {
-//                                final double _latitude = double.parse(
-//                                    _valueFor(attribute: 'coordinates_latitude'));
-//                                assert(_latitude is double);
-//                                final double _longitude = double.parse(
-//                                    _valueFor(attribute: 'coordinates_longitude'));
-//                                assert(_longitude is double);
-//                                _addPoint(
-//                                  venue: _venue,
-//                                  name: result['name'],
-//                                  id: doc.documentID,
-//                                  lat: _latitude,
-//                                  long: _longitude,
-//                                );
-//                              });
-                            }
-
-                            postNewVenue();
                           } else {
                             showDialog(
                                 context: context,
@@ -935,28 +1032,3 @@ class _OperationalHoursDay extends StatelessWidget {
     );
   }
 }
-
-class _PhotosSection extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        HouseTexts.subtitle('Photos'),
-        SizedBox(height: 16),
-        Wrap(
-          spacing: 16,
-          runSpacing: 16,
-          children: [
-            ImagePickerContainer(),
-            ImagePickerContainer(),
-            ImagePickerContainer(),
-            ImagePickerContainer(),
-            ImagePickerContainer(),
-            ImagePickerContainer(),
-          ],
-        )
-      ],
-    );
-  }
-}
-
