@@ -13,7 +13,7 @@ class AllVenuesListBuilder extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: StreamBuilder(
-          stream: FirestoreRequestService.defaultService().firestore.collection('venues_locations').snapshots(),
+          stream: FirestoreRequestService.defaultService().firestore.collection('venues_search').snapshots(),
           builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (!snapshot.hasData) {
               return CircularProgressIndicator();

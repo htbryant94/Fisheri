@@ -19,14 +19,17 @@ abstract class _$VenueSearchJSONSerializer implements Serializer<VenueSearch> {
     setMapValue(ret, 'image_url', model.imageURL);
     setMapValue(ret, 'categories',
         codeIterable(model.categories, (val) => passProcessor.serialize(val)));
-    setMapValue(ret, 'isLake', model.isLake);
-    setMapValue(ret, 'isShop', model.isShop);
     setMapValue(
         ret, 'address', _venueAddressJSONSerializer.toMap(model.address));
     setMapValue(ret, 'amenities',
         codeIterable(model.amenities, (val) => passProcessor.serialize(val)));
     setMapValue(ret, 'fish_stocked',
         codeIterable(model.fishStocked, (val) => passProcessor.serialize(val)));
+    setMapValue(
+        ret,
+        'fishing_tackles',
+        codeIterable(
+            model.fishingTackles, (val) => passProcessor.serialize(val)));
     setMapValue(
         ret,
         'fishing_types',
@@ -44,12 +47,13 @@ abstract class _$VenueSearchJSONSerializer implements Serializer<VenueSearch> {
     obj.imageURL = map['image_url'] as String;
     obj.categories = codeIterable<dynamic>(
         map['categories'] as Iterable, (val) => passProcessor.deserialize(val));
-    obj.isLake = map['isLake'] as bool;
-    obj.isShop = map['isShop'] as bool;
     obj.address = _venueAddressJSONSerializer.fromMap(map['address'] as Map);
     obj.amenities = codeIterable<dynamic>(
         map['amenities'] as Iterable, (val) => passProcessor.deserialize(val));
     obj.fishStocked = codeIterable<dynamic>(map['fish_stocked'] as Iterable,
+        (val) => passProcessor.deserialize(val));
+    obj.fishingTackles = codeIterable<dynamic>(
+        map['fishing_tackles'] as Iterable,
         (val) => passProcessor.deserialize(val));
     obj.fishingTypes = codeIterable<dynamic>(map['fishing_types'] as Iterable,
         (val) => passProcessor.deserialize(val));

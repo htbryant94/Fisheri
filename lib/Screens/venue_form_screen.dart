@@ -123,11 +123,13 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
             youtube: _valueFor(attribute: 'social_youtube'),
           ),
           fishStocked: isLake() ? _valueFor(attribute: 'fish_stocked') : null,
+          fishingTackles: isShop() ? _valueFor(attribute: 'fishing_tackles') : null,
           fishingTypes: isLake() ? _valueFor(attribute: 'fishing_types') : null,
           tickets: isLake() ? _valueFor(attribute: 'tickets'): null,
           operationalHours: getOperationalHours(),
           fishingRules: isLake() ? _valueFor(attribute: 'fishing_rules') : null,
-          images: imageURLs.isNotEmpty ? imageURLs : null
+          images: imageURLs.isNotEmpty ? imageURLs : null,
+          websiteURL: _valueFor(attribute: 'contact_url'),
       );
     }
 
@@ -143,6 +145,7 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
         address: venue.address,
         amenities: venue.amenities,
         fishStocked: venue.fishStocked,
+        fishingTackles: venue.fishingTackles,
         fishingTypes: venue.fishingTypes,
       );
     }
@@ -193,7 +196,7 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
       result['position'] = geoFirePoint.data;
 
       Firestore.instance
-          .collection('venues_locations')
+          .collection('venues_search')
           .document(venueSearch.id)
           .setData(result, merge: false)
           .whenComplete(() {
@@ -240,7 +243,7 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
         // 5. Create VenueSearch Object with fileURLs added
         final venueSearch = makeVenueSearch(id: id, venue: venue);
 
-        // 6. setData for node in venues_locations with VenueSearch object
+        // 6. setData for node in venues_search with VenueSearch object
         _addPoint(venueSearch: venueSearch, lat: _latitude, long: _longitude);
       });
     }
@@ -367,12 +370,16 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
                       _SocialLinksSection(),
                       SizedBox(height: 16),
                       Visibility(
+                        visible: isShop(),
+                        child: _FishingTypesSection(title: 'Shop: Fishing Tackle', attribute: 'fishing_tackles'),
+                      ),
+                      Visibility(
                         visible: isLake(),
                         child: _FishStockedSection(),
                       ),
                       Visibility(
                         visible: isLake(),
-                        child: _FishingTypesSection(),
+                        child: _FishingTypesSection(title: 'Lake: Fishing Types', attribute: 'fishing_types'),
                       ),
                       Visibility(
                         visible: isLake(),
@@ -820,6 +827,14 @@ enum FishingTypes {
 }
 
 class _FishingTypesSection extends StatelessWidget {
+  _FishingTypesSection({
+    @required this.title,
+    @required this.attribute
+  });
+
+  final String title;
+  final String attribute;
+
   final ReCase coarse = ReCase(describeEnum(FishingTypes.coarse));
   final ReCase match = ReCase(describeEnum(FishingTypes.match));
   final ReCase fly = ReCase(describeEnum(FishingTypes.fly));
@@ -830,9 +845,9 @@ class _FishingTypesSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        HouseTexts.subtitle('Fishing Types'),
+        HouseTexts.subtitle(title),
         FormBuilderCheckboxList(
-          attribute: "fishing_types",
+          attribute: attribute,
           options: [
             FormBuilderFieldOption(
                 value: coarse.snakeCase, child: Text(coarse.titleCase)),
@@ -846,7 +861,7 @@ class _FishingTypesSection extends StatelessWidget {
                 value: catfish.snakeCase, child: Text(catfish.titleCase)),
           ],
         ),
-        SizedBox(height: 16)
+        SizedBox(height: 16),
       ],
     );
   }

@@ -11,14 +11,12 @@ part 'venue_detailed.jser.dart';
     SocialJSONSerializer,
   ],
   fields: {
-    'amenities': EnDecode(alias: 'amenities_array'),
-    'assetsPath': EnDecode(alias: 'assets_path'),
     'contactDetails': EnDecode(alias: 'contact_details'),
     'fishingRules': EnDecode(alias: 'fishing_rules'),
-    'fishingTypes': EnDecode(alias: 'fishing_types_array'),
+    'fishingTackles': EnDecode(alias: 'fishing_tackles'),
+    'fishingTypes': EnDecode(alias: 'fishing_types'),
     'fishStocked': EnDecode(alias: 'fish_stock_array'),
-    'operationalHours': EnDecode(alias: 'hours_of_operation_map'),
-    'tickets': EnDecode(alias: 'tickets_array'),
+    'operationalHours': EnDecode(alias: 'hours_of_operation'),
     'websiteURL': EnDecode(alias: 'website_url'),
   },
 )
@@ -31,16 +29,14 @@ class VenueDetailed {
     this.name,
     this.images,
     this.categories,
-    this.isLake,
-    this.isShop,
     this.description,
     this.websiteURL,
-    this.assetsPath,
     this.address,
     this.contactDetails,
     this.social,
     this.amenities,
     this.fishStocked,
+    this.fishingTackles,
     this.fishingTypes,
     this.tickets,
     this.operationalHours,
@@ -52,16 +48,14 @@ class VenueDetailed {
   String name;
   List<String> images;
   List<dynamic> categories;
-  bool isLake;
-  bool isShop;
   String description;
   String websiteURL;
-  String assetsPath;
   VenueAddress address;
   ContactDetails contactDetails;
   Social social;
   List<dynamic> amenities;
   List<dynamic> fishStocked;
+  List<dynamic> fishingTackles;
   List<dynamic> fishingTypes;
   List<dynamic> tickets;
   HoursOfOperation operationalHours;

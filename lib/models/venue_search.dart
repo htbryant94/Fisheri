@@ -10,6 +10,7 @@ part 'venue_search.jser.dart';
   fields: {
     'amenities': EnDecode(alias: 'amenities'),
     'fishStocked': EnDecode(alias: 'fish_stocked'),
+    'fishingTackles': EnDecode(alias: 'fishing_tackles'),
     'fishingTypes': EnDecode(alias: 'fishing_types'),
     'imageURL': EnDecode(alias: 'image_url'),
   },
@@ -23,11 +24,10 @@ class VenueSearch {
     this.id,
     this.imageURL,
     this.categories,
-    this.isLake,
-    this.isShop,
     this.address,
     this.amenities,
     this.fishStocked,
+    this.fishingTackles,
     this.fishingTypes,
   });
 
@@ -35,10 +35,9 @@ class VenueSearch {
   String id;
   String imageURL;
   List<dynamic> categories;
-  bool isLake;
-  bool isShop;
   VenueAddress address;
   List<dynamic> amenities;
   List<dynamic> fishStocked;
+  List<dynamic> fishingTackles;
   List<dynamic> fishingTypes;
 }

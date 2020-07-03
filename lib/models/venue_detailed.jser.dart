@@ -32,28 +32,30 @@ abstract class _$VenueDetailedJSONSerializer
         ret, 'images', codeIterable(model.images, (val) => val as String));
     setMapValue(ret, 'categories',
         codeIterable(model.categories, (val) => passProcessor.serialize(val)));
-    setMapValue(ret, 'isLake', model.isLake);
-    setMapValue(ret, 'isShop', model.isShop);
     setMapValue(ret, 'description', model.description);
     setMapValue(ret, 'website_url', model.websiteURL);
-    setMapValue(ret, 'assets_path', model.assetsPath);
     setMapValue(
         ret, 'address', _venueAddressJSONSerializer.toMap(model.address));
     setMapValue(ret, 'contact_details',
         _contactDetailsJSONSerializer.toMap(model.contactDetails));
     setMapValue(ret, 'social', _socialJSONSerializer.toMap(model.social));
-    setMapValue(ret, 'amenities_array',
+    setMapValue(ret, 'amenities',
         codeIterable(model.amenities, (val) => passProcessor.serialize(val)));
     setMapValue(ret, 'fish_stock_array',
         codeIterable(model.fishStocked, (val) => passProcessor.serialize(val)));
     setMapValue(
         ret,
-        'fishing_types_array',
+        'fishing_tackles',
+        codeIterable(
+            model.fishingTackles, (val) => passProcessor.serialize(val)));
+    setMapValue(
+        ret,
+        'fishing_types',
         codeIterable(
             model.fishingTypes, (val) => passProcessor.serialize(val)));
-    setMapValue(ret, 'tickets_array',
+    setMapValue(ret, 'tickets',
         codeIterable(model.tickets, (val) => passProcessor.serialize(val)));
-    setMapValue(ret, 'hours_of_operation_map',
+    setMapValue(ret, 'hours_of_operation',
         _hoursOfOperationJSONSerializer.toMap(model.operationalHours));
     setMapValue(ret, 'fishing_rules', model.fishingRules);
     return ret;
@@ -70,26 +72,25 @@ abstract class _$VenueDetailedJSONSerializer
         codeIterable<String>(map['images'] as Iterable, (val) => val as String);
     obj.categories = codeIterable<dynamic>(
         map['categories'] as Iterable, (val) => passProcessor.deserialize(val));
-    obj.isLake = map['isLake'] as bool;
-    obj.isShop = map['isShop'] as bool;
     obj.description = map['description'] as String;
     obj.websiteURL = map['website_url'] as String;
-    obj.assetsPath = map['assets_path'] as String;
     obj.address = _venueAddressJSONSerializer.fromMap(map['address'] as Map);
     obj.contactDetails =
         _contactDetailsJSONSerializer.fromMap(map['contact_details'] as Map);
     obj.social = _socialJSONSerializer.fromMap(map['social'] as Map);
-    obj.amenities = codeIterable<dynamic>(map['amenities_array'] as Iterable,
-        (val) => passProcessor.deserialize(val));
+    obj.amenities = codeIterable<dynamic>(
+        map['amenities'] as Iterable, (val) => passProcessor.deserialize(val));
     obj.fishStocked = codeIterable<dynamic>(map['fish_stock_array'] as Iterable,
         (val) => passProcessor.deserialize(val));
-    obj.fishingTypes = codeIterable<dynamic>(
-        map['fishing_types_array'] as Iterable,
+    obj.fishingTackles = codeIterable<dynamic>(
+        map['fishing_tackles'] as Iterable,
         (val) => passProcessor.deserialize(val));
-    obj.tickets = codeIterable<dynamic>(map['tickets_array'] as Iterable,
+    obj.fishingTypes = codeIterable<dynamic>(map['fishing_types'] as Iterable,
         (val) => passProcessor.deserialize(val));
+    obj.tickets = codeIterable<dynamic>(
+        map['tickets'] as Iterable, (val) => passProcessor.deserialize(val));
     obj.operationalHours = _hoursOfOperationJSONSerializer
-        .fromMap(map['hours_of_operation_map'] as Map);
+        .fromMap(map['hours_of_operation'] as Map);
     obj.fishingRules = map['fishing_rules'] as String;
     return obj;
   }

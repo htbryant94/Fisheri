@@ -57,7 +57,7 @@ class _SearchScreenState extends State<SearchScreen> {
     ]);
 
     stream = radius.switchMap((rad) {
-      var collectionReference = _firestore.collection('venues_locations');
+      var collectionReference = _firestore.collection('venues_search');
       return geo.collection(collectionRef: collectionReference).within(
           center: center,
           radius: rad,
@@ -194,9 +194,7 @@ class _SearchScreenState extends State<SearchScreen> {
           VenueSearchJSONSerializer().fromMap(document.data);
       if (result != null) {
         GeoPoint point = document.data['position']['geopoint'];
-        List<String> venueTypes = [];
-        venueTypes.add(result.isLake == true ? 'Lake' : null);
-        venueTypes.add(result.isShop == true ? 'Shop' : null);
+        List<String> venueTypes = result.categories.cast<String>();
 
         String venueType;
         venueTypes.where((venue) => venue != null).forEach((venue) {
@@ -264,7 +262,7 @@ class _SearchScreenState extends State<SearchScreen> {
   void _addPoint(double lat, double long) {
     GeoFirePoint geoFirePoint = geo.point(latitude: lat, longitude: long);
     _firestore
-        .collection('venues_locations')
+        .collection('venues_search')
         .add({'name': 'test name', 'position': geoFirePoint.data}).then((_) {
       print('added ${geoFirePoint.hash} successfully');
     });

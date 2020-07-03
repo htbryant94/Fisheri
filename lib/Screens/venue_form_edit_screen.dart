@@ -146,11 +146,13 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
             youtube: _valueFor(attribute: 'social_youtube'),
           ),
           fishStocked: isLake() ? _valueFor(attribute: 'fish_stocked') : null,
+          fishingTackles: isShop() ? _valueFor(attribute: 'fishing_tackles') : null,
           fishingTypes: isLake() ? _valueFor(attribute: 'fishing_types') : null,
           tickets: isLake() ? _valueFor(attribute: 'tickets') : null,
           operationalHours: getOperationalHours(),
           fishingRules: isLake() ? _valueFor(attribute: 'fishing_rules') : null,
-          images: imageURLs.isNotEmpty ? imageURLs : null
+          images: imageURLs.isNotEmpty ? imageURLs : null,
+          websiteURL: _valueFor(attribute: 'contact_url'),
       );
     }
 
@@ -166,6 +168,7 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
         address: venue.address,
         amenities: venue.amenities,
         fishStocked: venue.fishStocked,
+        fishingTackles: venue.fishingTackles,
         fishingTypes: venue.fishingTypes,
       );
     }
@@ -227,7 +230,7 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
       result['position'] = geoFirePoint.data;
 
       Firestore.instance
-          .collection('venues_locations')
+          .collection('venues_search')
           .document(venueSearch.id)
           .setData(result, merge: false)
           .whenComplete(() {
@@ -274,7 +277,7 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
         // 5. Create VenueSearch Object with fileURLs added
         final venueSearch = makeVenueSearch(id: id, venue: venue);
 
-        // 6. setData for node in venues_locations with VenueSearch object
+        // 6. setData for node in venues_search with VenueSearch object
         _addPoint(venueSearch: venueSearch, lat: _latitude, long: _longitude);
       });
     }
@@ -380,24 +383,19 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
                     'monday_open': widget.venue.operationalHours.monday.open,
                     'monday_close': widget.venue.operationalHours.monday.close,
                     'tuesday_open': widget.venue.operationalHours.tuesday.open,
-                    'tuesday_close':
-                        widget.venue.operationalHours.tuesday.close,
-                    'wednesday_open':
-                        widget.venue.operationalHours.wednesday.open,
-                    'wednesday_close':
-                        widget.venue.operationalHours.wednesday.close,
-                    'thursday_open':
-                        widget.venue.operationalHours.thursday.open,
-                    'thursday_close':
-                        widget.venue.operationalHours.thursday.close,
+                    'tuesday_close': widget.venue.operationalHours.tuesday.close,
+                    'wednesday_open': widget.venue.operationalHours.wednesday.open,
+                    'wednesday_close': widget.venue.operationalHours.wednesday.close,
+                    'thursday_open': widget.venue.operationalHours.thursday.open,
+                    'thursday_close': widget.venue.operationalHours.thursday.close,
                     'friday_open': widget.venue.operationalHours.friday.open,
                     'friday_close': widget.venue.operationalHours.friday.close,
-                    'saturday_open':
-                        widget.venue.operationalHours.saturday.open,
-                    'saturday_close':
-                        widget.venue.operationalHours.saturday.close,
+                    'saturday_open': widget.venue.operationalHours.saturday.open,
+                    'saturday_close': widget.venue.operationalHours.saturday.close,
                     'sunday_open': widget.venue.operationalHours.sunday.open,
                     'sunday_close': widget.venue.operationalHours.sunday.close,
+                    'fishing_tackles': widget.venue.fishingTackles,
+                    'images': widget.venue.images,
                   },
                   autovalidate: true,
                   child: Column(
@@ -449,12 +447,16 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
                       _SocialLinksSection(),
                       SizedBox(height: 16),
                       Visibility(
+                        visible: isShop(),
+                        child: _FishingTypesSection(title: 'Shop: Fishing Tackle', attribute: 'fishing_tackles'),
+                      ),
+                      Visibility(
                         visible: isLake(),
                         child: _FishStockedSection(),
                       ),
                       Visibility(
                         visible: isLake(),
-                        child: _FishingTypesSection(),
+                        child: _FishingTypesSection(title: 'Lake: Fishing Types', attribute: 'fishing_types'),
                       ),
                       Visibility(
                         visible: isLake(),
@@ -464,7 +466,10 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
                         visible: isLake(),
                         child: _FishingRulesSection(),
                       ),
-                      _OperationalHoursSection(),
+                      Visibility(
+                        visible: widget.venue.operationalHours != null,
+                        child: _OperationalHoursSection(),
+                      ),
                       SizedBox(height: 16),
                       FormBuilderImagePickerCustom(
                         attribute: 'images',
@@ -904,6 +909,14 @@ enum FishingTypes {
 }
 
 class _FishingTypesSection extends StatelessWidget {
+  _FishingTypesSection({
+    @required this.title,
+    @required this.attribute
+  });
+
+  final String title;
+  final String attribute;
+
   final ReCase coarse = ReCase(describeEnum(FishingTypes.coarse));
   final ReCase match = ReCase(describeEnum(FishingTypes.match));
   final ReCase fly = ReCase(describeEnum(FishingTypes.fly));
@@ -914,9 +927,9 @@ class _FishingTypesSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        HouseTexts.subtitle('Fishing Types'),
+        HouseTexts.subtitle(title),
         FormBuilderCheckboxList(
-          attribute: "fishing_types",
+          attribute: attribute,
           options: [
             FormBuilderFieldOption(
                 value: coarse.snakeCase, child: Text(coarse.titleCase)),

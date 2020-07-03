@@ -20,7 +20,7 @@ class CatchReportsScreen extends StatelessWidget {
                 CupertinoButton(
                   onPressed: () {
                     Firestore.instance
-                    .collection('venues_locations')
+                    .collection('venues_search')
                     .getDocuments()
                     .then((documents) {
                   Navigator.push(
