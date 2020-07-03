@@ -5,6 +5,7 @@ import 'package:fisheri/models/catch.dart';
 import 'package:fisheri/Screens/detail_screen/image_carousel.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:recase/recase.dart';
 
 class CatchDetailScreen extends StatelessWidget {
   CatchDetailScreen({
@@ -49,34 +50,27 @@ class CatchDetailScreen extends StatelessWidget {
             children: [
               ImageCarousel(),
               TitleSection(
-                title: '${data.catchType} Catch - ${data.typeOfFish}',
+                title: '${ReCase(data.catchType).titleCase} Catch - ${ReCase(data.typeOfFish).titleCase}',
               ),
               Padding(
                 padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
                 child: Column(
                   children: <Widget>[
-                    HouseTexts.heading('Weight: ${convertGramsToPoundsAndOunces(data.weight)}'),
+                    _DetailRow(name: 'Weight', value: convertGramsToPoundsAndOunces(data.weight)),
                     SizedBox(height: 16),
-                    HouseTexts.heading('Time: ${data.time}'),
+                    _DetailRow(name: 'Time', value: data.time),
                     SizedBox(height: 16),
-                    HouseTexts.heading('Date: ${formattedDate(data.date)}'),
+                    _DetailRow(name: 'Date', value: formattedDate(data.date)),
                     SizedBox(height: 16),
-                    HouseTexts.heading('Weather Condition: ${data.weatherCondition}'),
+                    _DetailRow(name: 'Weather Condition', value: data.weatherCondition),
                     SizedBox(height: 16),
-                    HouseTexts.heading('Wind Direction: ${data.windDirection}'),
+                    _DetailRow(name: 'Wind Direction', value: data.windDirection),
                     SizedBox(height: 16),
-                    HouseTexts.heading('Temperature: ${formattedTemperature(data.temperature)}'),
+                    _DetailRow(name: 'Temperature', value: formattedTemperature((data.temperature))),
                     SizedBox(height: 16),
-                    HouseTexts.heading('Notes: '),
+                    HouseTexts.subheading('Notes:'),
                     SizedBox(height: 16),
-                    Text(
-                      '${data.notes}',
-                      style: GoogleFonts.raleway(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w300,
-                        fontStyle: FontStyle.normal,
-                      ),
-                    ),
+                    HouseTexts.body(data.notes),
                     SizedBox(height: 16),
                   ],
                 ),
@@ -84,5 +78,26 @@ class CatchDetailScreen extends StatelessWidget {
             ],
           ),
         ));
+  }
+}
+
+class _DetailRow extends StatelessWidget {
+  _DetailRow({
+    this.name,
+    this.value,
+});
+
+  final String name;
+  final dynamic value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        HouseTexts.subheading('$name:'),
+        SizedBox(width: 8),
+        HouseTexts.heading('$value'),
+      ],
+    );
   }
 }

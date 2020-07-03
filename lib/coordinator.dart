@@ -1,5 +1,6 @@
 import 'package:fisheri/Screens/auth_screen.dart';
 import 'package:fisheri/Screens/catch_detail_screen.dart';
+import 'package:fisheri/Screens/catch_form_edit_screen.dart';
 import 'package:fisheri/Screens/catch_report_screen.dart';
 import 'package:fisheri/Screens/detail_screen/detail_screen.dart';
 import 'package:fisheri/Screens/venue_form_screen.dart';
@@ -74,6 +75,20 @@ class Coordinator {
           navigationBar: CupertinoNavigationBar(
             previousPageTitle: currentPageTitle,
             middle: Text('Your Catch'),
+            trailing: CupertinoButton(
+              child: Icon(Icons.edit),
+              padding: EdgeInsets.all(8),
+//              onPressed: () {
+//                Coordinator.push(
+//                    context,
+//                    currentPageTitle: 'Your Catch',
+//                    screen: CatchFormEditScreen(
+//                      catchData: catchData,
+//                    ),
+//                    screenTitle: 'New Catch'
+//                );
+//              },
+            ),
           ),
           child: CatchDetailScreen(
             data: catchData,

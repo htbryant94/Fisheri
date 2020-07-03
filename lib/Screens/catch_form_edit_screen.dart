@@ -1,6 +1,5 @@
 import 'package:basic_utils/basic_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fisheri/Screens/venue_form_edit_screen.dart';
 import 'package:fisheri/house_texts.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -29,20 +28,18 @@ enum CatchType {
   match
 }
 
-class CatchFormScreenFull extends StatefulWidget {
-  CatchFormScreenFull({
-    @required this.dateRange,
-    @required this.catchReportID,
+class CatchFormEditScreen extends StatefulWidget {
+  CatchFormEditScreen({
+    @required this.catchData
   });
 
-  final List<DateTime> dateRange;
-  final String catchReportID;
+  final Catch catchData;
 
   @override
-  _CatchFormScreenFullState createState() => _CatchFormScreenFullState();
+  _CatchFormEditScreenState createState() => _CatchFormEditScreenState();
 }
 
-class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
+class _CatchFormEditScreenState extends State<CatchFormEditScreen> {
   final _fbKey = GlobalKey<FormBuilderState>();
   final List<CatchType> catchTypes = CatchType.values;
   CatchType selectedCatchType;
@@ -52,6 +49,23 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
         .currentState.fields[attribute].currentState.value;
   }
 
+  CatchType catchTypeFromString(String string) {
+    print(string);
+    if (string == "single") {
+      return CatchType.single;
+    } else if (string == "multi") {
+      return CatchType.multi;
+    } else if (string == "match") {
+      return CatchType.match;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    selectedCatchType = catchTypeFromString(widget.catchData.catchType);
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -59,7 +73,7 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
       return pounds * 16;
     };
 
-   double _convertOuncesToGrams({int ounces}) {
+    double _convertOuncesToGrams({int ounces}) {
       return ounces * 28.34952;
     };
 
@@ -88,7 +102,10 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
               children: <Widget>[
                 FormBuilder(
                   key: _fbKey,
-                  initialValue: {},
+                  initialValue: {
+                    'catch_type': catchTypeFromString(widget.catchData.catchType),
+                    'fish_type': widget.catchData.typeOfFish,
+                  },
                   autovalidate: true,
                   child: Column(
                     children: <Widget>[
@@ -110,6 +127,7 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                         child: _TypeOfFishSection(
                           title: 'Type of Fish *',
                           attribute: 'fish_type',
+                          items: FisheriConstants.typesFish,
                         ),
                       ),
                       CatchReportVisibility(
@@ -138,15 +156,6 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                         child: _TimePickerBuilder(
                           title: 'Time',
                           attribute: 'time',
-                        ),
-                      ),
-                      CatchReportVisibility(
-                        catchType: selectedCatchType,
-                        supportedCatchTypes: [CatchType.single],
-                        child: _DropDownMenuDatesBuilder(
-                          title: 'Date',
-                          attribute: 'date',
-                          items: widget.dateRange,
                         ),
                       ),
                       CatchReportVisibility(
@@ -218,7 +227,7 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
 
                             catchModel = Catch(
                               catchType: describeEnum(selectedCatchType),
-                              catchReportID: widget.catchReportID,
+                              catchReportID: widget.catchData.catchReportID,
                               date: date != null ? date.toIso8601String() : null,
                               notes: notes,
                               numberOfFish: numberOfFish,
@@ -285,7 +294,7 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                                   );
                                 });
                           }
-                          },
+                        },
                       )
                     ],
                   ),
@@ -370,49 +379,21 @@ class _TypeOfFishSection extends StatelessWidget {
   _TypeOfFishSection({
     @required this.title,
     @required this.attribute,
-  });
-
-  final String title;
-  final String attribute;
-
-  @override
-  Widget build(BuildContext context) {
-      return _DropDownMenuBuilder(
-        title: title,
-        attribute: attribute,
-        items: FishStock.values.map((fish) => describeEnum(fish)).toList(),
-        isRequired: true,
-      );
-  }
-}
-
-class _DropDownMenuDatesBuilder extends StatelessWidget {
-  _DropDownMenuDatesBuilder({
-    @required this.title,
-    @required this.attribute,
     @required this.items,
   });
 
   final String title;
   final String attribute;
-  final List<DateTime> items;
+  final List<String> items;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        HouseTexts.heading(title),
-        FormBuilderDropdown(
-            attribute: attribute,
-            items: items
-                .map((item) => DropdownMenuItem(
-              value: item,
-              child:
-              Text('${DateFormat('E, d MMM yyyy').format(item)}'),
-            )).toList())
-      ],
+    return _DropDownMenuBuilder(
+      title: title,
+      attribute: attribute,
+      items: items,
+      isRequired: true,
     );
-
   }
 }
 
@@ -426,7 +407,7 @@ class _DropDownMenuBuilder extends StatelessWidget {
 
   final String title;
   final String attribute;
-  final List<String> items;
+  final List<dynamic> items;
   final bool isRequired;
 
   @override
@@ -439,9 +420,9 @@ class _DropDownMenuBuilder extends StatelessWidget {
             validators: isRequired ? [FormBuilderValidators.required()] : [],
             items: items
                 .map((item) => DropdownMenuItem(
-                      value: ReCase(item).snakeCase,
-                      child: Text(ReCase(item).titleCase),
-                    ))
+              value: item,
+              child: Text('$item'),
+            ))
                 .toList())
       ],
     );
@@ -544,13 +525,13 @@ class CatchReportVisibility extends StatelessWidget {
     this.catchType,
     this.supportedCatchTypes,
     this.child,
-});
+  });
 
-final CatchType catchType;
-final List<CatchType> supportedCatchTypes;
-final Widget child;
+  final CatchType catchType;
+  final List<CatchType> supportedCatchTypes;
+  final Widget child;
 
- @override
+  @override
   Widget build(BuildContext context) {
     return Visibility(
       visible: supportedCatchTypes.contains(catchType),

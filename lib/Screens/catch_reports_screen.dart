@@ -23,11 +23,12 @@ class CatchReportsScreen extends StatelessWidget {
                     .collection('venues_search')
                     .getDocuments()
                     .then((documents) {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => CatchReportFormScreen(
-                              availableLakes: documents)));
+                      Coordinator.push(
+                          context,
+                          currentPageTitle: '',
+                          screen: CatchReportFormScreen(availableLakes: documents),
+                          screenTitle: 'New Catch Report'
+                      );
                 });
                   },
                   padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
@@ -59,7 +60,9 @@ class CatchReportListBuilder extends StatelessWidget {
       stream: Firestore.instance.collection('catch_reports').snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (!snapshot.hasData) {
-          return CircularProgressIndicator();
+          return Center(
+            child: CircularProgressIndicator(),
+          );
         }
         return ListView.builder(
           padding: EdgeInsets.all(8),

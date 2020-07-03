@@ -1,4 +1,4 @@
-import 'package:fisheri/Screens/catch_form_screen.dart';
+import 'package:fisheri/Screens/catch_form_screen_full.dart';
 import 'package:fisheri/coordinator.dart';
 import 'package:fisheri/house_texts.dart';
 import 'package:fisheri/models/catch.dart';
@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fisheri/Components/base_cell.dart';
+import 'package:recase/recase.dart';
 
 class CatchReportScreen extends StatelessWidget {
   CatchReportScreen({
@@ -32,13 +33,15 @@ class CatchReportScreen extends StatelessWidget {
                     endDate.difference(startDate).inDays + 1,
                         (day) => DateTime(startDate.year, startDate.month,
                         startDate.day + day));
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => CatchFormScreen(
-                          dateRange: dateRange,
-                          catchReportID: id,
-                        )));
+                Coordinator.push(
+                  context,
+                  currentPageTitle: 'Catches',
+                  screen: CatchFormScreenFull(
+                    dateRange: dateRange,
+                    catchReportID: id,
+                  ),
+                  screenTitle: 'New Catch'
+                );
               },
               padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
               child: Row(
@@ -84,7 +87,7 @@ class CatchListBuilder extends StatelessWidget {
               final _catch = snapshot.data.documents[index];
               final _data = CatchJSONSerializer().fromMap(_catch.data);
               return CatchCell(
-                data: _data,
+                catchData: _data,
               );
             });
       },
@@ -94,13 +97,13 @@ class CatchListBuilder extends StatelessWidget {
 
 class CatchCell extends StatelessWidget {
   CatchCell({
-    this.data,
+    this.catchData,
   });
 
-  final Catch data;
+  final Catch catchData;
 
   void _openCatchScreen(BuildContext context) {
-    Coordinator.pushCatchDetailScreen(context, currentPageTitle: 'Report', catchData: data);
+    Coordinator.pushCatchDetailScreen(context, currentPageTitle: 'Report', catchData: catchData);
   }
 
   @override
@@ -110,8 +113,8 @@ class CatchCell extends StatelessWidget {
           _openCatchScreen(context);
         },
         child: LocalImageBaseCell(
-          title: data.typeOfFish,
-          subtitle: data.catchType,
+          title: ReCase(catchData.typeOfFish).titleCase ?? "Match",
+          subtitle: (catchData.typeOfFish != null) ? catchData.catchType : "Position: ${catchData.position}",
           image: Image.asset('images/lake.jpg'),
         ));
   }
