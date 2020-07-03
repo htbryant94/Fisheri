@@ -45,9 +45,18 @@ class VenueFormScreen extends StatefulWidget {
 class _VenueFormScreenState extends State<VenueFormScreen> {
   final _fbKey = GlobalKey<FormBuilderState>();
   List<String> imageURLs = [];
+  List<String> selectedCategories = [];
 
   @override
   Widget build(BuildContext context) {
+
+    bool isLake() {
+      return selectedCategories.contains('lake');
+    }
+
+    bool isShop() {
+      return selectedCategories.contains('shop');
+    }
 
     Function _valueFor = ({String attribute}) {
       return _fbKey.currentState.fields[attribute]
@@ -101,7 +110,7 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
             postcode:
             _valueFor(attribute: 'address_postcode'),
           ),
-          amenities: _valueFor(attribute: 'amenities_list'),
+          amenities: isLake() ? _valueFor(attribute: 'amenities_list') : null,
           contactDetails: ContactDetails(
             email: _valueFor(attribute: 'contact_email'),
             phone: _valueFor(attribute: 'contact_phone'),
@@ -113,11 +122,11 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
             twitter: _valueFor(attribute: 'social_twitter'),
             youtube: _valueFor(attribute: 'social_youtube'),
           ),
-          fishStocked: _valueFor(attribute: 'fish_stocked'),
-          fishingTypes: _valueFor(attribute: 'fishing_types'),
-          tickets: _valueFor(attribute: 'tickets'),
+          fishStocked: isLake() ? _valueFor(attribute: 'fish_stocked') : null,
+          fishingTypes: isLake() ? _valueFor(attribute: 'fishing_types') : null,
+          tickets: isLake() ? _valueFor(attribute: 'tickets'): null,
           operationalHours: getOperationalHours(),
-          fishingRules: _valueFor(attribute: 'fishing_rules'),
+          fishingRules: isLake() ? _valueFor(attribute: 'fishing_rules') : null,
           images: imageURLs.isNotEmpty ? imageURLs : null
       );
     }
@@ -153,17 +162,6 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
         );
       }
       return result;
-    }
-
-    Future clearFolder(String id, List<String> images) async {
-      if (images != null) {
-        var index = 0;
-
-        await Future.forEach(images, (imageURL) async {
-          await FirebaseStorage.instance.ref().child('venues/$id/images/$index').delete();
-          index += 1;
-        });
-      }
     }
 
     Future uploadFile({String id, File file, String name}) async {
@@ -324,24 +322,66 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
                     children: <Widget>[
                       _OverviewSection(),
                       SizedBox(height: 16),
+                      FormBuilderCheckboxList(
+                        decoration: InputDecoration(labelText: "Categories *"),
+                        activeColor: HouseColors.accentGreen,
+                        checkColor: HouseColors.primaryGreen,
+                        attribute: "categories",
+                        onChanged: (categories) {
+                          setState(() {
+                            selectedCategories = categories.cast<String>();
+                          });
+                        },
+                        options: [
+                          FormBuilderFieldOption(value: "lake", child: Text('Lake')),
+                          FormBuilderFieldOption(value: "shop", child: Text('Shop')),
+                        ],
+                      ),
+                      FormBuilderTextField(
+                        keyboardType: TextInputType.multiline,
+                        minLines: 5,
+                        maxLines: null,
+                        attribute: "description",
+                        autocorrect: false,
+                        decoration: InputDecoration(
+                            labelText: "Description",
+                            helperText:
+                            "Include pricing information or details on how to get to your venue here",
+                            border: OutlineInputBorder()),
+                        validators: [
+                          FormBuilderValidators.minLength(4),
+                          FormBuilderValidators.maxLength(1000),
+                        ],
+                      ),
+                      SizedBox(height: 16),
                       _CoordinatesSection(),
                       SizedBox(height: 16),
                       _AddressSection(),
                       SizedBox(height: 16),
-                      _AmenitiesSection(),
-                      SizedBox(height: 16),
+                      Visibility(
+                        visible: isLake(),
+                        child: _AmenitiesSection(),
+                      ),
                       _ContactDetailsSection(),
                       SizedBox(height: 16),
                       _SocialLinksSection(),
                       SizedBox(height: 16),
-                      _FishStockedSection(),
-                      SizedBox(height: 16),
-                      _FishingTypesSection(),
-                      SizedBox(height: 16),
-                      _TicketsSection(),
-                      SizedBox(height: 16),
-                      _FishingRulesSection(),
-                      SizedBox(height: 16),
+                      Visibility(
+                        visible: isLake(),
+                        child: _FishStockedSection(),
+                      ),
+                      Visibility(
+                        visible: isLake(),
+                        child: _FishingTypesSection(),
+                      ),
+                      Visibility(
+                        visible: isLake(),
+                        child: _TicketsSection(),
+                      ),
+                      Visibility(
+                        visible: isLake(),
+                        child: _FishingRulesSection(),
+                      ),
                       _OperationalHoursSection(),
                       SizedBox(height: 16),
                       FormBuilderImagePickerCustom(
@@ -355,56 +395,6 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
                     MaterialButton(
                         child: Text("Submit"),
                         onPressed: () {
-
-//                          void _addPoint({VenueDetailed venue, String name, String id, double lat, double long}) {
-//                            print('adding point');
-//                            final _geo = Geoflutterfire();
-//
-//                            VenueSearch venueSearch = VenueSearch(
-//                              name: venue.name,
-//                              categories: venue.categories,
-//                              id: id,
-//                              imageURL: null,
-//                              address: venue.address,
-//                              amenities: venue.amenities,
-//                              fishStocked: venue.fishStocked,
-//                              fishingTypes: venue.fishingTypes,
-//                            );
-//
-//                            GeoFirePoint geoFirePoint =
-//                            _geo.point(latitude: lat, longitude: long);
-//
-//                            final result = VenueSearchJSONSerializer().toMap(venueSearch);
-//                            result['position'] = geoFirePoint.data;
-//
-//                            Firestore.instance
-//                                .collection('venues_locations')
-//                                .add(result).whenComplete(() {
-//                              print('added ${geoFirePoint.hash} successfully');
-//                              showDialog(
-//                                  context: context,
-//                                  barrierDismissible: false,
-//                                  builder: (BuildContext context) {
-//                                    return AlertDialog(
-//                                      title: Text('Form successfully submitted'),
-//                                      content: SingleChildScrollView(
-//                                        child: Text(
-//                                            'Tap Return to dismiss this page.'),
-//                                      ),
-//                                      actions: <Widget>[
-//                                        FlatButton(
-//                                          child: Text('Return'),
-//                                          onPressed: () {
-//                                            Navigator.of(context).pop();
-//                                            _fbKey.currentState.reset();
-//                                          },
-//                                        )
-//                                      ],
-//                                    );
-//                                  });
-//                            });
-//                          }
-
                           Future postNewVenue(VenueDetailed venue, Map<String, dynamic> data) async {
                             await Firestore.instance
                                 .collection('venues_detail')
@@ -484,32 +474,6 @@ class _OverviewSection extends StatelessWidget {
             FormBuilderValidators.maxLength(50),
           ],
         ),
-        FormBuilderCheckboxList(
-          decoration: InputDecoration(labelText: "Categories *"),
-          activeColor: HouseColors.accentGreen,
-          checkColor: HouseColors.primaryGreen,
-          attribute: "categories",
-          options: [
-            FormBuilderFieldOption(value: "lake", child: Text('Lake')),
-            FormBuilderFieldOption(value: "shop", child: Text('Shop')),
-          ],
-        ),
-        FormBuilderTextField(
-          keyboardType: TextInputType.multiline,
-          minLines: 5,
-          maxLines: null,
-          attribute: "description",
-          autocorrect: false,
-          decoration: InputDecoration(
-              labelText: "Description",
-              helperText:
-                  "Include pricing information or details on how to get to your venue here",
-              border: OutlineInputBorder()),
-          validators: [
-            FormBuilderValidators.minLength(4),
-            FormBuilderValidators.maxLength(1000),
-          ],
-        ),
       ],
     );
   }
@@ -533,6 +497,7 @@ class _FishingRulesSection extends StatelessWidget {
                   "Information on fishing rules and regulations for this venue",
               border: OutlineInputBorder()),
         ),
+        SizedBox(height: 16)
       ],
     );
   }
@@ -663,6 +628,7 @@ class _AmenitiesSection extends StatelessWidget {
                 value: camping.snakeCase, child: Text(camping.titleCase)),
           ],
         ),
+        SizedBox(height: 16)
       ],
     );
   }
@@ -839,6 +805,7 @@ class _FishStockedSection extends StatelessWidget {
                 value: ruffe.snakeCase, child: Text(ruffe.titleCase)),
           ],
         ),
+        SizedBox(height: 16)
       ],
     );
   }
@@ -879,6 +846,7 @@ class _FishingTypesSection extends StatelessWidget {
                 value: catfish.snakeCase, child: Text(catfish.titleCase)),
           ],
         ),
+        SizedBox(height: 16)
       ],
     );
   }
@@ -919,6 +887,7 @@ class _TicketsSection extends StatelessWidget {
                 value: clubWater.snakeCase, child: Text(clubWater.titleCase)),
           ],
         ),
+        SizedBox(height: 16)
       ],
     );
   }
