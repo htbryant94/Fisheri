@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fisheri/house_colors.dart';
 import 'package:fisheri/models/hours_of_operation.dart';
@@ -17,16 +19,11 @@ import 'package:fisheri/Components/form_builder_image_picker_custom.dart';
 import 'dart:io';
 
 class ImageType {
-  ImageType({
-    this.type,
-    this.url,
-    this.file
-  });
+  ImageType({this.type, this.url, this.file});
 
   final String type;
   final String url;
   final File file;
-
 }
 
 class VenueDetailedConstants {
@@ -63,6 +60,8 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
   final _fbKey = GlobalKey<FormBuilderState>();
   List<String> imageURLs = [];
   List<String> selectedCategories = [];
+  bool _isLoading = false;
+  bool _imagesReadOnly = true;
 
   @override
   void initState() {
@@ -80,10 +79,8 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     Function _valueFor = ({String attribute}) {
-      return _fbKey.currentState.fields[attribute]
-          .currentState.value;
+      return _fbKey.currentState.fields[attribute].currentState.value;
     };
 
     HoursOfOperation getOperationalHours() {
@@ -121,50 +118,44 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
 
     VenueDetailed makeVenueDetailed() {
       return VenueDetailed(
-          name: _valueFor(
-              attribute: VenueDetailedConstants.name),
-          categories: _valueFor(attribute: 'categories'),
-          description: _valueFor(
-              attribute: VenueDetailedConstants.description),
-          address: VenueAddress(
-            street: _valueFor(attribute: 'address_street'),
-            town: _valueFor(attribute: 'address_town'),
-            county: _valueFor(attribute: 'address_county'),
-            postcode:
-            _valueFor(attribute: 'address_postcode'),
-          ),
-          amenities: isLake() ? _valueFor(attribute: 'amenities_list') : null,
-          contactDetails: ContactDetails(
-            email: _valueFor(attribute: 'contact_email'),
-            phone: _valueFor(attribute: 'contact_phone'),
-          ),
-          social: Social(
-            facebook: _valueFor(attribute: 'social_facebook'),
-            instagram:
-            _valueFor(attribute: 'social_instagram'),
-            twitter: _valueFor(attribute: 'social_twitter'),
-            youtube: _valueFor(attribute: 'social_youtube'),
-          ),
-          fishStocked: isLake() ? _valueFor(attribute: 'fish_stocked') : null,
-          fishingTackles: isShop() ? _valueFor(attribute: 'fishing_tackles') : null,
-          fishingTypes: isLake() ? _valueFor(attribute: 'fishing_types') : null,
-          tickets: isLake() ? _valueFor(attribute: 'tickets') : null,
-          operationalHours: getOperationalHours(),
-          fishingRules: isLake() ? _valueFor(attribute: 'fishing_rules') : null,
-          images: imageURLs.isNotEmpty ? imageURLs : null,
-          websiteURL: _valueFor(attribute: 'contact_url'),
+        name: _valueFor(attribute: VenueDetailedConstants.name),
+        categories: _valueFor(attribute: 'categories'),
+        description: _valueFor(attribute: VenueDetailedConstants.description),
+        address: VenueAddress(
+          street: _valueFor(attribute: 'address_street'),
+          town: _valueFor(attribute: 'address_town'),
+          county: _valueFor(attribute: 'address_county'),
+          postcode: _valueFor(attribute: 'address_postcode'),
+        ),
+        amenities: isLake() ? _valueFor(attribute: 'amenities_list') : null,
+        contactDetails: ContactDetails(
+          email: _valueFor(attribute: 'contact_email'),
+          phone: _valueFor(attribute: 'contact_phone'),
+        ),
+        social: Social(
+          facebook: _valueFor(attribute: 'social_facebook'),
+          instagram: _valueFor(attribute: 'social_instagram'),
+          twitter: _valueFor(attribute: 'social_twitter'),
+          youtube: _valueFor(attribute: 'social_youtube'),
+        ),
+        fishStocked: isLake() ? _valueFor(attribute: 'fish_stocked') : null,
+        fishingTackles:
+            isShop() ? _valueFor(attribute: 'fishing_tackles') : null,
+        fishingTypes: isLake() ? _valueFor(attribute: 'fishing_types') : null,
+        tickets: isLake() ? _valueFor(attribute: 'tickets') : null,
+        operationalHours: getOperationalHours(),
+        fishingRules: isLake() ? _valueFor(attribute: 'fishing_rules') : null,
+        images: imageURLs.isNotEmpty ? imageURLs : null,
+        websiteURL: _valueFor(attribute: 'contact_url'),
       );
     }
 
-    VenueSearch makeVenueSearch({
-      VenueDetailed venue,
-      String id
-    }) {
+    VenueSearch makeVenueSearch({VenueDetailed venue, String id}) {
       return VenueSearch(
         name: venue.name,
         categories: venue.categories,
         id: id,
-        imageURL: imageURLs.isNotEmpty ? imageURLs.first : null,
+        imageURL: venue.images.first,
         address: venue.address,
         amenities: venue.amenities,
         fishStocked: venue.fishStocked,
@@ -178,9 +169,11 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
       final _longitude = _valueFor(attribute: 'coordinates_longitude');
 
       if (_latitude != null && _longitude != null) {
-        final double _latitude = double.parse(_valueFor(attribute: 'coordinates_latitude'));
+        final double _latitude =
+            double.parse(_valueFor(attribute: 'coordinates_latitude'));
         assert(_latitude is double);
-        final double _longitude = double.parse(_valueFor(attribute: 'coordinates_longitude'));
+        final double _longitude =
+            double.parse(_valueFor(attribute: 'coordinates_longitude'));
         assert(_longitude is double);
         result["coordinates"] = GeoPoint(
           _latitude,
@@ -195,14 +188,18 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
         var index = 0;
 
         await Future.forEach(images, (imageURL) async {
-          await FirebaseStorage.instance.ref().child('venues/$id/images/$index').delete();
+          await FirebaseStorage.instance
+              .ref()
+              .child('venues/$id/images/$index')
+              .delete();
           index += 1;
         });
       }
     }
 
     Future uploadFile({String id, File file, String name}) async {
-      StorageReference storageReference = FirebaseStorage.instance.ref().child('venues/$id/images/$name');
+      StorageReference storageReference =
+          FirebaseStorage.instance.ref().child('venues/$id/images/$name');
       StorageUploadTask uploadTask = storageReference.putFile(file);
       await uploadTask.onComplete;
       print('-----FILE UPLOADED-----');
@@ -234,17 +231,19 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
           .document(venueSearch.id)
           .setData(result, merge: false)
           .whenComplete(() {
+        setState(() {
+          _isLoading = false;
+        });
+
         print('added ${geoFirePoint.hash} successfully');
         showDialog(
             context: context,
             barrierDismissible: false,
             builder: (BuildContext context) {
               return AlertDialog(
-                title:
-                Text('Form successfully submitted'),
+                title: Text('Form successfully submitted'),
                 content: SingleChildScrollView(
-                  child: Text(
-                      'Tap Return to dismiss this page.'),
+                  child: Text('Tap Return to dismiss this page.'),
                 ),
                 actions: <Widget>[
                   FlatButton(
@@ -269,9 +268,11 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
           .document(id)
           .setData(venueJSON, merge: false)
           .then((doc) {
-        final double _latitude = double.parse(_valueFor(attribute: 'coordinates_latitude'));
+        final double _latitude =
+            double.parse(_valueFor(attribute: 'coordinates_latitude'));
         assert(_latitude is double);
-        final double _longitude = double.parse(_valueFor(attribute: 'coordinates_longitude'));
+        final double _longitude =
+            double.parse(_valueFor(attribute: 'coordinates_longitude'));
         assert(_longitude is double);
 
         // 5. Create VenueSearch Object with fileURLs added
@@ -284,243 +285,306 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
 
     // 2. Upload files to asset path with auto ID
     Future uploadFiles(VenueDetailed venue) async {
-      print('clearing folder of previous files');
-      await clearFolder(widget.venueID, widget.venue.images).whenComplete(() async {
-
-        print('uploading files started');
-        final List<dynamic> _images = _valueFor(attribute: 'images');
-        final List<ImageType> parsedImageTypes = _images.map((image) {
-          if (image is File) {
-            return ImageType(type: "FILE", file: image);
-          } else if (image is String) {
-            return ImageType(type: "STRING", url: image);
-          } else {
-            return null;
-          }
-        }).toList();
-        print('filesToUpload value -------');
-        parsedImageTypes.forEach((imageType) {
-          if (imageType.type == "URL") {
-            print('imageType is: ${imageType.url}');
-          } else if (imageType.type == "FILE") {
-            print('imageType is: ${imageType.file}');
-          }
-        });
-
-        if (parsedImageTypes != null) {
-          var index = 0;
-          await Future.forEach(parsedImageTypes, (imageType) async {
-            print('----- uploading file: $index');
-
-            final _imageType = imageType as ImageType;
-            if (_imageType.type == "FILE") {
-              await uploadFile(id: widget.venueID, file: _imageType.file, name: '$index').whenComplete(() {
-                index += 1;
-                print('----- uploaded file: $index');
-              });
-            } else if (_imageType.type == "URL") {
-              index += 1;
-              setState(() {
-                imageURLs.add(_imageType.url);
-              });
+      if(!_imagesReadOnly) {
+        print('clearing folder of previous files');
+        await clearFolder(widget.venueID, widget.venue.images)
+            .whenComplete(() async {
+          print('uploading files started');
+          final List<dynamic> _images = _valueFor(attribute: 'images');
+          final List<ImageType> parsedImageTypes = _images.map((image) {
+            if (image is File) {
+              return ImageType(type: "FILE", file: image);
+            } else if (image is String) {
+              return ImageType(type: "STRING", url: image);
+            } else {
+              return null;
             }
+          }).toList();
+          print('filesToUpload value -------');
+          parsedImageTypes.forEach((imageType) {
+            if (imageType.type == "URL") {
+              print('imageType is: ${imageType.url}');
+            } else if (imageType.type == "FILE") {
+              print('imageType is: ${imageType.file}');
+            }
+          });
 
+          if (parsedImageTypes != null) {
+            var index = 0;
+            await Future.forEach(parsedImageTypes, (imageType) async {
+              print('----- uploading file: $index');
 
-          }).whenComplete(() {
-            print('uploading files finished');
-            // 4. setData for node in venues_detail with VenueDetailed Object
+              final _imageType = imageType as ImageType;
+              if (_imageType.type == "FILE") {
+                await uploadFile(
+                    id: widget.venueID, file: _imageType.file, name: '$index')
+                    .whenComplete(() {
+                  index += 1;
+                  print('----- uploaded file: $index');
+                });
+              } else if (_imageType.type == "URL") {
+                index += 1;
+                setState(() {
+                  imageURLs.add(_imageType.url);
+                });
+              }
+            }).whenComplete(() {
+              print('uploading files finished');
+              // 4. setData for node in venues_detail with VenueDetailed Object
+              print('AMENDING VENUE');
+
+              venue.images = imageURLs;
+              amendVenue(widget.venueID, venue);
+            });
+          } else {
+            print('----- no files to upload, amending venue');
             print('AMENDING VENUE');
 
             venue.images = imageURLs;
-            amendVenue(widget.venueID, venue);
+            await amendVenue(widget.venueID, venue);
           }
-          );
-        } else {
-          print('----- no files to upload, amending venue');
-          print('AMENDING VENUE');
-
-          venue.images = imageURLs;
-          await amendVenue(widget.venueID, venue);
-        }
-      });
+        });
+      } else {
+        venue.images = widget.venue.images;
+        await amendVenue(widget.venueID, venue);
+      }
     }
 
     return Scaffold(
       body: SafeArea(
-        child: ListView(
-          padding: EdgeInsets.fromLTRB(24, 24, 24, 100),
-          children: <Widget>[
-            Column(
+        child: Stack(
+          children: [
+            ListView(
+              padding: EdgeInsets.fromLTRB(24, 24, 24, 100),
               children: <Widget>[
-                FormBuilder(
-                  key: _fbKey,
-                  initialValue: {
-                    VenueDetailedConstants.name: widget.venue.name,
-                    VenueDetailedConstants.categories: widget.venue.categories,
-                    VenueDetailedConstants.description:
-                        widget.venue.description,
-                    'coordinates_latitude':
-                        widget.venue.coordinates.latitude.toString(),
-                    'coordinates_longitude':
-                        widget.venue.coordinates.longitude.toString(),
-                    'address_street': widget.venue.address.street,
-                    'address_town': widget.venue.address.town,
-                    'address_county': widget.venue.address.county,
-                    'address_postcode': widget.venue.address.postcode,
-                    // TODO: Number of Lakes,
-                    'amenities_list': widget.venue.amenities,
-                    'contact_email': widget.venue.contactDetails.email,
-                    'contact_phone': widget.venue.contactDetails.phone,
-                    'contact_url': widget.venue.websiteURL,
-                    'social_facebook': widget.venue.social.facebook,
-                    'social_instagram': widget.venue.social.instagram,
-                    'social_twitter': widget.venue.social.twitter,
-                    'social_youtube': widget.venue.social.youtube,
-                    'fish_stocked': widget.venue.fishStocked,
-                    'fishing_types': widget.venue.fishingTypes,
-                    'tickets': widget.venue.tickets,
-                    'fishing_rules': widget.venue.fishingRules,
-                    'monday_open': widget.venue.operationalHours.monday.open,
-                    'monday_close': widget.venue.operationalHours.monday.close,
-                    'tuesday_open': widget.venue.operationalHours.tuesday.open,
-                    'tuesday_close': widget.venue.operationalHours.tuesday.close,
-                    'wednesday_open': widget.venue.operationalHours.wednesday.open,
-                    'wednesday_close': widget.venue.operationalHours.wednesday.close,
-                    'thursday_open': widget.venue.operationalHours.thursday.open,
-                    'thursday_close': widget.venue.operationalHours.thursday.close,
-                    'friday_open': widget.venue.operationalHours.friday.open,
-                    'friday_close': widget.venue.operationalHours.friday.close,
-                    'saturday_open': widget.venue.operationalHours.saturday.open,
-                    'saturday_close': widget.venue.operationalHours.saturday.close,
-                    'sunday_open': widget.venue.operationalHours.sunday.open,
-                    'sunday_close': widget.venue.operationalHours.sunday.close,
-                    'fishing_tackles': widget.venue.fishingTackles,
-                    'images': widget.venue.images,
-                  },
-                  autovalidate: true,
-                  child: Column(
-                    children: <Widget>[
-                      _OverviewSection(),
-                      SizedBox(height: 16),
-                      FormBuilderCheckboxList(
-                        decoration: InputDecoration(labelText: "Categories *"),
-                        activeColor: HouseColors.accentGreen,
-                        checkColor: HouseColors.primaryGreen,
-                        attribute: "categories",
-                        onChanged: (categories) {
-                          setState(() {
-                            selectedCategories = categories.cast<String>();
-                          });
-                        },
-                        options: [
-                          FormBuilderFieldOption(value: "lake", child: Text('Lake')),
-                          FormBuilderFieldOption(value: "shop", child: Text('Shop')),
-                        ],
-                      ),
-                      FormBuilderTextField(
-                        keyboardType: TextInputType.multiline,
-                        minLines: 5,
-                        maxLines: null,
-                        attribute: "description",
-                        autocorrect: false,
-                        decoration: InputDecoration(
-                            labelText: "Description",
-                            helperText:
-                            "Include pricing information or details on how to get to your venue here",
-                            border: OutlineInputBorder()),
-                        validators: [
-                          FormBuilderValidators.minLength(4),
-                          FormBuilderValidators.maxLength(1000),
-                        ],
-                      ),
-                      SizedBox(height: 16),
-                      _CoordinatesSection(),
-                      SizedBox(height: 16),
-                      _AddressSection(),
-                      SizedBox(height: 16),
-                      Visibility(
-                        visible: isLake(),
-                        child: _AmenitiesSection(),
-                      ),
-                      _ContactDetailsSection(),
-                      SizedBox(height: 16),
-                      _SocialLinksSection(),
-                      SizedBox(height: 16),
-                      Visibility(
-                        visible: isShop(),
-                        child: _FishingTypesSection(title: 'Shop: Fishing Tackle', attribute: 'fishing_tackles'),
-                      ),
-                      Visibility(
-                        visible: isLake(),
-                        child: _FishStockedSection(),
-                      ),
-                      Visibility(
-                        visible: isLake(),
-                        child: _FishingTypesSection(title: 'Lake: Fishing Types', attribute: 'fishing_types'),
-                      ),
-                      Visibility(
-                        visible: isLake(),
-                        child: _TicketsSection(),
-                      ),
-                      Visibility(
-                        visible: isLake(),
-                        child: _FishingRulesSection(),
-                      ),
-                      Visibility(
-                        visible: widget.venue.operationalHours != null,
-                        child: _OperationalHoursSection(),
-                      ),
-                      SizedBox(height: 16),
-                      FormBuilderImagePickerCustom(
-                        attribute: 'images',
-                      )
-                    ],
-                  ),
-                ),
-                Row(
+                Column(
                   children: <Widget>[
-                    MaterialButton(
-                        child: Text("Submit"),
-                        onPressed: () {
-                          if (_fbKey.currentState.saveAndValidate()) {
-
-                            // 1. Create VenueDetailed Object
-                            var _venue = makeVenueDetailed();
-                            uploadFiles(_venue);
-
-                          } else {
-                            showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: Text(
-                                        'There was an issue trying to submit your form'),
-                                    content: SingleChildScrollView(
-                                      child: Text(
-                                          'Please correct any incorrect entries and try again.'),
-                                    ),
-                                    actions: <Widget>[
-                                      FlatButton(
-                                        child: Text('OK'),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      )
-                                    ],
-                                  );
-                                });
-                          }
-                        }),
-                    MaterialButton(
-                      child: Text("Reset"),
-                      onPressed: () {
-                        _fbKey.currentState.reset();
+                    FormBuilder(
+                      key: _fbKey,
+                      initialValue: {
+                        VenueDetailedConstants.name: widget.venue.name,
+                        VenueDetailedConstants.categories:
+                            widget.venue.categories,
+                        VenueDetailedConstants.description:
+                            widget.venue.description,
+                        'coordinates_latitude':
+                            widget.venue.coordinates.latitude.toString(),
+                        'coordinates_longitude':
+                            widget.venue.coordinates.longitude.toString(),
+                        'address_street': widget.venue.address.street,
+                        'address_town': widget.venue.address.town,
+                        'address_county': widget.venue.address.county,
+                        'address_postcode': widget.venue.address.postcode,
+                        // TODO: Number of Lakes,
+                        'amenities_list': widget.venue.amenities,
+                        'contact_email': widget.venue.contactDetails.email,
+                        'contact_phone': widget.venue.contactDetails.phone,
+                        'contact_url': widget.venue.websiteURL,
+                        'social_facebook': widget.venue.social.facebook,
+                        'social_instagram': widget.venue.social.instagram,
+                        'social_twitter': widget.venue.social.twitter,
+                        'social_youtube': widget.venue.social.youtube,
+                        'fish_stocked': widget.venue.fishStocked,
+                        'fishing_types': widget.venue.fishingTypes,
+                        'tickets': widget.venue.tickets,
+                        'fishing_rules': widget.venue.fishingRules,
+                        'monday_open':
+                            widget.venue.operationalHours.monday.open,
+                        'monday_close':
+                            widget.venue.operationalHours.monday.close,
+                        'tuesday_open':
+                            widget.venue.operationalHours.tuesday.open,
+                        'tuesday_close':
+                            widget.venue.operationalHours.tuesday.close,
+                        'wednesday_open':
+                            widget.venue.operationalHours.wednesday.open,
+                        'wednesday_close':
+                            widget.venue.operationalHours.wednesday.close,
+                        'thursday_open':
+                            widget.venue.operationalHours.thursday.open,
+                        'thursday_close':
+                            widget.venue.operationalHours.thursday.close,
+                        'friday_open':
+                            widget.venue.operationalHours.friday.open,
+                        'friday_close':
+                            widget.venue.operationalHours.friday.close,
+                        'saturday_open':
+                            widget.venue.operationalHours.saturday.open,
+                        'saturday_close':
+                            widget.venue.operationalHours.saturday.close,
+                        'sunday_open':
+                            widget.venue.operationalHours.sunday.open,
+                        'sunday_close':
+                            widget.venue.operationalHours.sunday.close,
+                        'fishing_tackles': widget.venue.fishingTackles,
+                        'images': widget.venue.images,
                       },
+                      autovalidate: true,
+                      child: Column(
+                        children: <Widget>[
+                          _OverviewSection(),
+                          SizedBox(height: 16),
+                          FormBuilderCheckboxList(
+                            decoration:
+                                InputDecoration(labelText: "Categories *"),
+                            activeColor: HouseColors.accentGreen,
+                            checkColor: HouseColors.primaryGreen,
+                            attribute: "categories",
+                            onChanged: (categories) {
+                              setState(() {
+                                selectedCategories = categories.cast<String>();
+                              });
+                            },
+                            options: [
+                              FormBuilderFieldOption(
+                                  value: "lake", child: Text('Lake')),
+                              FormBuilderFieldOption(
+                                  value: "shop", child: Text('Shop')),
+                            ],
+                          ),
+                          FormBuilderTextField(
+                            keyboardType: TextInputType.multiline,
+                            minLines: 5,
+                            maxLines: null,
+                            attribute: "description",
+                            autocorrect: false,
+                            decoration: InputDecoration(
+                                labelText: "Description",
+                                helperText:
+                                    "Include pricing information or details on how to get to your venue here",
+                                border: OutlineInputBorder()),
+                            validators: [
+                              FormBuilderValidators.minLength(4),
+                              FormBuilderValidators.maxLength(1000),
+                            ],
+                          ),
+                          SizedBox(height: 16),
+                          _CoordinatesSection(),
+                          SizedBox(height: 16),
+                          _AddressSection(),
+                          SizedBox(height: 16),
+                          Visibility(
+                            visible: isLake(),
+                            child: _AmenitiesSection(),
+                          ),
+                          _ContactDetailsSection(),
+                          SizedBox(height: 16),
+                          _SocialLinksSection(),
+                          SizedBox(height: 16),
+                          Visibility(
+                            visible: isShop(),
+                            child: _FishingTypesSection(
+                                title: 'Shop: Fishing Tackle',
+                                attribute: 'fishing_tackles'),
+                          ),
+                          Visibility(
+                            visible: isLake(),
+                            child: _FishStockedSection(),
+                          ),
+                          Visibility(
+                            visible: isLake(),
+                            child: _FishingTypesSection(
+                                title: 'Lake: Fishing Types',
+                                attribute: 'fishing_types'),
+                          ),
+                          Visibility(
+                            visible: isLake(),
+                            child: _TicketsSection(),
+                          ),
+                          Visibility(
+                            visible: isLake(),
+                            child: _FishingRulesSection(),
+                          ),
+                          Visibility(
+                            visible: widget.venue.operationalHours != null,
+                            child: _OperationalHoursSection(),
+                          ),
+                          SizedBox(height: 16),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: CupertinoButton.filled(
+                              child: _imagesReadOnly ? Text('Edit Images') : Text('Keep Existing Images'),
+                              onPressed: () {
+                                setState(() {
+                                  _imagesReadOnly = !_imagesReadOnly;
+                                });
+                              },
+                            )
+                          ),
+                          FormBuilderImagePickerCustom(
+                            attribute: 'images',
+                            readOnly: _imagesReadOnly,
+                          )
+                        ],
+                      ),
+                    ),
+                    Row(
+                      children: <Widget>[
+                        MaterialButton(
+                            child: Text("Submit"),
+                            onPressed: () {
+                              if (_fbKey.currentState.saveAndValidate()) {
+                                setState(() {
+                                  _isLoading = true;
+                                });
+                                // 1. Create VenueDetailed Object
+                                var _venue = makeVenueDetailed();
+                                uploadFiles(_venue);
+                              } else {
+                                showDialog(
+                                    context: context,
+                                    barrierDismissible: false,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: Text(
+                                            'There was an issue trying to submit your form'),
+                                        content: SingleChildScrollView(
+                                          child: Text(
+                                              'Please correct any incorrect entries and try again.'),
+                                        ),
+                                        actions: <Widget>[
+                                          FlatButton(
+                                            child: Text('OK'),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                          )
+                                        ],
+                                      );
+                                    });
+                              }
+                            }),
+                        MaterialButton(
+                          child: Text("Reset"),
+                          onPressed: () {
+                            _fbKey.currentState.reset();
+                          },
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ],
+            ),
+            Visibility(
+              visible: _isLoading,
+              child: Positioned.fill(
+                child: AbsorbPointer(
+                  child: Center(
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CircularProgressIndicator(),
+                          SizedBox(height: 24),
+                          HouseTexts.heading('Submitting Changes...', alignment: Alignment.center),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ),
           ],
         ),
@@ -909,10 +973,7 @@ enum FishingTypes {
 }
 
 class _FishingTypesSection extends StatelessWidget {
-  _FishingTypesSection({
-    @required this.title,
-    @required this.attribute
-  });
+  _FishingTypesSection({@required this.title, @required this.attribute});
 
   final String title;
   final String attribute;
