@@ -874,89 +874,54 @@ class _SocialLinksSection extends StatelessWidget {
 }
 
 enum FishStock {
-  crucianCarp,
-  chub,
-  roach,
-  grassCarp,
-  perch,
-  rudd,
-  rainbowTrout,
+  barbel,
+  bream,
   brownTrout,
-  salmon,
-  koiCarp,
-  grayling,
-  zander,
-  eel,
-  orfe,
+  chub,
+  commonCarp,
+  crucianCarp,
   dace,
+  eel,
+  grassCarp,
+  grayling,
   gudgeon,
+  ide,
+  koiCarp,
+  mirrorCarp,
+  orfe,
+  perch,
+  pike,
+  rainbowTrout,
+  roach,
+  rudd,
   ruffe,
+  salmon,
+  tench,
+  welsCatfish,
+  zander
 }
 
 class _FishStockedSection extends StatelessWidget {
-  final ReCase crucianCarp = ReCase(describeEnum(FishStock.crucianCarp));
-  final ReCase chub = ReCase(describeEnum(FishStock.chub));
-  final ReCase roach = ReCase(describeEnum(FishStock.roach));
-  final ReCase grassCarp = ReCase(describeEnum(FishStock.grassCarp));
-  final ReCase perch = ReCase(describeEnum(FishStock.perch));
-  final ReCase rudd = ReCase(describeEnum(FishStock.rudd));
-  final ReCase rainbowTrout = ReCase(describeEnum(FishStock.rainbowTrout));
-  final ReCase brownTrout = ReCase(describeEnum(FishStock.brownTrout));
-  final ReCase salmon = ReCase(describeEnum(FishStock.salmon));
-  final ReCase koiCarp = ReCase(describeEnum(FishStock.koiCarp));
-  final ReCase grayling = ReCase(describeEnum(FishStock.grayling));
-  final ReCase zander = ReCase(describeEnum(FishStock.zander));
-  final ReCase eel = ReCase(describeEnum(FishStock.eel));
-  final ReCase orfe = ReCase(describeEnum(FishStock.orfe));
-  final ReCase dace = ReCase(describeEnum(FishStock.dace));
-  final ReCase gudgeon = ReCase(describeEnum(FishStock.gudgeon));
-  final ReCase ruffe = ReCase(describeEnum(FishStock.ruffe));
 
   @override
   Widget build(BuildContext context) {
+
+    List<FormBuilderFieldOption> options() {
+      final fishStocked = FishStock.values;
+      return fishStocked.map((fish) =>
+      FormBuilderFieldOption(
+        value: ReCase(describeEnum(fish)).snakeCase,
+        child: Text(ReCase(describeEnum(fish)).titleCase),
+      )
+      ).toList();
+    }
+
     return Column(
       children: <Widget>[
         HouseTexts.subtitle('Fish Stocked'),
         FormBuilderCheckboxList(
           attribute: "fish_stocked",
-          options: [
-            FormBuilderFieldOption(
-                value: crucianCarp.snakeCase,
-                child: Text(crucianCarp.titleCase)),
-            FormBuilderFieldOption(
-                value: chub.snakeCase, child: Text(chub.titleCase)),
-            FormBuilderFieldOption(
-                value: roach.snakeCase, child: Text(roach.titleCase)),
-            FormBuilderFieldOption(
-                value: grassCarp.snakeCase, child: Text(grassCarp.titleCase)),
-            FormBuilderFieldOption(
-                value: perch.snakeCase, child: Text(perch.titleCase)),
-            FormBuilderFieldOption(
-                value: rudd.snakeCase, child: Text(rudd.titleCase)),
-            FormBuilderFieldOption(
-                value: rainbowTrout.snakeCase,
-                child: Text(rainbowTrout.titleCase)),
-            FormBuilderFieldOption(
-                value: brownTrout.snakeCase, child: Text(brownTrout.titleCase)),
-            FormBuilderFieldOption(
-                value: salmon.snakeCase, child: Text(salmon.titleCase)),
-            FormBuilderFieldOption(
-                value: koiCarp.snakeCase, child: Text(koiCarp.titleCase)),
-            FormBuilderFieldOption(
-                value: grayling.snakeCase, child: Text(grayling.titleCase)),
-            FormBuilderFieldOption(
-                value: zander.snakeCase, child: Text(zander.titleCase)),
-            FormBuilderFieldOption(
-                value: eel.snakeCase, child: Text(eel.titleCase)),
-            FormBuilderFieldOption(
-                value: orfe.snakeCase, child: Text(orfe.titleCase)),
-            FormBuilderFieldOption(
-                value: dace.snakeCase, child: Text(dace.titleCase)),
-            FormBuilderFieldOption(
-                value: gudgeon.snakeCase, child: Text(gudgeon.titleCase)),
-            FormBuilderFieldOption(
-                value: ruffe.snakeCase, child: Text(ruffe.titleCase)),
-          ],
+          options: options(),
         ),
         SizedBox(height: 16),
       ],

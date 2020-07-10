@@ -21,7 +21,7 @@ class GridItem extends StatelessWidget {
             child: image,
           ),
           SizedBox(height: 8),
-          HouseTexts.heading(StringUtils.capitalize(item), alignment: Alignment.center),
+          HouseTexts.heading(item, alignment: Alignment.center),
         ]));
   }
 }

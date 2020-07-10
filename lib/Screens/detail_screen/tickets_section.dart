@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fisheri/house_texts.dart';
 import 'package:fisheri/house_colors.dart';
+import 'package:recase/recase.dart';
 
 class TicketsSection extends StatelessWidget {
   TicketsSection({this.tickets});
@@ -35,7 +36,7 @@ class _Ticket extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text(type, style: TextStyle(fontWeight: FontWeight.bold)),
+        Text(ReCase(type).titleCase, style: TextStyle(fontWeight: FontWeight.bold)),
         SizedBox(width: 16),
         Text('Price from: £39'),
         Spacer(),

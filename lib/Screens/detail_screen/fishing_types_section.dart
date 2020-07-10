@@ -2,6 +2,7 @@ import 'package:fisheri/house_texts.dart';
 import 'package:flutter/material.dart';
 import 'grid_item.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:recase/recase.dart';
 
 class FishingTypesSection extends StatelessWidget {
   FishingTypesSection(this.fishTypes);
@@ -64,7 +65,7 @@ class __FishingTypeGridItemState extends State<_FishingTypeGridItem> {
         } else {
           if (snapshot.hasError) {
             return GridItem(
-              item: widget.type,
+              item: ReCase(widget.type).titleCase,
               image: Image.asset('images/question_mark.png'),
               width: widget.itemWidth,
             );
@@ -75,7 +76,7 @@ class __FishingTypeGridItemState extends State<_FishingTypeGridItem> {
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
                 child: GridItem(
-                  item: widget.type,
+                  item: ReCase(widget.type).titleCase,
                   image: snapshot.data,
                   width: widget.itemWidth,
                 ),

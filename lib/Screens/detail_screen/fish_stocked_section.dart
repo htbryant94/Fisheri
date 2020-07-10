@@ -2,6 +2,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fisheri/house_texts.dart';
 import 'package:flutter/material.dart';
 import 'grid_item.dart';
+import 'package:recase/recase.dart';
 
 class FishStockedSection extends StatelessWidget {
   FishStockedSection(this.fishStock);
@@ -44,14 +45,12 @@ class _FishStockedGridItem extends StatefulWidget {
 class __FishStockedGridItemState extends State<_FishStockedGridItem> {
   @override
   Widget build(BuildContext context) {
-    final fishURL = widget.fish.replaceAll(" ", "_").toLowerCase();
-
     Future<Image> _getImage() async {
       String imageURL = await FirebaseStorage.instance
           .ref()
           .child('fish')
           .child('stock_new')
-          .child(('$fishURL.png'))
+          .child(('${widget.fish}.png'))
           .getDownloadURL();
       return await Image.network(imageURL);
     }
@@ -61,20 +60,20 @@ class __FishStockedGridItemState extends State<_FishStockedGridItem> {
       builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return GridItem(
-            item: widget.fish,
+            item: ReCase(widget.fish).titleCase,
             image: Image.asset('images/question_mark.png'),
             width: widget.itemWidth,
           );
         } else {
           if (snapshot.hasError) {
             return GridItem(
-              item: widget.fish,
+              item: ReCase(widget.fish).titleCase,
               image: Image.asset('images/question_mark.png'),
               width: widget.itemWidth,
             );
           } else {
             return GridItem(
-              item: widget.fish,
+              item: ReCase(widget.fish).titleCase,
               image: snapshot.data,
               width: widget.itemWidth,
             );
