@@ -78,16 +78,16 @@ class Coordinator {
             trailing: CupertinoButton(
               child: Icon(Icons.edit),
               padding: EdgeInsets.all(8),
-//              onPressed: () {
-//                Coordinator.push(
-//                    context,
-//                    currentPageTitle: 'Your Catch',
-//                    screen: CatchFormEditScreen(
-//                      catchData: catchData,
-//                    ),
-//                    screenTitle: 'New Catch'
-//                );
-//              },
+              onPressed: () {
+                Coordinator.push(
+                    context,
+                    currentPageTitle: 'Your Catch',
+                    screen: CatchFormEditScreen(
+                      catchData: catchData,
+                    ),
+                    screenTitle: 'New Catch'
+                );
+              },
             ),
           ),
           child: CatchDetailScreen(

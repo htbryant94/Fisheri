@@ -8,6 +8,16 @@ import 'package:intl/intl.dart';
 import 'package:fisheri/models/catch.dart';
 import 'package:recase/recase.dart';
 
+class FishWeight {
+  FishWeight({
+    this.pounds,
+    this.ounces,
+});
+
+  final int pounds;
+  final int ounces;
+}
+
 class CatchFormConstants {
   static const String typeOfFish = "fish_type";
   static const String numberOfFish = "num_of_fish";
@@ -93,6 +103,19 @@ class _CatchFormEditScreenState extends State<CatchFormEditScreen> {
       return null;
     };
 
+    double convertGramsToOunces(double grams) {
+      return grams / 28.34952;
+    }
+
+    FishWeight convertGramsToPoundsAndOunces(double grams) {
+      if (grams != null) {
+        double ounces = convertGramsToOunces(grams);
+        int pounds = (ounces / 16).floor();
+        int relativeOunces = (ounces % 16).floor();
+        return FishWeight(pounds: pounds, ounces: relativeOunces);
+      }
+    }
+
     return Scaffold(
       body: SafeArea(
         child: ListView(
@@ -104,7 +127,12 @@ class _CatchFormEditScreenState extends State<CatchFormEditScreen> {
                   key: _fbKey,
                   initialValue: {
                     'catch_type': catchTypeFromString(widget.catchData.catchType),
-                    'fish_type': widget.catchData.typeOfFish,
+                    'fish_weight_whole': '${convertGramsToPoundsAndOunces(widget.catchData.weight).pounds}',
+                    'fish_weight_fraction': '${convertGramsToPoundsAndOunces(widget.catchData.weight).ounces}',
+                    'fish_type': ReCase(widget.catchData.typeOfFish).titleCase,
+                    'weather_condition': widget.catchData.weatherCondition,
+                    'wind_direction': widget.catchData.windDirection,
+                    'notes': widget.catchData.notes,
                   },
                   autovalidate: true,
                   child: Column(
@@ -156,6 +184,7 @@ class _CatchFormEditScreenState extends State<CatchFormEditScreen> {
                         child: _TimePickerBuilder(
                           title: 'Time',
                           attribute: 'time',
+                          initialValue: widget.catchData.time != null ? DateFormat('HH:mm').parse(widget.catchData.time) : null,
                         ),
                       ),
                       CatchReportVisibility(
@@ -179,7 +208,7 @@ class _CatchFormEditScreenState extends State<CatchFormEditScreen> {
                       CatchReportVisibility(
                           catchType: selectedCatchType,
                           supportedCatchTypes: CatchType.values,
-                          child: _TemperatureSlider()
+                          child: _TemperatureSlider(initialValue: widget.catchData.temperature),
                       ),
                       CatchReportVisibility(
                         catchType: selectedCatchType,
@@ -356,10 +385,12 @@ class _TimePickerBuilder extends StatelessWidget {
   _TimePickerBuilder({
     @required this.title,
     @required this.attribute,
+    this.initialValue,
   });
 
   final String title;
   final String attribute;
+  final DateTime initialValue;
 
   @override
   Widget build(BuildContext context) {
@@ -369,6 +400,7 @@ class _TimePickerBuilder extends StatelessWidget {
         FormBuilderDateTimePicker(
           attribute: attribute,
           inputType: InputType.time,
+          initialValue: initialValue,
         )
       ],
     );
@@ -430,6 +462,12 @@ class _DropDownMenuBuilder extends StatelessWidget {
 }
 
 class _TemperatureSlider extends StatelessWidget {
+  _TemperatureSlider({
+    this.initialValue,
+});
+
+  final double initialValue;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -437,7 +475,7 @@ class _TemperatureSlider extends StatelessWidget {
         HouseTexts.heading('Temperature'),
         FormBuilderSlider(
           attribute: 'temperature',
-          initialValue: 20,
+          initialValue: initialValue ?? 0,
           max: 40,
           min: 0,
         )

@@ -3,7 +3,6 @@ import 'package:fisheri/Screens/detail_screen/title_section.dart';
 import 'package:flutter/material.dart';
 import 'package:fisheri/models/catch.dart';
 import 'package:fisheri/Screens/detail_screen/image_carousel.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:recase/recase.dart';
 
@@ -13,7 +12,7 @@ class CatchDetailScreen extends StatelessWidget {
   });
 
   final Catch data;
-  
+
   String convertGramsToPoundsAndOunces(double grams) {
     if (grams != null) {
       double ounces = convertGramsToOunces(grams);
@@ -21,7 +20,6 @@ class CatchDetailScreen extends StatelessWidget {
       int relativeOunces = (ounces % 16).floor();
       return "$pounds Ibs, $relativeOunces oz";
     }
-    return "No information";
   }
 
   double convertGramsToOunces(double grams) {
