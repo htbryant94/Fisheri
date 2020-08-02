@@ -417,252 +417,260 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
 
     return Scaffold(
       body: SafeArea(
-        child: Stack(
-          children: [
-            ListView(
-              padding: EdgeInsets.fromLTRB(24, 24, 24, 100),
-              children: <Widget>[
-                Column(
-                  children: <Widget>[
-                    FormBuilder(
-                      key: _fbKey,
-                      autovalidate: true,
-                      initialValue: {
-                        VenueDetailedConstants.name: widget.venue.name,
-                        VenueDetailedConstants.categories:
-                            widget.venue.categories,
-                        VenueDetailedConstants.description:
-                            widget.venue.description,
-                        'coordinates_latitude':
-                            widget.venue.coordinates.latitude.toString(),
-                        'coordinates_longitude':
-                            widget.venue.coordinates.longitude.toString(),
-                        'address_street': widget.venue.address.street,
-                        'address_town': widget.venue.address.town,
-                        'address_county': widget.venue.address.county,
-                        'address_postcode': widget.venue.address.postcode,
-                        // TODO: Number of Lakes,
-                        'amenities_list': widget.venue.amenities,
-                        'contact_email': widget.venue.contactDetails.email,
-                        'contact_phone': widget.venue.contactDetails.phone,
-                        'contact_url': widget.venue.websiteURL,
-                        'social_facebook': widget.venue.social.facebook,
-                        'social_instagram': widget.venue.social.instagram,
-                        'social_twitter': widget.venue.social.twitter,
-                        'social_youtube': widget.venue.social.youtube,
-                        'fish_stocked': widget.venue.fishStocked,
-                        'fishing_types': widget.venue.fishingTypes,
-                        'tickets': widget.venue.tickets,
-                        'fishing_rules': widget.venue.fishingRules,
-                        'operational_hours_enabled': widget.venue.operationalHours != null,
-                        'fishing_tackles': widget.venue.fishingTackles,
-                        'images': widget.venue.images,
-                      },
-                      child: Column(
-                        children: <Widget>[
-                          _OverviewSection(),
-                          SizedBox(height: 16),
-                          FormBuilderCheckboxList(
-                            decoration:
-                                InputDecoration(labelText: "Categories *"),
-                            activeColor: HouseColors.accentGreen,
-                            checkColor: HouseColors.primaryGreen,
-                            attribute: "categories",
-                            onChanged: (categories) {
-                              setState(() {
-                                selectedCategories = categories.cast<String>();
-                              });
-                            },
-                            options: [
-                              FormBuilderFieldOption(
-                                  value: "lake", child: Text('Lake')),
-                              FormBuilderFieldOption(
-                                  value: "shop", child: Text('Shop')),
-                            ],
-                          ),
-                          FormBuilderTextField(
-                            keyboardType: TextInputType.multiline,
-                            minLines: 5,
-                            maxLines: null,
-                            attribute: "description",
-                            autocorrect: false,
-                            decoration: InputDecoration(
-                                labelText: "Description",
-                                helperText:
-                                    "Include pricing information or details on how to get to your venue here",
-                                border: OutlineInputBorder()),
-                            validators: [
-                              FormBuilderValidators.minLength(4),
-                              FormBuilderValidators.maxLength(1000),
-                            ],
-                          ),
-                          SizedBox(height: 16),
-                          _CoordinatesSection(),
-                          SizedBox(height: 16),
-                          _AddressSection(),
-                          SizedBox(height: 16),
-                          Visibility(
-                            visible: isLake(),
-                            child: _AmenitiesSection(),
-                          ),
-                          _ContactDetailsSection(),
-                          SizedBox(height: 16),
-                          _SocialLinksSection(),
-                          SizedBox(height: 16),
-                          Visibility(
-                            visible: isShop(),
-                            child: _FishingTypesSection(
-                                title: 'Shop: Fishing Tackle',
-                                attribute: 'fishing_tackles'),
-                          ),
-                          Visibility(
-                            visible: isLake(),
-                            child: _FishStockedSection(),
-                          ),
-                          Visibility(
-                            visible: isLake(),
-                            child: _FishingTypesSection(
-                                title: 'Lake: Fishing Types',
-                                attribute: 'fishing_types'),
-                          ),
-                          Visibility(
-                            visible: isLake(),
-                            child: _TicketsSection(),
-                          ),
-                          Visibility(
-                            visible: isLake(),
-                            child: _FishingRulesSection(),
-                          ),
-                          FormBuilderSwitch(
-                            attribute: 'operational_hours_enabled',
-                            label: HouseTexts.subheading('Provide Opening times'),
-                            onChanged: (enabled) {
-                              setState(() {
-                                _operationalHoursEnabled = enabled;
-                              });
-                            },
-                          ),
-                          SizedBox(height: 16),
-                          Visibility(
-                            visible: _operationalHoursEnabled,
-                            child: OperationalHoursField(
-                              hoursOfOperation: widget.venue.operationalHours,
-                              onChanged: (weekDayState) {
-                                switch (weekDayState.dayOfTheWeek) {
-                                  case DayOfTheWeek.monday:
-                                    _isMondayOpen = weekDayState.isOpen;
-                                    break;
-                                  case DayOfTheWeek.tuesday:
-                                    _isTuesdayOpen = weekDayState.isOpen;
-                                    break;
-                                  case DayOfTheWeek.wednesday:
-                                    _isWednesdayOpen = weekDayState.isOpen;
-                                    break;
-                                  case DayOfTheWeek.thursday:
-                                    _isThursdayOpen = weekDayState.isOpen;
-                                    break;
-                                  case DayOfTheWeek.friday:
-                                    _isFridayOpen = weekDayState.isOpen;
-                                    break;
-                                  case DayOfTheWeek.saturday:
-                                    _isSaturdayOpen = weekDayState.isOpen;
-                                    break;
-                                  case DayOfTheWeek.sunday:
-                                    _isSundayOpen = weekDayState.isOpen;
-                                    break;
-                                }
+        child: Listener(
+          onPointerDown: (_) {
+            FocusScopeNode currentFocus = FocusScope.of(context);
+            if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
+              currentFocus.focusedChild.unfocus();
+            }
+          },
+          child: Stack(
+            children: [
+              ListView(
+                padding: EdgeInsets.fromLTRB(24, 24, 24, 100),
+                children: <Widget>[
+                  Column(
+                    children: <Widget>[
+                      FormBuilder(
+                        key: _fbKey,
+                        autovalidate: true,
+                        initialValue: {
+                          VenueDetailedConstants.name: widget.venue.name,
+                          VenueDetailedConstants.categories:
+                              widget.venue.categories,
+                          VenueDetailedConstants.description:
+                              widget.venue.description,
+                          'coordinates_latitude':
+                              widget.venue.coordinates.latitude.toString(),
+                          'coordinates_longitude':
+                              widget.venue.coordinates.longitude.toString(),
+                          'address_street': widget.venue.address.street,
+                          'address_town': widget.venue.address.town,
+                          'address_county': widget.venue.address.county,
+                          'address_postcode': widget.venue.address.postcode,
+                          // TODO: Number of Lakes,
+                          'amenities_list': widget.venue.amenities,
+                          'contact_email': widget.venue.contactDetails.email,
+                          'contact_phone': widget.venue.contactDetails.phone,
+                          'contact_url': widget.venue.websiteURL,
+                          'social_facebook': widget.venue.social.facebook,
+                          'social_instagram': widget.venue.social.instagram,
+                          'social_twitter': widget.venue.social.twitter,
+                          'social_youtube': widget.venue.social.youtube,
+                          'fish_stocked': widget.venue.fishStocked,
+                          'fishing_types': widget.venue.fishingTypes,
+                          'tickets': widget.venue.tickets,
+                          'fishing_rules': widget.venue.fishingRules,
+                          'operational_hours_enabled': widget.venue.operationalHours != null,
+                          'fishing_tackles': widget.venue.fishingTackles,
+                          'images': widget.venue.images,
+                        },
+                        child: Column(
+                          children: <Widget>[
+                            _OverviewSection(),
+                            SizedBox(height: 16),
+                            FormBuilderCheckboxList(
+                              decoration:
+                                  InputDecoration(labelText: "Categories *"),
+                              activeColor: HouseColors.accentGreen,
+                              checkColor: HouseColors.primaryGreen,
+                              attribute: "categories",
+                              onChanged: (categories) {
+                                setState(() {
+                                  selectedCategories = categories.cast<String>();
+                                });
+                              },
+                              options: [
+                                FormBuilderFieldOption(
+                                    value: "lake", child: Text('Lake')),
+                                FormBuilderFieldOption(
+                                    value: "shop", child: Text('Shop')),
+                              ],
+                            ),
+                            FormBuilderTextField(
+                              keyboardType: TextInputType.multiline,
+                              minLines: 5,
+                              maxLines: null,
+                              attribute: "description",
+                              autocorrect: false,
+                              decoration: InputDecoration(
+                                  labelText: "Description",
+                                  helperText:
+                                      "Include pricing information or details on how to get to your venue here",
+                                  border: OutlineInputBorder()),
+                              validators: [
+                                FormBuilderValidators.minLength(4),
+                                FormBuilderValidators.maxLength(1000),
+                              ],
+                            ),
+                            SizedBox(height: 16),
+                            _CoordinatesSection(),
+                            SizedBox(height: 16),
+                            _AddressSection(),
+                            SizedBox(height: 16),
+                            Visibility(
+                              visible: isLake(),
+                              child: _AmenitiesSection(),
+                            ),
+                            _ContactDetailsSection(),
+                            SizedBox(height: 16),
+                            _SocialLinksSection(),
+                            SizedBox(height: 16),
+                            Visibility(
+                              visible: isShop(),
+                              child: _FishingTypesSection(
+                                  title: 'Shop: Fishing Tackle',
+                                  attribute: 'fishing_tackles'),
+                            ),
+                            Visibility(
+                              visible: isLake(),
+                              child: _FishStockedSection(),
+                            ),
+                            Visibility(
+                              visible: isLake(),
+                              child: _FishingTypesSection(
+                                  title: 'Lake: Fishing Types',
+                                  attribute: 'fishing_types'),
+                            ),
+                            Visibility(
+                              visible: isLake(),
+                              child: _TicketsSection(),
+                            ),
+                            Visibility(
+                              visible: isLake(),
+                              child: _FishingRulesSection(),
+                            ),
+                            FormBuilderSwitch(
+                              attribute: 'operational_hours_enabled',
+                              label: HouseTexts.subheading('Provide Opening times'),
+                              onChanged: (enabled) {
+                                setState(() {
+                                  _operationalHoursEnabled = enabled;
+                                });
                               },
                             ),
-                          ),
-                          SizedBox(height: 16),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: CupertinoButton.filled(
-                              child: _imagesReadOnly ? Text('Edit Images') : Text('Keep Existing Images'),
-                              onPressed: () {
-                                setState(() {
-                                  _imagesReadOnly = !_imagesReadOnly;
-                                });
-                              },
+                            SizedBox(height: 16),
+                            Visibility(
+                              visible: _operationalHoursEnabled,
+                              child: OperationalHoursField(
+                                hoursOfOperation: widget.venue.operationalHours,
+                                onChanged: (weekDayState) {
+                                  switch (weekDayState.dayOfTheWeek) {
+                                    case DayOfTheWeek.monday:
+                                      _isMondayOpen = weekDayState.isOpen;
+                                      break;
+                                    case DayOfTheWeek.tuesday:
+                                      _isTuesdayOpen = weekDayState.isOpen;
+                                      break;
+                                    case DayOfTheWeek.wednesday:
+                                      _isWednesdayOpen = weekDayState.isOpen;
+                                      break;
+                                    case DayOfTheWeek.thursday:
+                                      _isThursdayOpen = weekDayState.isOpen;
+                                      break;
+                                    case DayOfTheWeek.friday:
+                                      _isFridayOpen = weekDayState.isOpen;
+                                      break;
+                                    case DayOfTheWeek.saturday:
+                                      _isSaturdayOpen = weekDayState.isOpen;
+                                      break;
+                                    case DayOfTheWeek.sunday:
+                                      _isSundayOpen = weekDayState.isOpen;
+                                      break;
+                                  }
+                                },
+                              ),
+                            ),
+                            SizedBox(height: 16),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: CupertinoButton.filled(
+                                child: _imagesReadOnly ? Text('Edit Images') : Text('Keep Existing Images'),
+                                onPressed: () {
+                                  setState(() {
+                                    _imagesReadOnly = !_imagesReadOnly;
+                                  });
+                                },
+                              )
+                            ),
+                            FormBuilderImagePickerCustom(
+                              attribute: 'images',
+                              readOnly: _imagesReadOnly,
                             )
+                          ],
+                        ),
+                      ),
+                      Row(
+                        children: <Widget>[
+                          MaterialButton(
+                              child: Text("Submit"),
+                              onPressed: () {
+                                if (_fbKey.currentState.saveAndValidate()) {
+                                  print('FORM VALIDATED');
+                                  setState(() {
+                                    _isLoading = true;
+                                  });
+                                  // 1. Create VenueDetailed Object
+                                  var _venue = makeVenueDetailed();
+                                  uploadFiles(_venue);
+                                } else {
+                                  showDialog(
+                                      context: context,
+                                      barrierDismissible: false,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Text(
+                                              'There was an issue trying to submit your form'),
+                                          content: SingleChildScrollView(
+                                            child: Text(
+                                                'Please correct any incorrect entries and try again.'),
+                                          ),
+                                          actions: <Widget>[
+                                            FlatButton(
+                                              child: Text('OK'),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            )
+                                          ],
+                                        );
+                                      });
+                                }
+                              }),
+                          MaterialButton(
+                            child: Text("Reset"),
+                            onPressed: () {
+                              _fbKey.currentState.reset();
+                            },
                           ),
-                          FormBuilderImagePickerCustom(
-                            attribute: 'images',
-                            readOnly: _imagesReadOnly,
-                          )
                         ],
                       ),
-                    ),
-                    Row(
-                      children: <Widget>[
-                        MaterialButton(
-                            child: Text("Submit"),
-                            onPressed: () {
-                              if (_fbKey.currentState.saveAndValidate()) {
-                                print('FORM VALIDATED');
-                                setState(() {
-                                  _isLoading = true;
-                                });
-                                // 1. Create VenueDetailed Object
-                                var _venue = makeVenueDetailed();
-                                uploadFiles(_venue);
-                              } else {
-                                showDialog(
-                                    context: context,
-                                    barrierDismissible: false,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title: Text(
-                                            'There was an issue trying to submit your form'),
-                                        content: SingleChildScrollView(
-                                          child: Text(
-                                              'Please correct any incorrect entries and try again.'),
-                                        ),
-                                        actions: <Widget>[
-                                          FlatButton(
-                                            child: Text('OK'),
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                          )
-                                        ],
-                                      );
-                                    });
-                              }
-                            }),
-                        MaterialButton(
-                          child: Text("Reset"),
-                          onPressed: () {
-                            _fbKey.currentState.reset();
-                          },
+                    ],
+                  ),
+                ],
+              ),
+              Visibility(
+                visible: _isLoading,
+                child: Positioned.fill(
+                  child: AbsorbPointer(
+                    child: Center(
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CircularProgressIndicator(),
+                            SizedBox(height: 24),
+                            HouseTexts.heading('Submitting Changes...', alignment: Alignment.center),
+                          ],
                         ),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            Visibility(
-              visible: _isLoading,
-              child: Positioned.fill(
-                child: AbsorbPointer(
-                  child: Center(
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CircularProgressIndicator(),
-                          SizedBox(height: 24),
-                          HouseTexts.heading('Submitting Changes...', alignment: Alignment.center),
-                        ],
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

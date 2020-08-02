@@ -363,195 +363,203 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
 
     return Scaffold(
       body: SafeArea(
-        child: ListView(
-          padding: EdgeInsets.fromLTRB(24, 24, 24, 100),
-          children: <Widget>[
-            Column(
-              children: <Widget>[
-                FormBuilder(
-                  key: _fbKey,
-                  initialValue: {
-                    'date': DateTime.now(),
-                    'accept_terms': false,
-                  },
-                  child: Column(
-                    children: <Widget>[
-                      _OverviewSection(),
-                      SizedBox(height: 16),
-                      FormBuilderCheckboxList(
-                        decoration: InputDecoration(labelText: "Categories *"),
-                        activeColor: HouseColors.accentGreen,
-                        checkColor: HouseColors.primaryGreen,
-                        attribute: "categories",
-                        onChanged: (categories) {
-                          setState(() {
-                            selectedCategories = categories.cast<String>();
-                          });
-                        },
-                        options: [
-                          FormBuilderFieldOption(value: "lake", child: Text('Lake')),
-                          FormBuilderFieldOption(value: "shop", child: Text('Shop')),
-                        ],
-                      ),
-                      FormBuilderTextField(
-                        keyboardType: TextInputType.multiline,
-                        minLines: 5,
-                        maxLines: null,
-                        attribute: "description",
-                        autocorrect: false,
-                        decoration: InputDecoration(
-                            labelText: "Description",
-                            helperText:
-                            "Include pricing information or details on how to get to your venue here",
-                            border: OutlineInputBorder()),
-                        validators: [
-                          FormBuilderValidators.minLength(4),
-                          FormBuilderValidators.maxLength(1000),
-                        ],
-                      ),
-                      SizedBox(height: 16),
-                      _CoordinatesSection(),
-                      SizedBox(height: 16),
-                      _AddressSection(),
-                      SizedBox(height: 16),
-                      Visibility(
-                        visible: isLake(),
-                        child: _AmenitiesSection(),
-                      ),
-                      _ContactDetailsSection(),
-                      SizedBox(height: 16),
-                      _SocialLinksSection(),
-                      SizedBox(height: 16),
-                      Visibility(
-                        visible: isShop(),
-                        child: _FishingTypesSection(title: 'Shop: Fishing Tackle', attribute: 'fishing_tackles'),
-                      ),
-                      Visibility(
-                        visible: isLake(),
-                        child: _FishStockedSection(),
-                      ),
-                      Visibility(
-                        visible: isLake(),
-                        child: _FishingTypesSection(title: 'Lake: Fishing Types', attribute: 'fishing_types'),
-                      ),
-                      Visibility(
-                        visible: isLake(),
-                        child: _TicketsSection(),
-                      ),
-                      Visibility(
-                        visible: isLake(),
-                        child: _FishingRulesSection(),
-                      ),
-                      FormBuilderSwitch(
-                        attribute: 'operational_hours_enabled',
-                        label: HouseTexts.subheading('Provide Opening times'),
-                        onChanged: (enabled) {
-                          setState(() {
-                            _operationalHoursEnabled = enabled;
-                          });
-                        },
-                      ),
-                      SizedBox(height: 16),
-                      Visibility(
-                        visible: _operationalHoursEnabled,
-                        child: OperationalHoursField(
-                          hoursOfOperation: null,
-                          onChanged: (weekDayState) {
-                            switch (weekDayState.dayOfTheWeek) {
-                              case DayOfTheWeek.monday:
-                                _isMondayOpen = weekDayState.isOpen;
-                                break;
-                              case DayOfTheWeek.tuesday:
-                                _isTuesdayOpen = weekDayState.isOpen;
-                                break;
-                              case DayOfTheWeek.wednesday:
-                                _isWednesdayOpen = weekDayState.isOpen;
-                                break;
-                              case DayOfTheWeek.thursday:
-                                _isThursdayOpen = weekDayState.isOpen;
-                                break;
-                              case DayOfTheWeek.friday:
-                                _isFridayOpen = weekDayState.isOpen;
-                                break;
-                              case DayOfTheWeek.saturday:
-                                _isSaturdayOpen = weekDayState.isOpen;
-                                break;
-                              case DayOfTheWeek.sunday:
-                                _isSundayOpen = weekDayState.isOpen;
-                                break;
-                            }
+        child: Listener(
+          onPointerDown: (_) {
+            FocusScopeNode currentFocus = FocusScope.of(context);
+            if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
+              currentFocus.focusedChild.unfocus();
+            }
+          },
+          child: ListView(
+            padding: EdgeInsets.fromLTRB(24, 24, 24, 100),
+            children: <Widget>[
+              Column(
+                children: <Widget>[
+                  FormBuilder(
+                    key: _fbKey,
+                    initialValue: {
+                      'date': DateTime.now(),
+                      'accept_terms': false,
+                    },
+                    child: Column(
+                      children: <Widget>[
+                        _OverviewSection(),
+                        SizedBox(height: 16),
+                        FormBuilderCheckboxList(
+                          decoration: InputDecoration(labelText: "Categories *"),
+                          activeColor: HouseColors.accentGreen,
+                          checkColor: HouseColors.primaryGreen,
+                          attribute: "categories",
+                          onChanged: (categories) {
+                            setState(() {
+                              selectedCategories = categories.cast<String>();
+                            });
+                          },
+                          options: [
+                            FormBuilderFieldOption(value: "lake", child: Text('Lake')),
+                            FormBuilderFieldOption(value: "shop", child: Text('Shop')),
+                          ],
+                        ),
+                        FormBuilderTextField(
+                          keyboardType: TextInputType.multiline,
+                          minLines: 5,
+                          maxLines: null,
+                          attribute: "description",
+                          autocorrect: false,
+                          decoration: InputDecoration(
+                              labelText: "Description",
+                              helperText:
+                              "Include pricing information or details on how to get to your venue here",
+                              border: OutlineInputBorder()),
+                          validators: [
+                            FormBuilderValidators.minLength(4),
+                            FormBuilderValidators.maxLength(1000),
+                          ],
+                        ),
+                        SizedBox(height: 16),
+                        _CoordinatesSection(),
+                        SizedBox(height: 16),
+                        _AddressSection(),
+                        SizedBox(height: 16),
+                        Visibility(
+                          visible: isLake(),
+                          child: _AmenitiesSection(),
+                        ),
+                        _ContactDetailsSection(),
+                        SizedBox(height: 16),
+                        _SocialLinksSection(),
+                        SizedBox(height: 16),
+                        Visibility(
+                          visible: isShop(),
+                          child: _FishingTypesSection(title: 'Shop: Fishing Tackle', attribute: 'fishing_tackles'),
+                        ),
+                        Visibility(
+                          visible: isLake(),
+                          child: _FishStockedSection(),
+                        ),
+                        Visibility(
+                          visible: isLake(),
+                          child: _FishingTypesSection(title: 'Lake: Fishing Types', attribute: 'fishing_types'),
+                        ),
+                        Visibility(
+                          visible: isLake(),
+                          child: _TicketsSection(),
+                        ),
+                        Visibility(
+                          visible: isLake(),
+                          child: _FishingRulesSection(),
+                        ),
+                        FormBuilderSwitch(
+                          attribute: 'operational_hours_enabled',
+                          label: HouseTexts.subheading('Provide Opening times'),
+                          onChanged: (enabled) {
+                            setState(() {
+                              _operationalHoursEnabled = enabled;
+                            });
                           },
                         ),
+                        SizedBox(height: 16),
+                        Visibility(
+                          visible: _operationalHoursEnabled,
+                          child: OperationalHoursField(
+                            hoursOfOperation: null,
+                            onChanged: (weekDayState) {
+                              switch (weekDayState.dayOfTheWeek) {
+                                case DayOfTheWeek.monday:
+                                  _isMondayOpen = weekDayState.isOpen;
+                                  break;
+                                case DayOfTheWeek.tuesday:
+                                  _isTuesdayOpen = weekDayState.isOpen;
+                                  break;
+                                case DayOfTheWeek.wednesday:
+                                  _isWednesdayOpen = weekDayState.isOpen;
+                                  break;
+                                case DayOfTheWeek.thursday:
+                                  _isThursdayOpen = weekDayState.isOpen;
+                                  break;
+                                case DayOfTheWeek.friday:
+                                  _isFridayOpen = weekDayState.isOpen;
+                                  break;
+                                case DayOfTheWeek.saturday:
+                                  _isSaturdayOpen = weekDayState.isOpen;
+                                  break;
+                                case DayOfTheWeek.sunday:
+                                  _isSundayOpen = weekDayState.isOpen;
+                                  break;
+                              }
+                            },
+                          ),
+                        ),
+                        SizedBox(height: 16),
+                        FormBuilderImagePickerCustom(
+                          attribute: 'images',
+                        )
+                      ],
+                    ),
+                  ),
+                  Row(
+                    children: <Widget>[
+                      MaterialButton(
+                          child: Text("Submit"),
+                          onPressed: () {
+                            Future postNewVenue(VenueDetailed venue, Map<String, dynamic> data) async {
+                              await Firestore.instance
+                                  .collection('venues_detail')
+                                  .add(data).then((doc) {
+                                final double _latitude = double.parse(
+                                    _valueFor(attribute: 'coordinates_latitude'));
+                                assert(_latitude is double);
+                                final double _longitude = double.parse(
+                                    _valueFor(attribute: 'coordinates_longitude'));
+                                assert(_longitude is double);
+
+                                uploadFiles(venue, doc.documentID);
+                              });
+                            }
+
+                            if (_fbKey.currentState.saveAndValidate()) {
+                              var _venue = makeVenueDetailed();
+                              var _venueJSON = VenueDetailedJSONSerializer().toMap(_venue);
+                              _venueJSON = addCoordinatesIfValid(_venueJSON);
+                              print(_venueJSON);
+
+                              postNewVenue(_venue, _venueJSON);
+                            } else {
+                              showDialog(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text(
+                                          'There was an issue trying to submit your form'),
+                                      content: SingleChildScrollView(
+                                        child: Text(
+                                            'Please correct any incorrect entries and try again.'),
+                                      ),
+                                      actions: <Widget>[
+                                        FlatButton(
+                                          child: Text('OK'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        )
+                                      ],
+                                    );
+                                  });
+                            }
+                          }),
+                      MaterialButton(
+                        child: Text("Reset"),
+                        onPressed: () {
+                          _fbKey.currentState.reset();
+                        },
                       ),
-                      SizedBox(height: 16),
-                      FormBuilderImagePickerCustom(
-                        attribute: 'images',
-                      )
                     ],
                   ),
-                ),
-                Row(
-                  children: <Widget>[
-                    MaterialButton(
-                        child: Text("Submit"),
-                        onPressed: () {
-                          Future postNewVenue(VenueDetailed venue, Map<String, dynamic> data) async {
-                            await Firestore.instance
-                                .collection('venues_detail')
-                                .add(data).then((doc) {
-                              final double _latitude = double.parse(
-                                  _valueFor(attribute: 'coordinates_latitude'));
-                              assert(_latitude is double);
-                              final double _longitude = double.parse(
-                                  _valueFor(attribute: 'coordinates_longitude'));
-                              assert(_longitude is double);
-
-                              uploadFiles(venue, doc.documentID);
-                            });
-                          }
-
-                          if (_fbKey.currentState.saveAndValidate()) {
-                            var _venue = makeVenueDetailed();
-                            var _venueJSON = VenueDetailedJSONSerializer().toMap(_venue);
-                            _venueJSON = addCoordinatesIfValid(_venueJSON);
-                            print(_venueJSON);
-
-                            postNewVenue(_venue, _venueJSON);
-                          } else {
-                            showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: Text(
-                                        'There was an issue trying to submit your form'),
-                                    content: SingleChildScrollView(
-                                      child: Text(
-                                          'Please correct any incorrect entries and try again.'),
-                                    ),
-                                    actions: <Widget>[
-                                      FlatButton(
-                                        child: Text('OK'),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      )
-                                    ],
-                                  );
-                                });
-                          }
-                        }),
-                    MaterialButton(
-                      child: Text("Reset"),
-                      onPressed: () {
-                        _fbKey.currentState.reset();
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
