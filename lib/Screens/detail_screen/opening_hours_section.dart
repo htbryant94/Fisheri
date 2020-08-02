@@ -1,6 +1,7 @@
 import 'package:fisheri/models/hours_of_operation.dart';
 import 'package:flutter/material.dart';
 import 'package:fisheri/house_texts.dart';
+import 'package:flutter/services.dart';
 
 class OpeningHoursSection extends StatelessWidget {
   OpeningHoursSection({
@@ -8,6 +9,14 @@ class OpeningHoursSection extends StatelessWidget {
   });
 
   final HoursOfOperation openingHours;
+
+  Widget _buildOpeningHoursRow({String day, OpeningHoursDay openingHours}) {
+    return _OpeningHoursRow(
+      day: day,
+      openTime: openingHours != null ? openingHours.open : "Closed",
+      closeTime: openingHours != null ? openingHours.close : "Closed",
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,41 +26,13 @@ class OpeningHoursSection extends StatelessWidget {
         child: Column(children: [
           HouseTexts.heading('Opening Hours'),
           SizedBox(height: 16),
-          _OpeningHoursRow(
-            day: 'Monday',
-            openTime: openingHours.monday.open,
-            closeTime: openingHours.monday.close,
-          ),
-          _OpeningHoursRow(
-            day: 'Tuesday',
-            openTime: openingHours.tuesday.open,
-            closeTime: openingHours.tuesday.close,
-          ),
-          _OpeningHoursRow(
-            day: 'Wednesday',
-            openTime: openingHours.wednesday.open,
-            closeTime: openingHours.wednesday.close,
-          ),
-          _OpeningHoursRow(
-            day: 'Thursday',
-            openTime: openingHours.thursday.open,
-            closeTime: openingHours.thursday.close,
-          ),
-          _OpeningHoursRow(
-            day: 'Friday',
-            openTime: openingHours.friday.open,
-            closeTime: openingHours.friday.close,
-          ),
-          _OpeningHoursRow(
-            day: 'Saturday',
-            openTime: openingHours.saturday.open,
-            closeTime: openingHours.saturday.close,
-          ),
-          _OpeningHoursRow(
-            day: 'Sunday',
-            openTime: openingHours.sunday.open,
-            closeTime: openingHours.sunday.close,
-          ),
+          _buildOpeningHoursRow(day: 'Monday', openingHours: openingHours != null ? openingHours.monday : null),
+          _buildOpeningHoursRow(day: 'Tuesday', openingHours: openingHours != null ? openingHours.tuesday : null),
+          _buildOpeningHoursRow(day: 'Wednesday', openingHours: openingHours != null ? openingHours.wednesday : null),
+          _buildOpeningHoursRow(day: 'Thursday', openingHours: openingHours != null ? openingHours.thursday : null),
+          _buildOpeningHoursRow(day: 'Friday', openingHours: openingHours != null ? openingHours.friday : null),
+          _buildOpeningHoursRow(day: 'Saturday', openingHours: openingHours != null ? openingHours.saturday : null),
+          _buildOpeningHoursRow(day: 'Sunday', openingHours: openingHours != null ? openingHours.sunday : null),
         ]),
       );
     } else {
@@ -78,7 +59,7 @@ class _OpeningHoursRow extends StatelessWidget {
     if (openTime == "Closed" || closeTime == "Closed") {
       return HouseTexts.custom(text: "Closed", color: Colors.red);
     } else if (openTime != null && closeTime != null) {
-      return HouseTexts.custom(text:'$openTime - $closeTime', fontWeight: FontWeight.w300);
+      return HouseTexts.custom(text:'$openTime - $closeTime', fontWeight: FontWeight.w400);
     } else {
       return HouseTexts.custom(text: 'Not Specified', color: Colors.black45);
     }

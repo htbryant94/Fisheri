@@ -11,12 +11,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fisheri/opening_hours_list.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:fisheri/house_texts.dart';
 import 'package:recase/recase.dart';
 import 'package:fisheri/Components/form_builder_image_picker_custom.dart';
 import 'dart:io';
+import 'package:intl/intl.dart';
+import 'package:fisheri/Components/form_fields/operational_hours_field.dart';
 
 class ImageType {
   ImageType({this.type, this.url, this.file});
@@ -63,10 +64,31 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
   bool _isLoading = false;
   bool _imagesReadOnly = true;
 
+  bool _operationalHoursEnabled;
+  bool _isMondayOpen = false;
+  bool _isTuesdayOpen = false;
+  bool _isWednesdayOpen = false;
+  bool _isThursdayOpen = false;
+  bool _isFridayOpen = false;
+  bool _isSaturdayOpen = false;
+  bool _isSundayOpen = false;
+
   @override
   void initState() {
     super.initState();
     selectedCategories = widget.venue.categories.cast<String>();
+    _operationalHoursEnabled = widget.venue.operationalHours != null;
+    print('EDITING VENUE WITH ID: ${widget.venueID}');
+
+    if (widget.venue.operationalHours != null) {
+      _isMondayOpen = widget.venue.operationalHours.monday != null;
+      _isTuesdayOpen = widget.venue.operationalHours.tuesday != null;
+      _isWednesdayOpen = widget.venue.operationalHours.wednesday != null;
+      _isThursdayOpen = widget.venue.operationalHours.thursday != null;
+      _isFridayOpen = widget.venue.operationalHours.friday != null;
+      _isSaturdayOpen = widget.venue.operationalHours.saturday != null;
+      _isSundayOpen = widget.venue.operationalHours.sunday != null;
+    }
   }
 
   bool isLake() {
@@ -84,35 +106,78 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
     };
 
     HoursOfOperation getOperationalHours() {
+      OpeningHoursDay monday;
+      OpeningHoursDay tuesday;
+      OpeningHoursDay wednesday;
+      OpeningHoursDay thursday;
+      OpeningHoursDay friday;
+      OpeningHoursDay saturday;
+      OpeningHoursDay sunday;
+
+      if(_isMondayOpen) {
+        print('monday');
+        monday = OpeningHoursDay(
+          open: DateFormat('HH:mm').format(_valueFor(attribute: 'monday_open')),
+          close: DateFormat('HH:mm').format(_valueFor(attribute: 'monday_close')),
+        );
+      }
+
+      if(_isTuesdayOpen) {
+        print('tuesday');
+        tuesday = OpeningHoursDay(
+          open: DateFormat('HH:mm').format(_valueFor(attribute: 'tuesday_open')),
+          close: DateFormat('HH:mm').format(_valueFor(attribute: 'tuesday_close')),
+        );
+      }
+
+      if(_isWednesdayOpen) {
+        print('wednesday');
+        wednesday = OpeningHoursDay(
+          open: DateFormat('HH:mm').format(_valueFor(attribute: 'wednesday_open')),
+          close: DateFormat('HH:mm').format(_valueFor(attribute: 'wednesday_close')),
+        );
+      }
+
+      if(_isThursdayOpen) {
+        print('thursday');
+        thursday = OpeningHoursDay(
+          open: DateFormat('HH:mm').format(_valueFor(attribute: 'thursday_open')),
+          close: DateFormat('HH:mm').format(_valueFor(attribute: 'thursday_close')),
+        );
+      }
+
+      if(_isFridayOpen) {
+        print('friday');
+        friday = OpeningHoursDay(
+          open: DateFormat('HH:mm').format(_valueFor(attribute: 'friday_open')),
+          close: DateFormat('HH:mm').format(_valueFor(attribute: 'friday_close')),
+        );
+      }
+
+      if(_isSaturdayOpen) {
+        print('saturday');
+        saturday = OpeningHoursDay(
+          open: DateFormat('HH:mm').format(_valueFor(attribute: 'saturday_open')),
+          close: DateFormat('HH:mm').format(_valueFor(attribute: 'saturday_close')),
+        );
+      }
+
+      if(_isSundayOpen) {
+        print('sunday');
+        sunday = OpeningHoursDay(
+          open: DateFormat('HH:mm').format(_valueFor(attribute: 'sunday_open')),
+          close: DateFormat('HH:mm').format(_valueFor(attribute: 'sunday_close')),
+        );
+      }
+
       return HoursOfOperation(
-        monday: OpeningHoursDay(
-          open: _valueFor(attribute: 'monday_open'),
-          close: _valueFor(attribute: 'monday_close'),
-        ),
-        tuesday: OpeningHoursDay(
-          open: _valueFor(attribute: 'tuesday_open'),
-          close: _valueFor(attribute: 'tuesday_close'),
-        ),
-        wednesday: OpeningHoursDay(
-          open: _valueFor(attribute: 'wednesday_open'),
-          close: _valueFor(attribute: 'wednesday_close'),
-        ),
-        thursday: OpeningHoursDay(
-          open: _valueFor(attribute: 'thursday_open'),
-          close: _valueFor(attribute: 'thursday_close'),
-        ),
-        friday: OpeningHoursDay(
-          open: _valueFor(attribute: 'friday_open'),
-          close: _valueFor(attribute: 'friday_close'),
-        ),
-        saturday: OpeningHoursDay(
-          open: _valueFor(attribute: 'saturday_open'),
-          close: _valueFor(attribute: 'saturday_close'),
-        ),
-        sunday: OpeningHoursDay(
-          open: _valueFor(attribute: 'sunday_open'),
-          close: _valueFor(attribute: 'sunday_close'),
-        ),
+        monday: monday,
+        tuesday: tuesday,
+        wednesday: wednesday,
+        thursday: thursday,
+        friday: friday,
+        saturday: saturday,
+        sunday: sunday,
       );
     }
 
@@ -143,7 +208,7 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
             isShop() ? _valueFor(attribute: 'fishing_tackles') : null,
         fishingTypes: isLake() ? _valueFor(attribute: 'fishing_types') : null,
         tickets: isLake() ? _valueFor(attribute: 'tickets') : null,
-        operationalHours: getOperationalHours(),
+        operationalHours: _operationalHoursEnabled ? getOperationalHours() : null,
         fishingRules: isLake() ? _valueFor(attribute: 'fishing_rules') : null,
         images: imageURLs.isNotEmpty ? imageURLs : null,
         websiteURL: _valueFor(attribute: 'contact_url'),
@@ -155,7 +220,7 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
         name: venue.name,
         categories: venue.categories,
         id: id,
-        imageURL: venue.images.first,
+        imageURL: venue.images != null && venue.images.isNotEmpty ? venue.images.first : null,
         address: venue.address,
         amenities: venue.amenities,
         fishStocked: venue.fishStocked,
@@ -361,6 +426,7 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
                   children: <Widget>[
                     FormBuilder(
                       key: _fbKey,
+                      autovalidate: true,
                       initialValue: {
                         VenueDetailedConstants.name: widget.venue.name,
                         VenueDetailedConstants.categories:
@@ -388,38 +454,10 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
                         'fishing_types': widget.venue.fishingTypes,
                         'tickets': widget.venue.tickets,
                         'fishing_rules': widget.venue.fishingRules,
-                        'monday_open':
-                            widget.venue.operationalHours.monday.open,
-                        'monday_close':
-                            widget.venue.operationalHours.monday.close,
-                        'tuesday_open':
-                            widget.venue.operationalHours.tuesday.open,
-                        'tuesday_close':
-                            widget.venue.operationalHours.tuesday.close,
-                        'wednesday_open':
-                            widget.venue.operationalHours.wednesday.open,
-                        'wednesday_close':
-                            widget.venue.operationalHours.wednesday.close,
-                        'thursday_open':
-                            widget.venue.operationalHours.thursday.open,
-                        'thursday_close':
-                            widget.venue.operationalHours.thursday.close,
-                        'friday_open':
-                            widget.venue.operationalHours.friday.open,
-                        'friday_close':
-                            widget.venue.operationalHours.friday.close,
-                        'saturday_open':
-                            widget.venue.operationalHours.saturday.open,
-                        'saturday_close':
-                            widget.venue.operationalHours.saturday.close,
-                        'sunday_open':
-                            widget.venue.operationalHours.sunday.open,
-                        'sunday_close':
-                            widget.venue.operationalHours.sunday.close,
+                        'operational_hours_enabled': widget.venue.operationalHours != null,
                         'fishing_tackles': widget.venue.fishingTackles,
                         'images': widget.venue.images,
                       },
-                      autovalidate: true,
                       child: Column(
                         children: <Widget>[
                           _OverviewSection(),
@@ -495,9 +533,46 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
                             visible: isLake(),
                             child: _FishingRulesSection(),
                           ),
+                          FormBuilderSwitch(
+                            attribute: 'operational_hours_enabled',
+                            label: HouseTexts.subheading('Provide Opening times'),
+                            onChanged: (enabled) {
+                              setState(() {
+                                _operationalHoursEnabled = enabled;
+                              });
+                            },
+                          ),
+                          SizedBox(height: 16),
                           Visibility(
-                            visible: widget.venue.operationalHours != null,
-                            child: _OperationalHoursSection(),
+                            visible: _operationalHoursEnabled,
+                            child: OperationalHoursField(
+                              hoursOfOperation: widget.venue.operationalHours,
+                              onChanged: (weekDayState) {
+                                switch (weekDayState.dayOfTheWeek) {
+                                  case DayOfTheWeek.monday:
+                                    _isMondayOpen = weekDayState.isOpen;
+                                    break;
+                                  case DayOfTheWeek.tuesday:
+                                    _isTuesdayOpen = weekDayState.isOpen;
+                                    break;
+                                  case DayOfTheWeek.wednesday:
+                                    _isWednesdayOpen = weekDayState.isOpen;
+                                    break;
+                                  case DayOfTheWeek.thursday:
+                                    _isThursdayOpen = weekDayState.isOpen;
+                                    break;
+                                  case DayOfTheWeek.friday:
+                                    _isFridayOpen = weekDayState.isOpen;
+                                    break;
+                                  case DayOfTheWeek.saturday:
+                                    _isSaturdayOpen = weekDayState.isOpen;
+                                    break;
+                                  case DayOfTheWeek.sunday:
+                                    _isSundayOpen = weekDayState.isOpen;
+                                    break;
+                                }
+                              },
+                            ),
                           ),
                           SizedBox(height: 16),
                           Align(
@@ -524,6 +599,7 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
                             child: Text("Submit"),
                             onPressed: () {
                               if (_fbKey.currentState.saveAndValidate()) {
+                                print('FORM VALIDATED');
                                 setState(() {
                                   _isLoading = true;
                                 });
@@ -795,6 +871,7 @@ class _ContactDetailsSection extends StatelessWidget {
         HouseTexts.subtitle('Venue Contact Details'),
         FormBuilderTextField(
           attribute: "contact_email",
+          keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
             labelText: "Email",
             icon: Icon(Icons.email),
@@ -806,6 +883,7 @@ class _ContactDetailsSection extends StatelessWidget {
         ),
         FormBuilderTextField(
           attribute: "contact_phone",
+          keyboardType: TextInputType.phone,
           decoration: InputDecoration(
             labelText: "Phone",
             icon: Icon(Icons.phone),
@@ -1047,63 +1125,164 @@ class _CoordinatesSection extends StatelessWidget {
   }
 }
 
-class _OperationalHoursSection extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        HouseTexts.subtitle('Operational Hours'),
-        SizedBox(height: 16),
-        _OperationalHoursDay(day: 'Monday'),
-        SizedBox(height: 8),
-        _OperationalHoursDay(day: 'Tuesday'),
-        SizedBox(height: 8),
-        _OperationalHoursDay(day: 'Wednesday'),
-        SizedBox(height: 8),
-        _OperationalHoursDay(day: 'Thursday'),
-        SizedBox(height: 8),
-        _OperationalHoursDay(day: 'Friday'),
-        SizedBox(height: 8),
-        _OperationalHoursDay(day: 'Saturday'),
-        SizedBox(height: 8),
-        _OperationalHoursDay(day: 'Sunday'),
-      ],
-    );
-  }
-}
+//enum DayOfTheWeek {
+//  monday,
+//  tuesday,
+//  wednesday,
+//  thursday,
+//  friday,
+//  saturday,
+//  sunday,
+//}
 
-class _OperationalHoursDay extends StatelessWidget {
-  _OperationalHoursDay({this.day});
-
-  final String day;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Text("$day"),
-        ),
-        FormBuilderDropdown(
-          attribute: "${day.toLowerCase()}_open",
-          decoration: InputDecoration(labelText: "Open"),
-          hint: Text('Open'),
-          items: OpeningHoursList.thirtyIntervalFromMorning
-              .map(
-                  (time) => DropdownMenuItem(value: time, child: Text("$time")))
-              .toList(),
-        ),
-        FormBuilderDropdown(
-          attribute: "${day.toLowerCase()}_close",
-          decoration: InputDecoration(labelText: "Close"),
-          hint: Text('Close'),
-          items: OpeningHoursList.thirtyIntervalFromAfternoon
-              .map(
-                  (time) => DropdownMenuItem(value: time, child: Text("$time")))
-              .toList(),
-        ),
-      ],
-    );
-  }
-}
+//class _OperationalHoursSection extends StatefulWidget {
+//  _OperationalHoursSection({
+//    this.hoursOfOperation,
+//    this.onChanged,
+//  });
+//
+//  final HoursOfOperation hoursOfOperation;
+//  final ValueChanged<WeekDayState> onChanged;
+//
+//  @override
+//  __OperationalHoursSectionState createState() => __OperationalHoursSectionState();
+//}
+//
+//class __OperationalHoursSectionState extends State<_OperationalHoursSection> {
+//
+//  _WeekDaySection _buildWeekDaySection(DayOfTheWeek day, OpeningHoursDay data) {
+//    return _WeekDaySection(
+//      day: day,
+//      data: data,
+//      onChanged: (isOpen) {
+//        widget.onChanged(WeekDayState(dayOfTheWeek: day, isOpen: isOpen));
+//      },
+//    );
+//  }
+//
+//  OpeningHoursDay defaultOpeningHoursDay() {
+//    return OpeningHoursDay(open: "09:00", close: "17:00");
+//  }
+//
+//  @override
+//  Widget build(BuildContext context) {
+//    return Column(
+//      children: [
+//        Column(
+//          children: [
+//            _buildWeekDaySection(DayOfTheWeek.monday, widget.hoursOfOperation != null ? widget.hoursOfOperation.monday : null),
+//            _buildWeekDaySection(DayOfTheWeek.tuesday, widget.hoursOfOperation != null ? widget.hoursOfOperation.tuesday : null),
+//            _buildWeekDaySection(DayOfTheWeek.wednesday, widget.hoursOfOperation != null ? widget.hoursOfOperation.wednesday : null),
+//            _buildWeekDaySection(DayOfTheWeek.thursday, widget.hoursOfOperation != null ? widget.hoursOfOperation.thursday : null),
+//            _buildWeekDaySection(DayOfTheWeek.friday, widget.hoursOfOperation != null ? widget.hoursOfOperation.friday : null),
+//            _buildWeekDaySection(DayOfTheWeek.saturday, widget.hoursOfOperation != null ? widget.hoursOfOperation.saturday : null),
+//            _buildWeekDaySection(DayOfTheWeek.sunday, widget.hoursOfOperation != null ? widget.hoursOfOperation.sunday : null),
+//          ],
+//        )
+//      ],
+//    );
+//  }
+//}
+//
+//class WeekDayState {
+//  WeekDayState({this.dayOfTheWeek, this.isOpen});
+//
+//  final dayOfTheWeek;
+//  final isOpen;
+//}
+//
+//class _WeekDaySection extends StatefulWidget {
+//  _WeekDaySection({
+//    this.day,
+//    this.data,
+//    this.onChanged,
+//});
+//
+//  final OpeningHoursDay data;
+//  final DayOfTheWeek day;
+//  final ValueChanged<bool> onChanged;
+//
+//  @override
+//  __WeekDaySectionState createState() => __WeekDaySectionState();
+//}
+//
+//class __WeekDaySectionState extends State<_WeekDaySection> {
+//  bool _isOpen = false;
+//
+//  @override
+//  void initState() {
+//    super.initState();
+//    _isOpen = widget.data != null;
+//  }
+//
+//  DateTime _initialOpeningTime({bool isOpen, OpeningHoursDay data}) {
+//    var timeAsFormattedString;
+//    if (isOpen && data != null) {
+//      timeAsFormattedString = data.open;
+//    } else {
+//      timeAsFormattedString = "09:00";
+//    }
+//    return DateFormat('HH:mm').parse(timeAsFormattedString);
+//  }
+//
+//  DateTime _initialClosingTime({bool isOpen, OpeningHoursDay data}) {
+//    var timeAsFormattedString;
+//    if (isOpen && data != null) {
+//      timeAsFormattedString = data.close;
+//    } else {
+//      timeAsFormattedString = "17:00";
+//    }
+//    return DateFormat('HH:mm').parse(timeAsFormattedString);
+//  }
+//
+//  @override
+//  Widget build(BuildContext context) {
+//    return Column(
+//      children: [
+//        Row(
+//          mainAxisAlignment: MainAxisAlignment.start,
+//          children: [
+//            Checkbox(
+//              value: _isOpen,
+//              onChanged: (value) {
+//                widget.onChanged(value);
+//                setState(() {
+//                  _isOpen = value;
+//                });
+//              },
+//            ),
+//            Text(ReCase(describeEnum(widget.day)).titleCase),
+//          ]
+//        ),
+//        Visibility(
+//          visible: _isOpen,
+//          child: FormBuilderDateTimePicker(
+//            attribute: "${describeEnum(widget.day)}_open",
+//            decoration: InputDecoration(labelText: "Open"),
+//            inputType: InputType.time,
+//            builder: (context, child) =>
+//                MediaQuery(data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true), child: child),
+//            initialValue: _initialOpeningTime(isOpen: _isOpen, data: widget.data),
+//            validators: [
+//              FormBuilderValidators.required(),
+//            ],
+//          ),
+//        ),
+//        Visibility(
+//          visible: _isOpen,
+//          child: FormBuilderDateTimePicker(
+//            attribute: "${describeEnum(widget.day)}_close",
+//            decoration: InputDecoration(labelText: "Close"),
+//            inputType: InputType.time,
+//            initialValue: _initialClosingTime(isOpen: _isOpen, data: widget.data),
+//            builder: (context, child) =>
+//                MediaQuery(data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true), child: child),
+//            validators: [
+//              FormBuilderValidators.required(),
+//            ],
+//          ),
+//        ),
+//      ],
+//    );
+//  }
+//}
