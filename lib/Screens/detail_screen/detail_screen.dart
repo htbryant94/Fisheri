@@ -105,6 +105,20 @@ class MapViewSection extends StatelessWidget {
                       fit: BoxFit.fitWidth,
                     ),
                   ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 8, right: 8),
+                    child: Align(
+                      alignment: Alignment.topRight,
+                      child: RaisedButton(
+                        color: Colors.blue,
+                        onPressed: () {
+                          print('tapped');
+                          },
+                        child: Text('Directions', style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ),
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Container(
@@ -125,18 +139,11 @@ class MapViewSection extends StatelessWidget {
                                 HouseTexts.body(address.postcode),
                               ],
                             ),
-                            RaisedButton(
-                              color: Colors.blue,
-                              onPressed: () {
-                                print('tapped');
-                              },
-                              child: Text('Directions', style: TextStyle(color: Colors.white),),
-                            )
                           ],
                         ),
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
             ),

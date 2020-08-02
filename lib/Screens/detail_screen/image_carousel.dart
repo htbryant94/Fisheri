@@ -57,7 +57,7 @@ class _ImageCarouselState extends State<ImageCarousel> {
         child: CirclePageIndicator(
           selectedDotColor: Colors.white,
           dotColor: Colors.grey[400],
-          itemCount: 5,
+          itemCount: imageURLsHasValue() ? widget.imageURLs.length : 1,
           currentPageNotifier: _currentPageNotifier,
         ),
       ),
