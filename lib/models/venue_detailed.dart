@@ -18,6 +18,7 @@ part 'venue_detailed.jser.dart';
     'fishStocked': EnDecode(alias: 'fish_stock_array'),
     'operationalHours': EnDecode(alias: 'hours_of_operation'),
     'websiteURL': EnDecode(alias: 'website_url'),
+    'numberOfLakes': EnDecode(alias: 'number_of_lakes'),
   },
 )
 class VenueDetailedJSONSerializer extends Serializer<VenueDetailed>
@@ -34,6 +35,7 @@ class VenueDetailed {
     this.address,
     this.contactDetails,
     this.social,
+    this.numberOfLakes,
     this.amenities,
     this.fishStocked,
     this.fishingTackles,
@@ -53,6 +55,7 @@ class VenueDetailed {
   VenueAddress address;
   ContactDetails contactDetails;
   Social social;
+  int numberOfLakes;
   List<dynamic> amenities;
   List<dynamic> fishStocked;
   List<dynamic> fishingTackles;

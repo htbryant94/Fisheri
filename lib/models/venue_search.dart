@@ -13,6 +13,7 @@ part 'venue_search.jser.dart';
     'fishingTackles': EnDecode(alias: 'fishing_tackles'),
     'fishingTypes': EnDecode(alias: 'fishing_types'),
     'imageURL': EnDecode(alias: 'image_url'),
+    'numberOfLakes': EnDecode(alias: 'number_of_lakes'),
   },
 )
 class VenueSearchJSONSerializer extends Serializer<VenueSearch>
@@ -25,6 +26,7 @@ class VenueSearch {
     this.imageURL,
     this.categories,
     this.address,
+    this.numberOfLakes,
     this.amenities,
     this.fishStocked,
     this.fishingTackles,
@@ -36,6 +38,7 @@ class VenueSearch {
   String imageURL;
   List<dynamic> categories;
   VenueAddress address;
+  int numberOfLakes;
   List<dynamic> amenities;
   List<dynamic> fishStocked;
   List<dynamic> fishingTackles;

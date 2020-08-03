@@ -39,6 +39,7 @@ abstract class _$VenueDetailedJSONSerializer
     setMapValue(ret, 'contact_details',
         _contactDetailsJSONSerializer.toMap(model.contactDetails));
     setMapValue(ret, 'social', _socialJSONSerializer.toMap(model.social));
+    setMapValue(ret, 'number_of_lakes', model.numberOfLakes);
     setMapValue(ret, 'amenities',
         codeIterable(model.amenities, (val) => passProcessor.serialize(val)));
     setMapValue(ret, 'fish_stock_array',
@@ -78,6 +79,7 @@ abstract class _$VenueDetailedJSONSerializer
     obj.contactDetails =
         _contactDetailsJSONSerializer.fromMap(map['contact_details'] as Map);
     obj.social = _socialJSONSerializer.fromMap(map['social'] as Map);
+    obj.numberOfLakes = map['number_of_lakes'] as int;
     obj.amenities = codeIterable<dynamic>(
         map['amenities'] as Iterable, (val) => passProcessor.deserialize(val));
     obj.fishStocked = codeIterable<dynamic>(map['fish_stock_array'] as Iterable,

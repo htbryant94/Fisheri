@@ -35,7 +35,6 @@ class VenueDetailedConstants {
   static const String description = "description";
   static const String coordinates = "coordinates";
   static const String address = "address";
-  // TODO: Add Number of Lakes
   static const String amenities = "amenities_array";
   static const String contactDetails = "contact_details";
   static const String social = "social";
@@ -194,6 +193,7 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
           county: _valueFor(attribute: 'address_county'),
           postcode: _valueFor(attribute: 'address_postcode'),
         ),
+        numberOfLakes: isLake() ? _valueFor(attribute: 'number_of_lakes') : null,
         amenities: isLake() ? _valueFor(attribute: 'amenities_list') : null,
         contactDetails: ContactDetails(
           email: _valueFor(attribute: 'contact_email'),
@@ -224,6 +224,7 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
         id: id,
         imageURL: venue.images != null && venue.images.isNotEmpty ? venue.images.first : null,
         address: venue.address,
+        numberOfLakes: venue.numberOfLakes,
         amenities: venue.amenities,
         fishStocked: venue.fishStocked,
         fishingTackles: venue.fishingTackles,
@@ -466,6 +467,7 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
                           'operational_hours_enabled': widget.venue.operationalHours != null,
                           'fishing_tackles': widget.venue.fishingTackles,
                           'images': widget.venue.images,
+                          'number_of_lakes': widget.venue.numberOfLakes ?? 0,
                         },
                         child: Column(
                           children: <Widget>[
@@ -829,9 +831,8 @@ class _AmenitiesSection extends StatelessWidget {
       children: <Widget>[
         HouseTexts.subtitle('Amenities'),
         FormBuilderTouchSpin(
-          attribute: "amenities_num_lakes",
+          attribute: "number_of_lakes",
           decoration: InputDecoration(labelText: "Number of Lakes"),
-          initialValue: 0,
           min: 0,
           max: 100,
           step: 1,

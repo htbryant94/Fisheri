@@ -25,7 +25,7 @@ import 'package:fisheri/Components/form_fields/operational_hours_field.dart';
 class VenueDetailedConstants {
   static const String name = "name";
   static const String isLake = "is_lake";
-  static const String isShop = "is_shop";
+  static const String isaShop = "is_shop";
   static const String categories = "categories";
   static const String address = "address";
   static const String amenities = "amenities_array";
@@ -174,6 +174,7 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
           county: _valueFor(attribute: 'address_county'),
           postcode: _valueFor(attribute: 'address_postcode'),
         ),
+        numberOfLakes: isLake() ? _valueFor(attribute: 'number_of_lakes') : null,
         amenities: isLake() ? _valueFor(attribute: 'amenities_list') : null,
         contactDetails: ContactDetails(
           email: _valueFor(attribute: 'contact_email'),
@@ -205,6 +206,7 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
         id: id,
         imageURL: imageURLs.isNotEmpty ? imageURLs.first : null,
         address: venue.address,
+        numberOfLakes: venue.numberOfLakes,
         amenities: venue.amenities,
         fishStocked: venue.fishStocked,
         fishingTackles: venue.fishingTackles,
@@ -754,7 +756,7 @@ class _AmenitiesSection extends StatelessWidget {
       children: <Widget>[
         HouseTexts.subtitle('Amenities'),
         FormBuilderTouchSpin(
-          attribute: "amenities_num_lakes",
+          attribute: "number_of_lakes",
           decoration: InputDecoration(labelText: "Number of Lakes"),
           initialValue: 0,
           min: 0,

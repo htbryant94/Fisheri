@@ -21,6 +21,7 @@ abstract class _$VenueSearchJSONSerializer implements Serializer<VenueSearch> {
         codeIterable(model.categories, (val) => passProcessor.serialize(val)));
     setMapValue(
         ret, 'address', _venueAddressJSONSerializer.toMap(model.address));
+    setMapValue(ret, 'number_of_lakes', model.numberOfLakes);
     setMapValue(ret, 'amenities',
         codeIterable(model.amenities, (val) => passProcessor.serialize(val)));
     setMapValue(ret, 'fish_stocked',
@@ -48,6 +49,7 @@ abstract class _$VenueSearchJSONSerializer implements Serializer<VenueSearch> {
     obj.categories = codeIterable<dynamic>(
         map['categories'] as Iterable, (val) => passProcessor.deserialize(val));
     obj.address = _venueAddressJSONSerializer.fromMap(map['address'] as Map);
+    obj.numberOfLakes = map['number_of_lakes'] as int;
     obj.amenities = codeIterable<dynamic>(
         map['amenities'] as Iterable, (val) => passProcessor.deserialize(val));
     obj.fishStocked = codeIterable<dynamic>(map['fish_stocked'] as Iterable,
