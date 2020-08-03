@@ -43,12 +43,17 @@ class SearchResultsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: ListView.builder(
+      child: ListView.separated(
+        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
           itemCount: searchResults.length,
+          separatorBuilder: (BuildContext context, int index) {
+          return SizedBox(height: 8);
+          },
           itemBuilder: (context, int index) {
             final VenueSearch venue = searchResults[index];
             return SearchResultCell(
               venue: venue,
+              layout: BaseCellLayout.cover,
             );
       }),
     );
@@ -101,7 +106,7 @@ class ListViewScreen extends StatelessWidget {
               );
             } else {
               return NewLocalImageBaseCell(
-                height: 500,
+                height: 300,
                 title: item.title,
                 subtitle: item.subtitle,
                 image: Image.asset('images/question_mark.png'),

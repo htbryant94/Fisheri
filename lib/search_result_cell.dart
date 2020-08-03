@@ -29,8 +29,8 @@ class VenueCategoriesSection extends StatelessWidget {
                 color: category == 'lake' ? Colors.blue : Colors.orange,
                 borderRadius: BorderRadius.circular(6),
             ),
-            padding: EdgeInsets.fromLTRB(8, 4, 8, 4),
-            child: HouseTexts.custom(text: StringUtils.capitalize(category), color: Colors.white),
+            padding: EdgeInsets.fromLTRB(4, 4, 4, 4),
+            child: HouseTexts.custom(text: StringUtils.capitalize(category), fontSize: 12, color: Colors.white),
           ),
           SizedBox(width: 8),
         ],
@@ -65,6 +65,7 @@ class EditVenueCell extends StatelessWidget {
         child: RemoteImageBaseCell(
           title: venue.name,
           imageURL: venue.imageURL,
+          height: 275,
           elements: <Widget>[
             if (venue.categories != null)
               VenueCategoriesSection(categories: venue.categories),
@@ -88,10 +89,12 @@ class SearchResultCell extends StatelessWidget {
   SearchResultCell({
     @required this.venue,
     this.index,
+    this.layout,
   });
 
   final VenueSearch venue;
   final int index;
+  final BaseCellLayout layout;
 
   @override
   Widget build(BuildContext context) {
@@ -110,6 +113,8 @@ class SearchResultCell extends StatelessWidget {
         child: RemoteImageBaseCell(
           title: venue.name,
           imageURL: venue.imageURL,
+          height: layout == BaseCellLayout.cover ? 290 : 250,
+          layout: layout,
           elements: <Widget>[
             if (venue.categories != null)
               VenueCategoriesSection(categories: venue.categories),
@@ -138,8 +143,8 @@ class _VenueOperational extends StatelessWidget {
     return Text(
       '${isOpen ? "Open" : "Closed"}',
       style: GoogleFonts.raleway(
-        fontSize: 14,
-        fontWeight: FontWeight.w300,
+        fontSize: 12,
+        fontWeight: FontWeight.w400,
         fontStyle: FontStyle.normal,
         color: isOpen ? Colors.green : Colors.red,
       ),
@@ -168,8 +173,8 @@ class _VenueFeatures extends StatelessWidget {
                   children: [
                     Image.asset(
                       'images/icons/amenities/$amenity.png',
-                      height: 24,
-                      width: 24,
+                      height: 20,
+                      width: 20,
                       errorBuilder: (BuildContext context, Object exception, StackTrace stackTrace) {
                         print("couldn't load asset for $amenity");
                         return Text('😢');
@@ -192,8 +197,8 @@ class _VenueDistance extends StatelessWidget {
     return Text(
       '$distance',
       style: GoogleFonts.raleway(
-        fontSize: 14,
-        fontWeight: FontWeight.w300,
+        fontSize: 12,
+        fontWeight: FontWeight.w400,
         fontStyle: FontStyle.italic,
         color: Colors.black,
       ),
