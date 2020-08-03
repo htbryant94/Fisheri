@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:fisheri/Components/form_builder_image_picker_custom.dart';
 import 'package:fisheri/Components/form_fields/fishing_types_field.dart';
 import 'package:fisheri/Screens/venue_form_edit_screen.dart';
@@ -49,6 +51,7 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
   final _fbKey = GlobalKey<FormBuilderState>();
   List<String> imageURLs = [];
   List<String> selectedCategories = [];
+  bool _isLoading = false;
 
   bool _operationalHoursEnabled = false;
   bool _isMondayOpen = false;
@@ -61,7 +64,6 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     bool isLake() {
       return selectedCategories.contains('lake');
     }
@@ -71,8 +73,7 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
     }
 
     Function _valueFor = ({String attribute}) {
-      return _fbKey.currentState.fields[attribute]
-          .currentState.value;
+      return _fbKey.currentState.fields[attribute].currentState.value;
     };
 
     HoursOfOperation getOperationalHours() {
@@ -84,59 +85,70 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
       OpeningHoursDay saturday;
       OpeningHoursDay sunday;
 
-      if(_isMondayOpen) {
+      if (_isMondayOpen) {
         print('monday');
         monday = OpeningHoursDay(
           open: DateFormat('HH:mm').format(_valueFor(attribute: 'monday_open')),
-          close: DateFormat('HH:mm').format(_valueFor(attribute: 'monday_close')),
+          close:
+              DateFormat('HH:mm').format(_valueFor(attribute: 'monday_close')),
         );
       }
 
-      if(_isTuesdayOpen) {
+      if (_isTuesdayOpen) {
         print('tuesday');
         tuesday = OpeningHoursDay(
-          open: DateFormat('HH:mm').format(_valueFor(attribute: 'tuesday_open')),
-          close: DateFormat('HH:mm').format(_valueFor(attribute: 'tuesday_close')),
+          open:
+              DateFormat('HH:mm').format(_valueFor(attribute: 'tuesday_open')),
+          close:
+              DateFormat('HH:mm').format(_valueFor(attribute: 'tuesday_close')),
         );
       }
 
-      if(_isWednesdayOpen) {
+      if (_isWednesdayOpen) {
         print('wednesday');
         wednesday = OpeningHoursDay(
-          open: DateFormat('HH:mm').format(_valueFor(attribute: 'wednesday_open')),
-          close: DateFormat('HH:mm').format(_valueFor(attribute: 'wednesday_close')),
+          open: DateFormat('HH:mm')
+              .format(_valueFor(attribute: 'wednesday_open')),
+          close: DateFormat('HH:mm')
+              .format(_valueFor(attribute: 'wednesday_close')),
         );
       }
 
-      if(_isThursdayOpen) {
+      if (_isThursdayOpen) {
         print('thursday');
         thursday = OpeningHoursDay(
-          open: DateFormat('HH:mm').format(_valueFor(attribute: 'thursday_open')),
-          close: DateFormat('HH:mm').format(_valueFor(attribute: 'thursday_close')),
+          open:
+              DateFormat('HH:mm').format(_valueFor(attribute: 'thursday_open')),
+          close: DateFormat('HH:mm')
+              .format(_valueFor(attribute: 'thursday_close')),
         );
       }
 
-      if(_isFridayOpen) {
+      if (_isFridayOpen) {
         print('friday');
         friday = OpeningHoursDay(
           open: DateFormat('HH:mm').format(_valueFor(attribute: 'friday_open')),
-          close: DateFormat('HH:mm').format(_valueFor(attribute: 'friday_close')),
+          close:
+              DateFormat('HH:mm').format(_valueFor(attribute: 'friday_close')),
         );
       }
 
-      if(_isSaturdayOpen) {
+      if (_isSaturdayOpen) {
         print('saturday');
         saturday = OpeningHoursDay(
-          open: DateFormat('HH:mm').format(_valueFor(attribute: 'saturday_open')),
-          close: DateFormat('HH:mm').format(_valueFor(attribute: 'saturday_close')),
+          open:
+              DateFormat('HH:mm').format(_valueFor(attribute: 'saturday_open')),
+          close: DateFormat('HH:mm')
+              .format(_valueFor(attribute: 'saturday_close')),
         );
       }
 
-      if(_isSundayOpen) {
+      if (_isSundayOpen) {
         print('sunday');
         sunday = OpeningHoursDay(
           open: DateFormat('HH:mm').format(_valueFor(attribute: 'sunday_open')),
-          close: DateFormat('HH:mm').format(_valueFor(attribute: 'sunday_close')),
+          close:
+              DateFormat('HH:mm').format(_valueFor(attribute: 'sunday_close')),
         );
       }
 
@@ -153,45 +165,40 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
 
     VenueDetailed makeVenueDetailed() {
       return VenueDetailed(
-          name: _valueFor(
-              attribute: VenueDetailedConstants.name),
-          categories: _valueFor(attribute: 'categories'),
-          description: _valueFor(
-              attribute: VenueDetailedConstants.description),
-          address: VenueAddress(
-            street: _valueFor(attribute: 'address_street'),
-            town: _valueFor(attribute: 'address_town'),
-            county: _valueFor(attribute: 'address_county'),
-            postcode:
-            _valueFor(attribute: 'address_postcode'),
-          ),
-          amenities: isLake() ? _valueFor(attribute: 'amenities_list') : null,
-          contactDetails: ContactDetails(
-            email: _valueFor(attribute: 'contact_email'),
-            phone: _valueFor(attribute: 'contact_phone'),
-          ),
-          social: Social(
-            facebook: _valueFor(attribute: 'social_facebook'),
-            instagram:
-            _valueFor(attribute: 'social_instagram'),
-            twitter: _valueFor(attribute: 'social_twitter'),
-            youtube: _valueFor(attribute: 'social_youtube'),
-          ),
-          fishStocked: isLake() ? _valueFor(attribute: 'fish_stocked') : null,
-          fishingTackles: isShop() ? _valueFor(attribute: 'fishing_tackles') : null,
-          fishingTypes: isLake() ? _valueFor(attribute: 'fishing_types') : null,
-          tickets: isLake() ? _valueFor(attribute: 'tickets'): null,
-          operationalHours: _operationalHoursEnabled ? getOperationalHours() : null,
-          fishingRules: isLake() ? _valueFor(attribute: 'fishing_rules') : null,
-          images: imageURLs.isNotEmpty ? imageURLs : null,
-          websiteURL: _valueFor(attribute: 'contact_url'),
+        name: _valueFor(attribute: VenueDetailedConstants.name),
+        categories: _valueFor(attribute: 'categories'),
+        description: _valueFor(attribute: VenueDetailedConstants.description),
+        address: VenueAddress(
+          street: _valueFor(attribute: 'address_street'),
+          town: _valueFor(attribute: 'address_town'),
+          county: _valueFor(attribute: 'address_county'),
+          postcode: _valueFor(attribute: 'address_postcode'),
+        ),
+        amenities: isLake() ? _valueFor(attribute: 'amenities_list') : null,
+        contactDetails: ContactDetails(
+          email: _valueFor(attribute: 'contact_email'),
+          phone: _valueFor(attribute: 'contact_phone'),
+        ),
+        social: Social(
+          facebook: _valueFor(attribute: 'social_facebook'),
+          instagram: _valueFor(attribute: 'social_instagram'),
+          twitter: _valueFor(attribute: 'social_twitter'),
+          youtube: _valueFor(attribute: 'social_youtube'),
+        ),
+        fishStocked: isLake() ? _valueFor(attribute: 'fish_stocked') : null,
+        fishingTackles:
+            isShop() ? _valueFor(attribute: 'fishing_tackles') : null,
+        fishingTypes: isLake() ? _valueFor(attribute: 'fishing_types') : null,
+        tickets: isLake() ? _valueFor(attribute: 'tickets') : null,
+        operationalHours:
+            _operationalHoursEnabled ? getOperationalHours() : null,
+        fishingRules: isLake() ? _valueFor(attribute: 'fishing_rules') : null,
+        images: imageURLs.isNotEmpty ? imageURLs : null,
+        websiteURL: _valueFor(attribute: 'contact_url'),
       );
     }
 
-    VenueSearch makeVenueSearch({
-      VenueDetailed venue,
-      String id
-    }) {
+    VenueSearch makeVenueSearch({VenueDetailed venue, String id}) {
       return VenueSearch(
         name: venue.name,
         categories: venue.categories,
@@ -210,9 +217,11 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
       final _longitude = _valueFor(attribute: 'coordinates_longitude');
 
       if (_latitude != null && _longitude != null) {
-        final double _latitude = double.parse(_valueFor(attribute: 'coordinates_latitude'));
+        final double _latitude =
+            double.parse(_valueFor(attribute: 'coordinates_latitude'));
         assert(_latitude is double);
-        final double _longitude = double.parse(_valueFor(attribute: 'coordinates_longitude'));
+        final double _longitude =
+            double.parse(_valueFor(attribute: 'coordinates_longitude'));
         assert(_longitude is double);
         result["coordinates"] = GeoPoint(
           _latitude,
@@ -223,7 +232,8 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
     }
 
     Future uploadFile({String id, File file, String name}) async {
-      StorageReference storageReference = FirebaseStorage.instance.ref().child('venues/$id/images/$name');
+      StorageReference storageReference =
+          FirebaseStorage.instance.ref().child('venues/$id/images/$name');
       StorageUploadTask uploadTask = storageReference.putFile(file);
       await uploadTask.onComplete;
       print('-----FILE UPLOADED-----');
@@ -255,17 +265,18 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
           .document(venueSearch.id)
           .setData(result, merge: false)
           .whenComplete(() {
+            setState(() {
+              _isLoading = false;
+            });
         print('added ${geoFirePoint.hash} successfully');
         showDialog(
             context: context,
             barrierDismissible: false,
             builder: (BuildContext context) {
               return AlertDialog(
-                title:
-                Text('Form successfully submitted'),
+                title: Text('Form successfully submitted'),
                 content: SingleChildScrollView(
-                  child: Text(
-                      'Tap Return to dismiss this page.'),
+                  child: Text('Tap Return to dismiss this page.'),
                 ),
                 actions: <Widget>[
                   FlatButton(
@@ -290,9 +301,11 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
           .document(id)
           .setData(venueJSON, merge: false)
           .then((doc) {
-        final double _latitude = double.parse(_valueFor(attribute: 'coordinates_latitude'));
+        final double _latitude =
+            double.parse(_valueFor(attribute: 'coordinates_latitude'));
         assert(_latitude is double);
-        final double _longitude = double.parse(_valueFor(attribute: 'coordinates_longitude'));
+        final double _longitude =
+            double.parse(_valueFor(attribute: 'coordinates_longitude'));
         assert(_longitude is double);
 
         // 5. Create VenueSearch Object with fileURLs added
@@ -305,274 +318,312 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
 
     // 2. Upload files to asset path with auto ID
     Future uploadFiles(VenueDetailed venue, String venueID) async {
-        print('uploading files started');
-        final List<dynamic> _images = _valueFor(attribute: 'images');
-        final List<ImageType> parsedImageTypes = _images.map((image) {
-          if (image is File) {
-            return ImageType(type: "FILE", file: image);
-          } else if (image is String) {
-            return ImageType(type: "STRING", url: image);
-          } else {
-            return null;
-          }
-        }).toList();
-        print('filesToUpload value -------');
-        parsedImageTypes.forEach((imageType) {
-          if (imageType.type == "URL") {
-            print('imageType is: ${imageType.url}');
-          } else if (imageType.type == "FILE") {
-            print('imageType is: ${imageType.file}');
-          }
-        });
-
-        if (parsedImageTypes != null) {
-          var index = 0;
-          await Future.forEach(parsedImageTypes, (imageType) async {
-            print('----- uploading file: $index');
-
-            final _imageType = imageType as ImageType;
-            if (_imageType.type == "FILE") {
-              await uploadFile(id: venueID, file: _imageType.file, name: '$index').whenComplete(() {
-                index += 1;
-                print('----- uploaded file: $index');
-              });
-            } else if (_imageType.type == "URL") {
-              index += 1;
-              setState(() {
-                imageURLs.add(_imageType.url);
-              });
-            }
-
-
-          }).whenComplete(() {
-            print('uploading files finished');
-            // 4. setData for node in venues_detail with VenueDetailed Object
-            print('AMENDING VENUE');
-
-            venue.images = imageURLs;
-            amendVenue(venueID, venue);
-          }
-          );
+      print('uploading files started');
+      final List<dynamic> _images = _valueFor(attribute: 'images');
+      final List<ImageType> parsedImageTypes = _images.map((image) {
+        if (image is File) {
+          return ImageType(type: "FILE", file: image);
+        } else if (image is String) {
+          return ImageType(type: "STRING", url: image);
         } else {
-          print('----- no files to upload, amending venue');
+          return null;
+        }
+      }).toList();
+      print('filesToUpload value -------');
+      parsedImageTypes.forEach((imageType) {
+        if (imageType.type == "URL") {
+          print('imageType is: ${imageType.url}');
+        } else if (imageType.type == "FILE") {
+          print('imageType is: ${imageType.file}');
+        }
+      });
+
+      if (parsedImageTypes != null) {
+        var index = 0;
+        await Future.forEach(parsedImageTypes, (imageType) async {
+          print('----- uploading file: $index');
+
+          final _imageType = imageType as ImageType;
+          if (_imageType.type == "FILE") {
+            await uploadFile(id: venueID, file: _imageType.file, name: '$index')
+                .whenComplete(() {
+              index += 1;
+              print('----- uploaded file: $index');
+            });
+          } else if (_imageType.type == "URL") {
+            index += 1;
+            setState(() {
+              imageURLs.add(_imageType.url);
+            });
+          }
+        }).whenComplete(() {
+          print('uploading files finished');
+          // 4. setData for node in venues_detail with VenueDetailed Object
           print('AMENDING VENUE');
 
           venue.images = imageURLs;
-          await amendVenue(venueID, venue);
-        }
+          amendVenue(venueID, venue);
+        });
+      } else {
+        print('----- no files to upload, amending venue');
+        print('AMENDING VENUE');
+
+        venue.images = imageURLs;
+        await amendVenue(venueID, venue);
       }
+    }
 
     return Scaffold(
       body: SafeArea(
         child: Listener(
           onPointerDown: (_) {
             FocusScopeNode currentFocus = FocusScope.of(context);
-            if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
+            if (!currentFocus.hasPrimaryFocus &&
+                currentFocus.focusedChild != null) {
               currentFocus.focusedChild.unfocus();
             }
           },
-          child: ListView(
-            padding: EdgeInsets.fromLTRB(24, 24, 24, 100),
-            children: <Widget>[
-              Column(
+          child: Stack(
+            children: [
+              ListView(
+                padding: EdgeInsets.fromLTRB(24, 24, 24, 100),
                 children: <Widget>[
-                  FormBuilder(
-                    key: _fbKey,
-                    initialValue: {
-                      'date': DateTime.now(),
-                      'accept_terms': false,
-                    },
-                    child: Column(
-                      children: <Widget>[
-                        _OverviewSection(),
-                        SizedBox(height: 16),
-                        FormBuilderCheckboxList(
-                          decoration: InputDecoration(labelText: "Categories *"),
-                          activeColor: HouseColors.accentGreen,
-                          checkColor: HouseColors.primaryGreen,
-                          attribute: "categories",
-                          onChanged: (categories) {
-                            setState(() {
-                              selectedCategories = categories.cast<String>();
-                            });
-                          },
-                          options: [
-                            FormBuilderFieldOption(value: "lake", child: Text('Lake')),
-                            FormBuilderFieldOption(value: "shop", child: Text('Shop')),
+                  Column(
+                    children: <Widget>[
+                      FormBuilder(
+                        key: _fbKey,
+                        initialValue: {
+                          'date': DateTime.now(),
+                          'accept_terms': false,
+                        },
+                        child: Column(
+                          children: <Widget>[
+                            _OverviewSection(),
+                            SizedBox(height: 16),
+                            FormBuilderCheckboxList(
+                              decoration:
+                                  InputDecoration(labelText: "Categories *"),
+                              activeColor: HouseColors.accentGreen,
+                              checkColor: HouseColors.primaryGreen,
+                              attribute: "categories",
+                              onChanged: (categories) {
+                                setState(() {
+                                  selectedCategories =
+                                      categories.cast<String>();
+                                });
+                              },
+                              options: [
+                                FormBuilderFieldOption(
+                                    value: "lake", child: Text('Lake')),
+                                FormBuilderFieldOption(
+                                    value: "shop", child: Text('Shop')),
+                              ],
+                            ),
+                            FormBuilderTextField(
+                              keyboardType: TextInputType.multiline,
+                              minLines: 5,
+                              maxLines: null,
+                              attribute: "description",
+                              autocorrect: false,
+                              decoration: InputDecoration(
+                                  labelText: "Description",
+                                  helperText:
+                                      "Include pricing information or details on how to get to your venue here",
+                                  border: OutlineInputBorder()),
+                              validators: [
+                                FormBuilderValidators.minLength(4),
+                                FormBuilderValidators.maxLength(1000),
+                              ],
+                            ),
+                            SizedBox(height: 16),
+                            _CoordinatesSection(),
+                            SizedBox(height: 16),
+                            _AddressSection(),
+                            SizedBox(height: 16),
+                            Visibility(
+                              visible: isLake(),
+                              child: _AmenitiesSection(),
+                            ),
+                            _ContactDetailsSection(),
+                            SizedBox(height: 16),
+                            _SocialLinksSection(),
+                            SizedBox(height: 16),
+                            Visibility(
+                              visible: isShop(),
+                              child: FishingTypesField(
+                                title: 'Shop: Fishing Tackle',
+                                attribute: 'fishing_tackles',
+                                fishingTypes: FishingTypes.values,
+                              ),
+                            ),
+                            Visibility(
+                              visible: isLake(),
+                              child: _FishStockedSection(),
+                            ),
+                            Visibility(
+                              visible: isLake(),
+                              child: FishingTypesField(
+                                title: 'Lake: Fishing Types',
+                                attribute: 'fishing_types',
+                                fishingTypes: [
+                                  FishingTypes.carp,
+                                  FishingTypes.catfish,
+                                  FishingTypes.coarse,
+                                  FishingTypes.fly,
+                                  FishingTypes.match,
+                                  FishingTypes.predator,
+                                ],
+                              ),
+                            ),
+                            Visibility(
+                              visible: isLake(),
+                              child: _TicketsSection(),
+                            ),
+                            Visibility(
+                              visible: isLake(),
+                              child: _FishingRulesSection(),
+                            ),
+                            FormBuilderSwitch(
+                              attribute: 'operational_hours_enabled',
+                              label: HouseTexts.subheading(
+                                  'Provide Opening times'),
+                              onChanged: (enabled) {
+                                setState(() {
+                                  _operationalHoursEnabled = enabled;
+                                });
+                              },
+                            ),
+                            SizedBox(height: 16),
+                            Visibility(
+                              visible: _operationalHoursEnabled,
+                              child: OperationalHoursField(
+                                hoursOfOperation: null,
+                                onChanged: (weekDayState) {
+                                  switch (weekDayState.dayOfTheWeek) {
+                                    case DayOfTheWeek.monday:
+                                      _isMondayOpen = weekDayState.isOpen;
+                                      break;
+                                    case DayOfTheWeek.tuesday:
+                                      _isTuesdayOpen = weekDayState.isOpen;
+                                      break;
+                                    case DayOfTheWeek.wednesday:
+                                      _isWednesdayOpen = weekDayState.isOpen;
+                                      break;
+                                    case DayOfTheWeek.thursday:
+                                      _isThursdayOpen = weekDayState.isOpen;
+                                      break;
+                                    case DayOfTheWeek.friday:
+                                      _isFridayOpen = weekDayState.isOpen;
+                                      break;
+                                    case DayOfTheWeek.saturday:
+                                      _isSaturdayOpen = weekDayState.isOpen;
+                                      break;
+                                    case DayOfTheWeek.sunday:
+                                      _isSundayOpen = weekDayState.isOpen;
+                                      break;
+                                  }
+                                },
+                              ),
+                            ),
+                            SizedBox(height: 16),
+                            FormBuilderImagePickerCustom(
+                              attribute: 'images',
+                            )
                           ],
                         ),
-                        FormBuilderTextField(
-                          keyboardType: TextInputType.multiline,
-                          minLines: 5,
-                          maxLines: null,
-                          attribute: "description",
-                          autocorrect: false,
-                          decoration: InputDecoration(
-                              labelText: "Description",
-                              helperText:
-                              "Include pricing information or details on how to get to your venue here",
-                              border: OutlineInputBorder()),
-                          validators: [
-                            FormBuilderValidators.minLength(4),
-                            FormBuilderValidators.maxLength(1000),
-                          ],
-                        ),
-                        SizedBox(height: 16),
-                        _CoordinatesSection(),
-                        SizedBox(height: 16),
-                        _AddressSection(),
-                        SizedBox(height: 16),
-                        Visibility(
-                          visible: isLake(),
-                          child: _AmenitiesSection(),
-                        ),
-                        _ContactDetailsSection(),
-                        SizedBox(height: 16),
-                        _SocialLinksSection(),
-                        SizedBox(height: 16),
-                        Visibility(
-                          visible: isShop(),
-                          child: FishingTypesField(
-                            title: 'Shop: Fishing Tackle',
-                            attribute: 'fishing_tackles',
-                            fishingTypes: FishingTypes.values,
-                          ),
-                        ),
-                        Visibility(
-                          visible: isLake(),
-                          child: _FishStockedSection(),
-                        ),
-                        Visibility(
-                          visible: isLake(),
-                          child: FishingTypesField(
-                            title: 'Lake: Fishing Types',
-                            attribute: 'fishing_types',
-                            fishingTypes: [
-                              FishingTypes.carp,
-                              FishingTypes.catfish,
-                              FishingTypes.coarse,
-                              FishingTypes.fly,
-                              FishingTypes.match,
-                              FishingTypes.predator,
-                            ],
-                          ),
-                        ),
-                        Visibility(
-                          visible: isLake(),
-                          child: _TicketsSection(),
-                        ),
-                        Visibility(
-                          visible: isLake(),
-                          child: _FishingRulesSection(),
-                        ),
-                        FormBuilderSwitch(
-                          attribute: 'operational_hours_enabled',
-                          label: HouseTexts.subheading('Provide Opening times'),
-                          onChanged: (enabled) {
-                            setState(() {
-                              _operationalHoursEnabled = enabled;
-                            });
-                          },
-                        ),
-                        SizedBox(height: 16),
-                        Visibility(
-                          visible: _operationalHoursEnabled,
-                          child: OperationalHoursField(
-                            hoursOfOperation: null,
-                            onChanged: (weekDayState) {
-                              switch (weekDayState.dayOfTheWeek) {
-                                case DayOfTheWeek.monday:
-                                  _isMondayOpen = weekDayState.isOpen;
-                                  break;
-                                case DayOfTheWeek.tuesday:
-                                  _isTuesdayOpen = weekDayState.isOpen;
-                                  break;
-                                case DayOfTheWeek.wednesday:
-                                  _isWednesdayOpen = weekDayState.isOpen;
-                                  break;
-                                case DayOfTheWeek.thursday:
-                                  _isThursdayOpen = weekDayState.isOpen;
-                                  break;
-                                case DayOfTheWeek.friday:
-                                  _isFridayOpen = weekDayState.isOpen;
-                                  break;
-                                case DayOfTheWeek.saturday:
-                                  _isSaturdayOpen = weekDayState.isOpen;
-                                  break;
-                                case DayOfTheWeek.sunday:
-                                  _isSundayOpen = weekDayState.isOpen;
-                                  break;
-                              }
+                      ),
+                      Row(
+                        children: <Widget>[
+                          MaterialButton(
+                              child: Text("Submit"),
+                              onPressed: () {
+                                Future postNewVenue(VenueDetailed venue,
+                                    Map<String, dynamic> data) async {
+                                  await Firestore.instance
+                                      .collection('venues_detail')
+                                      .add(data)
+                                      .then((doc) {
+                                    final double _latitude = double.parse(
+                                        _valueFor(
+                                            attribute: 'coordinates_latitude'));
+                                    assert(_latitude is double);
+                                    final double _longitude = double.parse(
+                                        _valueFor(
+                                            attribute:
+                                                'coordinates_longitude'));
+                                    assert(_longitude is double);
+
+                                    uploadFiles(venue, doc.documentID);
+                                  });
+                                }
+
+                                if (_fbKey.currentState.saveAndValidate()) {
+                                  setState(() {
+                                    _isLoading = true;
+                                  });
+                                  var _venue = makeVenueDetailed();
+                                  var _venueJSON = VenueDetailedJSONSerializer()
+                                      .toMap(_venue);
+                                  _venueJSON =
+                                      addCoordinatesIfValid(_venueJSON);
+                                  print(_venueJSON);
+
+                                  postNewVenue(_venue, _venueJSON);
+                                } else {
+                                  showDialog(
+                                      context: context,
+                                      barrierDismissible: false,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Text(
+                                              'There was an issue trying to submit your form'),
+                                          content: SingleChildScrollView(
+                                            child: Text(
+                                                'Please correct any incorrect entries and try again.'),
+                                          ),
+                                          actions: <Widget>[
+                                            FlatButton(
+                                              child: Text('OK'),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            )
+                                          ],
+                                        );
+                                      });
+                                }
+                              }),
+                          MaterialButton(
+                            child: Text("Reset"),
+                            onPressed: () {
+                              _fbKey.currentState.reset();
                             },
                           ),
-                        ),
-                        SizedBox(height: 16),
-                        FormBuilderImagePickerCustom(
-                          attribute: 'images',
-                        )
-                      ],
-                    ),
-                  ),
-                  Row(
-                    children: <Widget>[
-                      MaterialButton(
-                          child: Text("Submit"),
-                          onPressed: () {
-                            Future postNewVenue(VenueDetailed venue, Map<String, dynamic> data) async {
-                              await Firestore.instance
-                                  .collection('venues_detail')
-                                  .add(data).then((doc) {
-                                final double _latitude = double.parse(
-                                    _valueFor(attribute: 'coordinates_latitude'));
-                                assert(_latitude is double);
-                                final double _longitude = double.parse(
-                                    _valueFor(attribute: 'coordinates_longitude'));
-                                assert(_longitude is double);
-
-                                uploadFiles(venue, doc.documentID);
-                              });
-                            }
-
-                            if (_fbKey.currentState.saveAndValidate()) {
-                              var _venue = makeVenueDetailed();
-                              var _venueJSON = VenueDetailedJSONSerializer().toMap(_venue);
-                              _venueJSON = addCoordinatesIfValid(_venueJSON);
-                              print(_venueJSON);
-
-                              postNewVenue(_venue, _venueJSON);
-                            } else {
-                              showDialog(
-                                  context: context,
-                                  barrierDismissible: false,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: Text(
-                                          'There was an issue trying to submit your form'),
-                                      content: SingleChildScrollView(
-                                        child: Text(
-                                            'Please correct any incorrect entries and try again.'),
-                                      ),
-                                      actions: <Widget>[
-                                        FlatButton(
-                                          child: Text('OK'),
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                        )
-                                      ],
-                                    );
-                                  });
-                            }
-                          }),
-                      MaterialButton(
-                        child: Text("Reset"),
-                        onPressed: () {
-                          _fbKey.currentState.reset();
-                        },
+                        ],
                       ),
                     ],
                   ),
                 ],
+              ),
+              Visibility(
+                visible: _isLoading,
+                child: Positioned.fill(
+                  child: AbsorbPointer(
+                    child: Center(
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CircularProgressIndicator(),
+                            SizedBox(height: 24),
+                            HouseTexts.heading('Submitting Changes...', alignment: Alignment.center),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ],
           ),
@@ -685,11 +736,11 @@ class _AmenitiesSection extends StatelessWidget {
   final ReCase foodAndDrink = ReCase(describeEnum(Amenities.foodAndDrink));
   final ReCase nightFishing = ReCase(describeEnum(Amenities.nightFishing));
   final ReCase wheelchairAccess =
-  ReCase(describeEnum(Amenities.wheelchairAccess));
+      ReCase(describeEnum(Amenities.wheelchairAccess));
   final ReCase guestsAllowed = ReCase(describeEnum(Amenities.guestsAllowed));
   final ReCase trolleyHire = ReCase(describeEnum(Amenities.trolleyHire));
   final ReCase takeawayFriendly =
-  ReCase(describeEnum(Amenities.takeawayFriendly));
+      ReCase(describeEnum(Amenities.takeawayFriendly));
   final ReCase animalFriendly = ReCase(describeEnum(Amenities.animalFriendly));
   final ReCase tuition = ReCase(describeEnum(Amenities.tuition));
   final ReCase electricity = ReCase(describeEnum(Amenities.electricity));
@@ -875,18 +926,16 @@ enum FishStock {
 }
 
 class _FishStockedSection extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
-
     List<FormBuilderFieldOption> options() {
       final fishStocked = FishStock.values;
-      return fishStocked.map((fish) =>
-          FormBuilderFieldOption(
-            value: ReCase(describeEnum(fish)).snakeCase,
-            child: Text(ReCase(describeEnum(fish)).titleCase),
-          )
-      ).toList();
+      return fishStocked
+          .map((fish) => FormBuilderFieldOption(
+                value: ReCase(describeEnum(fish)).snakeCase,
+                child: Text(ReCase(describeEnum(fish)).titleCase),
+              ))
+          .toList();
     }
 
     return Column(

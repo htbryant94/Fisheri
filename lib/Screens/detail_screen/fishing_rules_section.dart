@@ -8,7 +8,7 @@ class FishingRulesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (content != null) {
+    if (content != null && content.isNotEmpty) {
       FlatButton readMoreButton = FlatButton(
         child: Text("Read More",
             style: TextStyle(
@@ -36,7 +36,7 @@ class FishingRulesSection extends StatelessWidget {
         child: Column(children: [
           HouseTexts.heading('Fishing Rules'),
           SizedBox(height: 16),
-          Text("Couldn't retrieve information. Request the owner of this property to provide this data."),
+          Text("No information has been specified for this section. Request the owner of this property to provide this data."),
         ]),
       );
     }
