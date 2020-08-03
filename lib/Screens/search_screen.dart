@@ -137,6 +137,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           imageURL: _selectedVenue.imageURL,
                           title: _selectedVenue.name,
                           subtitle: _selectedVenue.address.town,
+                          height: 275,
                           elements: [
                             if (_selectedVenue.categories != null)
                             VenueCategoriesSection(categories: _selectedVenue.categories),
