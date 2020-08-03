@@ -11,7 +11,7 @@ class HouseTexts {
       alignment: alignment,
       child: Text(text,
           style: GoogleFonts.openSans(
-            fontSize: 22,
+            fontSize: 20,
             fontWeight: FontWeight.w600,
             fontStyle: FontStyle.normal,
             color: Colors.black,
@@ -25,7 +25,7 @@ class HouseTexts {
       alignment: alignment,
       child: Text(text,
           style: GoogleFonts.openSans(
-            fontSize: 20,
+            fontSize: 18,
             fontWeight: FontWeight.w400,
             fontStyle: FontStyle.normal,
             color: Colors.black54,
@@ -40,7 +40,7 @@ class HouseTexts {
       child: Text(
         text,
         style: GoogleFonts.openSans(
-          fontSize: 18,
+          fontSize: 16,
           fontWeight: FontWeight.w400,
           color: Colors.black,
         ),
@@ -55,7 +55,7 @@ class HouseTexts {
       child: Text(
         text,
         style: GoogleFonts.openSans(
-          fontSize: 16,
+          fontSize: 14,
           fontWeight: FontWeight.w400,
           color: Colors.black54,
         ),
