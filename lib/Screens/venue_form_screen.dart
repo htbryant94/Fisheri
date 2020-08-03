@@ -820,6 +820,7 @@ class _ContactDetailsSection extends StatelessWidget {
         FormBuilderTextField(
           attribute: "contact_email",
           keyboardType: TextInputType.emailAddress,
+          autocorrect: false,
           decoration: InputDecoration(
             labelText: "Email",
             icon: Icon(Icons.email),
@@ -843,10 +844,12 @@ class _ContactDetailsSection extends StatelessWidget {
         ),
         FormBuilderTextField(
           attribute: "contact_url",
+          autocorrect: false,
           decoration: InputDecoration(
             labelText: "Website URL",
             icon: Icon(Icons.language),
-            hintText: "https://www.add_this_part_here",
+            prefixText: "www.",
+            helperText: "e.g. www.fisheri.co.uk",
           ),
           maxLines: 1,
           validators: [
@@ -962,6 +965,7 @@ class _CoordinatesSection extends StatelessWidget {
         FormBuilderTextField(
           attribute: "coordinates_latitude",
           maxLines: 1,
+          keyboardType: TextInputType.numberWithOptions(signed: true),
           decoration: InputDecoration(
             labelText: "Latitude *",
           ),
@@ -973,6 +977,7 @@ class _CoordinatesSection extends StatelessWidget {
         FormBuilderTextField(
           attribute: "coordinates_longitude",
           maxLines: 1,
+          keyboardType: TextInputType.numberWithOptions(signed: true),
           decoration: InputDecoration(labelText: "Longitude *"),
           validators: [
             FormBuilderValidators.required(),

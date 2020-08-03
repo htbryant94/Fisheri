@@ -33,6 +33,7 @@ class _SearchScreenState extends State<SearchScreen> {
   VenueSearch _selectedVenue;
   String _selectedVenueType;
   List<VenueSearch> _venues = [];
+  double _maxSearchRadius = 100;
 
   @override
   void initState() {
@@ -58,12 +59,21 @@ class _SearchScreenState extends State<SearchScreen> {
 
     stream = radius.switchMap((rad) {
       var collectionReference = _firestore.collection('venues_search');
-      return geo.collection(collectionRef: collectionReference).within(
+      if (rad.floor() < _maxSearchRadius) {
+        return geo.collection(collectionRef: collectionReference).within(
+            center: center,
+            radius: rad,
+            field: 'position',
+            strictMode: true
+        );
+      } else {
+        return geo.collection(collectionRef: collectionReference).within(
           center: center,
-          radius: rad,
+          radius: 1000,
           field: 'position',
-          strictMode: true
-      );
+          strictMode: false,
+        );
+      }
     });
 //    _addPoint(51.979900, -0.214280);
   }
@@ -78,6 +88,10 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     bool shouldShowVenueCard() {
       return _selectedVenue != null;
+    }
+
+    String getSearchRadius(int radius) {
+      return radius == _maxSearchRadius ? '∞' : "$radius";
     }
 
     return Scaffold(
@@ -122,6 +136,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         child: RemoteImageBaseCell(
                           imageURL: _selectedVenue.imageURL,
                           title: _selectedVenue.name,
+                          subtitle: _selectedVenue.address.town,
                           elements: [
                             if (_selectedVenue.categories != null)
                             VenueCategoriesSection(categories: _selectedVenue.categories),
@@ -149,26 +164,28 @@ class _SearchScreenState extends State<SearchScreen> {
                       children: <Widget>[
                         RotatedBox(child: Text('km'), quarterTurns: 1),
                         RotatedBox(
-                            child: Text('${radius.value.round()}'),
+                            child: Text(getSearchRadius(radius.value.round())),
                             quarterTurns: 1),
                         Slider(
                           value: _radiusSliderValue,
-                          max: 100,
+                          max: _maxSearchRadius,
                           onChanged: (value) {
                             setState(() {
                               radius.value = value;
                               circles = null;
-                              circles = Set.from([
-                                Circle(
-                                  circleId: CircleId("123"),
-                                  center: LatLng(_latitude, _longitude),
-                                  radius: (value * 1000),
-                                  strokeWidth: 2,
-                                  fillColor:
-                                      Colors.greenAccent.withOpacity(0.6),
-                                  strokeColor: Colors.green[200],
-                                )
-                              ]);
+                              if (value < _maxSearchRadius) {
+                                circles = Set.from([
+                                  Circle(
+                                    circleId: CircleId("123"),
+                                    center: LatLng(_latitude, _longitude),
+                                    radius: (value * 1000),
+                                    strokeWidth: 2,
+                                    fillColor:
+                                    Colors.greenAccent.withOpacity(0.6),
+                                    strokeColor: Colors.green[200],
+                                  )
+                                ]);
+                              }
                               _radiusSliderValue = value;
                             });
                           },
@@ -189,6 +206,7 @@ class _SearchScreenState extends State<SearchScreen> {
       _venues = [];
     });
 
+    print(documentList.length);
     documentList.forEach((DocumentSnapshot document) {
       final VenueSearch result =
           VenueSearchJSONSerializer().fromMap(document.data);
