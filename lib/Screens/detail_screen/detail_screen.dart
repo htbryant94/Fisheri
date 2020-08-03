@@ -31,6 +31,14 @@ class DetailScreen extends StatelessWidget {
   final bool descriptionExpanded;
   final int index;
 
+  bool isLake() {
+    return venue.categories.contains('lake');
+  }
+
+  bool isShop() {
+    return venue.categories.contains('shop');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,16 +68,31 @@ class DetailScreen extends StatelessWidget {
               SocialMediaSection(social: venue.social),
               MapViewSection(address: venue.address),
               ButtonSection(Colors.blue),
-              FishStockedSection(venue.fishStocked),
-              FishingTypesSection(venue.fishingTypes),
-              AmenitiesSection(venue.amenities),
-              TicketsSection(
-                tickets: venue.tickets,
+              Visibility(
+                visible: isLake(),
+                child: FishStockedSection(venue.fishStocked),
+              ),
+              Visibility(
+                visible: isLake(),
+                child: FishingTypesSection(venue.fishingTypes),
+              ),
+              Visibility(
+                visible: isLake(),
+                child: AmenitiesSection(venue.amenities),
+              ),
+              Visibility(
+                visible: isLake(),
+                child: TicketsSection(
+                  tickets: venue.tickets,
+                ),
               ),
               OpeningHoursSection(
                 openingHours: venue.operationalHours,
               ),
-              FishingRulesSection(venue.fishingRules),
+              Visibility(
+                visible: isLake(),
+                child: FishingRulesSection(venue.fishingRules),
+              ),
             ],
           ),
         ),

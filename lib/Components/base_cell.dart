@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fisheri/house_texts.dart';
 import 'package:flutter/material.dart';
 import 'package:fisheri/house_colors.dart';
+import 'package:flutter/rendering.dart';
 
 class LocalImageCoverCell extends StatelessWidget {
   LocalImageCoverCell({
