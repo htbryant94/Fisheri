@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:fisheri/Components/form_builder_image_picker_custom.dart';
 import 'package:fisheri/Components/form_fields/fishing_types_field.dart';
+import 'package:fisheri/Components/form_fields/social_media_field.dart';
 import 'package:fisheri/Screens/venue_form_edit_screen.dart';
 import 'package:fisheri/house_colors.dart';
 import 'package:fisheri/models/hours_of_operation.dart';
@@ -12,7 +13,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fisheri/opening_hours_list.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:fisheri/house_texts.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -446,7 +446,7 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
                             ),
                             _ContactDetailsSection(),
                             SizedBox(height: 16),
-                            _SocialLinksSection(),
+                            SocialMediaField(),
                             SizedBox(height: 16),
                             Visibility(
                               visible: isShop(),
@@ -850,47 +850,6 @@ class _ContactDetailsSection extends StatelessWidget {
           validators: [
             FormBuilderValidators.url(),
           ],
-        ),
-      ],
-    );
-  }
-}
-
-class _SocialLinksSection extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        HouseTexts.subtitle('Social Links'),
-        FormBuilderTextField(
-          attribute: "social_facebook",
-          decoration: InputDecoration(
-            labelText: "Facebook",
-            helperText: "www.facebook.com/your_page_here",
-          ),
-          maxLines: 1,
-          validators: [],
-        ),
-        FormBuilderTextField(
-          attribute: "social_instagram",
-          decoration: InputDecoration(
-            labelText: "Instagram",
-            helperText: "@your_handle_here",
-          ),
-          maxLines: 1,
-          validators: [],
-        ),
-        FormBuilderTextField(
-          attribute: "social_twitter",
-          decoration: InputDecoration(labelText: "Twitter"),
-          maxLines: 1,
-          validators: [],
-        ),
-        FormBuilderTextField(
-          attribute: "social_youtube",
-          decoration: InputDecoration(labelText: "Youtube"),
-          maxLines: 1,
-          validators: [],
         ),
       ],
     );

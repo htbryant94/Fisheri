@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fisheri/Components/form_fields/fishing_types_field.dart';
+import 'package:fisheri/Components/form_fields/social_media_field.dart';
 import 'package:fisheri/house_colors.dart';
 import 'package:fisheri/models/hours_of_operation.dart';
 import 'package:fisheri/models/venue_address.dart';
@@ -515,7 +516,7 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
                             ),
                             _ContactDetailsSection(),
                             SizedBox(height: 16),
-                            _SocialLinksSection(),
+                            SocialMediaField(),
                             SizedBox(height: 16),
                             Visibility(
                               visible: isShop(),
@@ -924,47 +925,6 @@ class _ContactDetailsSection extends StatelessWidget {
           validators: [
             FormBuilderValidators.url(),
           ],
-        ),
-      ],
-    );
-  }
-}
-
-class _SocialLinksSection extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        HouseTexts.subtitle('Social Links'),
-        FormBuilderTextField(
-          attribute: "social_facebook",
-          decoration: InputDecoration(
-            labelText: "Facebook",
-            helperText: "www.facebook.com/your_page_here",
-          ),
-          maxLines: 1,
-          validators: [],
-        ),
-        FormBuilderTextField(
-          attribute: "social_instagram",
-          decoration: InputDecoration(
-            labelText: "Instagram",
-            helperText: "@your_handle_here",
-          ),
-          maxLines: 1,
-          validators: [],
-        ),
-        FormBuilderTextField(
-          attribute: "social_twitter",
-          decoration: InputDecoration(labelText: "Twitter"),
-          maxLines: 1,
-          validators: [],
-        ),
-        FormBuilderTextField(
-          attribute: "social_youtube",
-          decoration: InputDecoration(labelText: "Youtube"),
-          maxLines: 1,
-          validators: [],
         ),
       ],
     );
