@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:fisheri/Components/form_fields/fishing_types_field.dart';
 import 'package:fisheri/house_colors.dart';
 import 'package:fisheri/models/hours_of_operation.dart';
 import 'package:fisheri/models/venue_address.dart';
@@ -518,9 +519,11 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
                             SizedBox(height: 16),
                             Visibility(
                               visible: isShop(),
-                              child: _FishingTypesSection(
-                                  title: 'Shop: Fishing Tackle',
-                                  attribute: 'fishing_tackles'),
+                              child: FishingTypesField(
+                                title: 'Shop: Fishing Tackle',
+                                attribute: 'fishing_tackles',
+                                fishingTypes: FishingTypes.values,
+                              ),
                             ),
                             Visibility(
                               visible: isLake(),
@@ -528,9 +531,18 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
                             ),
                             Visibility(
                               visible: isLake(),
-                              child: _FishingTypesSection(
-                                  title: 'Lake: Fishing Types',
-                                  attribute: 'fishing_types'),
+                              child: FishingTypesField(
+                                title: 'Lake: Fishing Types',
+                                attribute: 'fishing_types',
+                                fishingTypes: [
+                                  FishingTypes.carp,
+                                  FishingTypes.catfish,
+                                  FishingTypes.coarse,
+                                  FishingTypes.fly,
+                                  FishingTypes.match,
+                                  FishingTypes.predator,
+                                ],
+                              ),
                             ),
                             Visibility(
                               visible: isLake(),
@@ -1015,52 +1027,6 @@ class _FishStockedSection extends StatelessWidget {
   }
 }
 
-enum FishingTypes {
-  coarse,
-  match,
-  fly,
-  carp,
-  catfish,
-}
-
-class _FishingTypesSection extends StatelessWidget {
-  _FishingTypesSection({@required this.title, @required this.attribute});
-
-  final String title;
-  final String attribute;
-
-  final ReCase coarse = ReCase(describeEnum(FishingTypes.coarse));
-  final ReCase match = ReCase(describeEnum(FishingTypes.match));
-  final ReCase fly = ReCase(describeEnum(FishingTypes.fly));
-  final ReCase carp = ReCase(describeEnum(FishingTypes.carp));
-  final ReCase catfish = ReCase(describeEnum(FishingTypes.catfish));
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        HouseTexts.subtitle(title),
-        FormBuilderCheckboxList(
-          attribute: attribute,
-          options: [
-            FormBuilderFieldOption(
-                value: coarse.snakeCase, child: Text(coarse.titleCase)),
-            FormBuilderFieldOption(
-                value: match.snakeCase, child: Text(match.titleCase)),
-            FormBuilderFieldOption(
-                value: fly.snakeCase, child: Text(fly.titleCase)),
-            FormBuilderFieldOption(
-                value: carp.snakeCase, child: Text(carp.titleCase)),
-            FormBuilderFieldOption(
-                value: catfish.snakeCase, child: Text(catfish.titleCase)),
-          ],
-        ),
-        SizedBox(height: 16),
-      ],
-    );
-  }
-}
-
 enum Tickets {
   day,
   night,
@@ -1132,165 +1098,3 @@ class _CoordinatesSection extends StatelessWidget {
     );
   }
 }
-
-//enum DayOfTheWeek {
-//  monday,
-//  tuesday,
-//  wednesday,
-//  thursday,
-//  friday,
-//  saturday,
-//  sunday,
-//}
-
-//class _OperationalHoursSection extends StatefulWidget {
-//  _OperationalHoursSection({
-//    this.hoursOfOperation,
-//    this.onChanged,
-//  });
-//
-//  final HoursOfOperation hoursOfOperation;
-//  final ValueChanged<WeekDayState> onChanged;
-//
-//  @override
-//  __OperationalHoursSectionState createState() => __OperationalHoursSectionState();
-//}
-//
-//class __OperationalHoursSectionState extends State<_OperationalHoursSection> {
-//
-//  _WeekDaySection _buildWeekDaySection(DayOfTheWeek day, OpeningHoursDay data) {
-//    return _WeekDaySection(
-//      day: day,
-//      data: data,
-//      onChanged: (isOpen) {
-//        widget.onChanged(WeekDayState(dayOfTheWeek: day, isOpen: isOpen));
-//      },
-//    );
-//  }
-//
-//  OpeningHoursDay defaultOpeningHoursDay() {
-//    return OpeningHoursDay(open: "09:00", close: "17:00");
-//  }
-//
-//  @override
-//  Widget build(BuildContext context) {
-//    return Column(
-//      children: [
-//        Column(
-//          children: [
-//            _buildWeekDaySection(DayOfTheWeek.monday, widget.hoursOfOperation != null ? widget.hoursOfOperation.monday : null),
-//            _buildWeekDaySection(DayOfTheWeek.tuesday, widget.hoursOfOperation != null ? widget.hoursOfOperation.tuesday : null),
-//            _buildWeekDaySection(DayOfTheWeek.wednesday, widget.hoursOfOperation != null ? widget.hoursOfOperation.wednesday : null),
-//            _buildWeekDaySection(DayOfTheWeek.thursday, widget.hoursOfOperation != null ? widget.hoursOfOperation.thursday : null),
-//            _buildWeekDaySection(DayOfTheWeek.friday, widget.hoursOfOperation != null ? widget.hoursOfOperation.friday : null),
-//            _buildWeekDaySection(DayOfTheWeek.saturday, widget.hoursOfOperation != null ? widget.hoursOfOperation.saturday : null),
-//            _buildWeekDaySection(DayOfTheWeek.sunday, widget.hoursOfOperation != null ? widget.hoursOfOperation.sunday : null),
-//          ],
-//        )
-//      ],
-//    );
-//  }
-//}
-//
-//class WeekDayState {
-//  WeekDayState({this.dayOfTheWeek, this.isOpen});
-//
-//  final dayOfTheWeek;
-//  final isOpen;
-//}
-//
-//class _WeekDaySection extends StatefulWidget {
-//  _WeekDaySection({
-//    this.day,
-//    this.data,
-//    this.onChanged,
-//});
-//
-//  final OpeningHoursDay data;
-//  final DayOfTheWeek day;
-//  final ValueChanged<bool> onChanged;
-//
-//  @override
-//  __WeekDaySectionState createState() => __WeekDaySectionState();
-//}
-//
-//class __WeekDaySectionState extends State<_WeekDaySection> {
-//  bool _isOpen = false;
-//
-//  @override
-//  void initState() {
-//    super.initState();
-//    _isOpen = widget.data != null;
-//  }
-//
-//  DateTime _initialOpeningTime({bool isOpen, OpeningHoursDay data}) {
-//    var timeAsFormattedString;
-//    if (isOpen && data != null) {
-//      timeAsFormattedString = data.open;
-//    } else {
-//      timeAsFormattedString = "09:00";
-//    }
-//    return DateFormat('HH:mm').parse(timeAsFormattedString);
-//  }
-//
-//  DateTime _initialClosingTime({bool isOpen, OpeningHoursDay data}) {
-//    var timeAsFormattedString;
-//    if (isOpen && data != null) {
-//      timeAsFormattedString = data.close;
-//    } else {
-//      timeAsFormattedString = "17:00";
-//    }
-//    return DateFormat('HH:mm').parse(timeAsFormattedString);
-//  }
-//
-//  @override
-//  Widget build(BuildContext context) {
-//    return Column(
-//      children: [
-//        Row(
-//          mainAxisAlignment: MainAxisAlignment.start,
-//          children: [
-//            Checkbox(
-//              value: _isOpen,
-//              onChanged: (value) {
-//                widget.onChanged(value);
-//                setState(() {
-//                  _isOpen = value;
-//                });
-//              },
-//            ),
-//            Text(ReCase(describeEnum(widget.day)).titleCase),
-//          ]
-//        ),
-//        Visibility(
-//          visible: _isOpen,
-//          child: FormBuilderDateTimePicker(
-//            attribute: "${describeEnum(widget.day)}_open",
-//            decoration: InputDecoration(labelText: "Open"),
-//            inputType: InputType.time,
-//            builder: (context, child) =>
-//                MediaQuery(data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true), child: child),
-//            initialValue: _initialOpeningTime(isOpen: _isOpen, data: widget.data),
-//            validators: [
-//              FormBuilderValidators.required(),
-//            ],
-//          ),
-//        ),
-//        Visibility(
-//          visible: _isOpen,
-//          child: FormBuilderDateTimePicker(
-//            attribute: "${describeEnum(widget.day)}_close",
-//            decoration: InputDecoration(labelText: "Close"),
-//            inputType: InputType.time,
-//            initialValue: _initialClosingTime(isOpen: _isOpen, data: widget.data),
-//            builder: (context, child) =>
-//                MediaQuery(data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true), child: child),
-//            validators: [
-//              FormBuilderValidators.required(),
-//            ],
-//          ),
-//        ),
-//      ],
-//    );
-//  }
-//}

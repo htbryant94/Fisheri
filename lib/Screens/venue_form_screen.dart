@@ -1,4 +1,5 @@
 import 'package:fisheri/Components/form_builder_image_picker_custom.dart';
+import 'package:fisheri/Components/form_fields/fishing_types_field.dart';
 import 'package:fisheri/Screens/venue_form_edit_screen.dart';
 import 'package:fisheri/house_colors.dart';
 import 'package:fisheri/models/hours_of_operation.dart';
@@ -431,7 +432,11 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
                         SizedBox(height: 16),
                         Visibility(
                           visible: isShop(),
-                          child: _FishingTypesSection(title: 'Shop: Fishing Tackle', attribute: 'fishing_tackles'),
+                          child: FishingTypesField(
+                            title: 'Shop: Fishing Tackle',
+                            attribute: 'fishing_tackles',
+                            fishingTypes: FishingTypes.values,
+                          ),
                         ),
                         Visibility(
                           visible: isLake(),
@@ -439,7 +444,18 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
                         ),
                         Visibility(
                           visible: isLake(),
-                          child: _FishingTypesSection(title: 'Lake: Fishing Types', attribute: 'fishing_types'),
+                          child: FishingTypesField(
+                            title: 'Lake: Fishing Types',
+                            attribute: 'fishing_types',
+                            fishingTypes: [
+                              FishingTypes.carp,
+                              FishingTypes.catfish,
+                              FishingTypes.coarse,
+                              FishingTypes.fly,
+                              FishingTypes.match,
+                              FishingTypes.predator,
+                            ],
+                          ),
                         ),
                         Visibility(
                           visible: isLake(),
@@ -886,55 +902,6 @@ class _FishStockedSection extends StatelessWidget {
   }
 }
 
-enum FishingTypes {
-  coarse,
-  match,
-  fly,
-  carp,
-  catfish,
-}
-
-class _FishingTypesSection extends StatelessWidget {
-  _FishingTypesSection({
-    @required this.title,
-    @required this.attribute
-  });
-
-  final String title;
-  final String attribute;
-
-  final ReCase coarse = ReCase(describeEnum(FishingTypes.coarse));
-  final ReCase match = ReCase(describeEnum(FishingTypes.match));
-  final ReCase fly = ReCase(describeEnum(FishingTypes.fly));
-  final ReCase carp = ReCase(describeEnum(FishingTypes.carp));
-  final ReCase catfish = ReCase(describeEnum(FishingTypes.catfish));
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        HouseTexts.subtitle(title),
-        FormBuilderCheckboxList(
-          attribute: attribute,
-          options: [
-            FormBuilderFieldOption(
-                value: coarse.snakeCase, child: Text(coarse.titleCase)),
-            FormBuilderFieldOption(
-                value: match.snakeCase, child: Text(match.titleCase)),
-            FormBuilderFieldOption(
-                value: fly.snakeCase, child: Text(fly.titleCase)),
-            FormBuilderFieldOption(
-                value: carp.snakeCase, child: Text(carp.titleCase)),
-            FormBuilderFieldOption(
-                value: catfish.snakeCase, child: Text(catfish.titleCase)),
-          ],
-        ),
-        SizedBox(height: 16),
-      ],
-    );
-  }
-}
-
 enum Tickets {
   day,
   night,
@@ -1001,67 +968,6 @@ class _CoordinatesSection extends StatelessWidget {
             FormBuilderValidators.required(),
             FormBuilderValidators.numeric(),
           ],
-        ),
-      ],
-    );
-  }
-}
-
-class _OperationalHoursSection extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        HouseTexts.subtitle('Operational Hours'),
-        SizedBox(height: 16),
-        _OperationalHoursDay(day: 'Monday'),
-        SizedBox(height: 8),
-        _OperationalHoursDay(day: 'Tuesday'),
-        SizedBox(height: 8),
-        _OperationalHoursDay(day: 'Wednesday'),
-        SizedBox(height: 8),
-        _OperationalHoursDay(day: 'Thursday'),
-        SizedBox(height: 8),
-        _OperationalHoursDay(day: 'Friday'),
-        SizedBox(height: 8),
-        _OperationalHoursDay(day: 'Saturday'),
-        SizedBox(height: 8),
-        _OperationalHoursDay(day: 'Sunday'),
-      ],
-    );
-  }
-}
-
-class _OperationalHoursDay extends StatelessWidget {
-  _OperationalHoursDay({this.day});
-
-  final String day;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Text("$day"),
-        ),
-        FormBuilderDropdown(
-          attribute: "${day.toLowerCase()}_open",
-          decoration: InputDecoration(labelText: "Open"),
-          hint: Text('Open'),
-          items: OpeningHoursList.thirtyIntervalFromMorning
-              .map(
-                  (time) => DropdownMenuItem(value: time, child: Text("$time")))
-              .toList(),
-        ),
-        FormBuilderDropdown(
-          attribute: "${day.toLowerCase()}_close",
-          decoration: InputDecoration(labelText: "Close"),
-          hint: Text('Close'),
-          items: OpeningHoursList.thirtyIntervalFromAfternoon
-              .map(
-                  (time) => DropdownMenuItem(value: time, child: Text("$time")))
-              .toList(),
         ),
       ],
     );
