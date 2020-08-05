@@ -153,10 +153,10 @@ class CatchReportCell extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      HouseTexts.heading(name),
+                    children: [
+                      HouseTexts.custom(text: name, fontSize: 14),
                       dateLabel(),
                     ],
                   ),

@@ -113,21 +113,22 @@ class SearchResultCell extends StatelessWidget {
         child: RemoteImageBaseCell(
           title: venue.name,
           imageURL: venue.imageURL,
-          height: layout == BaseCellLayout.cover ? 290 : 250,
+          height: layout == BaseCellLayout.cover ? 275 : 250,
           layout: layout,
           elements: <Widget>[
             if (venue.categories != null)
               VenueCategoriesSection(categories: venue.categories),
-            _VenueOperational(true),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 if (venue.amenities != null)
                   _VenueFeatures(features: venue.amenities),
+                if (venue.categories.contains('shop') && !venue.categories.contains('lake'))
+                  _VenueOperational(true),
                 SizedBox(width: 16),
                 _VenueDistance('5 miles')
               ],
-            )
+            ),
           ],
         ));
   }
@@ -144,7 +145,7 @@ class _VenueOperational extends StatelessWidget {
       '${isOpen ? "Open" : "Closed"}',
       style: GoogleFonts.raleway(
         fontSize: 12,
-        fontWeight: FontWeight.w400,
+        fontWeight: FontWeight.w500,
         fontStyle: FontStyle.normal,
         color: isOpen ? Colors.green : Colors.red,
       ),

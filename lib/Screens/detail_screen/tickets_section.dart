@@ -11,14 +11,28 @@ class TicketsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           HouseTexts.heading('Tickets'),
           SizedBox(height: 8),
-          Column(
-            children: tickets.map((ticket) => _Ticket(type: ticket)).toList(),
+          HouseTexts.custom(text:'Prices from: £39', fontSize: 14, fontWeight: FontWeight.w600),
+          SizedBox(height: 8),
+          Padding(
+            padding: const EdgeInsets.only(left: 8),
+            child: Column(
+              children: tickets.map((ticket) => _Ticket(type: ticket)).toList(),
+            ),
           ),
+          RaisedButton(
+            child: Text(
+              "Book Now",
+              style: TextStyle(color: HouseColors.primaryGreen),
+            ),
+            color: HouseColors.accentGreen,
+            onPressed: () {},
+          )
         ],
       ),
     );
@@ -34,20 +48,14 @@ class _Ticket extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
       children: [
-        Text(ReCase(type).titleCase, style: TextStyle(fontWeight: FontWeight.bold)),
-        SizedBox(width: 16),
-        Text('Price from: £39'),
-        Spacer(),
-        RaisedButton(
-          child: Text(
-            "See more",
-            style: TextStyle(color: HouseColors.primaryGreen),
-          ),
-          color: HouseColors.accentGreen,
-          onPressed: () {},
-        )
+        Row(
+          children: [
+            HouseTexts.body('- ${ReCase(type).titleCase}'),
+          ],
+        ),
+        SizedBox(height: 8),
       ],
     );
   }

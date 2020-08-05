@@ -21,7 +21,7 @@ class Coordinator {
               CupertinoPageScaffold(
                 navigationBar: CupertinoNavigationBar(
                   previousPageTitle: currentPageTitle,
-                  middle: Text('Search Results'),
+                  middle: Text('${venues.length} ' + (venues.length == 1 ? 'Result' : 'Results')),
                 ),
                 child: SearchResultsScreen(searchResults: venues),
               ),
@@ -46,8 +46,6 @@ class Coordinator {
     pushCupertinoPageRoute(context,
     CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        previousPageTitle: currentPageTitle,
-        middle: Text(venue.name),
       ),
       child: DetailScreen(venue: venue, imageURL: imageURL),
     ));

@@ -107,9 +107,15 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                       CatchReportVisibility(
                         catchType: selectedCatchType,
                         supportedCatchTypes: [CatchType.single, CatchType.multi],
-                        child: _TypeOfFishSection(
-                          title: 'Type of Fish *',
-                          attribute: 'fish_type',
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Container(
+                            width: 200,
+                            child: _TypeOfFishSection(
+                              title: 'Type of Fish *',
+                              attribute: 'fish_type',
+                            ),
+                          ),
                         ),
                       ),
                       CatchReportVisibility(
@@ -152,10 +158,16 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                       CatchReportVisibility(
                         catchType: selectedCatchType,
                         supportedCatchTypes: CatchType.values,
-                        child: _DropDownMenuBuilder(
-                          title: 'Weather Conditions',
-                          attribute: 'weather_condition',
-                          items: FisheriConstants.weatherConditions,
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Container(
+                            width: 200,
+                            child: _DropDownMenuBuilder(
+                              title: 'Weather Conditions',
+                              attribute: 'weather_condition',
+                              items: FisheriConstants.weatherConditions,
+                            ),
+                          ),
                         ),
                       ),
                       CatchReportVisibility(
@@ -517,6 +529,7 @@ class _FishWeight extends StatelessWidget {
               width: 50,
               child: FormBuilderTextField(
                 attribute: 'fish_weight_whole',
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(suffixText: 'Ib'),
                 textAlign: TextAlign.center,
                 validators: _weightWholeValidators(),
@@ -528,6 +541,7 @@ class _FishWeight extends StatelessWidget {
               width: 50,
               child: FormBuilderTextField(
                 attribute: 'fish_weight_fraction',
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(suffixText: 'oz'),
                 validators: _weightFractionValidators(),
               ),

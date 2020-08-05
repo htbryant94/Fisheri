@@ -5,17 +5,21 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:recase/recase.dart';
 
 class FishingTypesSection extends StatelessWidget {
-  FishingTypesSection(this.fishTypes);
+  FishingTypesSection({
+    this.fishTypes,
+    this.title,
+  });
 
   final List<dynamic> fishTypes;
+  final String title;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Column(
         children: [
-          HouseTexts.heading('Fishing Types'),
+          HouseTexts.heading(title),
           const SizedBox(height: 16),
           Wrap(
               spacing: 16,
@@ -23,7 +27,7 @@ class FishingTypesSection extends StatelessWidget {
               children: fishTypes
                   .map((types) => _FishingTypeGridItem(
                 type: types,
-                itemWidth: MediaQuery.of(context).size.width / 2.5,
+                itemWidth: MediaQuery.of(context).size.width / 4,
               )).toList())
         ],
       ),
@@ -49,7 +53,7 @@ class __FishingTypeGridItemState extends State<_FishingTypeGridItem> {
   Widget build(BuildContext context) {
 
     Future<Image> _getImage() async {
-      String imageURL = await FirebaseStorage.instance.ref().child('fishing').child('types').child(('${widget.type}.jpg')).getDownloadURL();
+      String imageURL = await FirebaseStorage.instance.ref().child('fishing').child('types').child(('${widget.type}.png')).getDownloadURL();
       return await Image.network(imageURL);
     }
 
@@ -70,16 +74,12 @@ class __FishingTypeGridItemState extends State<_FishingTypeGridItem> {
               width: widget.itemWidth,
             );
           } else {
-            return Card(
-              elevation: 5,
-              clipBehavior: Clip.antiAliasWithSaveLayer,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
-                child: GridItem(
-                  item: ReCase(widget.type).titleCase,
-                  image: snapshot.data,
-                  width: widget.itemWidth,
-                ),
+            return Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
+              child: GridItem(
+                item: ReCase(widget.type).titleCase,
+                image: snapshot.data,
+                width: widget.itemWidth,
               ),
             );
           }

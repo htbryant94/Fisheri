@@ -22,22 +22,29 @@ class OpeningHoursSection extends StatelessWidget {
   Widget build(BuildContext context) {
     if (openingHours != null) {
       return Container(
-        padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Column(children: [
           HouseTexts.heading('Opening Hours'),
           SizedBox(height: 16),
           _buildOpeningHoursRow(day: 'Monday', openingHours: openingHours != null ? openingHours.monday : null),
+          SizedBox(height: 8),
           _buildOpeningHoursRow(day: 'Tuesday', openingHours: openingHours != null ? openingHours.tuesday : null),
+          SizedBox(height: 8),
           _buildOpeningHoursRow(day: 'Wednesday', openingHours: openingHours != null ? openingHours.wednesday : null),
+          SizedBox(height: 8),
           _buildOpeningHoursRow(day: 'Thursday', openingHours: openingHours != null ? openingHours.thursday : null),
+          SizedBox(height: 8),
           _buildOpeningHoursRow(day: 'Friday', openingHours: openingHours != null ? openingHours.friday : null),
+          SizedBox(height: 8),
           _buildOpeningHoursRow(day: 'Saturday', openingHours: openingHours != null ? openingHours.saturday : null),
+          SizedBox(height: 8),
           _buildOpeningHoursRow(day: 'Sunday', openingHours: openingHours != null ? openingHours.sunday : null),
+          SizedBox(height: 8),
         ]),
       );
     } else {
       return Container(
-        padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Column(children: [
           HouseTexts.heading('Opening Hours'),
           SizedBox(height: 16),

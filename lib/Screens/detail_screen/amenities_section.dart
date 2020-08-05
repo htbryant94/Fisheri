@@ -10,7 +10,7 @@ class AmenitiesSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(32, 8, 32, 8),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Column(
         children: [
           HouseTexts.heading('Amenities'),
@@ -46,7 +46,19 @@ class _Amenity extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      children: [Icon(Icons.person), HouseTexts.body(ReCase(amenity).titleCase)],
+      children: [
+        Image.asset(
+            'images/icons/amenities/$amenity.png',
+            height: 20,
+            width: 20,
+            errorBuilder: (BuildContext context, Object exception, StackTrace stackTrace) {
+              print("couldn't load asset for $amenity");
+              return Text('😢');
+            }
+        ),
+        SizedBox(width: 8),
+        HouseTexts.body(ReCase(amenity).titleCase)
+      ],
     );
   }
 }

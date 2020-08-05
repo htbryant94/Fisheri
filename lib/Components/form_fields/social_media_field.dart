@@ -32,8 +32,8 @@ class SocialMediaField extends StatelessWidget {
           attribute: "social_twitter",
           decoration: InputDecoration(
             labelText: "Twitter",
-            helperText: "e.g. www.twitter.com/fisheri_uk",
-            prefixText: "www.twitter.com/",
+            helperText: "e.g. @fisheriUK",
+            prefixText: "@",
           ),
           maxLines: 1,
           validators: [],
@@ -42,8 +42,8 @@ class SocialMediaField extends StatelessWidget {
           attribute: "social_youtube",
           decoration: InputDecoration(
               labelText: "Youtube",
-              helperText: "e.g. www.youtube.com/channel/fisheriUK",
-              prefixText: "www.youtube.com/channel/"
+              helperText: "e.g. www.youtube.com/user/fisheriUK",
+              prefixText: "www.youtube.com/user/"
           ),
           maxLines: 1,
           validators: [],

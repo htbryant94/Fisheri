@@ -40,7 +40,7 @@ class HouseTexts {
       child: Text(
         text,
         style: GoogleFonts.openSans(
-          fontSize: 14,
+          fontSize: 16,
           fontWeight: FontWeight.w400,
           color: Colors.black,
         ),

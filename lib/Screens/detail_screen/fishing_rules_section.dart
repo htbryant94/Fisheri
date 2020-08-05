@@ -23,7 +23,7 @@ class FishingRulesSection extends StatelessWidget {
         maxLines: content != null ? 8 : 0,
       );
       return Container(
-          padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Column(children: [
             HouseTexts.heading('Fishing Rules'),
             SizedBox(height: 16),
@@ -31,14 +31,7 @@ class FishingRulesSection extends StatelessWidget {
             readMoreButton
           ]));
     } else {
-      return Container(
-        padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
-        child: Column(children: [
-          HouseTexts.heading('Fishing Rules'),
-          SizedBox(height: 16),
-          Text("No information has been specified for this section. Request the owner of this property to provide this data."),
-        ]),
-      );
+      return Container();
     }
   }
 }

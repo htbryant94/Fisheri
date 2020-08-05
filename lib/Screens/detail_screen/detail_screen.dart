@@ -42,6 +42,7 @@ class DetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       body: SafeArea(
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
@@ -74,7 +75,17 @@ class DetailScreen extends StatelessWidget {
               ),
               Visibility(
                 visible: isLake(),
-                child: FishingTypesSection(venue.fishingTypes),
+                child: FishingTypesSection(
+                    title: 'Fishing Types',
+                    fishTypes: venue.fishingTypes
+                ),
+              ),
+              Visibility(
+                visible: isShop(),
+                child: FishingTypesSection(
+                  title: 'Fishing Tackles Stocked',
+                  fishTypes: venue.fishingTackles,
+                ),
               ),
               Visibility(
                 visible: isLake(),

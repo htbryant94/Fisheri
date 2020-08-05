@@ -68,14 +68,20 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
                   SizedBox(height: 16),
                   Visibility(
                     visible: selectedReportType == "lake",
-                    child: Column(
-                      children: [
-                        HouseTexts.subheading('Specified Lake *'),
-                        _LakesDropDownMenu(
-                          isEnabled: selectedReportType == "lake",
-                          snapshotLakes: widget.availableLakes,
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        width: 300,
+                        child: Column(
+                          children: [
+                            HouseTexts.subheading('Specified Lake *'),
+                            _LakesDropDownMenu(
+                              isEnabled: selectedReportType == "lake",
+                              snapshotLakes: widget.availableLakes,
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
                   Visibility(

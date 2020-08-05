@@ -34,14 +34,19 @@ class _ImageCarouselState extends State<ImageCarousel> {
         height: 350,
         itemBuilder: (BuildContext context, int itemIndex) =>
             imageURLsHasValue()
-                ? CachedNetworkImage(
-                    imageUrl: widget.imageURLs[itemIndex],
-                    fit: BoxFit.fill,
-                    placeholder: (context, url) => Align(
-                      alignment: Alignment.center,
-                      child: CircularProgressIndicator(),
+                ? Container(
+              decoration: BoxDecoration(
+                color: Colors.black,
+              ),
+                  child: CachedNetworkImage(
+                      imageUrl: widget.imageURLs[itemIndex],
+                      fit: BoxFit.fitWidth,
+                      placeholder: (context, url) => Align(
+                        alignment: Alignment.center,
+                        child: CircularProgressIndicator(),
+                      ),
                     ),
-                  )
+                )
                 : Image.asset('images/lake.jpg', fit: BoxFit.cover),
         onPageChanged: (index) {
           setState(() {
@@ -56,7 +61,7 @@ class _ImageCarouselState extends State<ImageCarousel> {
         bottom: 16,
         child: CirclePageIndicator(
           selectedDotColor: Colors.white,
-          dotColor: Colors.grey[400],
+          dotColor: Colors.grey[500],
           itemCount: imageURLsHasValue() ? widget.imageURLs.length : 1,
           currentPageNotifier: _currentPageNotifier,
         ),

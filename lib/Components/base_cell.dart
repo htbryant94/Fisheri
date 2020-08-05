@@ -236,7 +236,7 @@ class RemoteImageBaseCell extends StatelessWidget {
 
   List<Widget> _children() {
     List<Widget> stuff = [
-      HouseTexts.heading('$title'),
+      HouseTexts.custom(text: '$title', fontSize: 14),
       if (subtitle != null) HouseTexts.subheading('$subtitle')
     ];
     if (elements != null && elements.isNotEmpty) {
@@ -286,20 +286,22 @@ class RemoteImageBaseCell extends StatelessWidget {
             : Padding(
                 padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                 child: Column(
-//            crossAxisAlignment: CrossAxisAlignment.stretch,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Flexible(
                       flex: 4,
                       child: imageURL != null
                           ? CachedNetworkImage(
-                              fit: BoxFit.fill,
+                              fit: BoxFit.cover,
                               imageUrl: imageURL,
                               placeholder: (context, url) => Container(
-                                padding: EdgeInsets.all(16),
-                                child: CircularProgressIndicator(),
+                                child: Align(
+                                  alignment: Alignment.center,
+                                  child: CircularProgressIndicator(),
+                                ),
                               ),
                             )
-                          : Image.asset(defaultImagePath ?? 'images/lake.jpg'),
+                          : Image.asset(defaultImagePath ?? 'images/lake.jpg', fit: BoxFit.cover),
                     ),
                     Flexible(
                       flex: 2,
@@ -308,7 +310,7 @@ class RemoteImageBaseCell extends StatelessWidget {
                             horizontal: 8, vertical: 8),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: _children(),
                         ),
                       ),
