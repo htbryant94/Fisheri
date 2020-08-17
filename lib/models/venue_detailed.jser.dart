@@ -58,6 +58,7 @@ abstract class _$VenueDetailedJSONSerializer
         codeIterable(model.tickets, (val) => passProcessor.serialize(val)));
     setMapValue(ret, 'hours_of_operation',
         _hoursOfOperationJSONSerializer.toMap(model.operationalHours));
+    setMapValue(ret, 'always_open', model.alwaysOpen);
     setMapValue(ret, 'fishing_rules', model.fishingRules);
     return ret;
   }
@@ -93,6 +94,7 @@ abstract class _$VenueDetailedJSONSerializer
         map['tickets'] as Iterable, (val) => passProcessor.deserialize(val));
     obj.operationalHours = _hoursOfOperationJSONSerializer
         .fromMap(map['hours_of_operation'] as Map);
+    obj.alwaysOpen = map['always_open'] as bool;
     obj.fishingRules = map['fishing_rules'] as String;
     return obj;
   }

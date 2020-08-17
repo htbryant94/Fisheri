@@ -13,22 +13,33 @@ enum DayOfTheWeek {
   friday,
   saturday,
   sunday,
+  everyDay,
 }
 
 class OperationalHoursField extends StatefulWidget {
   OperationalHoursField({
     this.hoursOfOperation,
+    this.alwaysOpen,
     this.onChanged,
   });
 
   final HoursOfOperation hoursOfOperation;
   final ValueChanged<WeekDayState> onChanged;
+  final alwaysOpen;
 
   @override
   OperationalHoursSectionState createState() => OperationalHoursSectionState();
 }
 
 class OperationalHoursSectionState extends State<OperationalHoursField> {
+
+  bool _isAlwaysOpen;
+
+  @override
+  void initState() {
+    super.initState();
+    _isAlwaysOpen = widget.alwaysOpen;
+  }
 
   _WeekDaySection _buildWeekDaySection(DayOfTheWeek day, OpeningHoursDay data) {
     return _WeekDaySection(
@@ -50,13 +61,34 @@ class OperationalHoursSectionState extends State<OperationalHoursField> {
       children: [
         Column(
           children: [
-            _buildWeekDaySection(DayOfTheWeek.monday, widget.hoursOfOperation != null ? widget.hoursOfOperation.monday : null),
-            _buildWeekDaySection(DayOfTheWeek.tuesday, widget.hoursOfOperation != null ? widget.hoursOfOperation.tuesday : null),
-            _buildWeekDaySection(DayOfTheWeek.wednesday, widget.hoursOfOperation != null ? widget.hoursOfOperation.wednesday : null),
-            _buildWeekDaySection(DayOfTheWeek.thursday, widget.hoursOfOperation != null ? widget.hoursOfOperation.thursday : null),
-            _buildWeekDaySection(DayOfTheWeek.friday, widget.hoursOfOperation != null ? widget.hoursOfOperation.friday : null),
-            _buildWeekDaySection(DayOfTheWeek.saturday, widget.hoursOfOperation != null ? widget.hoursOfOperation.saturday : null),
-            _buildWeekDaySection(DayOfTheWeek.sunday, widget.hoursOfOperation != null ? widget.hoursOfOperation.sunday : null),
+            Row(
+              children: [
+                Checkbox(
+                  value: _isAlwaysOpen,
+                  onChanged: (value) {
+                    setState(() {
+                      _isAlwaysOpen = value;
+                    });
+                    widget.onChanged(WeekDayState(dayOfTheWeek: DayOfTheWeek.everyDay, isOpen: value));
+                  },
+                ),
+                Text('24 / 7'),
+                ],
+            ),
+            Visibility(
+              visible: !_isAlwaysOpen,
+              child: Column(
+                children: [
+                  _buildWeekDaySection(DayOfTheWeek.monday, widget.hoursOfOperation != null ? widget.hoursOfOperation.monday : null),
+                  _buildWeekDaySection(DayOfTheWeek.tuesday, widget.hoursOfOperation != null ? widget.hoursOfOperation.tuesday : null),
+                  _buildWeekDaySection(DayOfTheWeek.wednesday, widget.hoursOfOperation != null ? widget.hoursOfOperation.wednesday : null),
+                  _buildWeekDaySection(DayOfTheWeek.thursday, widget.hoursOfOperation != null ? widget.hoursOfOperation.thursday : null),
+                  _buildWeekDaySection(DayOfTheWeek.friday, widget.hoursOfOperation != null ? widget.hoursOfOperation.friday : null),
+                  _buildWeekDaySection(DayOfTheWeek.saturday, widget.hoursOfOperation != null ? widget.hoursOfOperation.saturday : null),
+                  _buildWeekDaySection(DayOfTheWeek.sunday, widget.hoursOfOperation != null ? widget.hoursOfOperation.sunday : null),
+                ],
+              ),
+            )
           ],
         )
       ],

@@ -39,10 +39,16 @@ class DetailScreen extends StatelessWidget {
     return venue.categories.contains('shop');
   }
 
+  bool hasSocialLinks() {
+    return venue.social.facebook != null && venue.social.facebook.isNotEmpty ||
+        venue.social.twitter != null && venue.social.twitter.isNotEmpty ||
+        venue.social.instagram != null && venue.social.instagram.isNotEmpty ||
+        venue.social.youtube != null && venue.social.youtube.isNotEmpty;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: SafeArea(
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
@@ -60,13 +66,16 @@ class DetailScreen extends StatelessWidget {
               if (venue.categories != null )
               Padding(
                 padding: const EdgeInsets.only(left: 16),
-                child: VenueCategoriesSection(categories: venue.categories),
+                child: VenueCategoriesSection(categories: venue.categories, alwaysOpen: venue.alwaysOpen != null ? venue.alwaysOpen : false),
               ),
               DescriptionSection(
                 text: venue.description,
                 descriptionExpanded: descriptionExpanded,
               ),
-              SocialMediaSection(social: venue.social),
+              Visibility(
+                visible: hasSocialLinks(),
+                child: SocialMediaSection(social: venue.social),
+              ),
               MapViewSection(address: venue.address),
               ButtonSection(Colors.blue),
               Visibility(
@@ -97,8 +106,11 @@ class DetailScreen extends StatelessWidget {
                   tickets: venue.tickets,
                 ),
               ),
-              OpeningHoursSection(
-                openingHours: venue.operationalHours,
+              Visibility(
+                visible: venue.alwaysOpen != null ? !venue.alwaysOpen : true,
+                child: OpeningHoursSection(
+                  openingHours: venue.operationalHours,
+                ),
               ),
               Visibility(
                 visible: isLake(),

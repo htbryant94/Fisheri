@@ -140,7 +140,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           height: 275,
                           elements: [
                             if (_selectedVenue.categories != null)
-                            VenueCategoriesSection(categories: _selectedVenue.categories),
+                            VenueCategoriesSection(categories: _selectedVenue.categories, alwaysOpen:  _selectedVenue.alwaysOpen ?? false),
                           ],
                         ),
                       ),

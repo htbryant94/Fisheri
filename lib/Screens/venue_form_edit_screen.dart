@@ -66,6 +66,7 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
   bool _imagesReadOnly = true;
 
   bool _operationalHoursEnabled;
+  bool _alwaysOpen;
   bool _isMondayOpen = false;
   bool _isTuesdayOpen = false;
   bool _isWednesdayOpen = false;
@@ -78,7 +79,9 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
   void initState() {
     super.initState();
     selectedCategories = widget.venue.categories.cast<String>();
-    _operationalHoursEnabled = widget.venue.operationalHours != null;
+    _operationalHoursEnabled = widget.venue.operationalHours != null || widget.venue.alwaysOpen;
+    _alwaysOpen = widget.venue.alwaysOpen ?? false;
+
     print('EDITING VENUE WITH ID: ${widget.venueID}');
 
     if (widget.venue.operationalHours != null) {
@@ -115,7 +118,7 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
       OpeningHoursDay saturday;
       OpeningHoursDay sunday;
 
-      if(_isMondayOpen) {
+      if (_isMondayOpen) {
         print('monday');
         monday = OpeningHoursDay(
           open: DateFormat('HH:mm').format(_valueFor(attribute: 'monday_open')),
@@ -123,7 +126,7 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
         );
       }
 
-      if(_isTuesdayOpen) {
+      if (_isTuesdayOpen) {
         print('tuesday');
         tuesday = OpeningHoursDay(
           open: DateFormat('HH:mm').format(_valueFor(attribute: 'tuesday_open')),
@@ -131,7 +134,7 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
         );
       }
 
-      if(_isWednesdayOpen) {
+      if (_isWednesdayOpen) {
         print('wednesday');
         wednesday = OpeningHoursDay(
           open: DateFormat('HH:mm').format(_valueFor(attribute: 'wednesday_open')),
@@ -139,7 +142,7 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
         );
       }
 
-      if(_isThursdayOpen) {
+      if (_isThursdayOpen) {
         print('thursday');
         thursday = OpeningHoursDay(
           open: DateFormat('HH:mm').format(_valueFor(attribute: 'thursday_open')),
@@ -147,7 +150,7 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
         );
       }
 
-      if(_isFridayOpen) {
+      if (_isFridayOpen) {
         print('friday');
         friday = OpeningHoursDay(
           open: DateFormat('HH:mm').format(_valueFor(attribute: 'friday_open')),
@@ -155,7 +158,7 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
         );
       }
 
-      if(_isSaturdayOpen) {
+      if (_isSaturdayOpen) {
         print('saturday');
         saturday = OpeningHoursDay(
           open: DateFormat('HH:mm').format(_valueFor(attribute: 'saturday_open')),
@@ -163,7 +166,7 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
         );
       }
 
-      if(_isSundayOpen) {
+      if (_isSundayOpen) {
         print('sunday');
         sunday = OpeningHoursDay(
           open: DateFormat('HH:mm').format(_valueFor(attribute: 'sunday_open')),
@@ -200,17 +203,18 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
           phone: _valueFor(attribute: 'contact_phone'),
         ),
         social: Social(
-          facebook: _valueFor(attribute: 'social_facebook'),
-          instagram: _valueFor(attribute: 'social_instagram'),
-          twitter: _valueFor(attribute: 'social_twitter'),
-          youtube: _valueFor(attribute: 'social_youtube'),
+          facebook: _valueFor(attribute: 'social_facebook').toString().isNotEmpty ? _valueFor(attribute: 'social_facebook') : null,
+          instagram: _valueFor(attribute: 'social_instagram').toString().isNotEmpty ? _valueFor(attribute: 'social_instagram') : null,
+          twitter: _valueFor(attribute: 'social_twitter').toString().isNotEmpty ? _valueFor(attribute: 'social_twitter') : null,
+          youtube: _valueFor(attribute: 'social_youtube').toString().isNotEmpty ? _valueFor(attribute: 'social_youtube') : null,
         ),
         fishStocked: isLake() ? _valueFor(attribute: 'fish_stocked') : null,
         fishingTackles:
             isShop() ? _valueFor(attribute: 'fishing_tackles') : null,
         fishingTypes: isLake() ? _valueFor(attribute: 'fishing_types') : null,
         tickets: isLake() ? _valueFor(attribute: 'tickets') : null,
-        operationalHours: _operationalHoursEnabled ? getOperationalHours() : null,
+        operationalHours: (_operationalHoursEnabled && !_alwaysOpen) ? getOperationalHours() : null,
+        alwaysOpen: _alwaysOpen,
         fishingRules: isLake() ? _valueFor(attribute: 'fishing_rules') : null,
         images: imageURLs.isNotEmpty ? imageURLs : null,
         websiteURL: _valueFor(attribute: 'contact_url'),
@@ -229,6 +233,7 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
         fishStocked: venue.fishStocked,
         fishingTackles: venue.fishingTackles,
         fishingTypes: venue.fishingTypes,
+        alwaysOpen: _alwaysOpen,
       );
     }
 
@@ -569,6 +574,7 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
                               visible: _operationalHoursEnabled,
                               child: OperationalHoursField(
                                 hoursOfOperation: widget.venue.operationalHours,
+                                alwaysOpen: _alwaysOpen,
                                 onChanged: (weekDayState) {
                                   switch (weekDayState.dayOfTheWeek) {
                                     case DayOfTheWeek.monday:
@@ -592,6 +598,9 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
                                     case DayOfTheWeek.sunday:
                                       _isSundayOpen = weekDayState.isOpen;
                                       break;
+
+                                    case DayOfTheWeek.everyDay:
+                                      _alwaysOpen = weekDayState.isOpen;
                                   }
                                 },
                               ),

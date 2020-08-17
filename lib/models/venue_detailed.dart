@@ -19,6 +19,7 @@ part 'venue_detailed.jser.dart';
     'operationalHours': EnDecode(alias: 'hours_of_operation'),
     'websiteURL': EnDecode(alias: 'website_url'),
     'numberOfLakes': EnDecode(alias: 'number_of_lakes'),
+    'alwaysOpen': EnDecode(alias: 'always_open'),
   },
 )
 class VenueDetailedJSONSerializer extends Serializer<VenueDetailed>
@@ -42,6 +43,7 @@ class VenueDetailed {
     this.fishingTypes,
     this.tickets,
     this.operationalHours,
+    this.alwaysOpen,
     this.fishingRules,
   });
 
@@ -62,6 +64,7 @@ class VenueDetailed {
   List<dynamic> fishingTypes;
   List<dynamic> tickets;
   HoursOfOperation operationalHours;
+  bool alwaysOpen;
   String fishingRules;
 }
 

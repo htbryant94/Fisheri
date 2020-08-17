@@ -14,23 +14,41 @@ import 'package:google_fonts/google_fonts.dart';
 class VenueCategoriesSection extends StatelessWidget {
   VenueCategoriesSection({
     this.categories,
+    this.alwaysOpen = false,
   });
 
   final List<dynamic> categories;
+  final bool alwaysOpen;
 
   @override
   Widget build(BuildContext context) {
+
+    if (alwaysOpen && !categories.contains("24/7")) {
+      categories.add("24/7");
+    }
+
+    Color getColorForCategory(String category) {
+      if (category == "lake") {
+        return Colors.blue;
+      } else if (category == "shop") {
+        return Colors.orange;
+      } else if (category == "24/7") {
+        return Colors.green;
+      }
+      return Colors.grey;
+    }
+
     return Row(
-      children: categories.map((category) =>
+      children: categories.asMap().entries.map((category) =>
       Row(
         children: [
           Container(
             decoration: BoxDecoration(
-                color: category == 'lake' ? Colors.blue : Colors.orange,
+                color: getColorForCategory(category.value),
                 borderRadius: BorderRadius.circular(6),
             ),
             padding: EdgeInsets.fromLTRB(4, 4, 4, 4),
-            child: HouseTexts.custom(text: StringUtils.capitalize(category), fontSize: 12, color: Colors.white),
+            child: HouseTexts.custom(text: StringUtils.capitalize(category.value), fontSize: 12, color: Colors.white),
           ),
           SizedBox(width: 8),
         ],
@@ -68,7 +86,7 @@ class EditVenueCell extends StatelessWidget {
           height: 275,
           elements: <Widget>[
             if (venue.categories != null)
-              VenueCategoriesSection(categories: venue.categories),
+              VenueCategoriesSection(categories: venue.categories, alwaysOpen: venue.alwaysOpen ?? false),
             _VenueOperational(true),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -117,7 +135,7 @@ class SearchResultCell extends StatelessWidget {
           layout: layout,
           elements: <Widget>[
             if (venue.categories != null)
-              VenueCategoriesSection(categories: venue.categories),
+              VenueCategoriesSection(categories: venue.categories, alwaysOpen: venue.alwaysOpen ?? false),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

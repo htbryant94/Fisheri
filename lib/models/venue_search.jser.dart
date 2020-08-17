@@ -36,6 +36,7 @@ abstract class _$VenueSearchJSONSerializer implements Serializer<VenueSearch> {
         'fishing_types',
         codeIterable(
             model.fishingTypes, (val) => passProcessor.serialize(val)));
+    setMapValue(ret, 'always_open', model.alwaysOpen);
     return ret;
   }
 
@@ -59,6 +60,7 @@ abstract class _$VenueSearchJSONSerializer implements Serializer<VenueSearch> {
         (val) => passProcessor.deserialize(val));
     obj.fishingTypes = codeIterable<dynamic>(map['fishing_types'] as Iterable,
         (val) => passProcessor.deserialize(val));
+    obj.alwaysOpen = map['always_open'] as bool;
     return obj;
   }
 }

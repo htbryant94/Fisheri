@@ -14,6 +14,7 @@ part 'venue_search.jser.dart';
     'fishingTypes': EnDecode(alias: 'fishing_types'),
     'imageURL': EnDecode(alias: 'image_url'),
     'numberOfLakes': EnDecode(alias: 'number_of_lakes'),
+    'alwaysOpen': EnDecode(alias: 'always_open'),
   },
 )
 class VenueSearchJSONSerializer extends Serializer<VenueSearch>
@@ -31,6 +32,7 @@ class VenueSearch {
     this.fishStocked,
     this.fishingTackles,
     this.fishingTypes,
+    this.alwaysOpen,
   });
 
   String name;
@@ -43,4 +45,5 @@ class VenueSearch {
   List<dynamic> fishStocked;
   List<dynamic> fishingTackles;
   List<dynamic> fishingTypes;
+  bool alwaysOpen;
 }

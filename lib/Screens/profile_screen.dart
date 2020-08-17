@@ -28,16 +28,16 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final List<ProfileListItem> items = [
-//      ProfileListItem(
-//          screen: VenueFormScreen(),
-//          title: "Add a Venue",
-//          icon: Icon(Icons.add, color: Colors.green)
-//      ),
-//      ProfileListItem(
-//          screen: AllVenuesListBuilder(),
-//          title: "Edit a Venue",
-//          icon: Icon(Icons.library_books, color: Colors.green)
-//      ),
+      ProfileListItem(
+          screen: VenueFormScreen(),
+          title: "Add a Venue",
+          icon: Icon(Icons.add, color: Colors.green)
+      ),
+      ProfileListItem(
+          screen: AllVenuesListBuilder(),
+          title: "Edit a Venue",
+          icon: Icon(Icons.library_books, color: Colors.green)
+      ),
       ProfileListItem(
           screen: AuthScreen(),
           title: "Login",
