@@ -79,7 +79,7 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
   void initState() {
     super.initState();
     selectedCategories = widget.venue.categories.cast<String>();
-    _operationalHoursEnabled = widget.venue.operationalHours != null || widget.venue.alwaysOpen;
+    _operationalHoursEnabled = widget.venue.operationalHours != null || widget.venue.alwaysOpen != null ? widget.venue.alwaysOpen : false;
     _alwaysOpen = widget.venue.alwaysOpen ?? false;
 
     print('EDITING VENUE WITH ID: ${widget.venueID}');
