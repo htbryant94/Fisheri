@@ -10,6 +10,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:fisheri/Components/base_cell.dart';
 import 'package:fisheri/coordinator.dart';
 import 'package:fisheri/firestore_request_service.dart';
+import 'package:geolocator/geolocator.dart';
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -30,10 +31,47 @@ class _SearchScreenState extends State<SearchScreen> {
   double _radiusSliderValue = 0;
   final _latitude = 51.979900;
   final _longitude = -0.214280;
+  final _defaultPosition = Position(latitude: 51.979900, longitude: -0.214280);
   VenueSearch _selectedVenue;
   String _selectedVenueType;
   List<VenueSearch> _venues = [];
   double _maxSearchRadius = 100;
+  Position _currentPosition;
+  GeoFirePoint _center;
+  final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
+  StreamSubscription<Position> positionStream;
+
+  void _getCurrentLocation() {
+    geolocator
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
+        .then((Position position) {
+      setState(() {
+        _currentPosition = position;
+        _center = geo.point(latitude: _currentPosition.latitude, longitude: _currentPosition.longitude);
+      });
+
+      if (_currentPosition != null) {
+        CameraUpdate cameraUpdate = CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(_currentPosition.latitude, _currentPosition.longitude), zoom: 10.0));
+        _mapController.animateCamera(cameraUpdate);
+
+        circles = null;
+        circles = Set.from([
+          Circle(
+            circleId: CircleId("123"),
+            center: LatLng(_currentPosition.latitude, _currentPosition.longitude),
+            radius: (radius.value * 1000),
+            strokeWidth: 2,
+            fillColor: Colors.greenAccent.withOpacity(0.6),
+            strokeColor: Colors.green[200],
+          )
+        ]);
+        _performSearch();
+      }
+
+    }).catchError((e) {
+      print(e);
+    });
+  }
 
   @override
   void initState() {
@@ -41,7 +79,21 @@ class _SearchScreenState extends State<SearchScreen> {
     geo = Geoflutterfire();
     radius.value = 15;
     _radiusSliderValue = radius.value;
-    GeoFirePoint center = geo.point(latitude: _latitude, longitude: _longitude);
+//    GeoFirePoint center = geo.point(latitude: _latitude, longitude: _longitude);
+
+    _getCurrentLocation();
+
+    if (_currentPosition != null) {
+      setState(() {
+        _center = geo.point(latitude: _currentPosition.latitude, longitude: _currentPosition.longitude);
+      });
+      print("using current position");
+    } else {
+      setState(() {
+        _center = geo.point(latitude: _defaultPosition.latitude, longitude: _defaultPosition.longitude);
+      });
+      print("using default position");
+    }
     BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(32, 32)), 'images/icons/map_icon.png').then((onValue) {
       pinLocationIcon = onValue;
     });
@@ -49,7 +101,7 @@ class _SearchScreenState extends State<SearchScreen> {
     circles = Set.from([
       Circle(
         circleId: CircleId("123"),
-        center: LatLng(_latitude, _longitude),
+        center: _currentPosition != null ? LatLng(_currentPosition.latitude, _currentPosition.longitude) : LatLng(_defaultPosition.latitude, _defaultPosition.longitude),
         radius: (radius.value * 1000),
         strokeWidth: 2,
         fillColor: Colors.greenAccent.withOpacity(0.6),
@@ -61,20 +113,28 @@ class _SearchScreenState extends State<SearchScreen> {
       var collectionReference = _firestore.collection('venues_search');
       if (rad.floor() < _maxSearchRadius) {
         return geo.collection(collectionRef: collectionReference).within(
-            center: center,
+            center: _center,
             radius: rad,
             field: 'position',
             strictMode: true
         );
       } else {
         return geo.collection(collectionRef: collectionReference).within(
-          center: center,
+          center: _center,
           radius: 1000,
           field: 'position',
           strictMode: false,
         );
       }
     });
+
+    positionStream = geolocator.getPositionStream().listen((position) {
+      setState(() {
+        _currentPosition = position;
+      });
+      _getCurrentLocation();
+    });
+
 //    _addPoint(51.979900, -0.214280);
   }
   
@@ -99,12 +159,13 @@ class _SearchScreenState extends State<SearchScreen> {
         child: Stack(children: <Widget> [
           GoogleMap(
             mapType: MapType.normal,
-            initialCameraPosition: const CameraPosition(
-              target: LatLng(51.979900, -0.214280),
+            initialCameraPosition: CameraPosition(
+            target: _currentPosition != null ? LatLng(_currentPosition.latitude, _currentPosition.longitude) : LatLng(_defaultPosition.latitude, _defaultPosition.longitude),
               zoom: 8.0,
             ),
+            myLocationEnabled: true,
             compassEnabled: false,
-            myLocationButtonEnabled: false,
+            myLocationButtonEnabled: true,
             onMapCreated: _onMapCreated,
             markers: Set<Marker>.of(markers.values),
             circles: circles,
@@ -178,7 +239,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                 circles = Set.from([
                                   Circle(
                                     circleId: CircleId("123"),
-                                    center: LatLng(_latitude, _longitude),
+                                    center: _currentPosition != null ? LatLng(_currentPosition.latitude, _currentPosition.longitude) : LatLng(_defaultPosition.latitude, _defaultPosition.longitude),
                                     radius: (value * 1000),
                                     strokeWidth: 2,
                                     fillColor:
