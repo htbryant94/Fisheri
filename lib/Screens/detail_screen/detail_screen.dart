@@ -1,3 +1,4 @@
+import 'package:fisheri/Screens/detail_screen/contents_section.dart';
 import 'package:fisheri/design_system.dart';
 import 'package:fisheri/house_texts.dart';
 import 'package:fisheri/models/venue_address.dart';
@@ -75,12 +76,27 @@ class DetailScreen extends StatelessWidget {
       );
     }
 
-    sections.add(DSComponents.sectionSpacer());
+    sections.add(DSComponents.paragraphSpacer());
 
     sections.add(
         DescriptionSection(
           text: venue.description,
         )
+    );
+
+    sections.add(DSComponents.paragraphSpacer());
+
+    sections.add(
+      ContentsSection(
+        contents: [
+          "Location",
+          "Amenities",
+          "Fishing Types",
+          "Fish",
+          "Rules",
+          "Opening Hours"
+        ],
+      )
     );
 
     sections.add(DSComponents.divider());
@@ -150,8 +166,8 @@ class MapViewSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        HouseTexts.heading('Map View'),
-        SizedBox(height: 16),
+        DSComponents.header(text: "Location"),
+        DSComponents.doubleSpacer(),
         AspectRatio(
           aspectRatio: 1.5,
           child: Card(

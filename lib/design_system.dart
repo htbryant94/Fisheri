@@ -45,6 +45,16 @@ class DesignSystemFonts {
       fontSize: 12,
     );
   }
+
+  static TextStyle link(Color color) {
+    return GoogleFonts.dMSans(
+      color: color,
+      fontWeight: FontWeight.normal,
+      letterSpacing: 0.1,
+      fontSize: 14,
+      decoration: TextDecoration.underline
+    );
+  }
 }
 
 class DSComponents {
@@ -60,7 +70,11 @@ class DSComponents {
   static SizedBox doubleSpacer() {
     return SizedBox(height: 16, width: 16);
   }
-  
+
+  static SizedBox paragraphSpacer() {
+    return SizedBox(height: 30, width: 30);
+  }
+
   static SizedBox sectionSpacer() {
     return SizedBox(height: 40, width: 50);
   }
@@ -145,6 +159,20 @@ class DSComponents {
           fontWeight: fontWeight,
           color: color,
         ),
+      ),
+    );
+  }
+
+  static Widget link({
+    String text,
+    Color color,
+    AlignmentGeometry alignment = Alignment.centerLeft,
+  }) {
+    return Align(
+      alignment: alignment,
+      child: Text(
+        text,
+        style: DesignSystemFonts.link(color)
       ),
     );
   }
