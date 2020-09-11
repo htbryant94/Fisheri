@@ -62,7 +62,7 @@ class DSComponents {
   }
   
   static SizedBox sectionSpacer() {
-    return SizedBox(height: 50, width: 50);
+    return SizedBox(height: 40, width: 50);
   }
   
   static Widget divider() {

@@ -75,7 +75,7 @@ class DetailScreen extends StatelessWidget {
       );
     }
 
-    sections.add(DSComponents.singleSpacer());
+    sections.add(DSComponents.sectionSpacer());
 
     sections.add(
         DescriptionSection(
