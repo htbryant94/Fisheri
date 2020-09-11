@@ -14,6 +14,13 @@ class DSColors {
 }
 
 class DesignSystemFonts {
+  static TextStyle title = GoogleFonts.dMSans(
+    color: DSColors.black,
+    fontWeight: FontWeight.bold,
+    letterSpacing: -0.2,
+    fontSize: 20,
+  );
+
   static TextStyle header = GoogleFonts.dMSans(
     color: DSColors.black,
     fontWeight: FontWeight.bold,
@@ -50,6 +57,19 @@ class DSComponents {
         Divider(thickness: 0.5, color: DSColors.black.withOpacity(0.2)),
         sectionSpacer(),
       ],
+    );
+  }
+
+  static Widget title({
+    String text,
+    AlignmentGeometry alignment = Alignment.centerLeft,
+  }) {
+    return Align(
+      alignment: alignment,
+      child: Text(
+        text,
+        style: DesignSystemFonts.title,
+      ),
     );
   }
   

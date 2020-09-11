@@ -48,8 +48,7 @@ class DetailScreen extends StatelessWidget {
     sections.add(
         TitleSection(
           title: venue.name,
-          town: venue.address.town,
-          county: venue.address.county,
+          address: venue.address,
         )
     );
 
