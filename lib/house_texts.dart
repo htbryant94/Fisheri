@@ -88,7 +88,7 @@ class HouseTexts {
       alignment: alignment,
       child: Text(
         text,
-        style: GoogleFonts.openSans(
+        style: GoogleFonts.dMSans(
           fontSize: fontSize,
           fontWeight: fontWeight,
           color: color,

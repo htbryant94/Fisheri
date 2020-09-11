@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:fisheri/house_texts.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class DescriptionSection extends StatelessWidget {
-  DescriptionSection({this.text, this.descriptionExpanded});
+  DescriptionSection({this.text});
 
   final String text;
-  final bool descriptionExpanded;
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,10 @@ class DescriptionSection extends StatelessWidget {
           HouseTexts.heading('Overview'),
           SizedBox(height: 16),
           Row(children: [
-            Icon(Icons.assignment, color: Colors.green,),
+            Icon(
+              Icons.assignment,
+              color: Colors.green,
+            ),
             SizedBox(width: 8),
             HouseTexts.body('1,247 catch reports')
           ]),
@@ -32,19 +35,20 @@ class DescriptionSection extends StatelessWidget {
             SizedBox(width: 8),
             HouseTexts.body('16 check-ins today'),
           ]),
-//          SizedBox(height: 16),
-//          Row(children: [
-//            Icon(Icons.star, color: Colors.blue),
-//            Icon(Icons.star, color: Colors.blue),
-//            Icon(Icons.star, color: Colors.blue),
-//            Icon(Icons.star, color: Colors.blue),
-//            Icon(Icons.star_half, color: Colors.blue),
-//            SizedBox(width: 8),
-//            HouseTexts.body('109 reviews')
-//          ],
-//          ),
           SizedBox(height: 16),
-          HouseTexts.body(text),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              text,
+              maxLines: 5,
+              overflow: TextOverflow.fade,
+              style: GoogleFonts.openSans(
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                color: Colors.black,
+              ),
+            ),
+          )
         ],
       ),
     );

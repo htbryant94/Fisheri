@@ -1,4 +1,6 @@
 import 'package:fisheri/Screens/detail_screen/fishing_rules_section.dart';
+import 'package:fisheri/Screens/venue_form_edit_screen.dart';
+import 'package:fisheri/design_system.dart';
 import 'package:fisheri/house_texts.dart';
 import 'package:fisheri/models/venue_address.dart';
 import 'package:fisheri/models/venue_detailed.dart';
@@ -18,19 +20,41 @@ import 'package:fisheri/Screens/detail_screen/opening_hours_section.dart';
 import 'social_media_section.dart';
 import 'package:flutter/rendering.dart';
 
+class FisheriDivider extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        SizedBox(height: 50),
+        Divider(thickness: 0.5, indent: 24, endIndent: 24, color: DesignSystemColors.black.withOpacity(0.2)),
+        SizedBox(height: 50),
+      ],
+    );
+  }
+}
+
+class _DetailSection {
+  _DetailSection({
+    this.title,
+    this.view,
+  });
+
+  final String title;
+  final Widget view;
+}
+
 class DetailScreen extends StatelessWidget {
   DetailScreen({
     @required this.venue,
     this.imageURL,
-    this.descriptionExpanded,
     this.index,
   });
 
+  List<String> sectionContents = [];
   final VenueDetailed venue;
   final String imageURL;
-  final bool descriptionExpanded;
   final int index;
-
+  
   bool isLake() {
     return venue.categories.contains('lake');
   }
@@ -46,78 +70,156 @@ class DetailScreen extends StatelessWidget {
         venue.social.youtube != null && venue.social.youtube.isNotEmpty;
   }
 
+  List<Widget> buildSections(VenueDetailed venue) {
+    List<Widget> sections = [];
+
+    sections.add(
+        ImageCarousel(
+          imageURLs: venue.images,
+        )
+    );
+
+    sections.add(
+        TitleSection(
+          title: venue.name,
+          town: venue.address.town,
+          county: venue.address.county,
+        )
+    );
+
+    sections.add(
+        Row(
+          children: [
+            Icon(Icons.pin_drop, color: Colors.green),
+            Text('5.6 miles')
+          ],
+        )
+    );
+
+    if (venue.categories != null) {
+      sections.add(
+          VenueCategoriesSection(
+            categories: venue.categories,
+            alwaysOpen: venue.alwaysOpen != null ? venue.alwaysOpen : false,
+          )
+      );
+    }
+
+    sections.add(
+        DescriptionSection(
+          text: venue.description,
+        )
+    );
+
+    sections.add(FisheriDivider());
+
+    sections.add(MapViewSection(address: venue.address));
+
+    sections.add(ButtonSection(Colors.grey));
+
+    sections.add(FisheriDivider());
+
+    if (isLake()) {
+      sections.add(AmenitiesSection(venue.amenities));
+      sections.add(FisheriDivider());
+    }
+
+    if (isLake()) {
+      sections.add(FishStockedSection(venue.fishStocked));
+      sections.add(FisheriDivider());
+    }
+
+    sections.add(
+        FishingTypesSection(
+          title: 'Fishing Types & Tackles',
+          fishTypes: venue.fishingTypes,
+          fishTackles: venue.fishingTackles,
+        )
+    );
+
+    return sections;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ImageCarousel(
-                imageURLs: venue.images,
-              ),
-              TitleSection(
-                title: venue.name,
-                town: venue.address.town,
-                county: venue.address.county,
-              ),
-              if (venue.categories != null )
-              Padding(
-                padding: const EdgeInsets.only(left: 16),
-                child: VenueCategoriesSection(categories: venue.categories, alwaysOpen: venue.alwaysOpen != null ? venue.alwaysOpen : false),
-              ),
-              DescriptionSection(
-                text: venue.description,
-                descriptionExpanded: descriptionExpanded,
-              ),
-              Visibility(
-                visible: hasSocialLinks(),
-                child: SocialMediaSection(social: venue.social),
-              ),
-              MapViewSection(address: venue.address),
-              ButtonSection(Colors.blue),
-              Visibility(
-                visible: isLake(),
-                child: FishStockedSection(venue.fishStocked),
-              ),
-              Visibility(
-                visible: isLake(),
-                child: FishingTypesSection(
-                    title: 'Fishing Types',
-                    fishTypes: venue.fishingTypes
-                ),
-              ),
-              Visibility(
-                visible: isShop(),
-                child: FishingTypesSection(
-                  title: 'Fishing Tackles Stocked',
-                  fishTypes: venue.fishingTackles,
-                ),
-              ),
-              Visibility(
-                visible: isLake(),
-                child: AmenitiesSection(venue.amenities),
-              ),
-              Visibility(
-                visible: isLake(),
-                child: TicketsSection(
-                  tickets: venue.tickets,
-                ),
-              ),
-              Visibility(
-                visible: venue.alwaysOpen != null ? !venue.alwaysOpen : true,
-                child: OpeningHoursSection(
-                  openingHours: venue.operationalHours,
-                ),
-              ),
-              Visibility(
-                visible: isLake(),
-                child: FishingRulesSection(venue.fishingRules),
-              ),
-            ],
-          ),
+            child: Column(
+              children: buildSections(venue)
+            ),
+//          child: Column(
+//            crossAxisAlignment: CrossAxisAlignment.start,
+//            children: [
+//              ImageCarousel(
+//                imageURLs: venue.images,
+//              ),
+//              TitleSection(
+//                title: venue.name,
+//                town: venue.address.town,
+//                county: venue.address.county,
+//              ),
+//              if (venue.categories != null )
+//              Padding(
+//                padding: const EdgeInsets.only(left: 16),
+//                child: VenueCategoriesSection(categories: venue.categories, alwaysOpen: venue.alwaysOpen != null ? venue.alwaysOpen : false),
+//              ),
+//                text: venue.description,
+//              ),
+//              DescriptionSection(
+//              FisheriDivider(),
+//              MapViewSection(address: venue.address),
+//              ButtonSection(Colors.blue),
+//              FisheriDivider(),
+//              Visibility(
+//                visible: isLake(),
+//                child: AmenitiesSection(venue.amenities),
+//              ),
+//              FisheriDivider(),
+//              Visibility(
+//                visible: isLake(),
+//                child: FishStockedSection(venue.fishStocked),
+//              ),
+////              FisheriDivider(),
+////              Visibility(
+////                visible: isLake(),
+////                child: FishingRulesSection(venue.fishingRules),
+////              ),
+////              FisheriDivider(),
+////              Visibility(
+////                visible: venue.alwaysOpen != null ? !venue.alwaysOpen : true,
+////                child: OpeningHoursSection(
+////                  openingHours: venue.operationalHours,
+////                ),
+////              ),
+////              FisheriDivider(),
+////              Visibility(
+////                visible: hasSocialLinks(),
+////                child: SocialMediaSection(social: venue.social),
+////              ),
+//////              Visibility(
+//////                visible: isLake(),
+//////                child: FishingTypesSection(
+//////                    title: 'Fishing Types',
+//////                    fishTypes: venue.fishingTypes
+//////                ),
+//////              ),
+//////              Visibility(
+//////                visible: isShop(),
+//////                child: FishingTypesSection(
+//////                  title: 'Fishing Tackles Stocked',
+//////                  fishTypes: venue.fishingTackles,
+//////                ),
+//////              ),
+//////              Visibility(
+//////                visible: isLake(),
+//////                child: TicketsSection(
+//////                  tickets: venue.tickets,
+//////                ),
+//////              ),
+//            ],
+//          ),
         ),
       ),
     );
