@@ -12,7 +12,6 @@ class FishStockedSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
       child: Column(
         children: [
           HouseTexts.heading('Fish Stocked'),
@@ -23,7 +22,7 @@ class FishStockedSection extends StatelessWidget {
               children: fishStock
                   .map((fish) => _FishStockedGridItem(
                         fish: fish,
-                        itemWidth: MediaQuery.of(context).size.width / 2.3,
+                        itemWidth: MediaQuery.of(context).size.width / 2.5,
                       ))
                   .toList())
         ],

@@ -55,12 +55,11 @@ class _FishingTypesSectionState extends State<FishingTypesSection> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
       child: Column(
         children: [
-          DesignSystemComponents.header(text: widget.title),
+          DSComponents.header(text: widget.title),
           SizedBox(height: 16),
-          DesignSystemComponents.body(text:
+          DSComponents.body(text:
               "We stock for associated fishing tackles. In some cases we stock tackles for fishing types that aren't available at this location."),
           SizedBox(height: 32),
           Wrap(
@@ -106,13 +105,13 @@ class GridItem extends StatelessWidget {
       width: width,
       child: Column(
         children: [
-          DesignSystemComponents.text(
+          DSComponents.text(
               text: ReCase(item.name).titleCase, alignment: Alignment.center, fontSize: 14),
           SizedBox(height: 8),
           Container(
             decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: DesignSystemColors.black.withOpacity(0.1))),
+                border: Border.all(color: DSColors.black.withOpacity(0.1))),
             padding: EdgeInsets.all(16),
             child: AspectRatio(
               aspectRatio: 1.5,
@@ -122,31 +121,31 @@ class GridItem extends StatelessWidget {
           SizedBox(height: 8),
           Container(
             decoration: BoxDecoration(
-              color: item.hasFishing ? DesignSystemColors.pastelBlue : Colors.grey[100],
+              color: item.hasFishing ? DSColors.pastelBlue : Colors.grey[100],
               borderRadius: BorderRadius.circular(width),
             ),
             width: 65,
             padding: EdgeInsets.fromLTRB(8, 4, 8, 4),
-            child: DesignSystemComponents.text(
+            child: DSComponents.text(
                 text: "Fishing",
                 alignment: Alignment.center,
                 fontSize: 12,
-                color: item.hasFishing ? DesignSystemColors.blue : DesignSystemColors.blue.withOpacity(0.5)
+                color: item.hasFishing ? DSColors.blue : DSColors.blue.withOpacity(0.5)
             ),
           ),
           SizedBox(height: 8),
           Container(
             decoration: BoxDecoration(
-              color: item.hasTackles ? DesignSystemColors.pastelGreen : Colors.grey[100],
+              color: item.hasTackles ? DSColors.pastelGreen : Colors.grey[100],
               borderRadius: BorderRadius.circular(width),
             ),
             width: 65,
             padding: EdgeInsets.fromLTRB(8, 4, 8, 4),
-            child: DesignSystemComponents.text(
+            child: DSComponents.text(
                 text: "Tackles",
                 alignment: Alignment.center,
                 fontSize: 12,
-                color: item.hasTackles ? DesignSystemColors.green : DesignSystemColors.green.withOpacity(0.5)
+                color: item.hasTackles ? DSColors.green : DSColors.green.withOpacity(0.5)
             ),
           ),
         ],

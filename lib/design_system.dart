@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class DesignSystemColors {
+class DSColors {
   static const Color pastelBlue = Color(0xffE5F1FF);
   static const Color pastelGreen = Color(0xffEAF6EF);
   static const Color pastelOrange = Color(0xffFFF1E4);
@@ -15,21 +15,44 @@ class DesignSystemColors {
 
 class DesignSystemFonts {
   static TextStyle header = GoogleFonts.dMSans(
-    color: DesignSystemColors.black,
+    color: DSColors.black,
     fontWeight: FontWeight.bold,
     letterSpacing: -0.2,
     fontSize: 18,
   );
 
   static TextStyle body = GoogleFonts.dMSans(
-    color: DesignSystemColors.grey,
+    color: DSColors.grey,
     fontWeight: FontWeight.normal,
     letterSpacing: 0.1,
     fontSize: 13,
   );
 }
 
-class DesignSystemComponents {
+class DSComponents {
+  
+  static SizedBox singleSpacer() {
+    return SizedBox(height: 8);
+  }
+  
+  static SizedBox doubleSpacer() {
+    return SizedBox(height: 16);
+  }
+  
+  static SizedBox sectionSpacer() {
+    return SizedBox(height: 50);
+  }
+  
+  static Widget divider() {
+    return Column(
+      children: [
+        sectionSpacer(),
+        Divider(thickness: 0.5, color: DSColors.black.withOpacity(0.2)),
+        sectionSpacer(),
+      ],
+    );
+  }
+  
   static Widget header({
     String text,
     AlignmentGeometry alignment = Alignment.centerLeft,
