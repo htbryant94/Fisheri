@@ -52,18 +52,19 @@ class DetailScreen extends StatelessWidget {
         )
     );
 
-    sections.add(DSComponents.singleSpacer());
+    sections.add(DSComponents.doubleSpacer());
 
     sections.add(
         Row(
           children: [
-            Icon(Icons.pin_drop, color: Colors.green),
-            Text('5.6 miles')
+            Icon(Icons.location_on, color: Colors.green, size: 20),
+            DSComponents.halfSpacer(),
+            DSComponents.body(text: '5.6 miles')
           ],
         )
     );
 
-    sections.add(DSComponents.singleSpacer());
+    sections.add(DSComponents.doubleSpacer());
 
     if (venue.categories != null) {
       sections.add(

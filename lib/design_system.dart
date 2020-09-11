@@ -28,26 +28,41 @@ class DesignSystemFonts {
     fontSize: 18,
   );
 
-  static TextStyle body = GoogleFonts.dMSans(
-    color: DSColors.grey,
-    fontWeight: FontWeight.normal,
-    letterSpacing: 0.1,
-    fontSize: 13,
-  );
+  static TextStyle body(Color color) {
+    return GoogleFonts.dMSans(
+      color: color,
+      fontWeight: FontWeight.normal,
+      letterSpacing: 0.1,
+      fontSize: 14,
+    );
+  }
+
+  static TextStyle bodySmall(Color color) {
+    return GoogleFonts.dMSans(
+      color: color,
+      fontWeight: FontWeight.normal,
+      letterSpacing: 0,
+      fontSize: 12,
+    );
+  }
 }
 
 class DSComponents {
+
+  static SizedBox halfSpacer() {
+    return SizedBox(height: 4, width: 4);
+  }
   
   static SizedBox singleSpacer() {
-    return SizedBox(height: 8);
+    return SizedBox(height: 8, width: 8);
   }
   
   static SizedBox doubleSpacer() {
-    return SizedBox(height: 16);
+    return SizedBox(height: 16, width: 16);
   }
   
   static SizedBox sectionSpacer() {
-    return SizedBox(height: 50);
+    return SizedBox(height: 50, width: 50);
   }
   
   static Widget divider() {
@@ -88,13 +103,28 @@ class DSComponents {
 
   static Widget body({
     String text,
+    Color color = DSColors.grey,
     AlignmentGeometry alignment = Alignment.centerLeft,
   }) {
     return Align(
       alignment: alignment,
       child: Text(
         text,
-        style: DesignSystemFonts.body,
+        style: DesignSystemFonts.body(color),
+      ),
+    );
+  }
+
+  static Widget bodySmall({
+    String text,
+    Color color = DSColors.grey,
+    AlignmentGeometry alignment = Alignment.centerLeft,
+  }) {
+    return Align(
+      alignment: alignment,
+      child: Text(
+        text,
+        style: DesignSystemFonts.bodySmall(color),
       ),
     );
   }

@@ -1,7 +1,8 @@
 import 'package:basic_utils/basic_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fisheri/Components/pill.dart';
 import 'package:fisheri/Screens/venue_form_edit_screen.dart';
-import 'package:fisheri/house_texts.dart';
+import 'package:fisheri/design_system.dart';
 import 'package:fisheri/models/venue_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -27,13 +28,24 @@ class VenueCategoriesSection extends StatelessWidget {
       categories.add("24/7");
     }
 
+    Color getTitleColorForCategory(String category) {
+      if (category == "lake") {
+        return DSColors.blue;
+      } else if (category == "shop") {
+        return DSColors.orange;
+      } else if (category == "24/7") {
+        return DSColors.green;
+      }
+      return Colors.grey;
+    }
+
     Color getColorForCategory(String category) {
       if (category == "lake") {
-        return Colors.blue;
+        return DSColors.pastelBlue;
       } else if (category == "shop") {
-        return Colors.orange;
+        return DSColors.pastelOrange;
       } else if (category == "24/7") {
-        return Colors.green;
+        return DSColors.pastelGreen;
       }
       return Colors.grey;
     }
@@ -42,15 +54,12 @@ class VenueCategoriesSection extends StatelessWidget {
       children: categories.asMap().entries.map((category) =>
       Row(
         children: [
-          Container(
-            decoration: BoxDecoration(
-                color: getColorForCategory(category.value),
-                borderRadius: BorderRadius.circular(6),
-            ),
-            padding: EdgeInsets.fromLTRB(4, 4, 4, 4),
-            child: HouseTexts.custom(text: StringUtils.capitalize(category.value), fontSize: 12, color: Colors.white),
+          Pill(
+            title: StringUtils.capitalize(category.value),
+            titleColor: getTitleColorForCategory(category.value),
+            color: getColorForCategory(category.value),
           ),
-          SizedBox(width: 8),
+          DSComponents.singleSpacer(),
         ],
       )
       ).toList(),
