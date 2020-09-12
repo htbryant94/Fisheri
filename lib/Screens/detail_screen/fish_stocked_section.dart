@@ -1,4 +1,5 @@
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:fisheri/design_system.dart';
 import 'package:fisheri/house_texts.dart';
 import 'package:flutter/material.dart';
 import 'grid_item.dart';
@@ -14,8 +15,8 @@ class FishStockedSection extends StatelessWidget {
     return Container(
       child: Column(
         children: [
-          HouseTexts.heading('Fish Stocked'),
-          const SizedBox(height: 16),
+          DSComponents.header(text: 'Fish Stocked'),
+          DSComponents.paragraphSpacer(),
           Wrap(
               spacing: 16,
               runSpacing: 16,
