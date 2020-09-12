@@ -1,3 +1,4 @@
+import 'package:fisheri/Screens/detail_screen/contact_section.dart';
 import 'package:fisheri/Screens/detail_screen/contents_section.dart';
 import 'package:fisheri/Screens/detail_screen/stats_section.dart';
 import 'package:fisheri/design_system.dart';
@@ -10,7 +11,6 @@ import 'package:flutter/material.dart';
 
 import 'package:fisheri/Screens/detail_screen/title_section.dart';
 import 'package:fisheri/Screens/detail_screen/description_section.dart';
-import 'package:fisheri/Screens/detail_screen/button_section.dart';
 import 'package:fisheri/Screens/detail_screen/image_carousel.dart';
 import 'package:fisheri/Screens/detail_screen/amenities_section.dart';
 import 'package:fisheri/Screens/detail_screen/fishing_types_section.dart';
@@ -116,9 +116,17 @@ class DetailScreen extends StatelessWidget {
 
     sections.add(MapViewSection(address: venue.address));
 
-    sections.add(DSComponents.doubleSpacer());
+    sections.add(DSComponents.paragraphSpacer());
 
-    sections.add(ButtonSection(Colors.grey));
+    sections.add(
+        ContactSection(
+          contactItems: [
+            "Call",
+            "Website",
+            "Email",
+          ],
+        )
+    );
 
     sections.add(DSComponents.divider());
 
