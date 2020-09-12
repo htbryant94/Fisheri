@@ -1,5 +1,5 @@
+import 'package:fisheri/design_system.dart';
 import 'package:flutter/material.dart';
-import 'package:fisheri/house_texts.dart';
 import 'package:recase/recase.dart';
 
 class AmenitiesSection extends StatelessWidget {
@@ -12,11 +12,11 @@ class AmenitiesSection extends StatelessWidget {
     return Container(
       child: Column(
         children: [
-          HouseTexts.heading('Amenities'),
-          const SizedBox(height: 16),
+          DSComponents.header(text:'Amenities'),
+          DSComponents.paragraphSpacer(),
           Wrap(
               spacing: 8,
-              runSpacing: 8,
+              runSpacing: 16,
               children: amenities
                   .map((amenity) => _AmenitiesGridItem(amenity))
                   .toList())
@@ -45,7 +45,9 @@ class _Amenity extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
+        DSComponents.body(text: ReCase(amenity).titleCase),
         Image.asset(
             'images/icons/amenities/$amenity.png',
             height: 20,
@@ -55,8 +57,6 @@ class _Amenity extends StatelessWidget {
               return Text('😢');
             }
         ),
-        SizedBox(width: 8),
-        HouseTexts.body(ReCase(amenity).titleCase)
       ],
     );
   }
