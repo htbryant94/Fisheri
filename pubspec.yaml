@@ -108,6 +108,7 @@ flutter:
     - images/icons/catch_reports.png
     - images/icons/upcoming_events.png
     - images/icons/check_ins_today.png
+    - images/icons/map_marker_new.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

@@ -180,62 +180,30 @@ class MapViewSection extends StatelessWidget {
     return Column(
       children: [
         DSComponents.header(text: "Location"),
-        DSComponents.doubleSpacer(),
-        AspectRatio(
-          aspectRatio: 1.5,
-          child: Card(
-            elevation: 4,
-            child: Stack(
+        DSComponents.paragraphSpacer(),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          clipBehavior: Clip.antiAliasWithSaveLayer,
+          height: 200,
+          width: double.infinity,
+          child: Stack(
+            fit: StackFit.expand,
               children: [
-                Positioned.fill(
-                  child: Image.asset(
-                    'images/placeholders/lake_map_view.png',
-                    fit: BoxFit.fitWidth,
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 8, right: 8),
-                  child: Align(
-                    alignment: Alignment.topRight,
-                    child: RaisedButton(
-                      color: Colors.blue,
-                      onPressed: () {
-                        print('tapped');
-                        },
-                      child: Text('Directions', style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    width: double.infinity,
-                    height: 75,
-                    color: Colors.white,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              HouseTexts.body(address.street),
-                              HouseTexts.body('${address.town}, ${address.county}'),
-                              HouseTexts.body(address.postcode),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+                Image.asset('images/placeholders/lake_map_view.png', fit: BoxFit.cover),
+                Image.asset('images/icons/map_marker_new.png'),
+              ]
           ),
         ),
+        DSComponents.paragraphSpacer(),
+        DSComponents.body(text: "${address.street}", alignment: Alignment.center),
+        DSComponents.singleSpacer(),
+        DSComponents.body(text: "${address.town}", alignment: Alignment.center),
+        DSComponents.singleSpacer(),
+        DSComponents.body(text: "${address.county}", alignment: Alignment.center),
+        DSComponents.singleSpacer(),
+        DSComponents.body(text: "${address.postcode}", alignment: Alignment.center),
       ],
     );
   }
