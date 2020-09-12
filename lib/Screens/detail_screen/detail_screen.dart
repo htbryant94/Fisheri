@@ -1,4 +1,5 @@
 import 'package:fisheri/Screens/detail_screen/contents_section.dart';
+import 'package:fisheri/Screens/detail_screen/stats_section.dart';
 import 'package:fisheri/design_system.dart';
 import 'package:fisheri/house_texts.dart';
 import 'package:fisheri/models/venue_address.dart';
@@ -97,6 +98,18 @@ class DetailScreen extends StatelessWidget {
           "Opening Hours"
         ],
       )
+    );
+
+    sections.add(DSComponents.paragraphSpacer());
+
+    sections.add(
+        StatsSection(
+          stats: [
+            Stat(name: "Catch Reports", value: 1247),
+            Stat(name: "Upcoming Events", value: 2),
+            Stat(name: "Check-Ins Today", value: 16),
+          ],
+        )
     );
 
     sections.add(DSComponents.divider());
