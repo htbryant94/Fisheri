@@ -1,3 +1,4 @@
+import 'package:fisheri/Components/pill.dart';
 import 'package:fisheri/design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -58,10 +59,10 @@ class _FishingTypesSectionState extends State<FishingTypesSection> {
       child: Column(
         children: [
           DSComponents.header(text: widget.title),
-          SizedBox(height: 16),
+          DSComponents.doubleSpacer(),
           DSComponents.body(text:
               "We stock for associated fishing tackles. In some cases we stock tackles for fishing types that aren't available at this location."),
-          SizedBox(height: 32),
+          DSComponents.paragraphSpacer(),
           Wrap(
               spacing: 16,
               runSpacing: 32,
@@ -107,7 +108,7 @@ class GridItem extends StatelessWidget {
         children: [
           DSComponents.text(
               text: ReCase(item.name).titleCase, alignment: Alignment.center, fontSize: 14),
-          SizedBox(height: 8),
+          DSComponents.singleSpacer(),
           Container(
             decoration: BoxDecoration(
                 shape: BoxShape.circle,
@@ -118,34 +119,22 @@ class GridItem extends StatelessWidget {
               child: image,
             ),
           ),
-          SizedBox(height: 8),
-          Container(
-            decoration: BoxDecoration(
-              color: item.hasFishing ? DSColors.pastelBlue : Colors.grey[100],
-              borderRadius: BorderRadius.circular(width),
-            ),
+          DSComponents.singleSpacer(),
+          SizedBox(
             width: 65,
-            padding: EdgeInsets.fromLTRB(8, 4, 8, 4),
-            child: DSComponents.text(
-                text: "Fishing",
-                alignment: Alignment.center,
-                fontSize: 12,
-                color: item.hasFishing ? DSColors.blue : DSColors.blue.withOpacity(0.5)
+            child: Pill(
+              title: "Fishing",
+              titleColor: item.hasFishing ? DSColors.blue : DSColors.blue.withOpacity(0.5),
+              color: item.hasFishing ? DSColors.pastelBlue : DSColors.pastelBlue.withOpacity(0.5),
             ),
           ),
-          SizedBox(height: 8),
-          Container(
-            decoration: BoxDecoration(
-              color: item.hasTackles ? DSColors.pastelGreen : Colors.grey[100],
-              borderRadius: BorderRadius.circular(width),
-            ),
+          DSComponents.singleSpacer(),
+          SizedBox(
             width: 65,
-            padding: EdgeInsets.fromLTRB(8, 4, 8, 4),
-            child: DSComponents.text(
-                text: "Tackles",
-                alignment: Alignment.center,
-                fontSize: 12,
-                color: item.hasTackles ? DSColors.green : DSColors.green.withOpacity(0.5)
+            child: Pill(
+              title: "Tackles",
+              titleColor: item.hasTackles ? DSColors.green : DSColors.green.withOpacity(0.5),
+              color: item.hasTackles ? DSColors.pastelGreen : DSColors.pastelGreen.withOpacity(0.5),
             ),
           ),
         ],
