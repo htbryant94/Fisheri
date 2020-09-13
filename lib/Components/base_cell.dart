@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:fisheri/design_system.dart';
 import 'package:fisheri/house_texts.dart';
 import 'package:flutter/material.dart';
 import 'package:fisheri/house_colors.dart';
@@ -236,7 +237,7 @@ class RemoteImageBaseCell extends StatelessWidget {
 
   List<Widget> _children() {
     List<Widget> stuff = [
-      HouseTexts.custom(text: '$title', fontSize: 14),
+      DSComponents.subheader(text: title),
       if (subtitle != null) HouseTexts.subheading('$subtitle')
     ];
     if (elements != null && elements.isNotEmpty) {
@@ -247,78 +248,71 @@ class RemoteImageBaseCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      clipBehavior: Clip.antiAliasWithSaveLayer,
-      elevation: 2,
-      child: Container(
-        height: layout == BaseCellLayout.thumbnail ? height / 2 : height,
+    return Container(
+//      height: layout == BaseCellLayout.thumbnail ? height / 2 : height,
+      decoration: BoxDecoration(
         color: Colors.white,
-        child: layout == BaseCellLayout.thumbnail
-            ? Padding(
-                padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    AspectRatio(
-                        aspectRatio: 1,
-                        child: imageURL != null
-                            ? CachedNetworkImage(
-                                fit: BoxFit.fill,
-                                imageUrl: imageURL,
-                                placeholder: (context, url) => Container(
-                                  padding: EdgeInsets.all(16),
-                                  child: CircularProgressIndicator(),
-                                ),
-                              )
-                            : Image.asset(defaultImagePath ?? 'images/lake.jpg',
-                                fit: BoxFit.fill)),
-                    SizedBox(width: 8),
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: _children(),
-                      ),
-                    ),
-                  ],
-                ),
-              )
-            : Padding(
-                padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Flexible(
-                      flex: 4,
+      ),
+      child: layout == BaseCellLayout.thumbnail
+          ? Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  AspectRatio(
+                      aspectRatio: 1,
                       child: imageURL != null
                           ? CachedNetworkImage(
-                              fit: BoxFit.cover,
+                              fit: BoxFit.fill,
                               imageUrl: imageURL,
                               placeholder: (context, url) => Container(
-                                child: Align(
-                                  alignment: Alignment.center,
-                                  child: CircularProgressIndicator(),
-                                ),
+                                padding: EdgeInsets.all(16),
+                                child: CircularProgressIndicator(),
                               ),
                             )
-                          : Image.asset(defaultImagePath ?? 'images/lake.jpg', fit: BoxFit.cover),
+                          : Image.asset(defaultImagePath ?? 'images/lake.jpg',
+                              fit: BoxFit.fill)),
+                  SizedBox(width: 8),
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: _children(),
                     ),
-                    Flexible(
-                      flex: 2,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 8),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: _children(),
-                        ),
+                  ),
+                ],
+              ),
+            )
+          : Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  imageURL != null
+                      ? Container(
+                    height: 180,
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: CachedNetworkImage(
+                      fit: BoxFit.fill,
+                      imageUrl: imageURL,
+                      placeholder: (context, url) => Container(
+                        padding: EdgeInsets.all(16),
+                        child: CircularProgressIndicator(),
                       ),
                     ),
-                  ],
-                ),
+                  ) : Image.asset(defaultImagePath ?? 'images/lake.jpg', fit: BoxFit.cover),
+                  DSComponents.doubleSpacer(),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: _children(),
+                  ),
+                ],
               ),
-      ),
+            ),
     );
   }
 }

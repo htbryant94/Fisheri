@@ -140,20 +140,34 @@ class SearchResultCell extends StatelessWidget {
         child: RemoteImageBaseCell(
           title: venue.name,
           imageURL: venue.imageURL,
-          height: layout == BaseCellLayout.cover ? 275 : 250,
+          height: layout == BaseCellLayout.cover ? 278 : 250,
           layout: layout,
           elements: <Widget>[
-            if (venue.categories != null)
-              VenueCategoriesSection(categories: venue.categories, alwaysOpen: venue.alwaysOpen ?? false),
+            DSComponents.singleSpacer(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                DSComponents.bodySmall(text: venue.address.town),
+                Row(
+                  children: [
+                    Icon(Icons.location_on, color: Colors.green, size: 20),
+                    DSComponents.halfSpacer(),
+                    DSComponents.bodySmall(text: '5.6 miles')
+                  ],
+                )
+              ],
+            ),
+            DSComponents.singleSpacer(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                if (venue.categories != null)
+                  VenueCategoriesSection(categories: venue.categories, alwaysOpen: venue.alwaysOpen ?? false),
                 if (venue.amenities != null)
                   _VenueFeatures(features: venue.amenities),
-                if (venue.categories.contains('shop') && !venue.categories.contains('lake'))
-                  _VenueOperational(true),
-                SizedBox(width: 16),
-                _VenueDistance('5 miles')
+//                if (venue.categories.contains('shop') && !venue.categories.contains('lake'))
+//                  _VenueOperational(true),
+//                SizedBox(width: 16),
               ],
             ),
           ],

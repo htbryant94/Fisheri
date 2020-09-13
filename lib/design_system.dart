@@ -28,6 +28,13 @@ class DesignSystemFonts {
     fontSize: 18,
   );
 
+  static TextStyle subheader = GoogleFonts.dMSans(
+    color: DSColors.black,
+    fontWeight: FontWeight.bold,
+    letterSpacing: -0.2,
+    fontSize: 16,
+  );
+
   static TextStyle body(Color color) {
     return GoogleFonts.dMSans(
       color: color,
@@ -111,6 +118,19 @@ class DSComponents {
       child: Text(
         text,
         style: DesignSystemFonts.header,
+      ),
+    );
+  }
+
+  static Widget subheader({
+    String text,
+    AlignmentGeometry alignment = Alignment.centerLeft,
+  }) {
+    return Align(
+      alignment: alignment,
+      child: Text(
+        text,
+        style: DesignSystemFonts.subheader,
       ),
     );
   }

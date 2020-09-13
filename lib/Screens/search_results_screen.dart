@@ -1,4 +1,5 @@
 import 'package:fisheri/Components/base_cell.dart';
+import 'package:fisheri/design_system.dart';
 import 'package:fisheri/firestore_request_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fisheri/house_texts.dart';
@@ -42,20 +43,23 @@ class SearchResultsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: ListView.separated(
-        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-          itemCount: searchResults.length,
-          separatorBuilder: (BuildContext context, int index) {
-          return SizedBox(height: 8);
-          },
-          itemBuilder: (context, int index) {
-            final VenueSearch venue = searchResults[index];
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: ListView.separated(
+          padding: EdgeInsets.symmetric(vertical: 8, horizontal: 24),
+            itemCount: searchResults.length,
+            separatorBuilder: (BuildContext context, int index) {
+            return DSComponents.sectionSpacer();
+            },
+            itemBuilder: (context, int index) {
+              final VenueSearch venue = searchResults[index];
             return SearchResultCell(
               venue: venue,
               layout: BaseCellLayout.cover,
             );
-      }),
+        }),
+      ),
     );
   }
 }
