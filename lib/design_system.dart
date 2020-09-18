@@ -35,6 +35,13 @@ class DesignSystemFonts {
     fontSize: 16,
   );
 
+  static TextStyle subheaderSmall = GoogleFonts.dMSans(
+    color: DSColors.black,
+    fontWeight: FontWeight.bold,
+    letterSpacing: -0.2,
+    fontSize: 14,
+  );
+
   static TextStyle body(Color color) {
     return GoogleFonts.dMSans(
       color: color,
@@ -125,12 +132,31 @@ class DSComponents {
   static Widget subheader({
     String text,
     AlignmentGeometry alignment = Alignment.centerLeft,
+    int maxLines = 0
   }) {
     return Align(
       alignment: alignment,
       child: Text(
         text,
         style: DesignSystemFonts.subheader,
+        maxLines: (maxLines > 0) ? maxLines : null,
+        overflow: (maxLines > 0) ? TextOverflow.ellipsis : null,
+      ),
+    );
+  }
+
+  static Widget subheaderSmall({
+    String text,
+    AlignmentGeometry alignment = Alignment.centerLeft,
+    int maxLines = 0
+  }) {
+    return Align(
+      alignment: alignment,
+      child: Text(
+        text,
+        style: DesignSystemFonts.subheaderSmall,
+        maxLines: (maxLines > 0) ? maxLines : null,
+        overflow: (maxLines > 0) ? TextOverflow.ellipsis : null,
       ),
     );
   }

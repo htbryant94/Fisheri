@@ -237,8 +237,9 @@ class RemoteImageBaseCell extends StatelessWidget {
 
   List<Widget> _children() {
     List<Widget> stuff = [
-      DSComponents.subheader(text: title),
-      if (subtitle != null) HouseTexts.subheading('$subtitle')
+      layout == BaseCellLayout.cover ? DSComponents.subheader(text: title, maxLines: 1) : DSComponents.subheaderSmall(text: title, maxLines: 1),
+      if (subtitle != null)
+        layout == BaseCellLayout.cover ? DSComponents.body(text: subtitle) : DSComponents.bodySmall(text: subtitle)
     ];
     if (elements != null && elements.isNotEmpty) {
       stuff += elements;
@@ -246,73 +247,88 @@ class RemoteImageBaseCell extends StatelessWidget {
     return stuff;
   }
 
+  Widget thumbnailView() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          AspectRatio(
+              aspectRatio: 1,
+              child: imageURL != null
+                  ? CachedNetworkImage(
+                fit: BoxFit.fitHeight,
+                imageUrl: imageURL,
+                placeholder: (context, url) => Container(
+                    padding: EdgeInsets.all(16),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: CircularProgressIndicator(),
+                    )
+                ),
+              )
+                  : Image.asset(defaultImagePath ?? 'images/lake.jpg',
+                  fit: BoxFit.fill)),
+          SizedBox(width: 8),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: _children(),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget coverView() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          imageURL != null
+              ? Container(
+            height: 180,
+            clipBehavior: Clip.antiAliasWithSaveLayer,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: CachedNetworkImage(
+              fit: BoxFit.cover,
+              imageUrl: imageURL,
+              placeholder: (context, url) => Container(
+                  padding: EdgeInsets.all(16),
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: CircularProgressIndicator(),
+                  )
+              ),
+            ),
+          ) : Image.asset(defaultImagePath ?? 'images/lake.jpg', fit: BoxFit.cover),
+          DSComponents.doubleSpacer(),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: _children(),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-//      height: layout == BaseCellLayout.thumbnail ? height / 2 : height,
+      height: layout == BaseCellLayout.thumbnail ? height / 2 : height,
       decoration: BoxDecoration(
         color: Colors.white,
       ),
-      child: layout == BaseCellLayout.thumbnail
-          ? Padding(
-              padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  AspectRatio(
-                      aspectRatio: 1,
-                      child: imageURL != null
-                          ? CachedNetworkImage(
-                              fit: BoxFit.fill,
-                              imageUrl: imageURL,
-                              placeholder: (context, url) => Container(
-                                padding: EdgeInsets.all(16),
-                                child: CircularProgressIndicator(),
-                              ),
-                            )
-                          : Image.asset(defaultImagePath ?? 'images/lake.jpg',
-                              fit: BoxFit.fill)),
-                  SizedBox(width: 8),
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: _children(),
-                    ),
-                  ),
-                ],
-              ),
-            )
-          : Padding(
-              padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  imageURL != null
-                      ? Container(
-                    height: 180,
-                    clipBehavior: Clip.antiAliasWithSaveLayer,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: CachedNetworkImage(
-                      fit: BoxFit.fill,
-                      imageUrl: imageURL,
-                      placeholder: (context, url) => Container(
-                        padding: EdgeInsets.all(16),
-                        child: CircularProgressIndicator(),
-                      ),
-                    ),
-                  ) : Image.asset(defaultImagePath ?? 'images/lake.jpg', fit: BoxFit.cover),
-                  DSComponents.doubleSpacer(),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: _children(),
-                  ),
-                ],
-              ),
-            ),
+      child: layout == BaseCellLayout.thumbnail ? thumbnailView() : coverView()
     );
   }
 }

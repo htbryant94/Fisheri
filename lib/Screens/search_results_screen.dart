@@ -19,9 +19,12 @@ class AllVenuesListBuilder extends StatelessWidget {
             if (!snapshot.hasData) {
               return CircularProgressIndicator();
             }
-            return ListView.builder(
+            return ListView.separated(
                 padding: EdgeInsets.all(8),
                 itemCount: snapshot.data.documents.length,
+                separatorBuilder: (BuildContext context, int index) {
+                  return DSComponents.singleSpacer();
+                },
                 itemBuilder: (context, int index) {
                   final result =  snapshot.data.documents[index];
                   final VenueSearch venue = VenueSearchJSONSerializer().fromMap(result.data);

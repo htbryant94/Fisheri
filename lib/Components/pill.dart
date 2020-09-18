@@ -15,7 +15,8 @@ class Pill extends StatelessWidget {
           color: color,
           borderRadius: BorderRadius.circular(25),
         ),
-        padding: EdgeInsets.symmetric(vertical: 4, horizontal: 12),
+        height: 24,
+        padding: EdgeInsets.symmetric(horizontal: 10),
         child: DSComponents.bodySmall(text: title, color: titleColor, alignment: Alignment.center)
     );
   }

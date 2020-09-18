@@ -156,7 +156,8 @@ class _SearchScreenState extends State<SearchScreen> {
 
     return Scaffold(
       body: SafeArea(
-        child: Stack(children: <Widget> [
+        child: Stack(
+            children: <Widget> [
           GoogleMap(
             mapType: MapType.normal,
             initialCameraPosition: CameraPosition(
@@ -164,11 +165,16 @@ class _SearchScreenState extends State<SearchScreen> {
               zoom: 8.0,
             ),
             myLocationEnabled: true,
-            compassEnabled: false,
-            myLocationButtonEnabled: true,
+//            compassEnabled: false,
+            myLocationButtonEnabled: false,
             onMapCreated: _onMapCreated,
             markers: Set<Marker>.of(markers.values),
             circles: circles,
+            onTap: (latLong) {
+              setState(() {
+                _selectedVenue = null;
+              });
+            },
           ),
           Padding(
             padding: const EdgeInsets.all(8),
@@ -182,29 +188,39 @@ class _SearchScreenState extends State<SearchScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                if (shouldShowVenueCard())
-                  Container(
-                      width: MediaQuery.of(context).size.width - 8,
-                      height: 100,
-                      child: GestureDetector(
-                        onTap: () async {
-                          await FirestoreRequestService.defaultService().getVenueDetailed(_selectedVenue.id).then((venue) {
-                            if (venue != null) {
-                              Coordinator.pushVenueDetailScreen(context, 'Map', venue, _selectedVenue.imageURL);
-                            }
-                          });
-                        },
-                        child: RemoteImageBaseCell(
-                          imageURL: _selectedVenue.imageURL,
-                          title: _selectedVenue.name,
-                          subtitle: _selectedVenue.address.town,
-                          height: 275,
-                          elements: [
-                            if (_selectedVenue.categories != null)
-                            VenueCategoriesSection(categories: _selectedVenue.categories, alwaysOpen:  _selectedVenue.alwaysOpen ?? false),
-                          ],
+                if(_selectedVenue != null)
+                  Visibility(
+                    visible: _selectedVenue != null,
+                    child: Container(
+                      padding: EdgeInsets.fromLTRB(24, 0, 24, 24),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10)
                         ),
+                        clipBehavior: Clip.antiAliasWithSaveLayer,
+                        width: MediaQuery.of(context).size.width - 8,
+                          height: 106,
+                          child: GestureDetector(
+                            onTap: () async {
+                              await FirestoreRequestService.defaultService().getVenueDetailed(_selectedVenue.id).then((venue) {
+                                if (venue != null) {
+                                  Coordinator.pushVenueDetailScreen(context, 'Map', venue, _selectedVenue.imageURL);
+                                }
+                              });
+                            },
+                            child: RemoteImageBaseCell(
+                              imageURL: _selectedVenue.imageURL,
+                              title: _selectedVenue.name,
+                              subtitle: _selectedVenue.address.town,
+                              height: 275,
+                              elements: [
+                                if (_selectedVenue.categories != null)
+                                VenueCategoriesSection(categories: _selectedVenue.categories, alwaysOpen:  _selectedVenue.alwaysOpen ?? false),
+                              ],
+                            ),
+                          ),
                       ),
+                    ),
                   ),
               ],
             ),

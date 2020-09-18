@@ -92,18 +92,19 @@ class EditVenueCell extends StatelessWidget {
         child: RemoteImageBaseCell(
           title: venue.name,
           imageURL: venue.imageURL,
-          height: 275,
+          height: 225,
           elements: <Widget>[
+            DSComponents.bodySmall(text: venue.address.town),
             if (venue.categories != null)
               VenueCategoriesSection(categories: venue.categories, alwaysOpen: venue.alwaysOpen ?? false),
-            _VenueOperational(true),
+//            _VenueOperational(true),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                if (venue.amenities != null)
-                  _VenueFeatures(features: venue.amenities),
-                SizedBox(width: 16),
-                _VenueDistance('5 miles')
+//                if (venue.amenities != null)
+//                  _VenueFeatures(features: venue.amenities),
+//                SizedBox(width: 16),
+//                _VenueDistance('5 miles')
               ],
             )
           ],
