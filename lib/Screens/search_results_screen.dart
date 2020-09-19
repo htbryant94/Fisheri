@@ -92,35 +92,43 @@ class ListViewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: ListView.builder(
-          itemCount: items.length,
-          itemBuilder: (context, int index) {
-            final item = items[index];
-            if (item.image != null) {
-              return NewLocalImageBaseCell(
-                title: item.title,
-                subtitle: item.subtitle,
-                image: item.image,
-                elements: item.additionalInformation.map((info) => HouseTexts.subheading(info)).toList(),
-              );
-            } else if (item.imageURL != null) {
-              return RemoteImageBaseCell(
-                title: item.title,
-                subtitle: item.subtitle,
-                imageURL: item.imageURL,
-                elements: item.additionalInformation.map((info) => HouseTexts.subheading(info)).toList(),
-              );
-            } else {
-              return NewLocalImageBaseCell(
-                height: 300,
-                title: item.title,
-                subtitle: item.subtitle,
-                image: Image.asset('images/question_mark.png'),
-                elements: item.additionalInformation.map((info) => HouseTexts.subheading(info)).toList(),
-              );
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: ListView.separated(
+            itemCount: items.length,
+            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 24),
+            separatorBuilder: (BuildContext context, int index) {
+              return DSComponents.sectionSpacer();
+            },
+            itemBuilder: (context, int index) {
+              final item = items[index];
+              if (item.image != null) {
+                return NewLocalImageBaseCell(
+                  title: item.title,
+                  subtitle: item.subtitle,
+                  image: item.image,
+                  elements: item.additionalInformation.map((info) => HouseTexts.subheading(info)).toList(),
+                );
+              } else if (item.imageURL != null) {
+                return RemoteImageBaseCell(
+                  title: item.title,
+                  subtitle: item.subtitle,
+                  imageURL: item.imageURL,
+                  elements: item.additionalInformation.map((info) => HouseTexts.subheading(info)).toList(),
+                );
+              } else {
+                return RemoteImageBaseCell(
+                  title: item.title,
+                  subtitle: item.subtitle,
+                  imageURL: item.imageURL,
+                  layout: BaseCellLayout.cover,
+                  height: 278,
+                  elements: item.additionalInformation.map((info) => HouseTexts.subheading(info)).toList(),
+                );
+              }
             }
-          }
+        ),
       ),
     );
   }
