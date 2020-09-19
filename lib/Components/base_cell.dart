@@ -309,7 +309,14 @@ class RemoteImageBaseCell extends StatelessWidget {
                   )
               ),
             ),
-          ) : Image.asset(defaultImagePath ?? 'images/lake.jpg', fit: BoxFit.cover),
+          ) : Container(
+              height: 180,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              clipBehavior: Clip.antiAliasWithSaveLayer,
+              child: Image.asset(defaultImagePath ?? 'images/lake.jpg', fit: BoxFit.cover)
+          ),
           DSComponents.doubleSpacer(),
           Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
