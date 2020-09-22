@@ -47,10 +47,19 @@ class DetailScreen extends StatelessWidget {
   List<Widget> buildSections(VenueDetailed venue) {
     List<Widget> sections = [];
 
+    String _buildLocationString(List<String> items) {
+      items.removeWhere((item) => item == null || item.isEmpty);
+      return items.join(", ");
+    }
+
     sections.add(
         TitleSection(
           title: venue.name,
-          address: venue.address,
+          subtitle: _buildLocationString([
+            venue.address.street,
+            venue.address.town,
+            venue.address.postcode
+          ]),
         )
     );
 
