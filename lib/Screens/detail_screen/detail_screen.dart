@@ -2,10 +2,10 @@ import 'package:fisheri/Screens/detail_screen/contact_section.dart';
 import 'package:fisheri/Screens/detail_screen/contents_section.dart';
 import 'package:fisheri/Screens/detail_screen/stats_section.dart';
 import 'package:fisheri/design_system.dart';
-import 'package:fisheri/house_texts.dart';
 import 'package:fisheri/models/venue_address.dart';
 import 'package:fisheri/models/venue_detailed.dart';
 import 'package:fisheri/search_result_cell.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -28,7 +28,7 @@ class DetailScreen extends StatelessWidget {
   final VenueDetailed venue;
   final String imageURL;
   final int index;
-  
+
   bool isLake() {
     return venue.categories.contains('lake');
   }
@@ -52,74 +52,59 @@ class DetailScreen extends StatelessWidget {
       return items.join(", ");
     }
 
-    sections.add(
-        TitleSection(
-          title: venue.name,
-          subtitle: _buildLocationString([
-            venue.address.street,
-            venue.address.town,
-            venue.address.postcode
-          ]),
-        )
-    );
+    sections.add(TitleSection(
+      title: venue.name,
+      subtitle: _buildLocationString(
+          [venue.address.street, venue.address.town, venue.address.postcode]),
+    ));
 
     sections.add(DSComponents.doubleSpacer());
 
-    sections.add(
-        Row(
-          children: [
-            Icon(Icons.location_on, color: Colors.green, size: 20),
-            DSComponents.halfSpacer(),
-            DSComponents.body(text: '5.6 miles')
-          ],
-        )
-    );
+    sections.add(Row(
+      children: [
+        Icon(Icons.location_on, color: Colors.green, size: 20),
+        DSComponents.halfSpacer(),
+        DSComponents.body(text: '5.6 miles')
+      ],
+    ));
 
     sections.add(DSComponents.doubleSpacer());
 
     if (venue.categories != null) {
-      sections.add(
-          VenueCategoriesSection(
-            categories: venue.categories,
-            alwaysOpen: venue.alwaysOpen != null ? venue.alwaysOpen : false,
-          )
-      );
+      sections.add(VenueCategoriesSection(
+        categories: venue.categories,
+        alwaysOpen: venue.alwaysOpen != null ? venue.alwaysOpen : false,
+      ));
     }
 
     sections.add(DSComponents.paragraphSpacer());
 
-    sections.add(
-        DescriptionSection(
-          text: venue.description,
-        )
-    );
+    sections.add(DescriptionSection(
+      text: venue.description,
+    ));
 
     sections.add(DSComponents.paragraphSpacer());
 
-    sections.add(
-      ContentsSection(
-        contents: [
-          "Location",
-          "Amenities",
-          "Fishing Types",
-          "Fish",
-          "Rules",
-          "Opening Hours"
-        ],
-      )
-    );
+    sections.add(ContentsSection(
+      contents: [
+        "Location",
+        "Amenities",
+        "Fishing Types",
+        "Fish",
+        "Rules",
+        "Opening Hours"
+      ],
+    ));
 
     sections.add(DSComponents.paragraphSpacer());
 
-    sections.add(
-        StatsSection(
-          stats: [
-            Stat(name: "Catch Reports", value: 1247),
-            Stat(name: "Upcoming Events", value: 2),
-            Stat(name: "Check-Ins Today", value: 16),
-          ],
-        )
-    );
+    sections.add(StatsSection(
+      stats: [
+        Stat(name: "Catch Reports", value: 1247),
+        Stat(name: "Upcoming Events", value: 2),
+        Stat(name: "Check-Ins Today", value: 16),
+      ],
+    ));
 
     sections.add(DSComponents.divider());
 
@@ -127,15 +112,13 @@ class DetailScreen extends StatelessWidget {
 
     sections.add(DSComponents.paragraphSpacer());
 
-    sections.add(
-        ContactSection(
-          contactItems: [
-            "Call",
-            "Website",
-            "Email",
-          ],
-        )
-    );
+    sections.add(ContactSection(
+      contactItems: [
+        "Call",
+        "Website",
+        "Email",
+      ],
+    ));
 
     sections.add(DSComponents.divider());
 
@@ -149,13 +132,13 @@ class DetailScreen extends StatelessWidget {
       sections.add(DSComponents.divider());
     }
 
-    sections.add(
-        FishingTypesSection(
-          title: 'Fishing Types & Tackles',
-          fishTypes: venue.fishingTypes,
-          fishTackles: venue.fishingTackles,
-        )
-    );
+    sections.add(FishingTypesSection(
+      title: 'Fishing Types & Tackles',
+      fishTypes: venue.fishingTypes,
+      fishTackles: venue.fishingTackles,
+    ));
+
+    sections.add(DSComponents.sectionSpacer());
 
     return sections;
   }
@@ -164,21 +147,36 @@ class DetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-            child: Column(
-              children:[
-                ImageCarousel(
-                  imageURLs: venue.images,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 24),
-                  child: Column(
-                    children: buildSections(venue)
+        child: Stack(
+          children: [
+            SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Column(
+                children: [
+                  ImageCarousel(
+                    imageURLs: venue.images,
                   ),
-                ),
-              ],
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 30, horizontal: 24),
+                    child: Column(children: buildSections(venue)),
+                  ),
+                ],
+              ),
             ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                  height: 58,
+                  padding: EdgeInsets.fromLTRB(52, 0, 52, 8),
+                  alignment: Alignment.bottomCenter,
+                  child: DSComponents.primaryButton(
+                    text: "Book Tickets from £39",
+                    onPressed: () { print("tapped"); }
+                  )
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -186,9 +184,7 @@ class DetailScreen extends StatelessWidget {
 }
 
 class MapViewSection extends StatelessWidget {
-  MapViewSection({
-    @required this.address
-  });
+  MapViewSection({@required this.address});
 
   final VenueAddress address;
 
@@ -205,22 +201,23 @@ class MapViewSection extends StatelessWidget {
           clipBehavior: Clip.antiAliasWithSaveLayer,
           height: 200,
           width: double.infinity,
-          child: Stack(
-            fit: StackFit.expand,
-              children: [
-                Image.asset('images/placeholders/lake_map_view.png', fit: BoxFit.cover),
-                Image.asset('images/icons/map_marker_new.png'),
-              ]
-          ),
+          child: Stack(fit: StackFit.expand, children: [
+            Image.asset('images/placeholders/lake_map_view.png',
+                fit: BoxFit.cover),
+            Image.asset('images/icons/map_marker_new.png'),
+          ]),
         ),
         DSComponents.paragraphSpacer(),
-        DSComponents.body(text: "${address.street}", alignment: Alignment.center),
+        DSComponents.body(
+            text: "${address.street}", alignment: Alignment.center),
         DSComponents.singleSpacer(),
         DSComponents.body(text: "${address.town}", alignment: Alignment.center),
         DSComponents.singleSpacer(),
-        DSComponents.body(text: "${address.county}", alignment: Alignment.center),
+        DSComponents.body(
+            text: "${address.county}", alignment: Alignment.center),
         DSComponents.singleSpacer(),
-        DSComponents.body(text: "${address.postcode}", alignment: Alignment.center),
+        DSComponents.body(
+            text: "${address.postcode}", alignment: Alignment.center),
       ],
     );
   }

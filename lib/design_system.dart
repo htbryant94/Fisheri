@@ -28,12 +28,14 @@ class DesignSystemFonts {
     fontSize: 18,
   );
 
-  static TextStyle subheader = GoogleFonts.dMSans(
-    color: DSColors.black,
-    fontWeight: FontWeight.bold,
-    letterSpacing: -0.2,
-    fontSize: 16,
-  );
+  static TextStyle subheader(Color color) {
+    return GoogleFonts.dMSans(
+      color: color,
+      fontWeight: FontWeight.bold,
+      letterSpacing: -0.2,
+      fontSize: 16,
+    );
+  }
 
   static TextStyle subheaderSmall = GoogleFonts.dMSans(
     color: DSColors.black,
@@ -72,6 +74,26 @@ class DesignSystemFonts {
 }
 
 class DSComponents {
+
+  static RaisedButton primaryButton({
+    String text,
+    VoidCallback onPressed
+  }) {
+    return RaisedButton(
+      elevation: 4,
+      highlightColor: DSColors.black,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(50),
+      ),
+      color: DSColors.green,
+      child: DSComponents.subheader(
+          text: text,
+          color: Colors.white,
+          alignment: Alignment.center
+      ),
+      onPressed: onPressed,
+    );
+  }
 
   static SizedBox halfSpacer() {
     return SizedBox(height: 4, width: 4);
@@ -131,6 +153,7 @@ class DSComponents {
 
   static Widget subheader({
     String text,
+    Color color = DSColors.black,
     AlignmentGeometry alignment = Alignment.centerLeft,
     int maxLines = 0
   }) {
@@ -138,7 +161,7 @@ class DSComponents {
       alignment: alignment,
       child: Text(
         text,
-        style: DesignSystemFonts.subheader,
+        style: DesignSystemFonts.subheader(color),
         maxLines: (maxLines > 0) ? maxLines : null,
         overflow: (maxLines > 0) ? TextOverflow.ellipsis : null,
       ),
