@@ -43,7 +43,7 @@ class Coordinator {
   }
 
   static void pushVenueDetailScreen(BuildContext context, String currentPageTitle, VenueDetailed venue, String imageURL) {
-    pushCupertinoPageRoute(context,
+    presentCupertinoPageRoute(context,
     CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
       ),
@@ -135,6 +135,14 @@ class Coordinator {
   static void pushCupertinoPageRoute(BuildContext context, Widget route) {
     Navigator.push(context, CupertinoPageRoute(
       builder: (context) => route)
+    );
+  }
+  
+  static void presentCupertinoPageRoute(BuildContext context, Widget route) {
+    Navigator.of(context, rootNavigator: true).push(
+        CupertinoPageRoute(
+          fullscreenDialog: true,
+          builder: (context) => route)
     );
   }
   
