@@ -1,6 +1,8 @@
+import 'package:fisheri/Components/form_fields/operational_hours_field.dart';
 import 'package:fisheri/Screens/detail_screen/contact_section.dart';
 import 'package:fisheri/Screens/detail_screen/contents_section.dart';
 import 'package:fisheri/Screens/detail_screen/fishing_rules_section.dart';
+import 'package:fisheri/Screens/detail_screen/opening_hours_section.dart';
 import 'package:fisheri/Screens/detail_screen/stats_section.dart';
 import 'package:fisheri/design_system.dart';
 import 'package:fisheri/models/venue_address.dart';
@@ -144,6 +146,10 @@ class DetailScreen extends StatelessWidget {
     if (isLake()) {
       sections.add(FishingRulesSection(venue.fishingRules));
     }
+
+    sections.add(DSComponents.divider());
+
+    sections.add(OpeningHoursSection(openingHours: venue.operationalHours));
 
     sections.add(DSComponents.sectionSpacer());
 
