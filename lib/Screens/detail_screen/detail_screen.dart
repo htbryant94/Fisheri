@@ -1,5 +1,6 @@
 import 'package:fisheri/Screens/detail_screen/contact_section.dart';
 import 'package:fisheri/Screens/detail_screen/contents_section.dart';
+import 'package:fisheri/Screens/detail_screen/fishing_rules_section.dart';
 import 'package:fisheri/Screens/detail_screen/stats_section.dart';
 import 'package:fisheri/design_system.dart';
 import 'package:fisheri/models/venue_address.dart';
@@ -137,6 +138,12 @@ class DetailScreen extends StatelessWidget {
       fishTypes: venue.fishingTypes,
       fishTackles: venue.fishingTackles,
     ));
+
+    sections.add(DSComponents.divider());
+
+    if (isLake()) {
+      sections.add(FishingRulesSection(venue.fishingRules));
+    }
 
     sections.add(DSComponents.sectionSpacer());
 

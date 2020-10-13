@@ -1,5 +1,6 @@
+import 'package:fisheri/design_system.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fisheri/house_texts.dart';
 
 class FishingRulesSection extends StatelessWidget {
   FishingRulesSection(this.content);
@@ -9,27 +10,20 @@ class FishingRulesSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (content != null && content.isNotEmpty) {
-      FlatButton readMoreButton = FlatButton(
-        child: Text("Read More",
-            style: TextStyle(
-              color: Colors.blue,
-            )),
-      );
-
-      Text textBody = Text(
-        content,
-        softWrap: true,
-        overflow: TextOverflow.fade,
-        maxLines: content != null ? 8 : 0,
-      );
       return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Column(children: [
-            HouseTexts.heading('Fishing Rules'),
-            SizedBox(height: 16),
-            textBody,
-            readMoreButton
-          ]));
+        child: Column(
+          children: [
+            DSComponents.header(text: 'Fishing Rules'),
+            DSComponents.doubleSpacer(),
+            DSComponents.body(text: content, maxLines: 8),
+            CupertinoButton(
+              child: DSComponents.body(text: 'More', color: DSColors.blue),
+              onPressed: () {
+              },
+            ),
+          ],
+        ),
+      );
     } else {
       return Container();
     }

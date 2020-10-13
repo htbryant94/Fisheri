@@ -188,12 +188,15 @@ class DSComponents {
     String text,
     Color color = DSColors.grey,
     AlignmentGeometry alignment = Alignment.centerLeft,
+    int maxLines = 0
   }) {
     return Align(
       alignment: alignment,
       child: Text(
         text,
         style: DesignSystemFonts.body(color),
+        maxLines: (maxLines > 0) ? maxLines : null,
+        overflow: (maxLines > 0) ? TextOverflow.ellipsis : null,
       ),
     );
   }
