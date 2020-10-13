@@ -24,7 +24,7 @@ class OpeningHoursSection extends StatelessWidget {
       return Container(
         child: Column(
           children: [
-            DSComponents.header(text: 'Opening Hours'),
+            DSComponents.header(text: 'Opening Times'),
             DSComponents.doubleSpacer(),
             _buildOpeningHoursRow(
                 day: 'Monday', openingHours: openingHours.monday),
