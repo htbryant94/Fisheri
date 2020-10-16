@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:ui';
+import 'package:fisheri/Components/VerticalSlider.dart';
 import 'package:fisheri/models/venue_search.dart';
 import 'package:fisheri/search_result_cell.dart';
 import 'package:flutter/cupertino.dart';
@@ -40,6 +42,7 @@ class _SearchScreenState extends State<SearchScreen> {
   GeoFirePoint _center;
   final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
   StreamSubscription<Position> positionStream;
+  final _selectedVenueCellHeight = 106.0;
 
   void _getCurrentLocation() {
     geolocator
@@ -199,7 +202,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         ),
                         clipBehavior: Clip.antiAliasWithSaveLayer,
                         width: MediaQuery.of(context).size.width - 8,
-                          height: 106,
+                          height: _selectedVenueCellHeight,
                           child: GestureDetector(
                             onTap: () async {
                               await FirestoreRequestService.defaultService().getVenueDetailed(_selectedVenue.id).then((venue) {
@@ -225,54 +228,34 @@ class _SearchScreenState extends State<SearchScreen> {
               ],
             ),
           ),
-          Align(
-            alignment: Alignment.centerRight,
-            child: RotatedBox(
-              quarterTurns: 3,
-              child: Container(
-                  padding: EdgeInsets.only(left: 8, right: 8, bottom: 8),
-                  height: 50,
-                  width: 250,
-                  child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8.0),
-                        color: Colors.white),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        RotatedBox(child: Text('km'), quarterTurns: 1),
-                        RotatedBox(
-                            child: Text(getSearchRadius(radius.value.round())),
-                            quarterTurns: 1),
-                        Slider(
-                          value: _radiusSliderValue,
-                          max: _maxSearchRadius,
-                          onChanged: (value) {
-                            setState(() {
-                              radius.value = value;
-                              circles = null;
-                              if (value < _maxSearchRadius) {
-                                circles = Set.from([
-                                  Circle(
-                                    circleId: CircleId("123"),
-                                    center: _currentPosition != null ? LatLng(_currentPosition.latitude, _currentPosition.longitude) : LatLng(_defaultPosition.latitude, _defaultPosition.longitude),
-                                    radius: (value * 1000),
-                                    strokeWidth: 2,
-                                    fillColor:
-                                    Colors.greenAccent.withOpacity(0.6),
-                                    strokeColor: Colors.green[200],
-                                  )
-                                ]);
-                              }
-                              _radiusSliderValue = value;
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                  )),
-            ),
-          ),
+              Align(
+                alignment: Alignment.bottomLeft,
+                child: Padding(
+                  padding: EdgeInsets.only(left: 24, bottom: _selectedVenue != null ? _selectedVenueCellHeight + 48 : 24),
+                  child: VerticalSlider(
+                    onChanged: (value) {
+                      setState(() {
+                        radius.value = value;
+                        circles = null;
+                        if (value < _maxSearchRadius) {
+                          circles = Set.from([
+                            Circle(
+                              circleId: CircleId("123"),
+                              center: _currentPosition != null ? LatLng(_currentPosition.latitude, _currentPosition.longitude) : LatLng(_defaultPosition.latitude, _defaultPosition.longitude),
+                              radius: (value * 1000),
+                              strokeWidth: 2,
+                              fillColor:
+                              Colors.greenAccent.withOpacity(0.6),
+                              strokeColor: Colors.green[200],
+                            )
+                          ]);
+                        }
+                        _radiusSliderValue = value;
+                      });
+                    },
+                  ),
+                ),
+              ),
         ]),
       ),
     );
