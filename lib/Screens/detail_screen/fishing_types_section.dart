@@ -61,7 +61,7 @@ class _FishingTypesSectionState extends State<FishingTypesSection> {
           DSComponents.header(text: widget.title),
           DSComponents.doubleSpacer(),
           DSComponents.body(text:
-              "We stock for associated fishing tackles. In some cases we stock tackles for fishing types that aren't available at this location."),
+              "We stock for associated fishing tackle. In some cases we stock tackle for fishing types that aren't available at this location."),
           DSComponents.paragraphSpacer(),
           Wrap(
               spacing: 16,
@@ -132,7 +132,7 @@ class GridItem extends StatelessWidget {
           SizedBox(
             width: 65,
             child: Pill(
-              title: "Tackles",
+              title: "Tackle",
               titleColor: item.hasTackles ? DSColors.green : DSColors.green.withOpacity(0.5),
               color: item.hasTackles ? DSColors.pastelGreen : DSColors.pastelGreen.withOpacity(0.5),
             ),

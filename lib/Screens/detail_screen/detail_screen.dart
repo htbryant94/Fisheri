@@ -138,7 +138,7 @@ class DetailScreen extends StatelessWidget {
     }
 
     sections.add(FishingTypesSection(
-      title: 'Fishing Types & Tackles',
+      title: 'Fishing Types & Tackle',
       fishTypes: venue.fishingTypes,
       fishTackles: venue.fishingTackles,
     ));
