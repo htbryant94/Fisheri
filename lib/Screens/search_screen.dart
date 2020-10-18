@@ -398,7 +398,11 @@ class __ListViewButtonState extends State<_ListViewButton> {
               )
             ]
         ),
-        child: Image.asset('images/icons/list.png', color: Colors.white),
+        padding: EdgeInsets.all(12),
+        child: Image.asset(
+          'images/icons/list.png',
+          color: Colors.white,
+        ),
       ),
     );
   }

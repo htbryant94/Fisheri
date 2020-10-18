@@ -29,7 +29,7 @@ class SearchBar extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             DSComponents.body(text: "Where are you going?"),
-            Image.asset('images/icons/filter.png'),
+            Image.asset('images/icons/filter.png', height: 24, width: 24),
           ],
         ),
       ),
