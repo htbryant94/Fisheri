@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:ui';
 import 'package:fisheri/Components/VerticalSlider.dart';
+import 'package:fisheri/Components/search_bar.dart';
+import 'package:fisheri/design_system.dart';
 import 'package:fisheri/models/venue_search.dart';
 import 'package:fisheri/search_result_cell.dart';
 import 'package:flutter/cupertino.dart';
@@ -178,6 +180,13 @@ class _SearchScreenState extends State<SearchScreen> {
                 _selectedVenue = null;
               });
             },
+          ),
+          Align(
+            alignment: Alignment.topLeft,
+            child: Padding(
+              padding: EdgeInsets.only(left: 24, top: 75),
+              child: SearchBar(),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(8),
