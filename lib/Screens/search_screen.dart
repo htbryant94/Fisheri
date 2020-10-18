@@ -61,13 +61,9 @@ class _SearchScreenState extends State<SearchScreen> {
 
         circles = null;
         circles = Set.from([
-          Circle(
-            circleId: CircleId("123"),
+          _makeCircle(
             center: LatLng(_currentPosition.latitude, _currentPosition.longitude),
-            radius: (radius.value * 1000),
-            strokeWidth: 2,
-            fillColor: Colors.greenAccent.withOpacity(0.6),
-            strokeColor: Colors.green[200],
+            radius: radius.value
           )
         ]);
         _performSearch();
@@ -104,14 +100,10 @@ class _SearchScreenState extends State<SearchScreen> {
     });
 
     circles = Set.from([
-      Circle(
-        circleId: CircleId("123"),
+      _makeCircle(
         center: _currentPosition != null ? LatLng(_currentPosition.latitude, _currentPosition.longitude) : LatLng(_defaultPosition.latitude, _defaultPosition.longitude),
-        radius: (radius.value * 1000),
-        strokeWidth: 2,
-        fillColor: Colors.greenAccent.withOpacity(0.6),
-        strokeColor: Colors.green[200],
-      )
+        radius: radius.value
+      ),
     ]);
 
     stream = radius.switchMap((rad) {
@@ -247,15 +239,10 @@ class _SearchScreenState extends State<SearchScreen> {
                         circles = null;
                         if (value < _maxSearchRadius) {
                           circles = Set.from([
-                            Circle(
-                              circleId: CircleId("123"),
+                            _makeCircle(
                               center: _currentPosition != null ? LatLng(_currentPosition.latitude, _currentPosition.longitude) : LatLng(_defaultPosition.latitude, _defaultPosition.longitude),
-                              radius: (value * 1000),
-                              strokeWidth: 2,
-                              fillColor:
-                              Colors.greenAccent.withOpacity(0.6),
-                              strokeColor: Colors.green[200],
-                            )
+                              radius: value
+                            ),
                           ]);
                         }
                         _radiusSliderValue = value;
@@ -266,6 +253,17 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
         ]),
       ),
+    );
+  }
+
+  Circle _makeCircle({LatLng center, double radius}) {
+    return Circle(
+      circleId: CircleId("123"),
+      center: center,
+      radius: radius * 1000,
+      strokeWidth: 3,
+      fillColor: Colors.white.withOpacity(0.4),
+      strokeColor: Colors.white,
     );
   }
 
