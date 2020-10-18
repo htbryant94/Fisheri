@@ -170,7 +170,7 @@ class _SearchScreenState extends State<SearchScreen> {
               zoom: 8.0,
             ),
             myLocationEnabled: true,
-//            compassEnabled: false,
+            compassEnabled: false,
             myLocationButtonEnabled: false,
             onMapCreated: _onMapCreated,
             markers: Set<Marker>.of(markers.values),
@@ -182,18 +182,17 @@ class _SearchScreenState extends State<SearchScreen> {
             },
           ),
           Align(
-            alignment: Alignment.topLeft,
+            alignment: Alignment.topCenter,
             child: Padding(
-              padding: EdgeInsets.only(left: 24, top: 75),
-              child: SearchBar(),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: Align(
-              alignment: Alignment.topRight,
-              child: _ListViewButton(venues: _venues),
-            ),
+              padding: const EdgeInsets.only(top: 24),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  SearchBar(),
+                  _ListViewButton(venues: _venues),
+                ],
+              )
+            )
           ),
           Align(
             alignment: Alignment.bottomCenter,
@@ -357,21 +356,52 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 }
 
-class _ListViewButton extends StatelessWidget {
+class _ListViewButton extends StatefulWidget {
   _ListViewButton({this.venues});
 
   @required
   final List<VenueSearch> venues;
 
   @override
+  __ListViewButtonState createState() => __ListViewButtonState();
+}
+
+class __ListViewButtonState extends State<_ListViewButton> {
+  Color _color = DSColors.black;
+
+  @override
   Widget build(BuildContext context) {
-        return CupertinoButton(
-          disabledColor: Colors.grey,
-          color: Colors.blue,
-          child: Icon(Icons.apps, color: Colors.white),
-          onPressed: venues != null ? () {
-            Coordinator.pushSearchResultsScreen(context, 'Map', venues);
-          } : null,
-      );
+    return GestureDetector(
+      onTapUp: (tapDetails) {
+        if (widget.venues != null) {
+          Coordinator.pushSearchResultsScreen(context, 'Map', widget.venues);
+        }
+        setState(() {
+          _color = DSColors.black;
+        });
+      },
+      onTapDown: (tapDetails) {
+        setState(() {
+          _color = DSColors.green;
+        });
+      },
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 100),
+        width: 44,
+        height: 44,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(22),
+            color: _color,
+            boxShadow: [
+              BoxShadow(
+                  color: Colors.black.withOpacity(0.36),
+                  offset: Offset(4,8),
+                  blurRadius: 16
+              )
+            ]
+        ),
+        child: Image.asset('images/icons/list.png', color: Colors.white),
+      ),
+    );
   }
 }

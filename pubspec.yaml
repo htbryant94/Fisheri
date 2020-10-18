@@ -113,6 +113,7 @@ flutter:
     - images/icons/website.png
     - images/icons/email.png
     - images/icons/filter.png
+    - images/icons/list.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

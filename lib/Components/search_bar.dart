@@ -28,7 +28,7 @@ class SearchBar extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            DSComponents.body(text: "Search"),
+            DSComponents.body(text: "Where are you going?"),
             Image.asset('images/icons/filter.png'),
           ],
         ),
