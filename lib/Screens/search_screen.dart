@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:ui';
 import 'package:fisheri/Components/VerticalSlider.dart';
+import 'package:fisheri/Components/list_view_button.dart';
 import 'package:fisheri/Components/search_bar.dart';
-import 'package:fisheri/design_system.dart';
 import 'package:fisheri/models/venue_search.dart';
 import 'package:fisheri/search_result_cell.dart';
 import 'package:flutter/cupertino.dart';
@@ -22,101 +22,59 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+  final Geoflutterfire _geoFire = Geoflutterfire();
+  final Position _defaultPosition = Position(latitude: 51.979900, longitude: -0.214280);
+  final Geolocator _geolocator = Geolocator()..forceAndroidLocationManager;
+  final double _selectedVenueCellHeight = 106.0;
+  
   GoogleMapController _mapController;
   Firestore _firestore = Firestore.instance;
-  Geoflutterfire geo;
-  Stream<List<DocumentSnapshot>> stream;
-  Set<Circle> circles;
 
-  BitmapDescriptor pinLocationIcon;
+  StreamSubscription<Position> positionStream;
+  Stream<List<DocumentSnapshot>> stream;
+  Set<Circle> _circles;
+
+  BitmapDescriptor _pinLocationIcon;
   BehaviorSubject<double> radius = BehaviorSubject();
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
   int _markerIdCounter = 1;
-  double _radiusSliderValue = 0;
-  final _latitude = 51.979900;
-  final _longitude = -0.214280;
-  final _defaultPosition = Position(latitude: 51.979900, longitude: -0.214280);
+  
   VenueSearch _selectedVenue;
-  String _selectedVenueType;
   List<VenueSearch> _venues = [];
   double _maxSearchRadius = 100;
   Position _currentPosition;
   GeoFirePoint _center;
-  final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
-  StreamSubscription<Position> positionStream;
-  final _selectedVenueCellHeight = 106.0;
-
-  void _getCurrentLocation() {
-    geolocator
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
-        .then((Position position) {
-      setState(() {
-        _currentPosition = position;
-        _center = geo.point(latitude: _currentPosition.latitude, longitude: _currentPosition.longitude);
-      });
-
-      if (_currentPosition != null) {
-        CameraUpdate cameraUpdate = CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(_currentPosition.latitude, _currentPosition.longitude), zoom: 10.0));
-        _mapController.animateCamera(cameraUpdate);
-
-        circles = null;
-        circles = Set.from([
-          _makeCircle(
-            center: LatLng(_currentPosition.latitude, _currentPosition.longitude),
-            radius: radius.value
-          )
-        ]);
-        _performSearch();
-      }
-
-    }).catchError((e) {
-      print(e);
-    });
-  }
-
+  
   @override
   void initState() {
     super.initState();
-    geo = Geoflutterfire();
+    
     radius.value = 15;
-    _radiusSliderValue = radius.value;
-//    GeoFirePoint center = geo.point(latitude: _latitude, longitude: _longitude);
 
     _getCurrentLocation();
 
-    if (_currentPosition != null) {
-      setState(() {
-        _center = geo.point(latitude: _currentPosition.latitude, longitude: _currentPosition.longitude);
-      });
-      print("using current position");
-    } else {
-      setState(() {
-        _center = geo.point(latitude: _defaultPosition.latitude, longitude: _defaultPosition.longitude);
-      });
-      print("using default position");
-    }
+    _center = _convertPositionToGeoPoint(_getPosition());
+    
     BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(32, 32)), 'images/icons/map_icon.png').then((onValue) {
-      pinLocationIcon = onValue;
+      _pinLocationIcon = onValue;
     });
 
-    circles = Set.from([
-      _makeCircle(
-        center: _currentPosition != null ? LatLng(_currentPosition.latitude, _currentPosition.longitude) : LatLng(_defaultPosition.latitude, _defaultPosition.longitude),
+    _setCircles(
+        center: _convertPositionToLatLng(_getPosition()),
         radius: radius.value
-      ),
-    ]);
+    );
 
     stream = radius.switchMap((rad) {
       var collectionReference = _firestore.collection('venues_search');
       if (rad.floor() < _maxSearchRadius) {
-        return geo.collection(collectionRef: collectionReference).within(
+        return _geoFire.collection(collectionRef: collectionReference).within(
             center: _center,
             radius: rad,
             field: 'position',
             strictMode: true
         );
       } else {
-        return geo.collection(collectionRef: collectionReference).within(
+        return _geoFire.collection(collectionRef: collectionReference).within(
           center: _center,
           radius: 1000,
           field: 'position',
@@ -125,32 +83,28 @@ class _SearchScreenState extends State<SearchScreen> {
       }
     });
 
-    positionStream = geolocator.getPositionStream().listen((position) {
+    positionStream = _geolocator.getPositionStream().listen((position) {
       setState(() {
         _currentPosition = position;
       });
       _getCurrentLocation();
     });
-
-//    _addPoint(51.979900, -0.214280);
   }
-  
+
   @override
   void dispose() {
     super.dispose();
+    stream = null;
+    positionStream = null;
     radius.close();
+  }
+
+  bool _isVenueSelected() {
+    return _selectedVenue != null;
   }
 
   @override
   Widget build(BuildContext context) {
-    bool shouldShowVenueCard() {
-      return _selectedVenue != null;
-    }
-
-    String getSearchRadius(int radius) {
-      return radius == _maxSearchRadius ? '∞' : "$radius";
-    }
-
     return Scaffold(
       body: SafeArea(
         child: Stack(
@@ -158,7 +112,7 @@ class _SearchScreenState extends State<SearchScreen> {
           GoogleMap(
             mapType: MapType.normal,
             initialCameraPosition: CameraPosition(
-            target: _currentPosition != null ? LatLng(_currentPosition.latitude, _currentPosition.longitude) : LatLng(_defaultPosition.latitude, _defaultPosition.longitude),
+            target: _convertPositionToLatLng(_getPosition()),
               zoom: 8.0,
             ),
             myLocationEnabled: true,
@@ -166,8 +120,8 @@ class _SearchScreenState extends State<SearchScreen> {
             myLocationButtonEnabled: false,
             onMapCreated: _onMapCreated,
             markers: Set<Marker>.of(markers.values),
-            circles: circles,
-            onTap: (latLong) {
+            circles: _circles,
+            onTap: (_) {
               setState(() {
                 _selectedVenue = null;
               });
@@ -181,71 +135,36 @@ class _SearchScreenState extends State<SearchScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   SearchBar(),
-                  _ListViewButton(venues: _venues),
+                  ListViewButton(venues: _venues),
                 ],
               )
             )
           ),
+          if (_isVenueSelected())
           Align(
             alignment: Alignment.bottomCenter,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                if(_selectedVenue != null)
-                  Visibility(
-                    visible: _selectedVenue != null,
-                    child: Container(
-                      padding: EdgeInsets.fromLTRB(24, 0, 24, 24),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10)
-                        ),
-                        clipBehavior: Clip.antiAliasWithSaveLayer,
-                        width: MediaQuery.of(context).size.width - 8,
-                          height: _selectedVenueCellHeight,
-                          child: GestureDetector(
-                            onTap: () async {
-                              await FirestoreRequestService.defaultService().getVenueDetailed(_selectedVenue.id).then((venue) {
-                                if (venue != null) {
-                                  Coordinator.pushVenueDetailScreen(context, 'Map', venue, _selectedVenue.imageURL);
-                                }
-                              });
-                            },
-                            child: RemoteImageBaseCell(
-                              imageURL: _selectedVenue.imageURL,
-                              title: _selectedVenue.name,
-                              subtitle: _selectedVenue.address.town,
-                              height: 275,
-                              elements: [
-                                if (_selectedVenue.categories != null)
-                                VenueCategoriesSection(categories: _selectedVenue.categories, alwaysOpen:  _selectedVenue.alwaysOpen ?? false),
-                              ],
-                            ),
-                          ),
-                      ),
-                    ),
-                  ),
-              ],
+            child: _SelectedVenueCell(
+                selectedVenueCellHeight: _selectedVenueCellHeight,
+                selectedVenue: _selectedVenue
             ),
           ),
               Align(
                 alignment: Alignment.bottomLeft,
                 child: Padding(
-                  padding: EdgeInsets.only(left: 24, bottom: _selectedVenue != null ? _selectedVenueCellHeight + 48 : 24),
+                  padding: EdgeInsets.only(
+                      left: 24,
+                      bottom: _isVenueSelected() ? _selectedVenueCellHeight + 48 : 24
+                  ),
                   child: VerticalSlider(
                     onChanged: (value) {
                       setState(() {
                         radius.value = value;
-                        circles = null;
                         if (value < _maxSearchRadius) {
-                          circles = Set.from([
-                            _makeCircle(
-                              center: _currentPosition != null ? LatLng(_currentPosition.latitude, _currentPosition.longitude) : LatLng(_defaultPosition.latitude, _defaultPosition.longitude),
-                              radius: value
-                            ),
-                          ]);
+                          _setCircles(
+                            center: _convertPositionToLatLng(_getPosition()),
+                            radius: value
+                          );
                         }
-                        _radiusSliderValue = value;
                       });
                     },
                   ),
@@ -254,6 +173,60 @@ class _SearchScreenState extends State<SearchScreen> {
         ]),
       ),
     );
+  }
+
+  void _setCircles({LatLng center, double radius}) {
+    setState(() {
+      _circles = null;
+      _circles = Set.from(
+        [
+          _makeCircle(
+              center: center,
+              radius: radius
+          ),
+        ],
+      );
+    });
+  }
+
+  GeoFirePoint _convertPositionToGeoPoint(Position position) {
+    return _geoFire.point(latitude: position.latitude, longitude: position.longitude);
+  }
+
+  LatLng _convertPositionToLatLng(Position position) {
+    return LatLng(position.latitude, position.longitude);
+  }
+
+  Position _getPosition() {
+    return _currentPosition != null ? _currentPosition : _defaultPosition;
+  }
+
+  void _getCurrentLocation() {
+    _geolocator
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
+        .then((Position position) {
+      setState(() {
+        _currentPosition = position;
+        _center = _geoFire.point(latitude: _currentPosition.latitude, longitude: _currentPosition.longitude);
+      });
+
+      if (_currentPosition != null) {
+        CameraUpdate cameraUpdate = CameraUpdate.newCameraPosition(CameraPosition(target: _convertPositionToLatLng(_currentPosition), zoom: 10.0));
+        _mapController.animateCamera(cameraUpdate);
+
+        setState(() {
+          _setCircles(
+            center: _convertPositionToLatLng(_currentPosition),
+            radius: radius.value
+          );
+        });
+
+        _performSearch();
+      }
+
+    }).catchError((e) {
+      print(e);
+    });
   }
 
   Circle _makeCircle({LatLng center, double radius}) {
@@ -313,12 +286,11 @@ class _SearchScreenState extends State<SearchScreen> {
       onTap: () async {
         setState(() {
           _selectedVenue = venue;
-          _selectedVenueType = venueType;
         });
       },
       markerId: markerId,
       position: LatLng(lat, long),
-      icon: pinLocationIcon,
+      icon: _pinLocationIcon,
     );
     setState(() {
       markers[markerId] = _marker;
@@ -343,66 +315,48 @@ class _SearchScreenState extends State<SearchScreen> {
       _performSearch();
     });
   }
-
-  void _addPoint(double lat, double long) {
-    GeoFirePoint geoFirePoint = geo.point(latitude: lat, longitude: long);
-    _firestore
-        .collection('venues_search')
-        .add({'name': 'test name', 'position': geoFirePoint.data}).then((_) {
-      print('added ${geoFirePoint.hash} successfully');
-    });
-  }
 }
 
-class _ListViewButton extends StatefulWidget {
-  _ListViewButton({this.venues});
+class _SelectedVenueCell extends StatelessWidget {
+  const _SelectedVenueCell({
+    Key key,
+    @required double selectedVenueCellHeight,
+    @required VenueSearch selectedVenue,
+  }) : _selectedVenueCellHeight = selectedVenueCellHeight, _selectedVenue = selectedVenue, super(key: key);
 
-  @required
-  final List<VenueSearch> venues;
-
-  @override
-  __ListViewButtonState createState() => __ListViewButtonState();
-}
-
-class __ListViewButtonState extends State<_ListViewButton> {
-  Color _color = DSColors.black;
+  final double _selectedVenueCellHeight;
+  final VenueSearch _selectedVenue;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTapUp: (tapDetails) {
-        if (widget.venues != null) {
-          Coordinator.pushSearchResultsScreen(context, 'Map', widget.venues);
-        }
-        setState(() {
-          _color = DSColors.black;
-        });
-      },
-      onTapDown: (tapDetails) {
-        setState(() {
-          _color = DSColors.green;
-        });
-      },
-      child: AnimatedContainer(
-        duration: Duration(milliseconds: 100),
-        width: 44,
-        height: 44,
+    return Container(
+      padding: EdgeInsets.fromLTRB(24, 0, 24, 24),
+      child: Container(
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(22),
-            color: _color,
-            boxShadow: [
-              BoxShadow(
-                  color: Colors.black.withOpacity(0.36),
-                  offset: Offset(4,8),
-                  blurRadius: 16
-              )
-            ]
+          borderRadius: BorderRadius.circular(10)
         ),
-        padding: EdgeInsets.all(12),
-        child: Image.asset(
-          'images/icons/list.png',
-          color: Colors.white,
-        ),
+        clipBehavior: Clip.antiAliasWithSaveLayer,
+        width: MediaQuery.of(context).size.width - 8,
+          height: _selectedVenueCellHeight,
+          child: GestureDetector(
+            onTap: () async {
+              await FirestoreRequestService.defaultService().getVenueDetailed(_selectedVenue.id).then((venue) {
+                if (venue != null) {
+                  Coordinator.pushVenueDetailScreen(context, 'Map', venue, _selectedVenue.imageURL);
+                }
+              });
+            },
+            child: RemoteImageBaseCell(
+              imageURL: _selectedVenue.imageURL,
+              title: _selectedVenue.name,
+              subtitle: _selectedVenue.address.town,
+              height: 275,
+              elements: [
+                if (_selectedVenue.categories != null)
+                VenueCategoriesSection(categories: _selectedVenue.categories, alwaysOpen:  _selectedVenue.alwaysOpen ?? false),
+              ],
+            ),
+          ),
       ),
     );
   }

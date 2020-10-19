@@ -1,4 +1,3 @@
-import 'package:fisheri/Components/form_fields/operational_hours_field.dart';
 import 'package:fisheri/Screens/detail_screen/contact_section.dart';
 import 'package:fisheri/Screens/detail_screen/contents_section.dart';
 import 'package:fisheri/Screens/detail_screen/fishing_rules_section.dart';
