@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:fisheri/Components/VerticalSlider.dart';
 import 'package:fisheri/Components/list_view_button.dart';
 import 'package:fisheri/Components/search_bar.dart';
+import 'package:fisheri/design_system.dart';
 import 'package:fisheri/models/venue_search.dart';
 import 'package:fisheri/search_result_cell.dart';
 import 'package:flutter/cupertino.dart';
@@ -44,6 +45,7 @@ class _SearchScreenState extends State<SearchScreen> {
   double _maxSearchRadius = 100;
   Position _currentPosition;
   GeoFirePoint _center;
+  bool _autoCompleteVisible = false;
   
   @override
   void initState() {
@@ -68,10 +70,10 @@ class _SearchScreenState extends State<SearchScreen> {
       var collectionReference = _firestore.collection('venues_search');
       if (rad.floor() < _maxSearchRadius) {
         return _geoFire.collection(collectionRef: collectionReference).within(
-            center: _center,
-            radius: rad,
-            field: 'position',
-            strictMode: true
+          center: _center,
+          radius: rad,
+          field: 'position',
+          strictMode: true,
         );
       } else {
         return _geoFire.collection(collectionRef: collectionReference).within(
@@ -107,70 +109,126 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Stack(
-            children: <Widget> [
-          GoogleMap(
-            mapType: MapType.normal,
-            initialCameraPosition: CameraPosition(
-            target: _convertPositionToLatLng(_getPosition()),
-              zoom: 8.0,
+        child: Listener(
+          onPointerDown: (_) {
+            FocusScopeNode currentFocus = FocusScope.of(context);
+            if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
+              currentFocus.focusedChild.unfocus();
+            }
+            setState(() {
+              _autoCompleteVisible = false;
+            });
+          },
+          child: Stack(
+              children: <Widget> [
+            GoogleMap(
+              mapType: MapType.normal,
+              initialCameraPosition: CameraPosition(
+              target: _convertPositionToLatLng(_getPosition()),
+                zoom: 8.0,
+              ),
+              myLocationEnabled: true,
+              compassEnabled: false,
+              myLocationButtonEnabled: false,
+              onMapCreated: _onMapCreated,
+              markers: Set<Marker>.of(markers.values),
+              circles: _circles,
+              onTap: (_) {
+                setState(() {
+                  _selectedVenue = null;
+                });
+              },
             ),
-            myLocationEnabled: true,
-            compassEnabled: false,
-            myLocationButtonEnabled: false,
-            onMapCreated: _onMapCreated,
-            markers: Set<Marker>.of(markers.values),
-            circles: _circles,
-            onTap: (_) {
-              setState(() {
-                _selectedVenue = null;
-              });
-            },
-          ),
-          Align(
-            alignment: Alignment.topCenter,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 24),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  SearchBar(),
-                  ListViewButton(venues: _venues),
-                ],
+            Align(
+              alignment: Alignment.topCenter,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 24),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    SearchBar(
+                      onChanged: (value) {
+                        setState(() {
+                          _autoCompleteVisible = value.isNotEmpty;
+                        });
+                      }
+                    ),
+                    ListViewButton(venues: _venues),
+                  ],
+                )
               )
-            )
-          ),
-          if (_isVenueSelected())
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: _SelectedVenueCell(
-                selectedVenueCellHeight: _selectedVenueCellHeight,
-                selectedVenue: _selectedVenue
             ),
-          ),
-              Align(
-                alignment: Alignment.bottomLeft,
+            Visibility(
+              visible: _autoCompleteVisible,
+              child: Align(
+                alignment: Alignment.topLeft,
                 child: Padding(
-                  padding: EdgeInsets.only(
-                      left: 24,
-                      bottom: _isVenueSelected() ? _selectedVenueCellHeight + 48 : 24
-                  ),
-                  child: VerticalSlider(
-                    onChanged: (value) {
-                      setState(() {
-                        radius.value = value;
-                        if (value < _maxSearchRadius) {
-                          _setCircles(
-                            center: _convertPositionToLatLng(_getPosition()),
-                            radius: value
-                          );
-                        }
-                      });
-                    },
-                  ),
+                  padding: const EdgeInsets.only(top: 69, left: 36),
+                  child: Container(
+                    height: 200,
+                    width: 224,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(8),
+                        bottomRight: Radius.circular(8),
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.black.withOpacity(0.12),
+                            offset: Offset(1,6),
+                            blurRadius: 12
+                        )
+                      ]
+                    ),
+                    child: ListView(
+                      children: [
+                        ListTile(
+                          leading: Icon(Icons.location_on, color: DSColors.black),
+                          title: DSComponents.body(text:"ben's a bum boy", color: DSColors.grey, alignment: Alignment.topLeft),
+                        ),
+                        ListTile(
+                          leading: Icon(Icons.location_on, color: DSColors.black),
+                          title: DSComponents.body(text:"Some really really really really really really long text", color: DSColors.grey, alignment: Alignment.topLeft),
+                        ),
+                      ],
+                    ),
+                  )
                 ),
               ),
-        ]),
+            ),
+            if (_isVenueSelected())
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: _SelectedVenueCell(
+                  selectedVenueCellHeight: _selectedVenueCellHeight,
+                  selectedVenue: _selectedVenue
+              ),
+            ),
+                Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                        left: 24,
+                        bottom: _isVenueSelected() ? _selectedVenueCellHeight + 48 : 24
+                    ),
+                    child: VerticalSlider(
+                      onChanged: (value) {
+                        setState(() {
+                          radius.value = value;
+                          if (value < _maxSearchRadius) {
+                            _setCircles(
+                              center: _convertPositionToLatLng(_getPosition()),
+                              radius: value
+                            );
+                          }
+                        });
+                      },
+                    ),
+                  ),
+                ),
+          ]),
+        ),
       ),
     );
   }

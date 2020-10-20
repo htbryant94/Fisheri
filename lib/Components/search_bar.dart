@@ -1,11 +1,15 @@
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../design_system.dart';
 
 class SearchBar extends StatelessWidget {
   const SearchBar({
     Key key,
+    this.onChanged,
   }) : super(key: key);
+
+  final ValueChanged<String> onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +32,17 @@ class SearchBar extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            DSComponents.body(text: "Where are you going?"),
+            Expanded(
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: "Where are you going?",
+                  hintStyle: DesignSystemFonts.body(DSColors.grey),
+                  border: InputBorder.none,
+                ),
+                style: DesignSystemFonts.body(DSColors.black),
+                onChanged: onChanged,
+              ),
+            ),
             Image.asset('images/icons/filter.png', height: 24, width: 24),
           ],
         ),
