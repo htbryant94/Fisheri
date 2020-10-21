@@ -114,6 +114,12 @@ flutter:
     - images/icons/email.png
     - images/icons/filter.png
     - images/icons/list.png
+    - images/icons/map_marker_unselected.png
+    - images/icons/2.0x/map_marker_unselected.png
+    - images/icons/3.0x/map_marker_unselected.png
+    - images/icons/map_marker_selected.png
+    - images/icons/2.0x/map_marker_selected.png
+    - images/icons/3.0x/map_marker_selected.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

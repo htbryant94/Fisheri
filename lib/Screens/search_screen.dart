@@ -27,7 +27,7 @@ class _SearchScreenState extends State<SearchScreen> {
   final Position _defaultPosition = Position(latitude: 51.979900, longitude: -0.214280);
   final Geolocator _geolocator = Geolocator()..forceAndroidLocationManager;
   final double _selectedVenueCellHeight = 106.0;
-  
+
   GoogleMapController _mapController;
   Firestore _firestore = Firestore.instance;
 
@@ -36,6 +36,8 @@ class _SearchScreenState extends State<SearchScreen> {
   Set<Circle> _circles;
 
   BitmapDescriptor _pinLocationIcon;
+  BitmapDescriptor _pinLocationIconGreen;
+
   BehaviorSubject<double> radius = BehaviorSubject();
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
   int _markerIdCounter = 1;
@@ -46,7 +48,9 @@ class _SearchScreenState extends State<SearchScreen> {
   Position _currentPosition;
   GeoFirePoint _center;
   bool _autoCompleteVisible = false;
-  
+
+  List<DocumentSnapshot> _venueResults;
+
   @override
   void initState() {
     super.initState();
@@ -56,9 +60,19 @@ class _SearchScreenState extends State<SearchScreen> {
     _getCurrentLocation();
 
     _center = _convertPositionToGeoPoint(_getPosition());
-    
-    BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(32, 32)), 'images/icons/map_icon.png').then((onValue) {
+
+    BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(),
+        'images/icons/map_marker_unselected.png'
+    ).then((onValue) {
       _pinLocationIcon = onValue;
+    });
+
+    BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(),
+        'images/icons/map_marker_selected.png'
+    ).then((onValue) {
+      _pinLocationIconGreen = onValue;
     });
 
     _setCircles(
@@ -136,6 +150,7 @@ class _SearchScreenState extends State<SearchScreen> {
               onTap: (_) {
                 setState(() {
                   _selectedVenue = null;
+                  _updateMarkers(_venueResults);
                 });
               },
             ),
@@ -304,7 +319,7 @@ class _SearchScreenState extends State<SearchScreen> {
       _venues = [];
     });
 
-    print(documentList.length);
+//    print(documentList.length);
     documentList.forEach((DocumentSnapshot document) {
       final VenueSearch result =
           VenueSearchJSONSerializer().fromMap(document.data);
@@ -337,18 +352,18 @@ class _SearchScreenState extends State<SearchScreen> {
 
   void _addMarker(
       {VenueSearch venue, double lat, double long, String venueType}) {
-    final String markerIdVal = 'marker_id_$_markerIdCounter';
-    _markerIdCounter++;
-    final MarkerId markerId = MarkerId(markerIdVal);
+    final MarkerId markerId = MarkerId(venue.id);
     var _marker = Marker(
       onTap: () async {
         setState(() {
           _selectedVenue = venue;
         });
+        _updateMarkers(_venueResults);
       },
       markerId: markerId,
       position: LatLng(lat, long),
-      icon: _pinLocationIcon,
+      zIndex: _selectedVenue != null ? (venue.id == _selectedVenue.id ? 1.0 : 0.0) : 0.0,
+      icon: _selectedVenue != null ? (venue.id == _selectedVenue.id ? _pinLocationIconGreen : _pinLocationIcon) : _pinLocationIcon,
     );
     setState(() {
       markers[markerId] = _marker;
@@ -360,6 +375,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
     setState(() {
       stream.listen((List<DocumentSnapshot> documentList) {
+        _venueResults = documentList;
         _updateMarkers(documentList);
       }).onError((error) {
         print('error streaming: $error');
