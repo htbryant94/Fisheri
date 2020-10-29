@@ -1,4 +1,6 @@
 import 'package:fisheri/Components/base_cell.dart';
+import 'package:fisheri/Components/distance_indicator.dart';
+import 'package:fisheri/Components/list_view_button.dart';
 import 'package:fisheri/design_system.dart';
 import 'package:fisheri/firestore_request_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -40,9 +42,10 @@ class AllVenuesListBuilder extends StatelessWidget {
 }
 
 class SearchResultsScreen extends StatelessWidget {
-  SearchResultsScreen({this.searchResults});
+  SearchResultsScreen({this.searchResults, this.userCurrentLocation});
 
-  final List<VenueSearch> searchResults;
+  final List<SearchResult> searchResults;
+  final GeoPoint userCurrentLocation;
 
   @override
   Widget build(BuildContext context) {
@@ -56,10 +59,14 @@ class SearchResultsScreen extends StatelessWidget {
             return DSComponents.sectionSpacer();
             },
             itemBuilder: (context, int index) {
-              final VenueSearch venue = searchResults[index];
+              final VenueSearch venue = searchResults[index].venue;
             return SearchResultCell(
               venue: venue,
               layout: BaseCellLayout.cover,
+              distanceIndicator: DistanceIndicator(
+                  selectedVenueLocation: searchResults[index].geoPoint,
+                  userCurrentLocation: userCurrentLocation
+              ),
             );
         }),
       ),

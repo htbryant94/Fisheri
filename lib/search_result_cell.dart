@@ -118,11 +118,13 @@ class SearchResultCell extends StatelessWidget {
     @required this.venue,
     this.index,
     this.layout,
+    this.distanceIndicator
   });
 
   final VenueSearch venue;
   final int index;
   final BaseCellLayout layout;
+  final Widget distanceIndicator;
 
   @override
   Widget build(BuildContext context) {
@@ -149,13 +151,7 @@ class SearchResultCell extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 DSComponents.bodySmall(text: venue.address.town),
-                Row(
-                  children: [
-                    Icon(Icons.location_on, color: Colors.green, size: 20),
-                    DSComponents.halfSpacer(),
-                    DSComponents.bodySmall(text: '5.6 miles')
-                  ],
-                )
+                distanceIndicator
               ],
             ),
             DSComponents.singleSpacer(),

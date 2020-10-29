@@ -43,7 +43,7 @@ class _SearchScreenState extends State<SearchScreen> {
   int _markerIdCounter = 1;
   
   VenueSearch _selectedVenue;
-  List<VenueSearch> _venues = [];
+  List<SearchResult> _venues = [];
   double _maxSearchRadius = 100;
   Position _currentPosition;
   GeoFirePoint _center;
@@ -168,7 +168,10 @@ class _SearchScreenState extends State<SearchScreen> {
                         });
                       }
                     ),
-                    ListViewButton(venues: _venues),
+                    ListViewButton(
+                      venues: _venues,
+                      userCurrentLocation: _getPosition(),
+                    ),
                   ],
                 )
               )
@@ -217,7 +220,7 @@ class _SearchScreenState extends State<SearchScreen> {
               alignment: Alignment.bottomCenter,
               child: _SelectedVenueCell(
                   selectedVenueCellHeight: _selectedVenueCellHeight,
-                  selectedVenue: _selectedVenue
+                  selectedVenue: _selectedVenue,
               ),
             ),
                 Align(
@@ -337,7 +340,12 @@ class _SearchScreenState extends State<SearchScreen> {
         });
 
         setState(() {
-          _venues.add(result);
+          _venues.add(
+              SearchResult(
+                  venue: result,
+                  geoPoint: point
+              )
+          );
         });
 
         _addMarker(
@@ -396,7 +404,10 @@ class _SelectedVenueCell extends StatelessWidget {
     Key key,
     @required double selectedVenueCellHeight,
     @required VenueSearch selectedVenue,
-  }) : _selectedVenueCellHeight = selectedVenueCellHeight, _selectedVenue = selectedVenue, super(key: key);
+  }) :
+        _selectedVenueCellHeight = selectedVenueCellHeight,
+        _selectedVenue = selectedVenue,
+        super(key: key);
 
   final double _selectedVenueCellHeight;
   final VenueSearch _selectedVenue;
@@ -426,7 +437,6 @@ class _SelectedVenueCell extends StatelessWidget {
               subtitle: _selectedVenue.address.town,
               height: 275,
               elements: [
-                if (_selectedVenue.categories != null)
                 VenueCategoriesSection(categories: _selectedVenue.categories, alwaysOpen:  _selectedVenue.alwaysOpen ?? false),
               ],
             ),

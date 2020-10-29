@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fisheri/Components/list_view_button.dart';
 import 'package:fisheri/Screens/auth_screen.dart';
 import 'package:fisheri/Screens/catch_detail_screen.dart';
 import 'package:fisheri/Screens/catch_form_edit_screen.dart';
@@ -8,13 +10,12 @@ import 'package:fisheri/models/catch.dart';
 import 'package:fisheri/models/venue_detailed.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'models/venue_search.dart';
 
 import 'Screens/search_results_screen.dart';
 
 class Coordinator {
 
-  static void pushSearchResultsScreen(BuildContext context, String currentPageTitle, List<VenueSearch> venues) {
+  static void pushSearchResultsScreen(BuildContext context, String currentPageTitle, {List<SearchResult> venues, GeoPoint userCurrentLocation}) {
     Navigator.push(context,
         CupertinoPageRoute(
           builder: (context) =>
@@ -23,7 +24,7 @@ class Coordinator {
                   previousPageTitle: currentPageTitle,
                   middle: Text('${venues.length} ' + (venues.length == 1 ? 'Result' : 'Results')),
                 ),
-                child: SearchResultsScreen(searchResults: venues),
+                child: SearchResultsScreen(searchResults: venues, userCurrentLocation: userCurrentLocation),
               ),
         ));
   }
