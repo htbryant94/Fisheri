@@ -1,9 +1,11 @@
+import 'package:fisheri/Screens/book_tickets_screen.dart';
 import 'package:fisheri/Screens/detail_screen/contact_section.dart';
 import 'package:fisheri/Screens/detail_screen/contents_section.dart';
 import 'package:fisheri/Screens/detail_screen/fishing_rules_section.dart';
 import 'package:fisheri/Screens/detail_screen/opening_hours_section.dart';
 import 'package:fisheri/Screens/detail_screen/social_media_section.dart';
 import 'package:fisheri/Screens/detail_screen/stats_section.dart';
+import 'package:fisheri/coordinator.dart';
 import 'package:fisheri/design_system.dart';
 import 'package:fisheri/models/venue_address.dart';
 import 'package:fisheri/models/venue_detailed.dart';
@@ -190,7 +192,9 @@ class DetailScreen extends StatelessWidget {
                   alignment: Alignment.bottomCenter,
                   child: DSComponents.primaryButton(
                     text: "Book Tickets from £39",
-                    onPressed: () { print("tapped"); }
+                    onPressed: () {
+                      Coordinator.present(context, screenTitle: "Tickets", screen: BookTicketsScreen());
+                    }
                   )
               ),
             ),
