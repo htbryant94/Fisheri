@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:fisheri/Components/favourite_button.dart';
 import 'package:fisheri/design_system.dart';
 import 'package:fisheri/house_texts.dart';
 import 'package:flutter/material.dart';
@@ -292,24 +293,34 @@ class RemoteImageBaseCell extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           imageURL != null
-              ? Container(
+              ? Stack(
+                children: [
+                  Container(
             height: 180,
+            width: double.maxFinite,
             clipBehavior: Clip.antiAliasWithSaveLayer,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(10),
             ),
             child: CachedNetworkImage(
-              fit: BoxFit.cover,
-              imageUrl: imageURL,
-              placeholder: (context, url) => Container(
-                  padding: EdgeInsets.all(16),
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: CircularProgressIndicator(),
-                  )
-              ),
+                  fit: BoxFit.cover,
+                  imageUrl: imageURL,
+                  placeholder: (context, url) => Container(
+                      padding: EdgeInsets.all(16),
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: CircularProgressIndicator(),
+                      )
+                  ),
             ),
-          ) : Container(
+          ),
+                  Positioned(
+                    right: 16,
+                    bottom: 16,
+                    child: FavouriteButton(),
+                  )
+                ],
+              ) : Container(
               height: 180,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
