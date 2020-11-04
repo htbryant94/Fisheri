@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:fisheri/Components/favourite_button.dart';
 import 'package:fisheri/design_system.dart';
 import 'package:fisheri/firestore_request_service.dart';
 import 'package:flutter/material.dart';
@@ -27,43 +28,50 @@ class _ImageCarouselState extends State<ImageCarousel> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(children: [
-      CarouselSlider.builder(
-        viewportFraction: 1.0,
-        enableInfiniteScroll: imageURLsHasValue(),
-        itemCount: imageURLsHasValue() ? widget.imageURLs.length : 1,
-        height: 268,
-        itemBuilder: (BuildContext context, int itemIndex) =>
-            imageURLsHasValue()
-                ? Container(
-                  child: CachedNetworkImage(
-                      imageUrl: widget.imageURLs[itemIndex],
-                      fit: BoxFit.fitWidth,
-                      placeholder: (context, url) => Align(
-                        alignment: Alignment.center,
-                        child: CircularProgressIndicator(),
-                      ),
-                    ),
-                )
-                : Image.asset('images/lake.jpg', fit: BoxFit.cover),
-        onPageChanged: (index) {
-          setState(() {
-            _currentPageNotifier.value = index;
-          });
-        },
-      ),
-      if (imageURLsHasValue())
-      Positioned(
-        left: 0,
-        right: 0,
-        bottom: 16,
-        child: CirclePageIndicator(
-          selectedDotColor: Colors.white,
-          dotColor: Colors.grey[500],
+    return Stack(
+      children: [
+        CarouselSlider.builder(
+          viewportFraction: 1.0,
+          enableInfiniteScroll: imageURLsHasValue(),
           itemCount: imageURLsHasValue() ? widget.imageURLs.length : 1,
-          currentPageNotifier: _currentPageNotifier,
+          height: 268,
+          itemBuilder: (BuildContext context, int itemIndex) =>
+              imageURLsHasValue()
+                  ? Container(
+                      child: CachedNetworkImage(
+                        imageUrl: widget.imageURLs[itemIndex],
+                        fit: BoxFit.fitWidth,
+                        placeholder: (context, url) => Align(
+                          alignment: Alignment.center,
+                          child: CircularProgressIndicator(),
+                        ),
+                      ),
+                    )
+                  : Image.asset('images/lake.jpg', fit: BoxFit.cover),
+          onPageChanged: (index) {
+            setState(() {
+              _currentPageNotifier.value = index;
+            });
+          },
         ),
-      ),
-    ]);
+        Positioned(
+          bottom: 24,
+          right: 24,
+          child: FavouriteButton(),
+        ),
+        if (imageURLsHasValue())
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 16,
+            child: CirclePageIndicator(
+              selectedDotColor: Colors.white,
+              dotColor: Colors.grey[500],
+              itemCount: imageURLsHasValue() ? widget.imageURLs.length : 1,
+              currentPageNotifier: _currentPageNotifier,
+            ),
+          ),
+      ],
+    );
   }
 }
