@@ -1,10 +1,13 @@
 import 'package:fisheri/Components/base_cell.dart';
 import 'package:fisheri/Components/distance_indicator.dart';
 import 'package:fisheri/Components/list_view_button.dart';
+import 'package:fisheri/Screens/holiday_detail_screen.dart';
+import 'package:fisheri/coordinator.dart';
 import 'package:fisheri/design_system.dart';
 import 'package:fisheri/firestore_request_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fisheri/house_texts.dart';
+import 'package:fisheri/models/holiday_detailed.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fisheri/search_result_cell.dart';
@@ -81,6 +84,7 @@ class ListViewItem {
     this.imageURL,
     this.image,
     this.additionalInformation,
+    this.venue
 });
 
   final String title;
@@ -88,6 +92,7 @@ class ListViewItem {
   final String imageURL;
   final Image image;
   final List<String> additionalInformation;
+  final HolidayDetailed venue;
 }
 
 class ListViewScreen extends StatelessWidget {
@@ -111,11 +116,17 @@ class ListViewScreen extends StatelessWidget {
             itemBuilder: (context, int index) {
               final item = items[index];
               if (item.image != null) {
-                return NewLocalImageBaseCell(
-                  title: item.title,
-                  subtitle: item.subtitle,
-                  image: item.image,
-                  elements: item.additionalInformation.map((info) => HouseTexts.subheading(info)).toList(),
+                return GestureDetector(
+                  onTap: () {
+                    Coordinator.present(context, screenTitle: "Holiday", currentPageTitle: "France", screen: HolidayDetailScreen(venue: item.venue));
+                    print("something");
+                  },
+                  child: NewLocalImageBaseCell(
+                    title: item.title,
+                    subtitle: item.subtitle,
+                    image: item.image,
+                    elements: item.additionalInformation.map((info) => HouseTexts.subheading(info)).toList(),
+                  ),
                 );
               } else if (item.imageURL != null) {
                 return RemoteImageBaseCell(
@@ -125,13 +136,19 @@ class ListViewScreen extends StatelessWidget {
                   elements: item.additionalInformation.map((info) => HouseTexts.subheading(info)).toList(),
                 );
               } else {
-                return RemoteImageBaseCell(
-                  title: item.title,
-                  subtitle: item.subtitle,
-                  imageURL: item.imageURL,
-                  layout: BaseCellLayout.cover,
-                  height: 278,
-                  elements: item.additionalInformation.map((info) => HouseTexts.subheading(info)).toList(),
+                return GestureDetector(
+                  onTap: () {
+                    Coordinator.present(context, screenTitle: "Holiday", currentPageTitle: "France", screen: HolidayDetailScreen(venue: item.venue));
+                    print("something");
+                  },
+                  child: RemoteImageBaseCell(
+                    title: item.title,
+                    subtitle: item.subtitle,
+                    imageURL: item.imageURL,
+                    layout: BaseCellLayout.cover,
+                    height: 278,
+                    elements: item.additionalInformation.map((info) => HouseTexts.subheading(info)).toList(),
+                  ),
                 );
               }
             }
