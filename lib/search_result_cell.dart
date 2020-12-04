@@ -168,7 +168,8 @@ class SearchResultCell extends StatelessWidget {
               ],
             ),
           ],
-        ));
+        )
+    );
   }
 }
 

@@ -1,12 +1,15 @@
+import 'package:fisheri/Components/add_button.dart';
 import 'package:fisheri/Screens/catch_form_screen_full.dart';
 import 'package:fisheri/coordinator.dart';
-import 'package:fisheri/house_texts.dart';
 import 'package:fisheri/models/catch.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fisheri/Components/base_cell.dart';
 import 'package:recase/recase.dart';
+import 'package:intl/intl.dart';
+
+import '../design_system.dart';
 
 class CatchReportScreen extends StatelessWidget {
   CatchReportScreen({
@@ -26,47 +29,49 @@ class CatchReportScreen extends StatelessWidget {
         child: Flex(
           direction: Axis.vertical,
           children: [
-            Expanded(child: CatchListBuilder(id: id)),
-            CupertinoButton(
-              onPressed: () {
-                var dateRange = List.generate(
-                    endDate.difference(startDate).inDays + 1,
-                        (day) => DateTime(startDate.year, startDate.month,
-                        startDate.day + day));
-                Coordinator.push(
-                  context,
-                  currentPageTitle: 'Catches',
-                  screen: CatchFormScreenFull(
-                    dateRange: dateRange,
-                    catchReportID: id,
-                  ),
-                  screenTitle: 'New Catch'
-                );
-              },
-              padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
-              child: Row(
-                children: <Widget>[
-                  Container(
-                    child: Icon(Icons.add, color: Colors.white),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.blue,
-                    ),
-                  ),
-                  SizedBox(width: 8),
-                  HouseTexts.heading('Add a new Catch'),
-                ],
-              ),
-            )
+            Expanded(child: _CatchListBuilder(id: id)),
+            _NewCatchButton(onPressed: () {
+              _pushNewCatchForm(context);
+            }),
           ],
         ),
       ),
     );
   }
+
+  void _pushNewCatchForm(BuildContext context) {
+    var dateRange = List.generate(
+        endDate.difference(startDate).inDays + 1,
+        (day) =>
+            DateTime(startDate.year, startDate.month, startDate.day + day));
+    Coordinator.push(context,
+        currentPageTitle: 'Catches',
+        screen: CatchFormScreenFull(
+          dateRange: dateRange,
+          catchReportID: id,
+        ),
+        screenTitle: 'New Catch');
+  }
 }
 
-class CatchListBuilder extends StatelessWidget {
-  CatchListBuilder({@required this.id});
+class _NewCatchButton extends StatelessWidget {
+  _NewCatchButton({
+    this.onPressed,
+  });
+
+  final Function onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return AddButton(
+      title: 'New Catch',
+      onPressed: onPressed,
+    );
+  }
+}
+
+class _CatchListBuilder extends StatelessWidget {
+  _CatchListBuilder({@required this.id});
 
   final String id;
 
@@ -81,8 +86,12 @@ class CatchListBuilder extends StatelessWidget {
         if (!snapshot.hasData) {
           return SizedBox(height: 0);
         }
-        return ListView.builder(
+        return ListView.separated(
             itemCount: snapshot.data.documents.length,
+            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+            separatorBuilder: (BuildContext context, int index) {
+              return DSComponents.singleSpacer();
+            },
             itemBuilder: (context, index) {
               final _catch = snapshot.data.documents[index];
               final _data = CatchJSONSerializer().fromMap(_catch.data);
@@ -103,7 +112,13 @@ class CatchCell extends StatelessWidget {
   final Catch catchData;
 
   void _openCatchScreen(BuildContext context) {
-    Coordinator.pushCatchDetailScreen(context, currentPageTitle: 'Report', catchData: catchData);
+    Coordinator.pushCatchDetailScreen(context,
+        currentPageTitle: 'Report', catchData: catchData);
+  }
+
+  String _formattedDate(String date) {
+    DateTime _dateTime = DateTime.parse(date);
+    return DateFormat('E, d MMM').format(_dateTime);
   }
 
   @override
@@ -112,10 +127,21 @@ class CatchCell extends StatelessWidget {
         onTap: () {
           _openCatchScreen(context);
         },
-        child: LocalImageBaseCell(
+        child: RemoteImageBaseCell(
           title: ReCase(catchData.typeOfFish).titleCase ?? "Match",
-          subtitle: (catchData.typeOfFish != null) ? catchData.catchType : "Position: ${catchData.position}",
-          image: Image.asset('images/lake.jpg'),
+          subtitle: (catchData.typeOfFish != null)
+              ? 'Catch: ${ReCase(catchData.catchType).titleCase}'
+              : "Position: ${catchData.position}",
+          elements: [
+            if (catchData.time != null)
+              DSComponents.bodySmall(text: 'Time: ${catchData.time}'),
+            if (catchData.date != null)
+              DSComponents.bodySmall(
+                  text: 'Date: ${_formattedDate(catchData.date)}'),
+          ],
+          imageURL: null,
+          height: 275,
+          layout: BaseCellLayout.thumbnail,
         ));
   }
 }

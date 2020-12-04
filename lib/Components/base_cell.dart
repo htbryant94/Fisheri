@@ -222,7 +222,7 @@ class RemoteImageBaseCell extends StatelessWidget {
     this.defaultImagePath,
     @required this.imageURL,
     @required this.title,
-    @required this.subtitle,
+    this.subtitle,
     @required this.height,
     this.elements,
     this.layout = BaseCellLayout.thumbnail,
@@ -275,7 +275,7 @@ class RemoteImageBaseCell extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: _children(),
               ),
@@ -343,8 +343,10 @@ class RemoteImageBaseCell extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: layout == BaseCellLayout.thumbnail ? height / 2 : height,
+      clipBehavior: Clip.antiAliasWithSaveLayer,
       decoration: BoxDecoration(
         color: Colors.white,
+        borderRadius: BorderRadius.circular(10)
       ),
       child: layout == BaseCellLayout.thumbnail ? thumbnailView() : coverView()
     );

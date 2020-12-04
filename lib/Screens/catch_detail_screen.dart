@@ -47,13 +47,13 @@ class CatchDetailScreen extends StatelessWidget {
           child: ListView(
             children: [
               ImageCarousel(),
-              TitleSection(
-                title: '${ReCase(data.catchType).titleCase} Catch - ${ReCase(data.typeOfFish).titleCase}',
-              ),
               Padding(
-                padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
+                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
                 child: Column(
                   children: <Widget>[
+                    TitleSection(
+                      title: '${ReCase(data.catchType).titleCase} Catch - ${ReCase(data.typeOfFish).titleCase}',
+                    ),
                     _DetailRow(name: 'Weight', value: convertGramsToPoundsAndOunces(data.weight)),
                     SizedBox(height: 16),
                     _DetailRow(name: 'Time', value: data.time),

@@ -1,4 +1,4 @@
-import 'package:fisheri/Screens/catch_reports_screen.dart';
+import 'package:fisheri/Screens/catch_report/catch_reports_screen.dart';
 import 'package:fisheri/Screens/holiday_countries_screen.dart';
 import 'package:fisheri/Screens/profile_screen.dart';
 import 'package:fisheri/Screens/venue_form_screen.dart';
