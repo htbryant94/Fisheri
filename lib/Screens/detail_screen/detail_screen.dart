@@ -145,9 +145,11 @@ class DetailScreen extends StatelessWidget {
     ));
 
     sections.add(DSComponents.divider());
-
+    
     if (isLake()) {
-      sections.add(FishingRulesSection(venue.fishingRules));
+      final fishingRulesList = venue.fishingRules.split("*");
+      fishingRulesList.removeAt(0);
+      sections.add(FishingRulesSection(fishingRules: fishingRulesList));
       sections.add(DSComponents.divider());
     }
 
