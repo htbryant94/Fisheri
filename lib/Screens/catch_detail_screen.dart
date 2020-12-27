@@ -1,3 +1,4 @@
+import 'package:fisheri/WeightConverter.dart';
 import 'package:fisheri/house_texts.dart';
 import 'package:fisheri/Screens/detail_screen/title_section.dart';
 import 'package:flutter/material.dart';
@@ -12,19 +13,19 @@ class CatchDetailScreen extends StatelessWidget {
   });
 
   final Catch data;
-
-  String convertGramsToPoundsAndOunces(double grams) {
-    if (grams != null) {
-      double ounces = convertGramsToOunces(grams);
-      int pounds = (ounces / 16).floor();
-      int relativeOunces = (ounces % 16).floor();
-      return "$pounds Ibs, $relativeOunces oz";
-    }
-  }
-
-  double convertGramsToOunces(double grams) {
-    return grams / 28.34952;
-  }
+//
+//  String convertGramsToPoundsAndOunces(double grams) {
+//    if (grams != null) {
+//      double ounces = convertGramsToOunces(grams);
+//      int pounds = (ounces / 16).floor();
+//      int relativeOunces = (ounces % 16).floor();
+//      return "$pounds Ibs, $relativeOunces oz";
+//    }
+//  }
+//
+//  double convertGramsToOunces(double grams) {
+//    return grams / 28.34952;
+//  }
 
   String formattedTemperature(double temp) {
     if (temp != null) {
@@ -54,7 +55,8 @@ class CatchDetailScreen extends StatelessWidget {
                     TitleSection(
                       title: '${ReCase(data.catchType).titleCase} Catch - ${ReCase(data.typeOfFish).titleCase}',
                     ),
-                    _DetailRow(name: 'Weight', value: convertGramsToPoundsAndOunces(data.weight)),
+                    if (data.weight != null)
+                    _DetailRow(name: 'Weight', value: WeightConverter.gramsToPoundsAndOunces(data.weight)),
                     SizedBox(height: 16),
                     _DetailRow(name: 'Time', value: data.time),
                     SizedBox(height: 16),

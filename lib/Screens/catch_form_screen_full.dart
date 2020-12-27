@@ -1,6 +1,7 @@
 import 'package:basic_utils/basic_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fisheri/Screens/venue_form_edit_screen.dart';
+import 'package:fisheri/WeightConverter.dart';
 import 'package:fisheri/house_texts.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -55,26 +56,13 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
   @override
   Widget build(BuildContext context) {
 
-    int _convertPoundsToOunces({int pounds}) {
-      return pounds * 16;
-    };
-
-   double _convertOuncesToGrams({int ounces}) {
-      return ounces * 28.34952;
-    };
-
-    double _convertPoundsAndOuncesToGrams({int pounds, int ounces}) {
-      final int totalOunces = _convertPoundsToOunces(pounds: pounds) + ounces;
-      return _convertOuncesToGrams(ounces: totalOunces);
-    };
-
     double _convertFishWeight() {
       final String weightWhole = _valueFor(attribute: CatchFormConstants.weightWhole);
       final String weightFraction = _valueFor(attribute: CatchFormConstants.weightFraction);
       if (weightWhole.isNotEmpty  && weightFraction.isNotEmpty) {
         final int pounds = int.parse(weightWhole);
         final int ounces = int.parse(weightFraction);
-        return _convertPoundsAndOuncesToGrams(pounds: pounds, ounces: ounces);
+        return WeightConverter.poundsAndOuncesToGrams(pounds: pounds, ounces: ounces);
       }
       return null;
     };
