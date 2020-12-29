@@ -27,12 +27,14 @@ class DetailScreen extends StatelessWidget {
     @required this.venue,
     this.imageURL,
     this.index,
+    this.id,
   });
 
   List<String> sectionContents = [];
   final VenueDetailed venue;
   final String imageURL;
   final int index;
+  final String id;
 
   bool isLake() {
     return venue.categories.contains('lake');
@@ -83,6 +85,10 @@ class DetailScreen extends StatelessWidget {
     }
 
     sections.add(DSComponents.paragraphSpacer());
+
+    sections.add(DSComponents.subheaderSmall(text: "ID: $id", alignment: Alignment.centerLeft));
+
+    sections.add(DSComponents.doubleSpacer());
 
     sections.add(DescriptionSection(
       text: venue.description,

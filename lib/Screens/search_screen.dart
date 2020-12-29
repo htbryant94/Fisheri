@@ -427,7 +427,7 @@ class _SelectedVenueCell extends StatelessWidget {
             onTap: () async {
               await FirestoreRequestService.defaultService().getVenueDetailed(_selectedVenue.id).then((venue) {
                 if (venue != null) {
-                  Coordinator.pushVenueDetailScreen(context, 'Map', venue, _selectedVenue.imageURL);
+                  Coordinator.pushVenueDetailScreen(context, 'Map', venue, _selectedVenue.imageURL, _selectedVenue.id);
                 }
               });
             },

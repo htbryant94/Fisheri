@@ -36,6 +36,10 @@ class FishingRulesSection extends StatelessWidget {
             .toList());
   }
 
+  int _getLimit() {
+    return fishingRules.length < limit ? fishingRules.length : limit;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -43,7 +47,7 @@ class FishingRulesSection extends StatelessWidget {
         children: [
           DSComponents.header(text: 'Fishing Rules'),
           DSComponents.paragraphSpacer(),
-          _rulesColumn(limit: limit),
+          _rulesColumn(limit: _getLimit()),
           if (fishingRules.length > limit)
             CupertinoButton(
               child: DSComponents.body(text: 'More', color: DSColors.blue),

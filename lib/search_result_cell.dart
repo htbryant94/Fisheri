@@ -135,9 +135,10 @@ class SearchResultCell extends StatelessWidget {
               .document(venue.id)
               .get()
               .then((DocumentSnapshot document) {
+            print('detail screen for venueID: ${venue.id}');
             final _venue = VenueDetailedJSONSerializer().fromMap(document.data);
             Coordinator.pushVenueDetailScreen(
-                context, 'Map', _venue, venue.imageURL);
+                context, 'Map', _venue, venue.imageURL, venue.id);
           });
         },
         child: RemoteImageBaseCell(
