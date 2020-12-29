@@ -134,7 +134,11 @@ class DetailScreen extends StatelessWidget {
     }
 
     if (isLake()) {
-      sections.add(FishStockedSection(venue.fishStocked));
+      if (venue.fishStock != null) {
+        sections.add(FishStockSectionFactory.standard(venue.fishStock));
+      } else {
+        sections.add(FishStockSectionFactory.fromStringArray(venue.fishStocked));
+      }
       sections.add(DSComponents.divider());
     }
 

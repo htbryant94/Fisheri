@@ -16,6 +16,7 @@ part 'venue_detailed.jser.dart';
     'fishingTackles': EnDecode(alias: 'fishing_tackles'),
     'fishingTypes': EnDecode(alias: 'fishing_types'),
     'fishStocked': EnDecode(alias: 'fish_stock_array'),
+    'fishStock': EnDecode(alias: 'fish_stock'),
     'operationalHours': EnDecode(alias: 'hours_of_operation'),
     'websiteURL': EnDecode(alias: 'website_url'),
     'numberOfLakes': EnDecode(alias: 'number_of_lakes'),
@@ -59,13 +60,29 @@ class VenueDetailed {
   Social social;
   int numberOfLakes;
   List<dynamic> amenities;
-  List<dynamic> fishStocked;
+  List<String> fishStocked;
   List<dynamic> fishingTackles;
   List<dynamic> fishingTypes;
   List<dynamic> tickets;
   HoursOfOperation operationalHours;
   bool alwaysOpen;
   String fishingRules;
+  List<FishStock> fishStock;
+}
+
+@GenSerializer()
+class FishStockJSONSerializer extends Serializer<FishStock>
+    with _$FishStockJSONSerializer {}
+
+class FishStock {
+  FishStock({
+    this.name,
+    this.weight,
+});
+
+  String name;
+  int weight;
+  int priority;
 }
 
 @GenSerializer()

@@ -98,7 +98,7 @@ class HolidayDetailScreen extends StatelessWidget {
     sections.add(AmenitiesSection(venue.amenities));
     sections.add(DSComponents.divider());
 
-    sections.add(FishStockedSection(venue.fishStocked));
+    sections.add(FishStockSectionFactory.fromStringArray(venue.fishStocked));
     sections.add(DSComponents.divider());
 
     sections.add(FishingRulesSection(fishingRules: venue.fishingRules));

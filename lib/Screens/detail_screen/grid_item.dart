@@ -2,9 +2,15 @@ import 'package:fisheri/design_system.dart';
 import 'package:flutter/material.dart';
 
 class GridItem extends StatelessWidget {
-  GridItem({this.item, this.image, this.width});
+  GridItem({
+    this.title,
+    this.subtitle,
+    this.image,
+    this.width
+  });
 
-  final String item;
+  final String title;
+  final String subtitle;
   final Image image;
   final double width;
 
@@ -18,7 +24,9 @@ class GridItem extends StatelessWidget {
             child: image,
           ),
           DSComponents.singleSpacer(),
-          DSComponents.bodySmall(text: item, color: DSColors.black, alignment: Alignment.center)
+          DSComponents.bodySmall(text: title, color: DSColors.black, alignment: Alignment.center),
+          if(subtitle != null)
+          DSComponents.bodySmall(text: subtitle, color: DSColors.black, alignment: Alignment.center),
         ]));
   }
 }

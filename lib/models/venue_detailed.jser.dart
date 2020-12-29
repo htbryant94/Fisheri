@@ -21,6 +21,9 @@ abstract class _$VenueDetailedJSONSerializer
   Serializer<HoursOfOperation> __hoursOfOperationJSONSerializer;
   Serializer<HoursOfOperation> get _hoursOfOperationJSONSerializer =>
       __hoursOfOperationJSONSerializer ??= HoursOfOperationJSONSerializer();
+  Serializer<FishStock> __fishStockJSONSerializer;
+  Serializer<FishStock> get _fishStockJSONSerializer =>
+      __fishStockJSONSerializer ??= FishStockJSONSerializer();
   @override
   Map<String, dynamic> toMap(VenueDetailed model) {
     if (model == null) return null;
@@ -43,7 +46,7 @@ abstract class _$VenueDetailedJSONSerializer
     setMapValue(ret, 'amenities',
         codeIterable(model.amenities, (val) => passProcessor.serialize(val)));
     setMapValue(ret, 'fish_stock_array',
-        codeIterable(model.fishStocked, (val) => passProcessor.serialize(val)));
+        codeIterable(model.fishStocked, (val) => val as String));
     setMapValue(
         ret,
         'fishing_tackles',
@@ -60,6 +63,11 @@ abstract class _$VenueDetailedJSONSerializer
         _hoursOfOperationJSONSerializer.toMap(model.operationalHours));
     setMapValue(ret, 'always_open', model.alwaysOpen);
     setMapValue(ret, 'fishing_rules', model.fishingRules);
+    setMapValue(
+        ret,
+        'fish_stock',
+        codeIterable(model.fishStock,
+            (val) => _fishStockJSONSerializer.toMap(val as FishStock)));
     return ret;
   }
 
@@ -83,8 +91,8 @@ abstract class _$VenueDetailedJSONSerializer
     obj.numberOfLakes = map['number_of_lakes'] as int;
     obj.amenities = codeIterable<dynamic>(
         map['amenities'] as Iterable, (val) => passProcessor.deserialize(val));
-    obj.fishStocked = codeIterable<dynamic>(map['fish_stock_array'] as Iterable,
-        (val) => passProcessor.deserialize(val));
+    obj.fishStocked = codeIterable<String>(
+        map['fish_stock_array'] as Iterable, (val) => val as String);
     obj.fishingTackles = codeIterable<dynamic>(
         map['fishing_tackles'] as Iterable,
         (val) => passProcessor.deserialize(val));
@@ -96,6 +104,30 @@ abstract class _$VenueDetailedJSONSerializer
         .fromMap(map['hours_of_operation'] as Map);
     obj.alwaysOpen = map['always_open'] as bool;
     obj.fishingRules = map['fishing_rules'] as String;
+    obj.fishStock = codeIterable<FishStock>(map['fish_stock'] as Iterable,
+        (val) => _fishStockJSONSerializer.fromMap(val as Map));
+    return obj;
+  }
+}
+
+abstract class _$FishStockJSONSerializer implements Serializer<FishStock> {
+  @override
+  Map<String, dynamic> toMap(FishStock model) {
+    if (model == null) return null;
+    Map<String, dynamic> ret = <String, dynamic>{};
+    setMapValue(ret, 'name', model.name);
+    setMapValue(ret, 'weight', model.weight);
+    setMapValue(ret, 'priority', model.priority);
+    return ret;
+  }
+
+  @override
+  FishStock fromMap(Map map) {
+    if (map == null) return null;
+    final obj = FishStock();
+    obj.name = map['name'] as String;
+    obj.weight = map['weight'] as int;
+    obj.priority = map['priority'] as int;
     return obj;
   }
 }

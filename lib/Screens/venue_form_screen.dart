@@ -866,7 +866,7 @@ class _ContactDetailsSection extends StatelessWidget {
   }
 }
 
-enum FishStock {
+enum FishStockList {
   barbel,
   bream,
   brownTrout,
@@ -898,7 +898,7 @@ class _FishStockedSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<FormBuilderFieldOption> options() {
-      final fishStocked = FishStock.values;
+      final fishStocked = FishStockList.values;
       return fishStocked
           .map((fish) => FormBuilderFieldOption(
                 value: ReCase(describeEnum(fish)).snakeCase,
