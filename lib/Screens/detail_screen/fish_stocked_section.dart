@@ -2,29 +2,37 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fisheri/WeightConverter.dart';
 import 'package:fisheri/design_system.dart';
 import 'package:fisheri/models/venue_detailed.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import '../venue_form_screen.dart';
 import 'grid_item.dart';
 import 'package:recase/recase.dart';
 
 class FishStockSectionFactory {
   static FishStockSection standard(List<FishStock> fishStock) {
-    return FishStockSection(fishStock);
+    return FishStockSection(fishStock: fishStock);
   }
 
   static FishStockSection fromStringArray(List<String> array) {
     final List<FishStock> fishStock = array.map((e) => FishStock(name: ReCase(e).titleCase)).toList();
-    return FishStockSection(fishStock);
+    return FishStockSection(fishStock: fishStock);
   }
 }
 
 class FishStockSection extends StatelessWidget {
-  FishStockSection(this.fishStock);
+  FishStockSection({
+    this.fishStock,
+    this.limit = 6,
+    this.showHeader = true,
+  });
 
   final List<FishStock> fishStock;
+  final int limit;
+  final bool showHeader;
 
-  List<FishStock> fishStockSortedByPriority(List<FishStock> fishStock) {
+  List<FishStock> _fishStockSortedByPriority(List<FishStock> fishStock) {
     List<FishStockList> fishStockOrder = [
       FishStockList.commonCarp,
       FishStockList.mirrorCarp,
@@ -59,22 +67,57 @@ class FishStockSection extends StatelessWidget {
     return fishStock;
   }
 
+  int _getLimit() {
+    return fishStock.length < limit ? fishStock.length : limit;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Column(
         children: [
+          if (showHeader)
           DSComponents.header(text: 'Fish Stocked'),
           DSComponents.paragraphSpacer(),
           Wrap(
               spacing: 16,
               runSpacing: 16,
-              children: fishStockSortedByPriority(fishStock)
+              children: _fishStockSortedByPriority(fishStock)
+                  .sublist(0, _getLimit())
                   .map((fish) => _FishStockGridItem(
                 fishStock: fish,
                 itemWidth: MediaQuery.of(context).size.width / 2.5,
-              ))
-                  .toList())
+              ),
+              ).toList()
+          ),
+          if (fishStock.length > limit)
+            Column(
+              children: [
+                DSComponents.doubleSpacer(),
+                CupertinoButton(
+                  child: DSComponents.body(text: 'More', color: DSColors.blue),
+                  onPressed: () {
+                    showCupertinoModalBottomSheet(
+                        context: context,
+                        builder: (context) => CupertinoPageScaffold(
+                          navigationBar: CupertinoNavigationBar(
+                            middle: Text('Fish Stocked'),
+                          ),
+                          backgroundColor: Colors.white,
+                          child: SafeArea(
+                            child: Scaffold(
+                              body: SingleChildScrollView(
+                                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                                  controller: ModalScrollController.of(context),
+                                  child: FishStockSection(fishStock: fishStock, limit: fishStock.length, showHeader: false)),
+                            ),
+                          ),
+                        )
+                    );
+                  },
+                ),
+              ],
+            ),
         ],
       ),
     );
