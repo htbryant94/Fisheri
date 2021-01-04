@@ -193,7 +193,7 @@ class _CatchFormEditScreenState extends State<CatchFormEditScreen> {
                         child: _DropDownMenuBuilder(
                           title: 'Weather Conditions',
                           attribute: 'weather_condition',
-                          items: FisheriConstants.weatherConditions,
+                          items: WeatherCondition.values.map((condition) => describeEnum(condition)).toList()
                         ),
                       ),
                       CatchReportVisibility(
@@ -453,7 +453,7 @@ class _DropDownMenuBuilder extends StatelessWidget {
             items: items
                 .map((item) => DropdownMenuItem(
               value: item,
-              child: Text('$item'),
+              child: Text('${ReCase(item).titleCase}'),
             ))
                 .toList())
       ],
@@ -583,6 +583,18 @@ class CatchReportVisibility extends StatelessWidget {
   }
 }
 
+enum WeatherCondition {
+  sunny,
+  sunnyCloudy,
+  cloudy,
+  raining,
+  rainingHeavy,
+  thunderstorms,
+  windy,
+  snowing,
+  night,
+}
+
 class FisheriConstants {
   static const List<String> typesFish = [
     "Crucian Carp",
@@ -602,13 +614,6 @@ class FisheriConstants {
     "Dace",
     "Gudgeon",
     "Ruffe",
-  ];
-
-  static const List<String> weatherConditions = [
-    "Sunny",
-    "Windy",
-    "Rain",
-    "Snow",
   ];
 
   static const List<String> windDirections = [

@@ -1,4 +1,5 @@
 import 'package:fisheri/WeightConverter.dart';
+import 'package:fisheri/design_system.dart';
 import 'package:fisheri/house_texts.dart';
 import 'package:fisheri/Screens/detail_screen/title_section.dart';
 import 'package:flutter/material.dart';
@@ -57,17 +58,16 @@ class CatchDetailScreen extends StatelessWidget {
                     ),
                     if (data.weight != null)
                     _DetailRow(name: 'Weight', value: WeightConverter.gramsToPoundsAndOunces(data.weight)),
-                    SizedBox(height: 16),
+                    if (data.time != null)
                     _DetailRow(name: 'Time', value: data.time),
-                    SizedBox(height: 16),
+                    if (data.date != null)
                     _DetailRow(name: 'Date', value: formattedDate(data.date)),
-                    SizedBox(height: 16),
+                    if (data.weatherCondition != null)
                     _DetailRow(name: 'Weather Condition', value: ReCase(data.weatherCondition).titleCase),
-                    SizedBox(height: 16),
+                    if (data.windDirection != null)
                     _DetailRow(name: 'Wind Direction', value: ReCase(data.windDirection).titleCase),
-                    SizedBox(height: 16),
+                    if (data.temperature != null)
                     _DetailRow(name: 'Temperature', value: formattedTemperature((data.temperature))),
-                    SizedBox(height: 16),
                     HouseTexts.subheading('Notes:'),
                     SizedBox(height: 16),
                     HouseTexts.body(data.notes),
@@ -92,11 +92,16 @@ class _DetailRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
       children: [
-        HouseTexts.subheading('$name:'),
-        SizedBox(width: 8),
-        HouseTexts.heading('$value'),
+        Row(
+          children: [
+            HouseTexts.subheading('$name:'),
+            DSComponents.singleSpacer(),
+            HouseTexts.heading('$value'),
+          ],
+        ),
+        DSComponents.doubleSpacer()
       ],
     );
   }

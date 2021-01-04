@@ -10,6 +10,8 @@ import 'package:intl/intl.dart';
 import 'package:fisheri/models/catch.dart';
 import 'package:recase/recase.dart';
 
+import 'catch_form_edit_screen.dart';
+
 class CatchFormConstants {
   static const String typeOfFish = "fish_type";
   static const String numberOfFish = "num_of_fish";
@@ -153,7 +155,7 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                             child: _DropDownMenuBuilder(
                               title: 'Weather Conditions',
                               attribute: 'weather_condition',
-                              items: FisheriConstants.weatherConditions,
+                                items: WeatherCondition.values.map((condition) => describeEnum(condition)).toList()
                             ),
                           ),
                         ),
@@ -585,13 +587,6 @@ class FisheriConstants {
     "Dace",
     "Gudgeon",
     "Ruffe",
-  ];
-
-  static const List<String> weatherConditions = [
-    "Sunny",
-    "Windy",
-    "Rain",
-    "Snow",
   ];
 
   static const List<String> windDirections = [
