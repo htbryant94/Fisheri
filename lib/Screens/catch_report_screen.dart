@@ -138,6 +138,16 @@ class CatchCell extends StatelessWidget {
             if (catchData.date != null)
               DSComponents.bodySmall(
                   text: 'Date: ${_formattedDate(catchData.date)}'),
+            if (catchData.temperature != null)
+              Row(
+                  children: [
+                    Icon(Icons.wb_sunny, size: 20, color: Colors.blue,),
+                    DSComponents.singleSpacer(),
+                    DSComponents.bodySmall(text: '${catchData.temperature.toStringAsFixed(1)} °C'),
+                    ],
+              ),
+            if (catchData.weatherCondition != null)
+              DSComponents.bodySmall(text: ReCase(catchData.weatherCondition).titleCase),
           ],
           imageURL: null,
           height: 275,
