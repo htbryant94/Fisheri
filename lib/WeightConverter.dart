@@ -12,6 +12,12 @@ class WeightConverter {
     return "$pounds Ibs, $relativeOunces oz";
   }
 
+  static String gramsToPoundsWhole(double grams) {
+    double ounces = _gramsToOunces(grams);
+    int pounds = (ounces / 16).floor();
+    return "$pounds Ibs";
+  }
+
   static int _poundsToOunces({int pounds}) {
     return pounds * 16;
   }

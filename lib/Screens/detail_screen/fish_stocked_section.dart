@@ -57,6 +57,7 @@ class FishStockSection extends StatelessWidget {
       FishStockList.dace,
       FishStockList.gudgeon,
       FishStockList.ruffe,
+      FishStockList.ide,
     ];
 
     fishStock.forEach((stock) {
@@ -170,7 +171,7 @@ class __FishStockGridItemState extends State<_FishStockGridItem> {
           } else {
             return GridItem(
               title: widget.fishStock.name,
-              subtitle: widget.fishStock.weight != null ? 'Max: ${WeightConverter.gramsToPoundsAndOunces(widget.fishStock.weight.toDouble())}' : null,
+              subtitle: widget.fishStock.weight != null ? 'to: ${WeightConverter.gramsToPoundsWhole(widget.fishStock.weight.toDouble())}' : null,
               image: snapshot.data,
               width: widget.itemWidth,
             );
