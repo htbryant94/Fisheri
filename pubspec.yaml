@@ -122,6 +122,15 @@ flutter:
     - images/icons/map_marker_selected.png
     - images/icons/2.0x/map_marker_selected.png
     - images/icons/3.0x/map_marker_selected.png
+    - images/icons/weather/cloudy.png
+    - images/icons/weather/night.png
+    - images/icons/weather/raining.png
+    - images/icons/weather/raining_heavy.png
+    - images/icons/weather/snowing.png
+    - images/icons/weather/sunny.png
+    - images/icons/weather/sunny_cloudy.png
+    - images/icons/weather/thunderstorms.png
+    - images/icons/weather/windy.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

@@ -1,5 +1,6 @@
 import 'package:fisheri/Components/add_button.dart';
 import 'package:fisheri/Screens/catch_form_screen_full.dart';
+import 'package:fisheri/WeightConverter.dart';
 import 'package:fisheri/coordinator.dart';
 import 'package:fisheri/models/catch.dart';
 import 'package:flutter/cupertino.dart';
@@ -121,37 +122,77 @@ class CatchCell extends StatelessWidget {
     return DateFormat('E, d MMM').format(_dateTime);
   }
 
+  String _subtitle() {
+    if (catchData.weight != null) {
+      return WeightConverter.gramsToPoundsAndOunces(catchData.weight);
+    } else if (catchData.catchType != null) {
+      return 'Type: ${ReCase(catchData.catchType).titleCase}';
+    }
+    return null;
+  }
+
+  String _title() {
+    if (catchData.typeOfFish != null) {
+      return ReCase(catchData.typeOfFish).titleCase;
+    } else {
+      return 'Match';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: () {
           _openCatchScreen(context);
         },
-        child: RemoteImageBaseCell(
-          title: ReCase(catchData.typeOfFish).titleCase ?? "Match",
-          subtitle: (catchData.typeOfFish != null)
-              ? 'Catch: ${ReCase(catchData.catchType).titleCase}'
-              : "Position: ${catchData.position}",
-          elements: [
-            if (catchData.time != null)
-              DSComponents.bodySmall(text: 'Time: ${catchData.time}'),
-            if (catchData.date != null)
-              DSComponents.bodySmall(
-                  text: 'Date: ${_formattedDate(catchData.date)}'),
-            if (catchData.temperature != null)
-              Row(
-                  children: [
-                    Icon(Icons.wb_sunny, size: 20, color: Colors.blue,),
-                    DSComponents.singleSpacer(),
-                    DSComponents.bodySmall(text: '${catchData.temperature.toStringAsFixed(1)} °C'),
-                    ],
-              ),
+        child: Stack(
+          children: [
+            RemoteImageBaseCell(
+              title: _title(),
+              subtitle: _subtitle(),
+//          subtitle: (catchData.typeOfFish != null)
+//              ? 'Catch: ${ReCase(catchData.catchType).titleCase}'
+//              : "Position: ${catchData.position}",
+              elements: [
+                if (catchData.date != null)
+                  DSComponents.bodySmall(
+                      text: 'Date: ${_formattedDate(catchData.date)}'),
+                if (catchData.time != null)
+                  DSComponents.bodySmall(text: 'Time: ${catchData.time}'),
+//            if (catchData.temperature != null)
+//              Row(
+//                  children: [
+//                    Icon(Icons.wb_sunny, size: 20, color: Colors.blue,),
+//                    DSComponents.singleSpacer(),
+//                    DSComponents.bodySmall(text: '${catchData.temperature.toStringAsFixed(1)} °C'),
+//                    ],
+//              ),
+              ],
+              imageURL: null,
+              height: 275,
+              layout: BaseCellLayout.thumbnail,
+            ),
             if (catchData.weatherCondition != null)
-              DSComponents.bodySmall(text: ReCase(catchData.weatherCondition).titleCase),
+            Positioned(
+              right: 16,
+              top: 16,
+              bottom: 16,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Container(
+                    width: 32,
+                    height: 32,
+                    child: Image.asset('images/icons/weather/${ReCase(catchData.weatherCondition).snakeCase}.png'),
+                  ),
+                  if (catchData.temperature != null)
+                    DSComponents.subheaderSmall(text: '${catchData.temperature.round()}°'),
+                  if (catchData.windDirection != null)
+                    DSComponents.subheaderSmall(text: '${catchData.windDirection.substring(0, 1).titleCase}')
+                ],
+              ),
+            ),
           ],
-          imageURL: null,
-          height: 275,
-          layout: BaseCellLayout.thumbnail,
         ));
   }
 }
