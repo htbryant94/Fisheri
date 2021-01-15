@@ -307,6 +307,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.10.1"
+  flutter_google_places:
+    dependency: "direct main"
+    description:
+      name: flutter_google_places
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.4"
   flutter_keyboard_visibility:
     dependency: transitive
     description:
@@ -394,6 +401,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.5.24+1"
+  google_maps_webservice:
+    dependency: transitive
+    description:
+      name: google_maps_webservice
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.19"
   graphs:
     dependency: transitive
     description:
