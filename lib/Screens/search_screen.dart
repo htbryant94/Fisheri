@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:fisheri/Components/VerticalSlider.dart';
 import 'package:fisheri/Components/list_view_button.dart';
 import 'package:fisheri/Components/search_bar.dart';
-import 'package:fisheri/design_system.dart';
 import 'package:fisheri/models/venue_search.dart';
 import 'package:fisheri/search_result_cell.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,6 +15,8 @@ import 'package:fisheri/Components/base_cell.dart';
 import 'package:fisheri/coordinator.dart';
 import 'package:fisheri/firestore_request_service.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_webservice/places.dart';
+import 'package:flutter_google_places/flutter_google_places.dart';
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -47,9 +48,10 @@ class _SearchScreenState extends State<SearchScreen> {
   double _maxSearchRadius = 100;
   Position _currentPosition;
   GeoFirePoint _center;
-  bool _autoCompleteVisible = false;
 
   List<DocumentSnapshot> _venueResults;
+
+  String _currentSearchText;
 
   @override
   void initState() {
@@ -129,9 +131,6 @@ class _SearchScreenState extends State<SearchScreen> {
             if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
               currentFocus.focusedChild.unfocus();
             }
-            setState(() {
-              _autoCompleteVisible = false;
-            });
           },
           child: Stack(
               children: <Widget> [
@@ -162,11 +161,8 @@ class _SearchScreenState extends State<SearchScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     SearchBar(
-                      onChanged: (value) {
-                        setState(() {
-                          _autoCompleteVisible = value.isNotEmpty;
-                        });
-                      }
+                      text: _currentSearchText,
+                      onTap: _openGooglePlacesAutocomplete
                     ),
                     ListViewButton(
                       venues: _venues,
@@ -175,45 +171,6 @@ class _SearchScreenState extends State<SearchScreen> {
                   ],
                 )
               )
-            ),
-            Visibility(
-              visible: _autoCompleteVisible,
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 69, left: 36),
-                  child: Container(
-                    height: 200,
-                    width: 224,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(8),
-                        bottomRight: Radius.circular(8),
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.black.withOpacity(0.12),
-                            offset: Offset(1,6),
-                            blurRadius: 12
-                        )
-                      ]
-                    ),
-                    child: ListView(
-                      children: [
-                        ListTile(
-                          leading: Icon(Icons.location_on, color: DSColors.black),
-                          title: DSComponents.body(text:"ben's a bum boy", color: DSColors.grey, alignment: Alignment.topLeft),
-                        ),
-                        ListTile(
-                          leading: Icon(Icons.location_on, color: DSColors.black),
-                          title: DSComponents.body(text:"Some really really really really really really long text", color: DSColors.grey, alignment: Alignment.topLeft),
-                        ),
-                      ],
-                    ),
-                  )
-                ),
-              ),
             ),
             if (_isVenueSelected())
             Align(
@@ -249,6 +206,47 @@ class _SearchScreenState extends State<SearchScreen> {
         ),
       ),
     );
+  }
+
+  Future<Function> _openGooglePlacesAutocomplete() async {
+    final API_KEY = "AIzaSyC4dxfbMSrSA3x_1ENoo7i9L4EzGJgGAgc";
+    Prediction prediction = await PlacesAutocomplete.show(
+        context: context,
+        apiKey: API_KEY,
+        mode: Mode.overlay,
+        language: 'en',
+        components: [Component(Component.country, 'uk')],
+        onError: (response) {
+          print('Error with Places API: ${response.errorMessage}');
+        }
+    );
+
+    if (prediction != null) {
+      GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: API_KEY);
+      PlacesDetailsResponse _detail = await _places.getDetailsByPlaceId(prediction.placeId);
+      double latitude = _detail.result.geometry.location.lat;
+      double longitude = _detail.result.geometry.location.lng;
+
+      Position _newPosition = Position(
+          latitude: latitude,
+          longitude: longitude
+      );
+
+      CameraUpdate cameraUpdate = CameraUpdate.newCameraPosition(CameraPosition(target: _convertPositionToLatLng(_newPosition), zoom: 8.0));
+      await _mapController.animateCamera(cameraUpdate);
+
+      setState(() {
+        _currentPosition = _newPosition;
+        _currentSearchText = _detail.result.name;
+        _center = GeoFirePoint(_newPosition.latitude, _newPosition.longitude);
+        _setCircles(
+            center: _convertPositionToLatLng(_newPosition),
+            radius: radius.value
+        );
+      });
+
+      _performSearch();
+    }
   }
 
   void _setCircles({LatLng center, double radius}) {

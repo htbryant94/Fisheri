@@ -6,10 +6,12 @@ import '../design_system.dart';
 class SearchBar extends StatelessWidget {
   const SearchBar({
     Key key,
-    this.onChanged,
+    this.text,
+    this.onTap,
   }) : super(key: key);
 
-  final ValueChanged<String> onChanged;
+  final VoidCallback onTap;
+  final String text;
 
   @override
   Widget build(BuildContext context) {
@@ -33,15 +35,13 @@ class SearchBar extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: "Where are you going?",
-                  hintStyle: DesignSystemFonts.body(DSColors.grey),
-                  border: InputBorder.none,
-                ),
-                style: DesignSystemFonts.body(DSColors.black),
-                onChanged: onChanged,
-              ),
+              child: MaterialButton(
+                onPressed: onTap,
+                child: DSComponents.subheader(text: text ?? 'Where are you going?', maxLines: 1),
+                splashColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                enableFeedback: false,
+              )
             ),
             Image.asset('images/icons/filter.png', height: 24, width: 24),
           ],
