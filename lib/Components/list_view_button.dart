@@ -48,6 +48,11 @@ class ListViewButtonState extends State<ListViewButton> {
           _color = DSColors.green;
         });
       },
+      onTapCancel: () {
+        setState(() {
+          _color = DSColors.black;
+        });
+      },
       child: AnimatedContainer(
         duration: Duration(milliseconds: 100),
         width: 44,

@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:ui';
 import 'package:fisheri/Components/VerticalSlider.dart';
+import 'package:fisheri/Components/fisheri_icon_button.dart';
 import 'package:fisheri/Components/list_view_button.dart';
 import 'package:fisheri/Components/search_bar.dart';
+import 'package:fisheri/design_system.dart';
 import 'package:fisheri/models/venue_search.dart';
 import 'package:fisheri/search_result_cell.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,6 +19,7 @@ import 'package:fisheri/firestore_request_service.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
+import 'dart:math';
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -42,7 +45,7 @@ class _SearchScreenState extends State<SearchScreen> {
   BehaviorSubject<double> radius = BehaviorSubject();
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
   int _markerIdCounter = 1;
-  
+
   VenueSearch _selectedVenue;
   List<SearchResult> _venues = [];
   double _maxSearchRadius = 100;
@@ -52,11 +55,14 @@ class _SearchScreenState extends State<SearchScreen> {
   List<DocumentSnapshot> _venueResults;
 
   String _currentSearchText;
+  bool _showSearchThisArea = false;
+  LatLng _lastMapPosition;
+  double _zoomLevel = 8;
 
   @override
   void initState() {
     super.initState();
-    
+
     radius.value = 15;
 
     _getCurrentLocation();
@@ -138,11 +144,17 @@ class _SearchScreenState extends State<SearchScreen> {
               mapType: MapType.normal,
               initialCameraPosition: CameraPosition(
               target: _convertPositionToLatLng(_getPosition()),
-                zoom: 8.0,
+                zoom: _zoomLevel,
               ),
               myLocationEnabled: true,
               compassEnabled: false,
               myLocationButtonEnabled: false,
+              onCameraMove: (cameraPosition) {
+                setState(() {
+                  _lastMapPosition = cameraPosition.target;
+                  _showSearchThisArea = true;
+                });
+              },
               onMapCreated: _onMapCreated,
               markers: Set<Marker>.of(markers.values),
               circles: _circles,
@@ -152,6 +164,37 @@ class _SearchScreenState extends State<SearchScreen> {
                   _updateMarkers(_venueResults);
                 });
               },
+            ),
+            Align(
+                alignment: Alignment.topCenter,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 100),
+                  child: Visibility(
+                    visible: _showSearchThisArea,
+                    child: FisheriIconButton(
+                      icon: Icon(Icons.refresh, color: Colors.white),
+                      onTap: () async {
+                        final Position _newPosition = Position(latitude: _lastMapPosition.latitude, longitude: _lastMapPosition.longitude);
+                        _searchThisArea(_newPosition);
+                      },
+                    ),
+                  ),
+                )
+            ),
+            Positioned(
+                bottom: 24,
+                right: 24,
+                child: FisheriIconButton(
+                  icon: Icon(Icons.my_location, color: Colors.white),
+                  onTap: () async {
+                    await _geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
+                        .then((position) {
+                          CameraUpdate cameraUpdate = CameraUpdate.newCameraPosition(CameraPosition(target: _convertPositionToLatLng(position), zoom: _getZoomLevel(_circles.first)));
+                          _mapController.animateCamera(cameraUpdate);
+                        }
+                    );
+                  },
+                )
             ),
             Align(
               alignment: Alignment.topCenter,
@@ -208,7 +251,7 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  Future<Function> _openGooglePlacesAutocomplete() async {
+  Future<void> _openGooglePlacesAutocomplete() async {
     final API_KEY = "AIzaSyC4dxfbMSrSA3x_1ENoo7i9L4EzGJgGAgc";
     Prediction prediction = await PlacesAutocomplete.show(
         context: context,
@@ -232,7 +275,7 @@ class _SearchScreenState extends State<SearchScreen> {
           longitude: longitude
       );
 
-      CameraUpdate cameraUpdate = CameraUpdate.newCameraPosition(CameraPosition(target: _convertPositionToLatLng(_newPosition), zoom: 8.0));
+      CameraUpdate cameraUpdate = CameraUpdate.newCameraPosition(CameraPosition(target: _convertPositionToLatLng(_newPosition), zoom: _getZoomLevel(_circles.first)));
       await _mapController.animateCamera(cameraUpdate);
 
       setState(() {
@@ -247,6 +290,15 @@ class _SearchScreenState extends State<SearchScreen> {
 
       _performSearch();
     }
+  }
+
+  double _getZoomLevel(Circle circle) {
+    double zoomLevel = 11;
+    if (circle != null) {
+      double scale = circle.radius / 500;
+      zoomLevel = (16 - log(scale) / log(2));
+    }
+    return zoomLevel;
   }
 
   void _setCircles({LatLng center, double radius}) {
@@ -285,7 +337,7 @@ class _SearchScreenState extends State<SearchScreen> {
       });
 
       if (_currentPosition != null) {
-        CameraUpdate cameraUpdate = CameraUpdate.newCameraPosition(CameraPosition(target: _convertPositionToLatLng(_currentPosition), zoom: 10.0));
+        CameraUpdate cameraUpdate = CameraUpdate.newCameraPosition(CameraPosition(target: _convertPositionToLatLng(_currentPosition), zoom: _getZoomLevel(_circles.first)));
         _mapController.animateCamera(cameraUpdate);
 
         setState(() {
@@ -301,6 +353,21 @@ class _SearchScreenState extends State<SearchScreen> {
     }).catchError((e) {
       print(e);
     });
+  }
+
+  void _searchThisArea(Position position) {
+    setState(() {
+      _currentPosition = position;
+      _currentSearchText = null;
+      _center = GeoFirePoint(position.latitude, position.longitude);
+      _setCircles(
+          center: _convertPositionToLatLng(position),
+          radius: radius.value
+      );
+    });
+    CameraUpdate cameraUpdate = CameraUpdate.newCameraPosition(CameraPosition(target: _convertPositionToLatLng(position), zoom: _getZoomLevel(_circles.first)));
+    _mapController.animateCamera(cameraUpdate);
+    _performSearch();
   }
 
   Circle _makeCircle({LatLng center, double radius}) {
@@ -378,8 +445,9 @@ class _SearchScreenState extends State<SearchScreen> {
 
   void _performSearch() {
     print('current search radius: ${radius.value}');
-
     setState(() {
+      _zoomLevel = _getZoomLevel(_circles.first);
+      _showSearchThisArea = false;
       stream.listen((List<DocumentSnapshot> documentList) {
         _venueResults = documentList;
         _updateMarkers(documentList);
