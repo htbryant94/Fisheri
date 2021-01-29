@@ -52,7 +52,7 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
 
   dynamic _valueFor({String attribute}) {
     return _fbKey
-        .currentState.fields[attribute].currentState.value;
+        .currentState.fields[attribute].value;
   }
 
   @override
@@ -79,13 +79,17 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                 FormBuilder(
                   key: _fbKey,
                   initialValue: {},
-                  autovalidate: true,
+                  autovalidateMode: AutovalidateMode.always,
                   child: Column(
                     children: <Widget>[
                       HouseTexts.heading('Catch Type'),
-                      FormBuilderRadio(
-                        attribute: 'catch_type',
-                        options: catchTypes.map((type) => FormBuilderFieldOption(value: type, label: StringUtils.capitalize(describeEnum(type)))).toList(),
+                      FormBuilderRadioGroup(
+                        name: 'catch_type',
+                        options: catchTypes.map((type) =>
+                            FormBuilderFieldOption(
+                                value: type,
+                                child: Text(StringUtils.capitalize(describeEnum(type))))
+                        ).toList(),
                         onChanged: (value) {
                           print("$value");
                           setState(() {
@@ -181,7 +185,7 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                           keyboardType: TextInputType.multiline,
                           minLines: 5,
                           maxLines: null,
-                          attribute: "notes",
+                          name: "notes",
                           decoration: InputDecoration(
                               labelText: "Notes", border: OutlineInputBorder()),
                         ),
@@ -307,8 +311,8 @@ class _NumberOfFishSection extends StatelessWidget {
     return Column(
       children: [
         HouseTexts.heading('Number of Fish'),
-        FormBuilderStepper(
-          attribute: "num_of_fish",
+        FormBuilderTouchSpin(
+          name: "num_of_fish",
           initialValue: 0,
           min: 0,
           max: 100,
@@ -334,7 +338,7 @@ class _PositionSection extends StatelessWidget {
       children: [
         HouseTexts.heading(title),
         FormBuilderTouchSpin(
-          attribute: attribute,
+          name: attribute,
           initialValue: 1,
           min: 1,
           max: 10,
@@ -360,7 +364,7 @@ class _TimePickerBuilder extends StatelessWidget {
       children: [
         HouseTexts.heading(title),
         FormBuilderDateTimePicker(
-          attribute: attribute,
+          name: attribute,
           inputType: InputType.time,
         )
       ],
@@ -405,7 +409,7 @@ class _DropDownMenuDatesBuilder extends StatelessWidget {
       children: [
         HouseTexts.heading(title),
         FormBuilderDropdown(
-            attribute: attribute,
+            name: attribute,
             items: items
                 .map((item) => DropdownMenuItem(
               value: item,
@@ -437,8 +441,8 @@ class _DropDownMenuBuilder extends StatelessWidget {
       children: [
         HouseTexts.heading(title),
         FormBuilderDropdown(
-            attribute: attribute,
-            validators: isRequired ? [FormBuilderValidators.required()] : [],
+            name: attribute,
+            validator: isRequired ? FormBuilderValidators.required(context) : null,
             items: items
                 .map((item) => DropdownMenuItem(
                       value: ReCase(item).snakeCase,
@@ -457,7 +461,7 @@ class _TemperatureSlider extends StatelessWidget {
       children: [
         HouseTexts.heading('Temperature'),
         FormBuilderSlider(
-          attribute: 'temperature',
+          name: 'temperature',
           initialValue: 20,
           max: 40,
           min: 0,
@@ -484,12 +488,12 @@ class _FishWeight extends StatelessWidget {
     List<FormFieldValidator> _weightWholeValidators() {
       if (isRequired) {
         return [
-          FormBuilderValidators.required(errorText: 'required'),
-          FormBuilderValidators.numeric(),
+          FormBuilderValidators.required(context, errorText: 'required'),
+          FormBuilderValidators.numeric(context),
         ];
       } else {
         return [
-          FormBuilderValidators.numeric(),
+          FormBuilderValidators.numeric(context),
         ];
       }
     }
@@ -497,14 +501,14 @@ class _FishWeight extends StatelessWidget {
     List<FormFieldValidator> _weightFractionValidators() {
       if (isRequired) {
         return [
-          FormBuilderValidators.required(errorText: 'required'),
-          FormBuilderValidators.numeric(),
-          FormBuilderValidators.max(16),
+          FormBuilderValidators.required(context, errorText: 'required'),
+          FormBuilderValidators.numeric(context),
+          FormBuilderValidators.max(context, 16),
         ];
       } else {
         return [
-          FormBuilderValidators.numeric(),
-          FormBuilderValidators.max(16),
+          FormBuilderValidators.numeric(context),
+          FormBuilderValidators.max(context, 16),
         ];
       }
     }
@@ -518,11 +522,11 @@ class _FishWeight extends StatelessWidget {
             Container(
               width: 50,
               child: FormBuilderTextField(
-                attribute: 'fish_weight_whole',
+                name: 'fish_weight_whole',
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(suffixText: 'Ib'),
                 textAlign: TextAlign.center,
-                validators: _weightWholeValidators(),
+                validator: FormBuilderValidators.compose(_weightWholeValidators()),
 
               ),
             ),
@@ -530,10 +534,10 @@ class _FishWeight extends StatelessWidget {
             Container(
               width: 50,
               child: FormBuilderTextField(
-                attribute: 'fish_weight_fraction',
+                name: 'fish_weight_fraction',
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(suffixText: 'oz'),
-                validators: _weightFractionValidators(),
+                validator: FormBuilderValidators.compose(_weightFractionValidators()),
               ),
             ),
           ],

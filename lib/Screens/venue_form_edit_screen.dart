@@ -13,6 +13,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:form_builder_image_picker/form_builder_image_picker.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:fisheri/house_texts.dart';
 import 'package:recase/recase.dart';
@@ -106,7 +107,7 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
   @override
   Widget build(BuildContext context) {
     Function _valueFor = ({String attribute}) {
-      return _fbKey.currentState.fields[attribute].currentState.value;
+      return _fbKey.currentState.fields[attribute].value;
     };
 
     HoursOfOperation getOperationalHours() {
@@ -441,7 +442,7 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
                     children: <Widget>[
                       FormBuilder(
                         key: _fbKey,
-                        autovalidate: true,
+                        autovalidateMode: AutovalidateMode.always,
                         initialValue: {
                           VenueDetailedConstants.name: widget.venue.name,
                           VenueDetailedConstants.categories:
@@ -478,12 +479,12 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
                           children: <Widget>[
                             _OverviewSection(),
                             SizedBox(height: 16),
-                            FormBuilderCheckboxList(
+                            FormBuilderCheckboxGroup(
+                              name: 'categories',
                               decoration:
                                   InputDecoration(labelText: "Categories *"),
                               activeColor: HouseColors.accentGreen,
                               checkColor: HouseColors.primaryGreen,
-                              attribute: "categories",
                               onChanged: (categories) {
                                 setState(() {
                                   selectedCategories = categories.cast<String>();
@@ -500,17 +501,19 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
                               keyboardType: TextInputType.multiline,
                               minLines: 5,
                               maxLines: null,
-                              attribute: "description",
+                              name: "description",
                               autocorrect: false,
                               decoration: InputDecoration(
                                   labelText: "Description",
                                   helperText:
                                       "Include pricing information or details on how to get to your venue here",
                                   border: OutlineInputBorder()),
-                              validators: [
-                                FormBuilderValidators.minLength(4),
-                                FormBuilderValidators.maxLength(1000),
-                              ],
+                              validator: FormBuilderValidators.compose(
+                                  [
+                                    FormBuilderValidators.minLength(context, 4),
+                                    FormBuilderValidators.maxLength(context, 1000),
+                                  ]
+                              ),
                             ),
                             SizedBox(height: 16),
                             _CoordinatesSection(),
@@ -561,8 +564,8 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
                               child: _FishingRulesSection(),
                             ),
                             FormBuilderSwitch(
-                              attribute: 'operational_hours_enabled',
-                              label: HouseTexts.subheading('Provide Opening times'),
+                              name: 'operational_hours_enabled',
+                              title: HouseTexts.subheading('Provide Opening times'),
                               onChanged: (enabled) {
                                 setState(() {
                                   _operationalHoursEnabled = enabled;
@@ -617,10 +620,11 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
                                 },
                               )
                             ),
-                            FormBuilderImagePickerCustom(
-                              attribute: 'images',
-                              readOnly: _imagesReadOnly,
-                            )
+                            FormBuilderImagePicker(name: 'images')
+//                            FormBuilderImagePickerCustom(
+//                              attribute: 'images',
+//                              readOnly: _imagesReadOnly,
+//                            )
                           ],
                         ),
                       ),
@@ -708,14 +712,14 @@ class _OverviewSection extends StatelessWidget {
       children: <Widget>[
         HouseTexts.subtitle('Add a Venue'),
         FormBuilderTextField(
-          attribute: "name",
+          name: "name",
           decoration: InputDecoration(labelText: "Name of Venue *"),
           maxLines: 1,
-          validators: [
-            FormBuilderValidators.required(),
-            FormBuilderValidators.minLength(4),
-            FormBuilderValidators.maxLength(50),
-          ],
+          validator: FormBuilderValidators.compose([
+            FormBuilderValidators.required(context),
+            FormBuilderValidators.minLength(context, 4),
+            FormBuilderValidators.maxLength(context, 50),
+          ]),
         ),
         SizedBox(height: 16),
       ],
@@ -734,7 +738,7 @@ class _FishingRulesSection extends StatelessWidget {
           keyboardType: TextInputType.multiline,
           minLines: 5,
           maxLines: null,
-          attribute: "fishing_rules",
+          name: "fishing_rules",
           decoration: InputDecoration(
               labelText: "Fishing Rules",
               helperText:
@@ -754,45 +758,45 @@ class _AddressSection extends StatelessWidget {
       children: <Widget>[
         HouseTexts.subtitle('Address'),
         FormBuilderTextField(
-          attribute: "address_street",
+          name: "address_street",
           decoration: InputDecoration(labelText: "Street *"),
           maxLines: 1,
-          validators: [
-            FormBuilderValidators.required(),
-            FormBuilderValidators.minLength(4),
-            FormBuilderValidators.maxLength(100),
-          ],
+          validator: FormBuilderValidators.compose([
+            FormBuilderValidators.required(context),
+            FormBuilderValidators.minLength(context, 4),
+            FormBuilderValidators.maxLength(context, 100),
+          ]),
         ),
         FormBuilderTextField(
-          attribute: "address_town",
+          name: "address_town",
           decoration: InputDecoration(labelText: "Town *"),
           maxLines: 1,
-          validators: [
-            FormBuilderValidators.required(),
-            FormBuilderValidators.minLength(4),
-            FormBuilderValidators.maxLength(100),
-          ],
+          validator: FormBuilderValidators.compose([
+            FormBuilderValidators.required(context),
+            FormBuilderValidators.minLength(context, 4),
+            FormBuilderValidators.maxLength(context, 100),
+          ]),
         ),
         FormBuilderTextField(
-          attribute: "address_county",
+          name: "address_county",
           decoration: InputDecoration(labelText: "County *"),
           maxLines: 1,
-          validators: [
-            FormBuilderValidators.required(),
-            FormBuilderValidators.minLength(4),
-            FormBuilderValidators.maxLength(100),
-          ],
+          validator: FormBuilderValidators.compose([
+            FormBuilderValidators.required(context),
+            FormBuilderValidators.minLength(context, 4),
+            FormBuilderValidators.maxLength(context, 100),
+          ]),
         ),
         FormBuilderTextField(
-          attribute: "address_postcode",
+          name: "address_postcode",
           textCapitalization: TextCapitalization.words,
           decoration: InputDecoration(labelText: "Postcode *"),
           maxLines: 1,
-          validators: [
-            FormBuilderValidators.required(),
-            FormBuilderValidators.minLength(6),
-            FormBuilderValidators.maxLength(8),
-          ],
+          validator: FormBuilderValidators.compose([
+            FormBuilderValidators.required(context),
+            FormBuilderValidators.minLength(context, 6),
+            FormBuilderValidators.maxLength(context, 8),
+          ]),
         ),
       ],
     );
@@ -840,14 +844,15 @@ class _AmenitiesSection extends StatelessWidget {
       children: <Widget>[
         HouseTexts.subtitle('Amenities'),
         FormBuilderTouchSpin(
-          attribute: "number_of_lakes",
+          name: "number_of_lakes",
           decoration: InputDecoration(labelText: "Number of Lakes"),
+          initialValue: 0,
           min: 0,
           max: 100,
           step: 1,
         ),
-        FormBuilderCheckboxList(
-          attribute: "amenities_list",
+        FormBuilderCheckboxGroup(
+          name: 'amenities_list',
           options: [
             FormBuilderFieldOption(
                 value: toilets.snakeCase, child: Text(toilets.titleCase)),
@@ -901,7 +906,7 @@ class _ContactDetailsSection extends StatelessWidget {
       children: <Widget>[
         HouseTexts.subtitle('Venue Contact Details'),
         FormBuilderTextField(
-          attribute: "contact_email",
+          name: "contact_email",
           keyboardType: TextInputType.emailAddress,
           autocorrect: false,
           decoration: InputDecoration(
@@ -909,35 +914,29 @@ class _ContactDetailsSection extends StatelessWidget {
             icon: Icon(Icons.email),
           ),
           maxLines: 1,
-          validators: [
-            FormBuilderValidators.email(),
-          ],
+          validator: FormBuilderValidators.email(context),
         ),
         FormBuilderTextField(
-          attribute: "contact_phone",
+          name: "contact_phone",
           keyboardType: TextInputType.phone,
           decoration: InputDecoration(
             labelText: "Phone",
             icon: Icon(Icons.phone),
           ),
           maxLines: 1,
-          validators: [
-            // TODO: Add validation for phone number
-          ],
+//          validator: // TODO: Add validation for phone number,
         ),
         FormBuilderTextField(
-          attribute: "contact_url",
+          name: 'contact_url',
           autocorrect: false,
           decoration: InputDecoration(
-            labelText: "Website URL",
+            labelText: 'Website URL',
             icon: Icon(Icons.language),
-              prefixText: "www.",
-              helperText: "e.g. www.fisheri.co.uk"
+              prefixText: 'www.',
+              helperText: 'e.g. www.fisheri.co.uk'
           ),
           maxLines: 1,
-          validators: [
-            FormBuilderValidators.url(),
-          ],
+          validator: FormBuilderValidators.url(context),
         ),
       ],
     );
@@ -990,8 +989,8 @@ class _FishStockedSection extends StatelessWidget {
     return Column(
       children: <Widget>[
         HouseTexts.subtitle('Fish Stocked'),
-        FormBuilderCheckboxList(
-          attribute: "fish_stocked",
+        FormBuilderCheckboxGroup(
+          name: "fish_stocked",
           options: options(),
         ),
         SizedBox(height: 16),
@@ -1020,8 +1019,8 @@ class _TicketsSection extends StatelessWidget {
     return Column(
       children: <Widget>[
         HouseTexts.subtitle('Tickets Available'),
-        FormBuilderCheckboxList(
-          attribute: "tickets",
+        FormBuilderCheckboxGroup(
+          name: "tickets",
           options: [
             FormBuilderFieldOption(
                 value: day.snakeCase, child: Text(day.titleCase)),
@@ -1048,26 +1047,26 @@ class _CoordinatesSection extends StatelessWidget {
       children: <Widget>[
         HouseTexts.subtitle('Coordinates'),
         FormBuilderTextField(
-          attribute: "coordinates_latitude",
+          name: "coordinates_latitude",
           maxLines: 1,
           keyboardType: TextInputType.numberWithOptions(signed: true),
           decoration: InputDecoration(
             labelText: "Latitude *",
           ),
-          validators: [
-            FormBuilderValidators.required(),
-            FormBuilderValidators.numeric(),
-          ],
+          validator: FormBuilderValidators.compose([
+            FormBuilderValidators.required(context),
+            FormBuilderValidators.numeric(context),
+          ]),
         ),
         FormBuilderTextField(
-          attribute: "coordinates_longitude",
+          name: 'coordinates_longitude',
           maxLines: 1,
           keyboardType: TextInputType.numberWithOptions(signed: true),
-          decoration: InputDecoration(labelText: "Longitude *"),
-          validators: [
-            FormBuilderValidators.required(),
-            FormBuilderValidators.numeric(),
-          ],
+          decoration: InputDecoration(labelText: 'Longitude *'),
+          validator: FormBuilderValidators.compose([
+            FormBuilderValidators.required(context),
+            FormBuilderValidators.numeric(context),
+          ]),
         ),
       ],
     );

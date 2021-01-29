@@ -42,21 +42,21 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
               initialValue: {
                 'catch_type': "lake",
               },
-              autovalidate: true,
+              autovalidateMode: AutovalidateMode.always,
               child: Column(
                 children: <Widget>[
                   HouseTexts.heading('New Report'),
                   SizedBox(height: 16),
-                  FormBuilderRadio(
-                    attribute: 'catch_type',
+                  FormBuilderRadioGroup(
+                    name: 'catch_type',
                     options: [
                       FormBuilderFieldOption(
                         value: 'lake',
-                        label: 'Specified Lake',
+                        child: Text('Specified Lake'),
                       ),
                       FormBuilderFieldOption(
                         value: 'custom',
-                        label: 'Custom',
+                        child: Text('Custom'),
                       ),
                     ],
                     onChanged: (value) {
@@ -90,19 +90,21 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
                       children: [
                         HouseTexts.subheading('Custom Name *'),
                         FormBuilderTextField(
-                          attribute: "custom_name",
-                          validators: selectedReportType == "custom" ?
-                          [
-                            FormBuilderValidators.required(),
-                            FormBuilderValidators.minLength(3),
-                          ]: [],
+                          name: "custom_name",
+                          validator: selectedReportType == "custom" ?
+                              FormBuilderValidators.compose(
+                                  [
+                                    FormBuilderValidators.required(context),
+                                    FormBuilderValidators.minLength(context, 3),
+                                  ]
+                              ) : null,
                         ),
                       ],
                     ),
                   ),
                   SizedBox(height: 16),
                   FormBuilderDateTimePicker(
-                    attribute: 'date_start',
+                    name: 'date_start',
                     inputType: InputType.date,
                     format: DateFormat('dd-MM-yyyy'),
                     decoration: InputDecoration(labelText: 'Start date'),
@@ -113,8 +115,8 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
                     },
                   ),
                   FormBuilderCheckbox(
-                    attribute: 'date_one_day_only',
-                    label: Text('Day only?'),
+                    name: 'date_one_day_only',
+                    title: Text('Day only?'),
                     onChanged: (value) {
                       setState(() {
                         setState(() {
@@ -126,7 +128,7 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
                   Visibility(
                     visible: !isDayOnly,
                     child: FormBuilderDateTimePicker(
-                      attribute: 'date_end',
+                      name: 'date_end',
                       inputType: InputType.date,
                       format: DateFormat('dd-MM-yyyy'),
                       decoration: InputDecoration(labelText: 'End date'),
@@ -155,14 +157,13 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
                   CatchReport _report;
 
                   DateTime _startDate =
-                      _fbKey.currentState.fields['date_start'].currentState
-                          .value;
+                      _fbKey.currentState.fields['date_start'].value;
                   String _dateEnd = isDayOnly ? 'date_start' : 'date_end';
                   DateTime _endDate =
-                      _fbKey.currentState.fields[_dateEnd].currentState.value;
+                      _fbKey.currentState.fields[_dateEnd].value;
 
                   if (selectedReportType == "lake") {
-                    String _documentID = _fbKey.currentState.fields['lake_name'].currentState.value;
+                    String _documentID = _fbKey.currentState.fields['lake_name'].value;
                     DocumentSnapshot _document = widget.availableLakes.documents
                         .firstWhere((lake) => lake.documentID == _documentID);
                     String _lakeID = _document.documentID;
@@ -174,7 +175,7 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
                       endDate: _endDate.toIso8601String(),
                     );
                   } else if (selectedReportType == "custom") {
-                    String _customName = _fbKey.currentState.fields['custom_name'].currentState.value;
+                    String _customName = _fbKey.currentState.fields['custom_name'].value;
                     _report = CatchReport(
                       lakeID: null,
                       lakeName: _customName,
@@ -256,18 +257,20 @@ class _LakesDropDownMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FormBuilderDropdown(
-      attribute: 'lake_name',
+      name: 'lake_name',
         items: snapshotLakes.documents.map((lake) {
           return DropdownMenuItem(
             child: (Text(lake['name'])),
             value: lake.documentID,
           );
         }).toList(),
-      validators: isEnabled ?
-      [
-        FormBuilderValidators.required(),
-        FormBuilderValidators.minLength(3),
-      ]: [],
+      validator: isEnabled ?
+          FormBuilderValidators.compose(
+              [
+                FormBuilderValidators.required(context),
+                FormBuilderValidators.minLength(context, 3),
+              ]
+          ) : null,
     );
   }
 }

@@ -44,8 +44,9 @@ class FishingTypesField extends StatelessWidget {
     return Column(
       children: <Widget>[
         HouseTexts.subtitle(title),
-        FormBuilderCheckboxList(
-          attribute: attribute,
+        FormBuilderCheckboxGroup(
+          name: attribute,
+//          attribute: attribute,
           options: _options(),
         ),
         SizedBox(height: 16),

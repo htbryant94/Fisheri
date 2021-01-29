@@ -20,7 +20,7 @@ class LocalImageCoverCell extends StatelessWidget {
   final List<Widget> elements;
 
   List<Widget> _children() {
-    List<Widget> stuff = [
+    var stuff = <Widget>[
       HouseTexts.heading('$title'),
       HouseTexts.subheading('$subtitle')
     ];
@@ -85,7 +85,7 @@ class NewLocalImageBaseCell extends StatelessWidget {
   final BaseCellLayout layout;
 
   List<Widget> _children() {
-    List<Widget> stuff = [
+    var stuff = <Widget>[
       HouseTexts.heading('$title'),
       HouseTexts.subheading('$subtitle')
     ];
@@ -167,7 +167,7 @@ class LocalImageBaseCell extends StatelessWidget {
   final List<Widget> elements;
 
   List<Widget> _children() {
-    List<Widget> stuff = [
+    var stuff = <Widget>[
       HouseTexts.heading('$title'),
       HouseTexts.subheading('$subtitle')
     ];
@@ -237,7 +237,7 @@ class RemoteImageBaseCell extends StatelessWidget {
   final BaseCellLayout layout;
 
   List<Widget> _children() {
-    List<Widget> stuff = [
+    var stuff = <Widget>[
       layout == BaseCellLayout.cover ? DSComponents.subheader(text: title, maxLines: 1) : DSComponents.subheaderSmall(text: title, maxLines: 1),
       if (subtitle != null)
         layout == BaseCellLayout.cover ? DSComponents.body(text: subtitle) : DSComponents.bodySmall(text: subtitle)

@@ -169,29 +169,23 @@ class __WeekDaySectionState extends State<_WeekDaySection> {
         Visibility(
           visible: _isOpen,
           child: FormBuilderDateTimePicker(
-            attribute: "${describeEnum(widget.day)}_open",
+            name: "${describeEnum(widget.day)}_open",
             decoration: InputDecoration(labelText: "Open"),
             inputType: InputType.time,
-            builder: (context, child) =>
-                MediaQuery(data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true), child: child),
+            alwaysUse24HourFormat: true,
             initialValue: _initialOpeningTime(isOpen: _isOpen, data: widget.data),
-            validators: [
-              FormBuilderValidators.required(),
-            ],
+            validator: FormBuilderValidators.required(context),
           ),
         ),
         Visibility(
           visible: _isOpen,
           child: FormBuilderDateTimePicker(
-            attribute: "${describeEnum(widget.day)}_close",
+            name: "${describeEnum(widget.day)}_close",
             decoration: InputDecoration(labelText: "Close"),
             inputType: InputType.time,
             initialValue: _initialClosingTime(isOpen: _isOpen, data: widget.data),
-            builder: (context, child) =>
-                MediaQuery(data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true), child: child),
-            validators: [
-              FormBuilderValidators.required(),
-            ],
+            alwaysUse24HourFormat: true,
+            validator: FormBuilderValidators.required(context),
           ),
         ),
       ],
