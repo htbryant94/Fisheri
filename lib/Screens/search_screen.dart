@@ -4,7 +4,6 @@ import 'package:fisheri/Components/VerticalSlider.dart';
 import 'package:fisheri/Components/fisheri_icon_button.dart';
 import 'package:fisheri/Components/list_view_button.dart';
 import 'package:fisheri/Components/search_bar.dart';
-import 'package:fisheri/design_system.dart';
 import 'package:fisheri/models/venue_search.dart';
 import 'package:fisheri/search_result_cell.dart';
 import 'package:flutter/cupertino.dart';
@@ -65,8 +64,6 @@ class _SearchScreenState extends State<SearchScreen> {
 
     radius.value = 15;
 
-    _getCurrentLocation();
-
     _center = _convertPositionToGeoPoint(_getPosition());
 
     BitmapDescriptor.fromAssetImage(
@@ -114,7 +111,7 @@ class _SearchScreenState extends State<SearchScreen> {
       _getCurrentLocation();
     });
   }
-
+  
   @override
   void dispose() {
     super.dispose();
@@ -337,9 +334,6 @@ class _SearchScreenState extends State<SearchScreen> {
       });
 
       if (_currentPosition != null) {
-        CameraUpdate cameraUpdate = CameraUpdate.newCameraPosition(CameraPosition(target: _convertPositionToLatLng(_currentPosition), zoom: _getZoomLevel(_circles.first)));
-        _mapController.animateCamera(cameraUpdate);
-
         setState(() {
           _setCircles(
             center: _convertPositionToLatLng(_currentPosition),
@@ -353,6 +347,11 @@ class _SearchScreenState extends State<SearchScreen> {
     }).catchError((e) {
       print(e);
     });
+  }
+
+  void _moveCamera(CameraPosition cameraPosition) {
+     CameraUpdate cameraUpdate = CameraUpdate.newCameraPosition(cameraPosition);
+    _mapController.animateCamera(cameraUpdate);
   }
 
   void _searchThisArea(Position position) {
