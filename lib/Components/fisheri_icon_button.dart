@@ -5,12 +5,14 @@ class FisheriIconButton extends StatefulWidget {
   FisheriIconButton({
     this.icon,
     this.onTap,
+    this.title,
   });
 
   @required
   final Icon icon;
   @required
   final Function onTap;
+  final String title;
 
   @override
   FisheriIconButtonState createState() => FisheriIconButtonState();
@@ -40,7 +42,7 @@ class FisheriIconButtonState extends State<FisheriIconButton> {
       },
       child: AnimatedContainer(
         duration: Duration(milliseconds: 100),
-        width: 44,
+        width: widget.title != null ? 200 : 44,
         height: 44,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(22),
@@ -53,7 +55,14 @@ class FisheriIconButtonState extends State<FisheriIconButton> {
               )
             ]
         ),
-        child: widget.icon,
+        child: widget.title != null ? Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            widget.icon,
+            DSComponents.singleSpacer(),
+            DSComponents.subheader(text: widget.title, color: Colors.white),
+          ],
+        ) : widget.icon,
       ),
     );
   }

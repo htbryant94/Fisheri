@@ -41,7 +41,7 @@ dependencies:
   recase: ^3.0.0
   image_picker: ^0.6.7
   uuid: ^2.1.0
-  geolocator: ^5.3.2+2
+  geolocator: ^6.2.0
   modal_bottom_sheet: ^1.0.0+1
   flutter_google_places:
     git:

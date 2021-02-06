@@ -14,7 +14,7 @@ class DistanceIndicator extends StatelessWidget {
   final GeoPoint selectedVenueLocation;
 
   Future<double> distanceFromCurrentLocation() async {
-    return await Geolocator().distanceBetween(
+    return await Geolocator.distanceBetween(
         userCurrentLocation.latitude,
         userCurrentLocation.longitude,
         selectedVenueLocation.latitude,

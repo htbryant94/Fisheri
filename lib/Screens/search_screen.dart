@@ -28,7 +28,6 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   final Geoflutterfire _geoFire = Geoflutterfire();
   final Position _defaultPosition = Position(latitude: 51.979900, longitude: -0.214280);
-  final Geolocator _geolocator = Geolocator()..forceAndroidLocationManager;
   final double _selectedVenueCellHeight = 106.0;
 
   GoogleMapController _mapController;
@@ -55,8 +54,10 @@ class _SearchScreenState extends State<SearchScreen> {
 
   String _currentSearchText;
   bool _showSearchThisArea = false;
+  double _lastCameraZoom;
   LatLng _lastMapPosition;
   double _zoomLevel = 8;
+  double _lastRadius;
 
   @override
   void initState() {
@@ -80,11 +81,6 @@ class _SearchScreenState extends State<SearchScreen> {
       _pinLocationIconGreen = onValue;
     });
 
-    _setCircles(
-        center: _convertPositionToLatLng(_getPosition()),
-        radius: radius.value
-    );
-
     stream = radius.switchMap((rad) {
       var collectionReference = _firestore.collection('venues_search');
       if (rad.floor() < _maxSearchRadius) {
@@ -103,13 +99,6 @@ class _SearchScreenState extends State<SearchScreen> {
         );
       }
     });
-
-    positionStream = _geolocator.getPositionStream().listen((position) {
-      setState(() {
-        _currentPosition = position;
-      });
-      _getCurrentLocation();
-    });
   }
   
   @override
@@ -124,13 +113,55 @@ class _SearchScreenState extends State<SearchScreen> {
     return _selectedVenue != null;
   }
 
+  Future<void> _openGooglePlacesAutocomplete() async {
+    final API_KEY = 'AIzaSyC4dxfbMSrSA3x_1ENoo7i9L4EzGJgGAgc';
+    final prediction = await PlacesAutocomplete.show(
+        context: context,
+        apiKey: API_KEY,
+        mode: Mode.overlay,
+        language: 'en',
+        components: [Component(Component.country, 'uk')],
+        onError: (response) {
+          print('Error with Places API: ${response.errorMessage}');
+        }
+    );
+
+    if (prediction != null) {
+      final _places = GoogleMapsPlaces(apiKey: API_KEY);
+      final _detail = await _places.getDetailsByPlaceId(prediction.placeId);
+      final latitude = _detail.result.geometry.location.lat;
+      final longitude = _detail.result.geometry.location.lng;
+
+      final _newPosition = Position(
+          latitude: latitude,
+          longitude: longitude
+      );
+
+      final cameraUpdate = CameraUpdate.newCameraPosition(CameraPosition(target: _convertPositionToLatLng(_newPosition), zoom: _getZoomLevel(_circles.first)));
+      await _mapController.animateCamera(cameraUpdate);
+
+      setState(() {
+        _currentPosition = _newPosition;
+        _currentSearchText = _detail.result.name;
+        _center = GeoFirePoint(_newPosition.latitude, _newPosition.longitude);
+        radius.value = _lastRadius;
+        _setCircles(
+            center: _convertPositionToLatLng(_newPosition),
+            radius: radius.value
+        );
+      });
+
+      _performSearch();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Listener(
           onPointerDown: (_) {
-            FocusScopeNode currentFocus = FocusScope.of(context);
+            final currentFocus = FocusScope.of(context);
             if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
               currentFocus.focusedChild.unfocus();
             }
@@ -148,6 +179,7 @@ class _SearchScreenState extends State<SearchScreen> {
               myLocationButtonEnabled: false,
               onCameraMove: (cameraPosition) {
                 setState(() {
+                  _lastCameraZoom = cameraPosition.zoom;
                   _lastMapPosition = cameraPosition.target;
                   _showSearchThisArea = true;
                 });
@@ -169,9 +201,10 @@ class _SearchScreenState extends State<SearchScreen> {
                   child: Visibility(
                     visible: _showSearchThisArea,
                     child: FisheriIconButton(
+                      title: 'Search this area',
                       icon: Icon(Icons.refresh, color: Colors.white),
                       onTap: () async {
-                        final Position _newPosition = Position(latitude: _lastMapPosition.latitude, longitude: _lastMapPosition.longitude);
+                        final _newPosition = Position(latitude: _lastMapPosition.latitude, longitude: _lastMapPosition.longitude);
                         _searchThisArea(_newPosition);
                       },
                     ),
@@ -184,9 +217,9 @@ class _SearchScreenState extends State<SearchScreen> {
                 child: FisheriIconButton(
                   icon: Icon(Icons.my_location, color: Colors.white),
                   onTap: () async {
-                    await _geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
+                    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
                         .then((position) {
-                          CameraUpdate cameraUpdate = CameraUpdate.newCameraPosition(CameraPosition(target: _convertPositionToLatLng(position), zoom: _getZoomLevel(_circles.first)));
+                          final cameraUpdate = CameraUpdate.newCameraPosition(CameraPosition(target: _convertPositionToLatLng(position), zoom: _lastCameraZoom));
                           _mapController.animateCamera(cameraUpdate);
                         }
                     );
@@ -231,6 +264,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       onChanged: (value) {
                         setState(() {
                           radius.value = value;
+                          _lastRadius = value;
                           if (value < _maxSearchRadius) {
                             _setCircles(
                               center: _convertPositionToLatLng(_getPosition()),
@@ -248,47 +282,6 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  Future<void> _openGooglePlacesAutocomplete() async {
-    final API_KEY = "AIzaSyC4dxfbMSrSA3x_1ENoo7i9L4EzGJgGAgc";
-    Prediction prediction = await PlacesAutocomplete.show(
-        context: context,
-        apiKey: API_KEY,
-        mode: Mode.overlay,
-        language: 'en',
-        components: [Component(Component.country, 'uk')],
-        onError: (response) {
-          print('Error with Places API: ${response.errorMessage}');
-        }
-    );
-
-    if (prediction != null) {
-      GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: API_KEY);
-      PlacesDetailsResponse _detail = await _places.getDetailsByPlaceId(prediction.placeId);
-      double latitude = _detail.result.geometry.location.lat;
-      double longitude = _detail.result.geometry.location.lng;
-
-      Position _newPosition = Position(
-          latitude: latitude,
-          longitude: longitude
-      );
-
-      CameraUpdate cameraUpdate = CameraUpdate.newCameraPosition(CameraPosition(target: _convertPositionToLatLng(_newPosition), zoom: _getZoomLevel(_circles.first)));
-      await _mapController.animateCamera(cameraUpdate);
-
-      setState(() {
-        _currentPosition = _newPosition;
-        _currentSearchText = _detail.result.name;
-        _center = GeoFirePoint(_newPosition.latitude, _newPosition.longitude);
-        _setCircles(
-            center: _convertPositionToLatLng(_newPosition),
-            radius: radius.value
-        );
-      });
-
-      _performSearch();
-    }
-  }
-
   double _getZoomLevel(Circle circle) {
     double zoomLevel = 11;
     if (circle != null) {
@@ -301,14 +294,12 @@ class _SearchScreenState extends State<SearchScreen> {
   void _setCircles({LatLng center, double radius}) {
     setState(() {
       _circles = null;
-      _circles = Set.from(
-        [
+      _circles = {
           _makeCircle(
               center: center,
               radius: radius
           ),
-        ],
-      );
+        };
     });
   }
 
@@ -321,11 +312,11 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   Position _getPosition() {
-    return _currentPosition != null ? _currentPosition : _defaultPosition;
+    return _currentPosition ?? _defaultPosition;
   }
 
   void _getCurrentLocation() {
-    _geolocator
+    Geolocator
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
         .then((Position position) {
       setState(() {
@@ -341,6 +332,9 @@ class _SearchScreenState extends State<SearchScreen> {
           );
         });
 
+        final _latLng = LatLng(position.latitude, position.longitude);
+        final _cameraPosition = CameraPosition(target: _latLng, zoom: _getZoomLevel(_circles.first));
+        _moveCamera(_cameraPosition);
         _performSearch();
       }
 
@@ -350,8 +344,8 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   void _moveCamera(CameraPosition cameraPosition) {
-     CameraUpdate cameraUpdate = CameraUpdate.newCameraPosition(cameraPosition);
-    _mapController.animateCamera(cameraUpdate);
+     final _cameraUpdate = CameraUpdate.newCameraPosition(cameraPosition);
+    _mapController.animateCamera(_cameraUpdate);
   }
 
   void _searchThisArea(Position position) {
@@ -359,19 +353,21 @@ class _SearchScreenState extends State<SearchScreen> {
       _currentPosition = position;
       _currentSearchText = null;
       _center = GeoFirePoint(position.latitude, position.longitude);
+      radius.value = _lastRadius;
       _setCircles(
           center: _convertPositionToLatLng(position),
           radius: radius.value
       );
     });
-    CameraUpdate cameraUpdate = CameraUpdate.newCameraPosition(CameraPosition(target: _convertPositionToLatLng(position), zoom: _getZoomLevel(_circles.first)));
+
+    final cameraUpdate = CameraUpdate.newCameraPosition(CameraPosition(target: _convertPositionToLatLng(position), zoom: _lastCameraZoom));
     _mapController.animateCamera(cameraUpdate);
     _performSearch();
   }
 
   Circle _makeCircle({LatLng center, double radius}) {
     return Circle(
-      circleId: CircleId("123"),
+      circleId: CircleId('123'),
       center: center,
       radius: radius * 1000,
       strokeWidth: 3,
@@ -386,7 +382,6 @@ class _SearchScreenState extends State<SearchScreen> {
       _venues = [];
     });
 
-//    print(documentList.length);
     documentList.forEach((DocumentSnapshot document) {
       final result =
           VenueSearchJSONSerializer().fromMap(document.data());
@@ -424,7 +419,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   void _addMarker(
       {VenueSearch venue, double lat, double long, String venueType}) {
-    final MarkerId markerId = MarkerId(venue.id);
+    final markerId = MarkerId(venue.id);
     var _marker = Marker(
       onTap: () async {
         setState(() {
@@ -443,7 +438,7 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   void _performSearch() {
-    print('current search radius: ${radius.value}');
+    print('performSearch()');
     setState(() {
       _zoomLevel = _getZoomLevel(_circles.first);
       _showSearchThisArea = false;
@@ -459,8 +454,9 @@ class _SearchScreenState extends State<SearchScreen> {
   void _onMapCreated(GoogleMapController controller) {
     setState(() {
       _mapController = controller;
-      _performSearch();
     });
+
+    _getCurrentLocation();
   }
 }
 
