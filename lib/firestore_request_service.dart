@@ -9,19 +9,19 @@ class FirestoreRequestService {
     this.firestore,
   });
 
-  final Firestore firestore;
+  final FirebaseFirestore firestore;
 
   static FirestoreRequestService defaultService() {
-    return FirestoreRequestService(firestore: Firestore.instance);
+    return FirestoreRequestService(firestore: FirebaseFirestore.instance);
   }
 
   Future<VenueDetailed> getVenueDetailed(String id) async {
     return await firestore
         .collection(venuesDetail)
-        .document(id)
+        .doc(id)
         .get()
         .then((DocumentSnapshot document) {
-      return VenueDetailedJSONSerializer().fromMap(document.data);
+      return VenueDetailedJSONSerializer().fromMap(document.data());
     }).catchError((error) {
       print('getVenueDetailed request error: $error');
     });

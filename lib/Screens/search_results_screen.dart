@@ -26,13 +26,13 @@ class AllVenuesListBuilder extends StatelessWidget {
             }
             return ListView.separated(
                 padding: EdgeInsets.all(8),
-                itemCount: snapshot.data.documents.length,
+                itemCount: snapshot.data.docs.length,
                 separatorBuilder: (BuildContext context, int index) {
                   return DSComponents.singleSpacer();
                 },
                 itemBuilder: (context, int index) {
-                  final result =  snapshot.data.documents[index];
-                  final VenueSearch venue = VenueSearchJSONSerializer().fromMap(result.data);
+                  final result =  snapshot.data.docs[index];
+                  final venue = VenueSearchJSONSerializer().fromMap(result.data());
                   return EditVenueCell(
                     venue: venue,
                   );

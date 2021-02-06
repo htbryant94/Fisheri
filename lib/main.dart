@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:fisheri/Screens/catch_report/catch_reports_screen.dart';
 import 'package:fisheri/Screens/holiday_countries_screen.dart';
 import 'package:fisheri/Screens/profile_screen.dart';
@@ -8,10 +9,13 @@ import 'Screens/auth_screen.dart';
 import 'Screens/search_results_screen.dart';
 import 'Screens/search_screen.dart';
 
-import 'result_info.dart';
 import 'house_colors.dart';
 
-void main() => runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override

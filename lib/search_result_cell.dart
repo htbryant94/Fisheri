@@ -80,12 +80,12 @@ class EditVenueCell extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: () {
-          Firestore.instance
+          FirebaseFirestore.instance
               .collection('venues_detail')
-              .document(venue.id)
+              .doc(venue.id)
               .get()
               .then((DocumentSnapshot document) {
-            final VenueDetailed _venue = VenueDetailedJSONSerializer().fromMap(document.data);
+            final VenueDetailed _venue = VenueDetailedJSONSerializer().fromMap(document.data());
               Coordinator.push(context, screenTitle: "Edit Venue", screen: VenueFormEditScreen(venue: _venue, venueID: venue.id));
           });
         },
@@ -130,13 +130,13 @@ class SearchResultCell extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: () {
-          Firestore.instance
+          FirebaseFirestore.instance
               .collection('venues_detail')
-              .document(venue.id)
+              .doc(venue.id)
               .get()
               .then((DocumentSnapshot document) {
             print('detail screen for venueID: ${venue.id}');
-            final _venue = VenueDetailedJSONSerializer().fromMap(document.data);
+            final _venue = VenueDetailedJSONSerializer().fromMap(document.data());
             Coordinator.pushVenueDetailScreen(
                 context, 'Map', _venue, venue.imageURL, venue.id);
           });

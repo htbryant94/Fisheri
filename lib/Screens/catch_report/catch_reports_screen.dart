@@ -31,9 +31,9 @@ class _AddNewCatchReportButton extends StatelessWidget {
     return AddButton(
       title: 'New Catch Report',
       onPressed: () {
-        Firestore.instance
+        FirebaseFirestore.instance
             .collection('venues_search')
-            .getDocuments()
+            .get()
             .then((documents) {
           Coordinator.push(context,
               currentPageTitle: '',
@@ -49,7 +49,7 @@ class _CatchReportListBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: Firestore.instance.collection('catch_reports').snapshots(),
+      stream: FirebaseFirestore.instance.collection('catch_reports').snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (!snapshot.hasData) {
           return Center(
@@ -58,14 +58,14 @@ class _CatchReportListBuilder extends StatelessWidget {
         }
         return ListView.builder(
             padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-            itemCount: snapshot.data.documents.length,
+            itemCount: snapshot.data.docs.length,
             itemBuilder: (context, index) {
-              final _catchReport = snapshot.data.documents[index];
+              final _catchReport = snapshot.data.docs[index];
               return CatchReportCell(
                 name: _catchReport['lake_name'],
                 startDate: DateTime.parse(_catchReport['start_date']),
                 endDate: DateTime.parse(_catchReport['end_date']),
-                id: _catchReport.documentID,
+                id: _catchReport.id
               );
             });
       },

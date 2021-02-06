@@ -32,7 +32,7 @@ class _SearchScreenState extends State<SearchScreen> {
   final double _selectedVenueCellHeight = 106.0;
 
   GoogleMapController _mapController;
-  Firestore _firestore = Firestore.instance;
+  final _firestore = FirebaseFirestore.instance;
 
   StreamSubscription<Position> positionStream;
   Stream<List<DocumentSnapshot>> stream;
@@ -388,10 +388,10 @@ class _SearchScreenState extends State<SearchScreen> {
 
 //    print(documentList.length);
     documentList.forEach((DocumentSnapshot document) {
-      final VenueSearch result =
-          VenueSearchJSONSerializer().fromMap(document.data);
+      final result =
+          VenueSearchJSONSerializer().fromMap(document.data());
       if (result != null) {
-        GeoPoint point = document.data['position']['geopoint'];
+        GeoPoint point = document.data()['position']['geopoint'];
         List<String> venueTypes = result.categories.cast<String>();
 
         String venueType;

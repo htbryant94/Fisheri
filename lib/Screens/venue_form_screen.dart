@@ -237,19 +237,20 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
     }
 
     Future uploadFile({String id, File file, String name}) async {
-      StorageReference storageReference =
+      Reference storageReference =
           FirebaseStorage.instance.ref().child('venues/$id/images/$name');
-      StorageUploadTask uploadTask = storageReference.putFile(file);
-      await uploadTask.onComplete;
-      print('-----FILE UPLOADED-----');
-      await storageReference.getDownloadURL().then((fileURL) {
-        setState(() {
-          // 3. Store URLs globally
+      UploadTask uploadTask = storageReference.putFile(file);
+      await uploadTask.whenComplete(() {
+        print('-----FILE UPLOADED-----');
+        storageReference.getDownloadURL().then((fileURL) {
           setState(() {
-            imageURLs.add(fileURL);
+            // 3. Store URLs globally
+            setState(() {
+              imageURLs.add(fileURL);
+            });
+            print('File URL: $fileURL');
+            print('Total URLS: $imageURLs');
           });
-          print('File URL: $fileURL');
-          print('Total URLS: $imageURLs');
         });
       });
     }
@@ -265,10 +266,10 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
       final result = VenueSearchJSONSerializer().toMap(venueSearch);
       result['position'] = geoFirePoint.data;
 
-      Firestore.instance
+      FirebaseFirestore.instance
           .collection('venues_search')
-          .document(venueSearch.id)
-          .setData(result, merge: false)
+          .doc(venueSearch.id)
+          .set(result, SetOptions(merge: false))
           .whenComplete(() {
             setState(() {
               _isLoading = false;
@@ -301,16 +302,14 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
       var venueJSON = VenueDetailedJSONSerializer().toMap(venue);
       venueJSON = addCoordinatesIfValid(venueJSON);
 
-      await Firestore.instance
+      await FirebaseFirestore.instance
           .collection('venues_detail')
-          .document(id)
-          .setData(venueJSON, merge: false)
+          .doc(id)
+          .set(venueJSON, SetOptions(merge: false))
           .then((doc) {
-        final double _latitude =
-            double.parse(_valueFor(attribute: 'coordinates_latitude'));
+        final  _latitude = double.parse(_valueFor(attribute: 'coordinates_latitude'));
         assert(_latitude is double);
-        final double _longitude =
-            double.parse(_valueFor(attribute: 'coordinates_longitude'));
+        final _longitude = double.parse(_valueFor(attribute: 'coordinates_longitude'));
         assert(_longitude is double);
 
         // 5. Create VenueSearch Object with fileURLs added
@@ -548,7 +547,7 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
                               onPressed: () {
                                 Future postNewVenue(VenueDetailed venue,
                                     Map<String, dynamic> data) async {
-                                  await Firestore.instance
+                                  await FirebaseFirestore.instance
                                       .collection('venues_detail')
                                       .add(data)
                                       .then((doc) {
@@ -562,7 +561,7 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
                                                 'coordinates_longitude'));
                                     assert(_longitude is double);
 
-                                    uploadFiles(venue, doc.documentID);
+                                    uploadFiles(venue, doc.id);
                                   });
                                 }
 

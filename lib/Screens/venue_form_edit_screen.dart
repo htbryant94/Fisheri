@@ -272,10 +272,10 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
     }
 
     Future uploadFile({String id, File file, String name}) async {
-      StorageReference storageReference =
+      Reference storageReference =
           FirebaseStorage.instance.ref().child('venues/$id/images/$name');
-      StorageUploadTask uploadTask = storageReference.putFile(file);
-      await uploadTask.onComplete;
+      UploadTask uploadTask = storageReference.putFile(file);
+
       print('-----FILE UPLOADED-----');
       await storageReference.getDownloadURL().then((fileURL) {
         setState(() {
@@ -300,10 +300,10 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
       final result = VenueSearchJSONSerializer().toMap(venueSearch);
       result['position'] = geoFirePoint.data;
 
-      Firestore.instance
+      FirebaseFirestore.instance
           .collection('venues_search')
-          .document(venueSearch.id)
-          .setData(result, merge: false)
+          .doc(venueSearch.id)
+          .set(result, SetOptions(merge: false))
           .whenComplete(() {
         setState(() {
           _isLoading = false;
@@ -337,16 +337,14 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
       var venueJSON = VenueDetailedJSONSerializer().toMap(venue);
       venueJSON = addCoordinatesIfValid(venueJSON);
 
-      await Firestore.instance
+      await FirebaseFirestore.instance
           .collection('venues_detail')
-          .document(id)
-          .setData(venueJSON, merge: false)
+          .doc(id)
+          .set(venueJSON, SetOptions(merge: false))
           .then((doc) {
-        final double _latitude =
-            double.parse(_valueFor(attribute: 'coordinates_latitude'));
+        final _latitude = double.parse(_valueFor(attribute: 'coordinates_latitude'));
         assert(_latitude is double);
-        final double _longitude =
-            double.parse(_valueFor(attribute: 'coordinates_longitude'));
+        final _longitude = double.parse(_valueFor(attribute: 'coordinates_longitude'));
         assert(_longitude is double);
 
         // 5. Create VenueSearch Object with fileURLs added

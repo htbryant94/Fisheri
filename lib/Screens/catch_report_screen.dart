@@ -79,7 +79,7 @@ class _CatchListBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: Firestore.instance
+      stream: FirebaseFirestore.instance
           .collection('catches')
           .where('catch_report_id', isEqualTo: id)
           .snapshots(),
@@ -88,14 +88,14 @@ class _CatchListBuilder extends StatelessWidget {
           return SizedBox(height: 0);
         }
         return ListView.separated(
-            itemCount: snapshot.data.documents.length,
+            itemCount: snapshot.data.docs.length,
             padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
             separatorBuilder: (BuildContext context, int index) {
               return DSComponents.singleSpacer();
             },
             itemBuilder: (context, index) {
-              final _catch = snapshot.data.documents[index];
-              final _data = CatchJSONSerializer().fromMap(_catch.data);
+              final _catch = snapshot.data.docs[index];
+              final _data = CatchJSONSerializer().fromMap(_catch.data());
               return CatchCell(
                 catchData: _data,
               );

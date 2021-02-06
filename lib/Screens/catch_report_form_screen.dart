@@ -21,7 +21,7 @@ class CatchReportFormScreen extends StatefulWidget {
 class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
   final _fbKey = GlobalKey<FormBuilderState>();
   bool isDayOnly;
-  Firestore _firestore = Firestore.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   String selectedReportType = "lake";
 
   @override
@@ -164,9 +164,9 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
 
                   if (selectedReportType == "lake") {
                     String _documentID = _fbKey.currentState.fields['lake_name'].value;
-                    DocumentSnapshot _document = widget.availableLakes.documents
-                        .firstWhere((lake) => lake.documentID == _documentID);
-                    String _lakeID = _document.documentID;
+                    DocumentSnapshot _document = widget.availableLakes.docs
+                        .firstWhere((lake) => lake.id == _documentID);
+                    final _lakeID = _document.id;
                     String _lakeName = _document['name'];
                     _report = CatchReport(
                       lakeID: _lakeID,
@@ -258,10 +258,10 @@ class _LakesDropDownMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return FormBuilderDropdown(
       name: 'lake_name',
-        items: snapshotLakes.documents.map((lake) {
+        items: snapshotLakes.docs.map((lake) {
           return DropdownMenuItem(
             child: (Text(lake['name'])),
-            value: lake.documentID,
+            value: lake.id,
           );
         }).toList(),
       validator: isEnabled ?

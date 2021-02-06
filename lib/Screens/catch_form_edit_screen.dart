@@ -275,7 +275,7 @@ class _CatchFormEditScreenState extends State<CatchFormEditScreen> {
                             print('catchType: ${catchModel.catchType}');
 
                             final catchJSON = CatchJSONSerializer().toMap(catchModel);
-                            Firestore.instance
+                            FirebaseFirestore.instance
                                 .collection('catches')
                                 .add(catchJSON)
                                 .whenComplete(() {

@@ -70,7 +70,7 @@ packages:
       name: build_daemon
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.6"
+    version: "2.1.7"
   build_resolvers:
     dependency: transitive
     description:
@@ -154,21 +154,21 @@ packages:
       name: cloud_firestore
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.13.7"
+    version: "0.16.0"
   cloud_firestore_platform_interface:
     dependency: transitive
     description:
       name: cloud_firestore_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.2"
+    version: "3.0.1"
   cloud_firestore_web:
     dependency: transitive
     description:
       name: cloud_firestore_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.1+2"
+    version: "0.3.0+1"
   code_builder:
     dependency: transitive
     description:
@@ -267,41 +267,48 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "5.2.1"
-  firebase:
-    dependency: transitive
-    description:
-      name: firebase
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "7.3.3"
   firebase_core:
     dependency: "direct main"
     description:
       name: firebase_core
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.5"
+    version: "0.7.0"
   firebase_core_platform_interface:
     dependency: transitive
     description:
       name: firebase_core_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.4"
+    version: "3.0.1"
   firebase_core_web:
     dependency: transitive
     description:
       name: firebase_core_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.1+2"
+    version: "0.2.1+3"
   firebase_storage:
     dependency: "direct main"
     description:
       name: firebase_storage
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.6"
+    version: "7.0.0"
+  firebase_storage_platform_interface:
+    dependency: transitive
+    description:
+      name: firebase_storage_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.4"
+  firebase_storage_web:
+    dependency: transitive
+    description:
+      name: firebase_storage_web
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.1+3"
   fixnum:
     dependency: transitive
     description:
@@ -359,17 +366,19 @@ packages:
   flutter_google_places:
     dependency: "direct main"
     description:
-      name: flutter_google_places
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.2.4"
+      path: "."
+      ref: HEAD
+      resolved-ref: "3e0d27b09691c1f1087e46a34328153307bef41a"
+      url: "https://github.com/hayderux/flutter_google_places"
+    source: git
+    version: "0.2.5"
   flutter_keyboard_visibility:
     dependency: transitive
     description:
       name: flutter_keyboard_visibility
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.2"
+    version: "4.0.3"
   flutter_keyboard_visibility_platform_interface:
     dependency: transitive
     description:
@@ -437,10 +446,12 @@ packages:
   geoflutterfire:
     dependency: "direct main"
     description:
-      name: geoflutterfire
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.1.0"
+      path: "."
+      ref: HEAD
+      resolved-ref: "2e4afd028d19ab1cd53b44a162d6844e70f74a3b"
+      url: "https://github.com/awaik/GeoFlutterFire"
+    source: git
+    version: "2.2.1"
   geolocator:
     dependency: "direct main"
     description:
@@ -475,14 +486,14 @@ packages:
       name: google_maps_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.1"
+    version: "1.2.0"
   google_maps_flutter_platform_interface:
     dependency: transitive
     description:
       name: google_maps_flutter_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.0"
+    version: "1.2.0"
   google_maps_webservice:
     dependency: transitive
     description:
@@ -538,7 +549,7 @@ packages:
       name: image_picker
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.6.7+21"
+    version: "0.6.7+22"
   image_picker_for_web:
     dependency: transitive
     description:
@@ -832,7 +843,7 @@ packages:
       name: rxdart
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.23.1"
+    version: "0.25.0"
   shelf:
     dependency: transitive
     description:
@@ -846,7 +857,7 @@ packages:
       name: shelf_web_socket
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.3"
+    version: "0.2.4"
   signature:
     dependency: transitive
     description:
@@ -879,7 +890,7 @@ packages:
       name: sqflite
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.3.2+2"
+    version: "1.3.2+3"
   sqflite_common:
     dependency: transitive
     description:
@@ -1005,7 +1016,7 @@ packages:
       name: win32
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.7.4"
+    version: "1.7.4+1"
   xdg_directories:
     dependency: transitive
     description:
