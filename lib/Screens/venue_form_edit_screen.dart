@@ -66,7 +66,7 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
   bool _imagesReadOnly = true;
 
   bool _operationalHoursEnabled;
-  bool _alwaysOpen;
+  bool _alwaysOpen = false;
   bool _isMondayOpen = false;
   bool _isTuesdayOpen = false;
   bool _isWednesdayOpen = false;
@@ -78,11 +78,23 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
   @override
   void initState() {
     super.initState();
-    selectedCategories = widget.venue.categories.cast<String>();
-    _operationalHoursEnabled = widget.venue.operationalHours != null || widget.venue.alwaysOpen != null ? widget.venue.alwaysOpen : false;
-    _alwaysOpen = widget.venue.alwaysOpen ?? false;
-
     print('EDITING VENUE WITH ID: ${widget.venueID}');
+
+    selectedCategories = widget.venue.categories.cast<String>();
+
+    _operationalHoursEnabled = false;
+
+    if (widget.venue.alwaysOpen != null) {
+      _alwaysOpen = widget.venue.alwaysOpen;
+
+      if (widget.venue.alwaysOpen) {
+        _operationalHoursEnabled = true;
+      } else if (widget.venue.operationalHours != null) {
+        _operationalHoursEnabled = true;
+      } else {
+        _operationalHoursEnabled = false;
+      }
+    }
 
     if (widget.venue.operationalHours != null) {
       _isMondayOpen = widget.venue.operationalHours.monday != null;
@@ -464,7 +476,8 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
                           'fishing_types': widget.venue.fishingTypes,
                           'tickets': widget.venue.tickets,
                           'fishing_rules': widget.venue.fishingRules,
-                          'operational_hours_enabled': widget.venue.operationalHours != null,
+//                          'operational_hours_enabled': widget.venue.operationalHours != null,
+//                          'operational_hours_enabled': _operationalHoursEnabled,
                           'fishing_tackles': widget.venue.fishingTackles,
                           'images': widget.venue.images,
                           'number_of_lakes': widget.venue.numberOfLakes ?? 0,
@@ -475,6 +488,7 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
                             SizedBox(height: 16),
                             FormBuilderCheckboxGroup(
                               name: 'categories',
+                              orientation: OptionsOrientation.vertical,
                               decoration:
                                   InputDecoration(labelText: 'Categories *'),
                               activeColor: HouseColors.accentGreen,
@@ -559,6 +573,7 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
                             ),
                             FormBuilderSwitch(
                               name: 'operational_hours_enabled',
+                              initialValue: _operationalHoursEnabled,
                               title: HouseTexts.subheading('Provide Opening times'),
                               onChanged: (enabled) {
                                 setState(() {
@@ -614,11 +629,11 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
                                 },
                               )
                             ),
-                            FormBuilderImagePicker(name: 'images')
-//                            FormBuilderImagePickerCustom(
-//                              attribute: 'images',
-//                              readOnly: _imagesReadOnly,
-//                            )
+                            FormBuilderImagePicker(
+                              name: 'images',
+                              enabled: !_imagesReadOnly,
+                              bottomSheetPadding: EdgeInsets.fromLTRB(0, 0, 0, 100),
+                            )
                           ],
                         ),
                       ),
@@ -847,6 +862,7 @@ class _AmenitiesSection extends StatelessWidget {
         ),
         FormBuilderCheckboxGroup(
           name: 'amenities_list',
+          orientation: OptionsOrientation.vertical,
           options: [
             FormBuilderFieldOption(
                 value: toilets.snakeCase, child: Text(toilets.titleCase)),
@@ -985,6 +1001,7 @@ class _FishStockedSection extends StatelessWidget {
         HouseTexts.subtitle('Fish Stocked'),
         FormBuilderCheckboxGroup(
           name: 'fish_stocked',
+          orientation: OptionsOrientation.vertical,
           options: options(),
         ),
         SizedBox(height: 16),
@@ -1015,6 +1032,7 @@ class _TicketsSection extends StatelessWidget {
         HouseTexts.subtitle('Tickets Available'),
         FormBuilderCheckboxGroup(
           name: 'tickets',
+          orientation: OptionsOrientation.vertical,
           options: [
             FormBuilderFieldOption(
                 value: day.snakeCase, child: Text(day.titleCase)),
