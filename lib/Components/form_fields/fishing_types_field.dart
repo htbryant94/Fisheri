@@ -46,7 +46,7 @@ class FishingTypesField extends StatelessWidget {
         HouseTexts.subtitle(title),
         FormBuilderCheckboxGroup(
           name: attribute,
-//          attribute: attribute,
+          orientation: OptionsOrientation.vertical,
           options: _options(),
         ),
         SizedBox(height: 16),

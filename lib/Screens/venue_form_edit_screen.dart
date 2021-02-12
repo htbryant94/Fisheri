@@ -17,7 +17,6 @@ import 'package:form_builder_image_picker/form_builder_image_picker.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:fisheri/house_texts.dart';
 import 'package:recase/recase.dart';
-import 'package:fisheri/Components/form_builder_image_picker_custom.dart';
 import 'dart:io';
 import 'package:intl/intl.dart';
 import 'package:fisheri/Components/form_fields/operational_hours_field.dart';
@@ -31,19 +30,19 @@ class ImageType {
 }
 
 class VenueDetailedConstants {
-  static const String name = "name";
-  static const String categories = "categories";
-  static const String description = "description";
-  static const String coordinates = "coordinates";
-  static const String address = "address";
-  static const String amenities = "amenities_array";
-  static const String contactDetails = "contact_details";
-  static const String social = "social";
-  static const String fishStocked = "fish_stock_array";
-  static const String fishingTypes = "fishing_types_array";
-  static const String tickets = "tickets_array";
-  static const String hoursOfOperation = "hours_of_operation";
-  static const String assetsPath = "assets_path";
+  static const String name = 'name';
+  static const String categories = 'categories';
+  static const String description = 'description';
+  static const String coordinates = 'coordinates';
+  static const String address = 'address';
+  static const String amenities = 'amenities_array';
+  static const String contactDetails = 'contact_details';
+  static const String social = 'social';
+  static const String fishStocked = 'fish_stock_array';
+  static const String fishingTypes = 'fishing_types_array';
+  static const String tickets = 'tickets_array';
+  static const String hoursOfOperation = 'hours_of_operation';
+  static const String assetsPath = 'assets_path';
 }
 
 class VenueFormEditScreen extends StatefulWidget {
@@ -243,13 +242,11 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
       final _longitude = _valueFor(attribute: 'coordinates_longitude');
 
       if (_latitude != null && _longitude != null) {
-        final double _latitude =
-            double.parse(_valueFor(attribute: 'coordinates_latitude'));
+        final _latitude = double.parse(_valueFor(attribute: 'coordinates_latitude'));
         assert(_latitude is double);
-        final double _longitude =
-            double.parse(_valueFor(attribute: 'coordinates_longitude'));
+        final _longitude = double.parse(_valueFor(attribute: 'coordinates_longitude'));
         assert(_longitude is double);
-        result["coordinates"] = GeoPoint(
+        result['coordinates'] = GeoPoint(
           _latitude,
           _longitude,
         );
@@ -272,9 +269,8 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
     }
 
     Future uploadFile({String id, File file, String name}) async {
-      Reference storageReference =
-          FirebaseStorage.instance.ref().child('venues/$id/images/$name');
-      UploadTask uploadTask = storageReference.putFile(file);
+      var storageReference = FirebaseStorage.instance.ref().child('venues/$id/images/$name');
+      storageReference.putFile(file);
 
       print('-----FILE UPLOADED-----');
       await storageReference.getDownloadURL().then((fileURL) {
@@ -296,7 +292,7 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
     }) {
       print('adding point');
       final _geo = Geoflutterfire();
-      GeoFirePoint geoFirePoint = _geo.point(latitude: lat, longitude: long);
+      var geoFirePoint = _geo.point(latitude: lat, longitude: long);
       final result = VenueSearchJSONSerializer().toMap(venueSearch);
       result['position'] = geoFirePoint.data;
 
@@ -363,20 +359,20 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
             .whenComplete(() async {
           print('uploading files started');
           final List<dynamic> _images = _valueFor(attribute: 'images');
-          final List<ImageType> parsedImageTypes = _images.map((image) {
+          final parsedImageTypes = _images.map((image) {
             if (image is File) {
-              return ImageType(type: "FILE", file: image);
+              return ImageType(type: 'FILE', file: image);
             } else if (image is String) {
-              return ImageType(type: "STRING", url: image);
+              return ImageType(type: 'STRING', url: image);
             } else {
               return null;
             }
           }).toList();
           print('filesToUpload value -------');
           parsedImageTypes.forEach((imageType) {
-            if (imageType.type == "URL") {
+            if (imageType.type == 'URL') {
               print('imageType is: ${imageType.url}');
-            } else if (imageType.type == "FILE") {
+            } else if (imageType.type == 'FILE') {
               print('imageType is: ${imageType.file}');
             }
           });
@@ -387,14 +383,14 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
               print('----- uploading file: $index');
 
               final _imageType = imageType as ImageType;
-              if (_imageType.type == "FILE") {
+              if (_imageType.type == 'FILE') {
                 await uploadFile(
                     id: widget.venueID, file: _imageType.file, name: '$index')
                     .whenComplete(() {
                   index += 1;
                   print('----- uploaded file: $index');
                 });
-              } else if (_imageType.type == "URL") {
+              } else if (_imageType.type == 'URL') {
                 index += 1;
                 setState(() {
                   imageURLs.add(_imageType.url);
@@ -426,7 +422,7 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
       body: SafeArea(
         child: Listener(
           onPointerDown: (_) {
-            FocusScopeNode currentFocus = FocusScope.of(context);
+            var currentFocus = FocusScope.of(context);
             if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
               currentFocus.focusedChild.unfocus();
             }
@@ -480,7 +476,7 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
                             FormBuilderCheckboxGroup(
                               name: 'categories',
                               decoration:
-                                  InputDecoration(labelText: "Categories *"),
+                                  InputDecoration(labelText: 'Categories *'),
                               activeColor: HouseColors.accentGreen,
                               checkColor: HouseColors.primaryGreen,
                               onChanged: (categories) {
@@ -490,21 +486,21 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
                               },
                               options: [
                                 FormBuilderFieldOption(
-                                    value: "lake", child: Text('Lake')),
+                                    value: 'lake', child: Text('Lake')),
                                 FormBuilderFieldOption(
-                                    value: "shop", child: Text('Shop')),
+                                    value: 'shop', child: Text('Shop')),
                               ],
                             ),
                             FormBuilderTextField(
                               keyboardType: TextInputType.multiline,
                               minLines: 5,
                               maxLines: null,
-                              name: "description",
+                              name: 'description',
                               autocorrect: false,
                               decoration: InputDecoration(
-                                  labelText: "Description",
+                                  labelText: 'Description',
                                   helperText:
-                                      "Include pricing information or details on how to get to your venue here",
+                                      'Include pricing information or details on how to get to your venue here',
                                   border: OutlineInputBorder()),
                               validator: FormBuilderValidators.compose(
                                   [
@@ -629,7 +625,7 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
                       Row(
                         children: <Widget>[
                           MaterialButton(
-                              child: Text("Submit"),
+                              child: Text('Submit'),
                               onPressed: () {
                                 if (_fbKey.currentState.saveAndValidate()) {
                                   print('FORM VALIDATED');
@@ -664,7 +660,7 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
                                 }
                               }),
                           MaterialButton(
-                            child: Text("Reset"),
+                            child: Text('Reset'),
                             onPressed: () {
                               _fbKey.currentState.reset();
                             },
@@ -710,8 +706,8 @@ class _OverviewSection extends StatelessWidget {
       children: <Widget>[
         HouseTexts.subtitle('Add a Venue'),
         FormBuilderTextField(
-          name: "name",
-          decoration: InputDecoration(labelText: "Name of Venue *"),
+          name: 'name',
+          decoration: InputDecoration(labelText: 'Name of Venue *'),
           maxLines: 1,
           validator: FormBuilderValidators.compose([
             FormBuilderValidators.required(context),
@@ -736,11 +732,11 @@ class _FishingRulesSection extends StatelessWidget {
           keyboardType: TextInputType.multiline,
           minLines: 5,
           maxLines: null,
-          name: "fishing_rules",
+          name: 'fishing_rules',
           decoration: InputDecoration(
-              labelText: "Fishing Rules",
+              labelText: 'Fishing Rules',
               helperText:
-                  "Information on fishing rules and regulations for this venue",
+                  'Information on fishing rules and regulations for this venue',
               border: OutlineInputBorder()),
         ),
         SizedBox(height: 16),
@@ -756,8 +752,8 @@ class _AddressSection extends StatelessWidget {
       children: <Widget>[
         HouseTexts.subtitle('Address'),
         FormBuilderTextField(
-          name: "address_street",
-          decoration: InputDecoration(labelText: "Street *"),
+          name: 'address_street',
+          decoration: InputDecoration(labelText: 'Street *'),
           maxLines: 1,
           validator: FormBuilderValidators.compose([
             FormBuilderValidators.required(context),
@@ -766,8 +762,8 @@ class _AddressSection extends StatelessWidget {
           ]),
         ),
         FormBuilderTextField(
-          name: "address_town",
-          decoration: InputDecoration(labelText: "Town *"),
+          name: 'address_town',
+          decoration: InputDecoration(labelText: 'Town *'),
           maxLines: 1,
           validator: FormBuilderValidators.compose([
             FormBuilderValidators.required(context),
@@ -776,8 +772,8 @@ class _AddressSection extends StatelessWidget {
           ]),
         ),
         FormBuilderTextField(
-          name: "address_county",
-          decoration: InputDecoration(labelText: "County *"),
+          name: 'address_county',
+          decoration: InputDecoration(labelText: 'County *'),
           maxLines: 1,
           validator: FormBuilderValidators.compose([
             FormBuilderValidators.required(context),
@@ -786,9 +782,9 @@ class _AddressSection extends StatelessWidget {
           ]),
         ),
         FormBuilderTextField(
-          name: "address_postcode",
+          name: 'address_postcode',
           textCapitalization: TextCapitalization.words,
-          decoration: InputDecoration(labelText: "Postcode *"),
+          decoration: InputDecoration(labelText: 'Postcode *'),
           maxLines: 1,
           validator: FormBuilderValidators.compose([
             FormBuilderValidators.required(context),
@@ -842,8 +838,8 @@ class _AmenitiesSection extends StatelessWidget {
       children: <Widget>[
         HouseTexts.subtitle('Amenities'),
         FormBuilderTouchSpin(
-          name: "number_of_lakes",
-          decoration: InputDecoration(labelText: "Number of Lakes"),
+          name: 'number_of_lakes',
+          decoration: InputDecoration(labelText: 'Number of Lakes'),
           initialValue: 0,
           min: 0,
           max: 100,
@@ -904,21 +900,21 @@ class _ContactDetailsSection extends StatelessWidget {
       children: <Widget>[
         HouseTexts.subtitle('Venue Contact Details'),
         FormBuilderTextField(
-          name: "contact_email",
+          name: 'contact_email',
           keyboardType: TextInputType.emailAddress,
           autocorrect: false,
           decoration: InputDecoration(
-            labelText: "Email",
+            labelText: 'Email',
             icon: Icon(Icons.email),
           ),
           maxLines: 1,
           validator: FormBuilderValidators.email(context),
         ),
         FormBuilderTextField(
-          name: "contact_phone",
+          name: 'contact_phone',
           keyboardType: TextInputType.phone,
           decoration: InputDecoration(
-            labelText: "Phone",
+            labelText: 'Phone',
             icon: Icon(Icons.phone),
           ),
           maxLines: 1,
@@ -988,7 +984,7 @@ class _FishStockedSection extends StatelessWidget {
       children: <Widget>[
         HouseTexts.subtitle('Fish Stocked'),
         FormBuilderCheckboxGroup(
-          name: "fish_stocked",
+          name: 'fish_stocked',
           options: options(),
         ),
         SizedBox(height: 16),
@@ -1018,7 +1014,7 @@ class _TicketsSection extends StatelessWidget {
       children: <Widget>[
         HouseTexts.subtitle('Tickets Available'),
         FormBuilderCheckboxGroup(
-          name: "tickets",
+          name: 'tickets',
           options: [
             FormBuilderFieldOption(
                 value: day.snakeCase, child: Text(day.titleCase)),
@@ -1045,11 +1041,11 @@ class _CoordinatesSection extends StatelessWidget {
       children: <Widget>[
         HouseTexts.subtitle('Coordinates'),
         FormBuilderTextField(
-          name: "coordinates_latitude",
+          name: 'coordinates_latitude',
           maxLines: 1,
           keyboardType: TextInputType.numberWithOptions(signed: true),
           decoration: InputDecoration(
-            labelText: "Latitude *",
+            labelText: 'Latitude *',
           ),
           validator: FormBuilderValidators.compose([
             FormBuilderValidators.required(context),

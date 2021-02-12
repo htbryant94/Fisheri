@@ -52,7 +52,7 @@ class OperationalHoursSectionState extends State<OperationalHoursField> {
   }
 
   OpeningHoursDay defaultOpeningHoursDay() {
-    return OpeningHoursDay(open: "09:00", close: "17:00");
+    return OpeningHoursDay(open: '09:00', close: '17:00');
   }
 
   @override

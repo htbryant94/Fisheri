@@ -39,7 +39,7 @@ class CatchDetailScreen extends StatelessWidget {
     return date != null
         ? DateFormat('EEEE, MMM d, yyyy')
         .format(DateTime.parse(date))
-        : "No Date";
+        : 'No Date';
   }
 
   @override

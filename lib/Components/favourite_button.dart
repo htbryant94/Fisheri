@@ -22,7 +22,7 @@ class _FavouriteButtonState extends State<FavouriteButton> {
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: () {
-          print("heart tapped");
+          print('heart tapped');
           setState(() {
             isEnabled = !isEnabled;
           });

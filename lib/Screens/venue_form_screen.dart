@@ -405,9 +405,10 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
                             _OverviewSection(),
                             SizedBox(height: 16),
                             FormBuilderCheckboxGroup(
-                              name: "categories",
+                              name: 'categories',
+                              orientation: OptionsOrientation.vertical,
                               decoration:
-                                  InputDecoration(labelText: "Categories *"),
+                                  InputDecoration(labelText: 'Categories *'),
                               activeColor: HouseColors.accentGreen,
                               checkColor: HouseColors.primaryGreen,
                               onChanged: (categories) {
@@ -489,6 +490,7 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
                             ),
                             FormBuilderSwitch(
                               name: 'operational_hours_enabled',
+                              initialValue: false,
                               title: HouseTexts.subheading(
                                   'Provide Opening times'),
                               onChanged: (enabled) {
@@ -762,15 +764,16 @@ class _AmenitiesSection extends StatelessWidget {
       children: <Widget>[
         HouseTexts.subtitle('Amenities'),
         FormBuilderTouchSpin(
-          name: "number_of_lakes",
-          decoration: InputDecoration(labelText: "Number of Lakes"),
+          name: 'number_of_lakes',
+          decoration: InputDecoration(labelText: 'Number of Lakes'),
           initialValue: 0,
           min: 0,
           max: 100,
           step: 1,
         ),
         FormBuilderCheckboxGroup(
-          name: "amenities_list",
+          name: 'amenities_list',
+          orientation: OptionsOrientation.vertical,
           options: [
             FormBuilderFieldOption(
                 value: toilets.snakeCase, child: Text(toilets.titleCase)),
@@ -906,7 +909,8 @@ class _FishStockedSection extends StatelessWidget {
       children: <Widget>[
         HouseTexts.subtitle('Fish Stocked'),
         FormBuilderCheckboxGroup(
-          name: "fish_stocked",
+          name: 'fish_stocked',
+          orientation: OptionsOrientation.vertical,
           options: options(),
         ),
         SizedBox(height: 16),
@@ -936,7 +940,8 @@ class _TicketsSection extends StatelessWidget {
       children: <Widget>[
         HouseTexts.subtitle('Tickets Available'),
         FormBuilderCheckboxGroup(
-          name: "tickets",
+          name: 'tickets',
+          orientation: OptionsOrientation.vertical,
           options: [
             FormBuilderFieldOption(
                 value: day.snakeCase, child: Text(day.titleCase)),
