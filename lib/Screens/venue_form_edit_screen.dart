@@ -282,19 +282,20 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
 
     Future uploadFile({String id, File file, String name}) async {
       var storageReference = FirebaseStorage.instance.ref().child('venues/$id/images/$name');
-      storageReference.putFile(file);
-
-      print('-----FILE UPLOADED-----');
-      await storageReference.getDownloadURL().then((fileURL) {
-        setState(() {
-          // 3. Store URLs globally
+      await storageReference.putFile(file)
+          .then((_) async {
+        print('-----FILE UPLOADED-----');
+        await storageReference.getDownloadURL().then((fileURL) {
           setState(() {
-            imageURLs.add(fileURL);
+            // 3. Store URLs globally
+            setState(() {
+              imageURLs.add(fileURL);
+            });
+            print('File URL: $fileURL');
+            print('Total URLS: $imageURLs');
           });
-          print('File URL: $fileURL');
-          print('Total URLS: $imageURLs');
         });
-      });
+          });
     }
 
     void _addPoint({

@@ -237,12 +237,11 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
     }
 
     Future uploadFile({String id, File file, String name}) async {
-      Reference storageReference =
-          FirebaseStorage.instance.ref().child('venues/$id/images/$name');
-      UploadTask uploadTask = storageReference.putFile(file);
-      await uploadTask.whenComplete(() {
+      var storageReference = FirebaseStorage.instance.ref().child('venues/$id/images/$name');
+      await storageReference.putFile(file)
+          .then((_) async {
         print('-----FILE UPLOADED-----');
-        storageReference.getDownloadURL().then((fileURL) {
+        await storageReference.getDownloadURL().then((fileURL) {
           setState(() {
             // 3. Store URLs globally
             setState(() {
@@ -254,7 +253,7 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
         });
       });
     }
-
+    
     void _addPoint({
       VenueSearch venueSearch,
       double lat,
