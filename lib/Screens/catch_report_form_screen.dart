@@ -116,6 +116,7 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
                   ),
                   FormBuilderCheckbox(
                     name: 'date_one_day_only',
+                    initialValue: false,
                     title: Text('Day only?'),
                     onChanged: (value) {
                       setState(() {

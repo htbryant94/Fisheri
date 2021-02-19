@@ -57,7 +57,6 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
 
   @override
   Widget build(BuildContext context) {
-
     double _convertFishWeight() {
       final String weightWhole = _valueFor(attribute: CatchFormConstants.weightWhole);
       final String weightFraction = _valueFor(attribute: CatchFormConstants.weightFraction);
@@ -474,18 +473,14 @@ class _TemperatureSlider extends StatelessWidget {
 class _FishWeight extends StatelessWidget {
   _FishWeight({
     this.isRequired,
-    this.catchType,
-    this.supportedCatchTypes,
   });
 
-  final CatchType catchType;
-  final List<CatchType> supportedCatchTypes;
   final bool isRequired;
 
   @override
   Widget build(BuildContext context) {
 
-    List<FormFieldValidator> _weightWholeValidators() {
+    List<FormFieldValidator<String>> _weightWholeValidators() {
       if (isRequired) {
         return [
           FormBuilderValidators.required(context, errorText: 'required'),
@@ -498,7 +493,7 @@ class _FishWeight extends StatelessWidget {
       }
     }
 
-    List<FormFieldValidator> _weightFractionValidators() {
+     List<FormFieldValidator<String>> _weightFractionValidators() {
       if (isRequired) {
         return [
           FormBuilderValidators.required(context, errorText: 'required'),
@@ -527,7 +522,6 @@ class _FishWeight extends StatelessWidget {
                 decoration: InputDecoration(suffixText: 'Ib'),
                 textAlign: TextAlign.center,
                 validator: FormBuilderValidators.compose(_weightWholeValidators()),
-
               ),
             ),
             SizedBox(width: 16),

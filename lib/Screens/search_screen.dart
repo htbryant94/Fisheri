@@ -353,7 +353,7 @@ class _SearchScreenState extends State<SearchScreen> {
       _currentPosition = position;
       _currentSearchText = null;
       _center = GeoFirePoint(position.latitude, position.longitude);
-      radius.value = _lastRadius;
+      radius.value = _lastRadius ?? radius.value;
       _setCircles(
           center: _convertPositionToLatLng(position),
           radius: radius.value

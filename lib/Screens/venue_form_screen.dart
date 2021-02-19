@@ -253,7 +253,7 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
         });
       });
     }
-    
+
     void _addPoint({
       VenueSearch venueSearch,
       double lat,
