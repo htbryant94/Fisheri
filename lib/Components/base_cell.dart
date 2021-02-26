@@ -226,6 +226,7 @@ class RemoteImageBaseCell extends StatelessWidget {
     @required this.height,
     this.elements,
     this.layout = BaseCellLayout.thumbnail,
+    this.imageBoxFit = BoxFit.fitHeight,
   });
 
   final String defaultImagePath;
@@ -235,6 +236,7 @@ class RemoteImageBaseCell extends StatelessWidget {
   final double height;
   final List<Widget> elements;
   final BaseCellLayout layout;
+  final BoxFit imageBoxFit;
 
   List<Widget> _children() {
     var stuff = <Widget>[
@@ -258,7 +260,7 @@ class RemoteImageBaseCell extends StatelessWidget {
               aspectRatio: 1,
               child: imageURL != null
                   ? CachedNetworkImage(
-                fit: BoxFit.fitHeight,
+                fit: imageBoxFit,
                 imageUrl: imageURL,
                 placeholder: (context, url) => Container(
                     padding: EdgeInsets.all(16),

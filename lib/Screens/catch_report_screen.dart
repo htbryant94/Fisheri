@@ -1,3 +1,4 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fisheri/Components/add_button.dart';
 import 'package:fisheri/Screens/catch_form_screen_full.dart';
 import 'package:fisheri/WeightConverter.dart';
@@ -139,6 +140,14 @@ class CatchCell extends StatelessWidget {
     }
   }
 
+  String _makeImageURL(String fish) {
+    if (fish != null) {
+      final sanitisedFish = ReCase(fish).snakeCase;
+      return 'https://firebasestorage.googleapis.com/v0/b/fishing-finder-594f0.appspot.com/o/fish%2Fstock_new%2F$sanitisedFish.png?alt=media&token=b8893ebd-5647-42a2-bfd3-9c2026f2703d';
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -150,27 +159,17 @@ class CatchCell extends StatelessWidget {
             RemoteImageBaseCell(
               title: _title(),
               subtitle: _subtitle(),
-//          subtitle: (catchData.typeOfFish != null)
-//              ? 'Catch: ${ReCase(catchData.catchType).titleCase}'
-//              : "Position: ${catchData.position}",
+              imageURL: _makeImageURL(catchData.typeOfFish),
               elements: [
                 if (catchData.date != null)
                   DSComponents.bodySmall(
                       text: 'Date: ${_formattedDate(catchData.date)}'),
                 if (catchData.time != null)
                   DSComponents.bodySmall(text: 'Time: ${catchData.time}'),
-//            if (catchData.temperature != null)
-//              Row(
-//                  children: [
-//                    Icon(Icons.wb_sunny, size: 20, color: Colors.blue,),
-//                    DSComponents.singleSpacer(),
-//                    DSComponents.bodySmall(text: '${catchData.temperature.toStringAsFixed(1)} °C'),
-//                    ],
-//              ),
               ],
-              imageURL: null,
               height: 275,
               layout: BaseCellLayout.thumbnail,
+              imageBoxFit: BoxFit.fitWidth,
             ),
             if (catchData.weatherCondition != null)
             Positioned(

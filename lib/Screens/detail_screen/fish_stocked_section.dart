@@ -142,8 +142,8 @@ class __FishStockGridItemState extends State<_FishStockGridItem> {
   @override
   Widget build(BuildContext context) {
     Future<Image> _getImage() async {
-      final String assetName = ReCase(widget.fishStock.name).snakeCase;
-      String imageURL = await FirebaseStorage.instance
+      final assetName = ReCase(widget.fishStock.name).snakeCase;
+      final imageURL = await FirebaseStorage.instance
           .ref()
           .child('fish')
           .child('stock_new')
