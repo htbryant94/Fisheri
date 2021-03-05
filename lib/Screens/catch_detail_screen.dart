@@ -42,6 +42,14 @@ class CatchDetailScreen extends StatelessWidget {
         : 'No Date';
   }
 
+  String _makeTitle() {
+    if (data.typeOfFish != null) {
+      return '${ReCase(data.catchType).titleCase} Catch - ${ReCase(data.typeOfFish).titleCase}';
+    } else {
+      return '${ReCase(data.catchType).titleCase} Catch';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,7 +62,7 @@ class CatchDetailScreen extends StatelessWidget {
                 child: Column(
                   children: <Widget>[
                     TitleSection(
-                      title: '${ReCase(data.catchType).titleCase} Catch - ${ReCase(data.typeOfFish).titleCase}',
+                      title: _makeTitle(),
                     ),
                     if (data.weight != null)
                     _DetailRow(name: 'Weight', value: WeightConverter.gramsToPoundsAndOunces(data.weight)),

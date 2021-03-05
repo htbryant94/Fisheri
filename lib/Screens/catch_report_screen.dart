@@ -148,6 +148,37 @@ class CatchCell extends StatelessWidget {
     return null;
   }
 
+  String _makeMatchPositionImageURL(int position) {
+    if (position != null) {
+      return 'https://firebasestorage.googleapis.com/v0/b/fishing-finder-594f0.appspot.com/o/position%2F$position.png?alt=media&token=840bfbfb-a8a6-4295-a7fc-1e0d8a9ed3c6';
+    }
+    return null;
+  }
+
+  bool _isSingle() {
+    return catchData.catchType == 'single';
+  }
+
+  bool _isMulti() {
+    return catchData.catchType == 'multi';
+  }
+
+  bool _isMatch() {
+    return catchData.catchType == 'match';
+  }
+
+  String _formattedPosition(int position) {
+    if (position == 1) {
+      return '${position}st';
+    } else if (position == 2) {
+      return '${position}nd';
+    } else if (position == 3) {
+      return '${position}rd';
+    } else {
+      return '${position}th';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -159,17 +190,21 @@ class CatchCell extends StatelessWidget {
             RemoteImageBaseCell(
               title: _title(),
               subtitle: _subtitle(),
-              imageURL: _makeImageURL(catchData.typeOfFish),
+              imageURL: _isMatch() ? _makeMatchPositionImageURL(catchData.position) : _makeImageURL(catchData.typeOfFish),
               elements: [
+                if (_isMulti())
+                  DSComponents.subheaderSmall(text: 'x${catchData.numberOfFish}'),
                 if (catchData.date != null)
                   DSComponents.bodySmall(
                       text: 'Date: ${_formattedDate(catchData.date)}'),
                 if (catchData.time != null)
                   DSComponents.bodySmall(text: 'Time: ${catchData.time}'),
+                if (_isMatch())
+                  DSComponents.subheaderSmall(text: 'Position: ' + _formattedPosition(catchData.position)),
               ],
               height: 275,
               layout: BaseCellLayout.thumbnail,
-              imageBoxFit: BoxFit.fitWidth,
+              imageBoxFit: _isMatch() ? BoxFit.scaleDown : BoxFit.fitWidth,
             ),
             if (catchData.weatherCondition != null)
             Positioned(
