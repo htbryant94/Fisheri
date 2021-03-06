@@ -179,6 +179,16 @@ class CatchCell extends StatelessWidget {
     }
   }
 
+  String _fetchImageURL(Catch data) {
+    if (_isMatch()) {
+      return _makeMatchPositionImageURL(catchData.position);
+    } else if (data.images != null && data.images.isNotEmpty) {
+      return data.images.first;
+    } else {
+      return _makeImageURL(catchData.typeOfFish);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -190,7 +200,7 @@ class CatchCell extends StatelessWidget {
             RemoteImageBaseCell(
               title: _title(),
               subtitle: _subtitle(),
-              imageURL: _isMatch() ? _makeMatchPositionImageURL(catchData.position) : _makeImageURL(catchData.typeOfFish),
+              imageURL: _fetchImageURL(catchData),
               elements: [
                 if (_isMulti())
                   DSComponents.subheaderSmall(text: 'x${catchData.numberOfFish}'),
