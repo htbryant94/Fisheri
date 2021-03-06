@@ -56,7 +56,9 @@ class CatchDetailScreen extends StatelessWidget {
         body: SafeArea(
           child: ListView(
             children: [
-              ImageCarousel(),
+              ImageCarousel(
+                  imageURLs: data.images
+              ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
                 child: Column(
