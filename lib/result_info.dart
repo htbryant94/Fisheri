@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'models/venue_address.dart';
-import 'models/fish_stock.dart';
+import 'models/venue_fish_stock.dart';
 
 class ResultInfo {
   ResultInfo(String title, String distance, String location, bool isLake,

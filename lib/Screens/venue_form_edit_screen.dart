@@ -633,7 +633,6 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
                             FormBuilderImagePicker(
                               name: 'images',
                               enabled: !_imagesReadOnly,
-                              bottomSheetPadding: EdgeInsets.fromLTRB(0, 0, 0, 100),
                             )
                           ],
                         ),

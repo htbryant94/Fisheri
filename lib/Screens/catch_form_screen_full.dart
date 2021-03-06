@@ -1,36 +1,18 @@
 import 'package:basic_utils/basic_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fisheri/Screens/venue_form_edit_screen.dart';
 import 'package:fisheri/WeightConverter.dart';
 import 'package:fisheri/house_texts.dart';
+import 'package:fisheri/types/weather_condition.dart';
+import 'package:fisheri/types/wind_direction.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_image_picker/form_builder_image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:fisheri/models/catch.dart';
 import 'package:recase/recase.dart';
-
-import 'catch_form_edit_screen.dart';
-
-class CatchFormConstants {
-  static const String typeOfFish = "fish_type";
-  static const String numberOfFish = "num_of_fish";
-  static const String position = "position";
-  static const String time = "time";
-  static const String date = "date";
-  static const String weightWhole = "fish_weight_whole";
-  static const String weightFraction = "fish_weight_fraction";
-  static const String weatherCondition = "weather_condition";
-  static const String windDirection = "wind_direction";
-  static const String temperature = "temperature";
-  static const String notes = "notes";
-}
-
-enum CatchType {
-  single,
-  multi,
-  match
-}
 
 class CatchFormScreenFull extends StatefulWidget {
   CatchFormScreenFull({
@@ -49,11 +31,7 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
   final _fbKey = GlobalKey<FormBuilderState>();
   final List<CatchType> catchTypes = CatchType.values;
   CatchType selectedCatchType;
-
-  dynamic _valueFor({String attribute}) {
-    return _fbKey
-        .currentState.fields[attribute].value;
-  }
+  List<String> imageURLs = [];
 
   @override
   Widget build(BuildContext context) {
@@ -61,8 +39,8 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
       final String weightWhole = _valueFor(attribute: CatchFormConstants.weightWhole);
       final String weightFraction = _valueFor(attribute: CatchFormConstants.weightFraction);
       if (weightWhole.isNotEmpty  && weightFraction.isNotEmpty) {
-        final int pounds = int.parse(weightWhole);
-        final int ounces = int.parse(weightFraction);
+        final pounds = int.parse(weightWhole);
+        final ounces = int.parse(weightFraction);
         return WeightConverter.poundsAndOuncesToGrams(pounds: pounds, ounces: ounces);
       }
       return null;
@@ -90,7 +68,7 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                                 child: Text(StringUtils.capitalize(describeEnum(type))))
                         ).toList(),
                         onChanged: (value) {
-                          print("$value");
+                          print('$value');
                           setState(() {
                             selectedCatchType = value;
                           });
@@ -169,7 +147,7 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                         child: _DropDownMenuBuilder(
                           title: 'Wind Direction',
                           attribute: 'wind_direction',
-                          items: FisheriConstants.windDirections,
+                          items: WindDirection.values.map((windDirection) => describeEnum(windDirection)).toList(),
                         ),
                       ),
                       CatchReportVisibility(
@@ -184,19 +162,23 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                           keyboardType: TextInputType.multiline,
                           minLines: 5,
                           maxLines: null,
-                          name: "notes",
+                          name: 'notes',
                           decoration: InputDecoration(
-                              labelText: "Notes", border: OutlineInputBorder()),
+                              labelText: 'Notes', border: OutlineInputBorder()),
                         ),
                       ),
-                      HouseTexts.heading('Add Photos - WIP'),
+                      FormBuilderImagePicker(
+                        name: 'images',
+                      ),
                       MaterialButton(
                         child: Text('Submit'),
-                        onPressed: () {
+                        onPressed: () async {
                           if(_fbKey.currentState.validate()) {
+
+                            // 1. Create CatchModel
                             Catch catchModel;
                             // COMMON
-                            final double weight = _convertFishWeight();
+                            final weight = _convertFishWeight();
                             String typeOfFish;
 
                             DateTime time;
@@ -221,6 +203,8 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                               position = _valueFor(attribute: CatchFormConstants.position);
                             }
 
+                            print('creating catch');
+
                             catchModel = Catch(
                               catchType: describeEnum(selectedCatchType),
                               catchReportID: widget.catchReportID,
@@ -234,41 +218,87 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                               weatherCondition: weatherCondition,
                               weight: weight,
                               windDirection: windDirection,
+                              images: null
                             );
+                            
                             print('catch report successfully created:');
                             print('catchType: ${catchModel.catchType}');
 
+                            // 2. Upload catch to database
                             final catchJSON = CatchJSONSerializer().toMap(catchModel);
-                            FirebaseFirestore.instance
+                            await FirebaseFirestore.instance
                                 .collection('catches')
                                 .add(catchJSON)
-                                .whenComplete(() {
-                              print('catch added successfully');
-                              showDialog(
-                                  context: context,
-                                  barrierDismissible: false,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: Text('Form successfully submitted'),
-                                      content: SingleChildScrollView(
-                                        child: Text(
-                                            'Tap Return to dismiss this page.'),
-                                      ),
-                                      actions: <Widget>[
-                                        FlatButton(
-                                          child: Text('Return'),
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                            _fbKey.currentState.reset();
-                                          },
-                                        )
-                                      ],
-                                    );
-                                  });
-                            });
+                                .then((result) async {
 
+                              print('catch added successfully: ${result.id}');
+                              print('uploading images');
+
+                              // 3. Upload images to storage
+                              final _images = _valueFor(attribute: 'images');
+                              var index = 0;
+
+                              await Future.forEach(_images, (image) async {
+                                final storageReference = FirebaseStorage
+                                    .instance
+                                    .ref()
+                                    .child('catch_reports/catches/${widget.catchReportID}/${result.id}/$index');
+
+                                await storageReference
+                                    .putFile(image)
+                                    .whenComplete(() async {
+                                  await storageReference
+                                      .getDownloadURL()
+                                      .then((fileURL) {
+                                    // 4. Fetch downloadURLs and populate imageURLs
+                                    setState(() {
+                                      imageURLs.add(fileURL);
+                                    });
+                                  });
+                                });
+                                index += 1;
+                              });
+
+                              print('finished uploading images');
+
+                              // 5. Amend database entry with imageURLs
+                              if (imageURLs.isNotEmpty) {
+                                print('amending Catch');
+
+                                catchModel.images = imageURLs;
+                                final amendedCatchJSON = CatchJSONSerializer().toMap(catchModel);
+
+                                await FirebaseFirestore.instance
+                                    .collection('catches')
+                                    .doc(result.id)
+                                    .set(amendedCatchJSON)
+                                    .whenComplete(() {
+                                      showDialog(
+                                          context: context,
+                                          barrierDismissible: false,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: Text('Form successfully submitted'),
+                                              content: SingleChildScrollView(
+                                                child: Text(
+                                                    'Tap Return to dismiss this page.'),
+                                              ),
+                                              actions: <Widget>[
+                                                FlatButton(
+                                                  child: Text('Return'),
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                    _fbKey.currentState.reset();
+                                                    },
+                                                )
+                                              ],
+                                            );
+                                          });
+                                    });
+                              }
+                                });
                           } else {
-                            showDialog(
+                            await showDialog(
                                 context: context,
                                 barrierDismissible: false,
                                 builder: (BuildContext context) {
@@ -302,6 +332,11 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
       ),
     );
   }
+
+  dynamic _valueFor({String attribute}) {
+    return _fbKey
+        .currentState.fields[attribute].value;
+  }
 }
 
 class _NumberOfFishSection extends StatelessWidget {
@@ -311,7 +346,7 @@ class _NumberOfFishSection extends StatelessWidget {
       children: [
         HouseTexts.heading('Number of Fish'),
         FormBuilderTouchSpin(
-          name: "num_of_fish",
+          name: 'num_of_fish',
           initialValue: 0,
           min: 0,
           max: 100,
@@ -566,35 +601,22 @@ final Widget child;
   }
 }
 
-class FisheriConstants {
-  static const List<String> typesFish = [
-    "Crucian Carp",
-    "Chub",
-    "Roach",
-    "Grass Carp",
-    "Perch",
-    "Rudd",
-    "Rainbow Trout",
-    "Brown Trout",
-    "Salmon",
-    "Koi Carp",
-    "Grayling",
-    "Zander",
-    "Eel",
-    "Orfe",
-    "Dace",
-    "Gudgeon",
-    "Ruffe",
-  ];
+class CatchFormConstants {
+  static const String typeOfFish = 'fish_type';
+  static const String numberOfFish = 'num_of_fish';
+  static const String position = 'position';
+  static const String time = 'time';
+  static const String date = 'date';
+  static const String weightWhole = 'fish_weight_whole';
+  static const String weightFraction = 'fish_weight_fraction';
+  static const String weatherCondition = 'weather_condition';
+  static const String windDirection = 'wind_direction';
+  static const String temperature = 'temperature';
+  static const String notes = 'notes';
+}
 
-  static const List<String> windDirections = [
-    "North",
-    "North East",
-    "North West",
-    "East",
-    "South",
-    "South East",
-    "South West",
-    "West"
-  ];
+enum CatchType {
+  single,
+  multi,
+  match
 }

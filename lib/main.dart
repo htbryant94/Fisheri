@@ -9,8 +9,6 @@ import 'Screens/auth_screen.dart';
 import 'Screens/search_results_screen.dart';
 import 'Screens/search_screen.dart';
 
-import 'house_colors.dart';
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -70,25 +68,15 @@ class HomePageState extends State<HomePage>
     );
   }
 
-  Text _appBarTitle = Text(
-    "Fisheri",
-    style: TextStyle(color: HouseColors.white, fontSize: 24.0),
-  );
-
   @override
   Widget build(BuildContext context) {
-    AppBar _appBar = AppBar(
-        title: _appBarTitle,
-        backgroundColor: HouseColors.primaryGreen,
-        centerTitle: true);
-
     return CupertinoTabScaffold(
       tabBar: CupertinoTabBar(
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.search), title: Text('Search')),
-          BottomNavigationBarItem(icon: Icon(Icons.description), title: Text('Catch')),
-          BottomNavigationBarItem(icon: Icon(Icons.wb_sunny), title: Text('Holidays')),
-          BottomNavigationBarItem(icon: Icon(Icons.account_circle), title: Text('Profile')),
+          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
+          BottomNavigationBarItem(icon: Icon(Icons.description), label: 'Catch'),
+          BottomNavigationBarItem(icon: Icon(Icons.wb_sunny), label: 'Holidays'),
+          BottomNavigationBarItem(icon: Icon(Icons.account_circle), label: 'Profile'),
 //          BottomNavigationBarItem(icon: Icon(Icons.assignment), title: Text('Venue')),
 //          BottomNavigationBarItem(icon: Icon(Icons.explore), title: Text('Login')),
         ],
@@ -96,35 +84,43 @@ class HomePageState extends State<HomePage>
       tabBuilder: (context, index) {
         switch (index) {
           case 0:
-            return CupertinoTabView(builder: (context) {
-              return CupertinoPageScaffold(
-                child: SearchScreen(),
-              );
-            });
+            return SafeArea(
+              child: CupertinoTabView(builder: (context) {
+                return CupertinoPageScaffold(
+                  child: SearchScreen(),
+                );
+              }),
+            );
           case 1:
-            return CupertinoTabView(builder: (context) {
-              return CupertinoPageScaffold(
-                navigationBar: CupertinoNavigationBar(
-                  middle: Text('Your Catch Reports'),
-                ),
-                child: CatchReportsScreen(),
-              );
-            });
+            return SafeArea(
+              child: CupertinoTabView(builder: (context) {
+                return CupertinoPageScaffold(
+                  navigationBar: CupertinoNavigationBar(
+                    middle: Text('Your Catch Reports'),
+                  ),
+                  child: CatchReportsScreen(),
+                );
+              }),
+            );
           case 2:
-            return CupertinoTabView(builder: (context) {
-              return CupertinoPageScaffold(
-                navigationBar: CupertinoNavigationBar(
-                  middle: Text('Holidays'),
-                ),
-                child: HolidayCountriesScreen(),
-              );
-            });
+            return SafeArea(
+              child: CupertinoTabView(builder: (context) {
+                return CupertinoPageScaffold(
+                  navigationBar: CupertinoNavigationBar(
+                    middle: Text('Holidays'),
+                  ),
+                  child: HolidayCountriesScreen(),
+                );
+              }),
+            );
           case 3:
-            return CupertinoTabView(builder: (context) {
-              return CupertinoPageScaffold(
-                child: ProfileScreen(),
-              );
-            });
+            return SafeArea(
+              child: CupertinoTabView(builder: (context) {
+                return CupertinoPageScaffold(
+                  child: ProfileScreen(),
+                );
+              }),
+            );
           default:
             return Container();
         };

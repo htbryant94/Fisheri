@@ -23,6 +23,8 @@ abstract class _$CatchJSONSerializer implements Serializer<Catch> {
     setMapValue(ret, 'weather_condition', model.weatherCondition);
     setMapValue(ret, 'weight', model.weight);
     setMapValue(ret, 'wind_direction', model.windDirection);
+    setMapValue(
+        ret, 'images', codeIterable(model.images, (val) => val as String));
     return ret;
   }
 
@@ -42,6 +44,8 @@ abstract class _$CatchJSONSerializer implements Serializer<Catch> {
     obj.weatherCondition = map['weather_condition'] as String;
     obj.weight = map['weight'] as double;
     obj.windDirection = map['wind_direction'] as String;
+    obj.images =
+        codeIterable<String>(map['images'] as Iterable, (val) => val as String);
     return obj;
   }
 }

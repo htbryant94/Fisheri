@@ -1,6 +1,9 @@
 import 'package:basic_utils/basic_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fisheri/house_texts.dart';
+import 'package:fisheri/types/fish_stock_list.dart';
+import 'package:fisheri/types/weather_condition.dart';
+import 'package:fisheri/types/wind_direction.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -158,7 +161,7 @@ class _CatchFormEditScreenState extends State<CatchFormEditScreen> {
                         child: _TypeOfFishSection(
                           title: 'Type of Fish *',
                           attribute: 'fish_type',
-                          items: FisheriConstants.typesFish,
+                          items: FishStockList.values.map((windDirection) => describeEnum(windDirection)).toList(),
                         ),
                       ),
                       CatchReportVisibility(
@@ -205,7 +208,7 @@ class _CatchFormEditScreenState extends State<CatchFormEditScreen> {
                         child: _DropDownMenuBuilder(
                           title: 'Wind Direction',
                           attribute: 'wind_direction',
-                          items: FisheriConstants.windDirections,
+                          items: WindDirection.values.map((windDirection) => describeEnum(windDirection)).toList(),
                         ),
                       ),
                       CatchReportVisibility(
@@ -583,49 +586,4 @@ class CatchReportVisibility extends StatelessWidget {
       ),
     );
   }
-}
-
-enum WeatherCondition {
-  sunny,
-  sunnyCloudy,
-  cloudy,
-  raining,
-  rainingHeavy,
-  thunderstorms,
-  windy,
-  snowing,
-  night,
-}
-
-class FisheriConstants {
-  static const List<String> typesFish = [
-    "Crucian Carp",
-    "Chub",
-    "Roach",
-    "Grass Carp",
-    "Perch",
-    "Rudd",
-    "Rainbow Trout",
-    "Brown Trout",
-    "Salmon",
-    "Koi Carp",
-    "Grayling",
-    "Zander",
-    "Eel",
-    "Orfe",
-    "Dace",
-    "Gudgeon",
-    "Ruffe",
-  ];
-
-  static const List<String> windDirections = [
-    "North",
-    "North East",
-    "North West",
-    "East",
-    "South",
-    "South East",
-    "South West",
-    "West"
-  ];
 }

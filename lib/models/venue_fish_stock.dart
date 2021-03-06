@@ -1,5 +1,5 @@
 import 'package:jaguar_serializer/jaguar_serializer.dart';
-part 'fish_stock.jser.dart';
+part 'venue_fish_stock.jser.dart';
 
 @GenSerializer(
   serializers: const [

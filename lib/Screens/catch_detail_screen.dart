@@ -65,21 +65,19 @@ class CatchDetailScreen extends StatelessWidget {
                       title: _makeTitle(),
                     ),
                     if (data.weight != null)
-                    _DetailRow(name: 'Weight', value: WeightConverter.gramsToPoundsAndOunces(data.weight)),
+                      _DetailRow(name: 'Weight', value: WeightConverter.gramsToPoundsAndOunces(data.weight)),
                     if (data.time != null)
-                    _DetailRow(name: 'Time', value: data.time),
+                      _DetailRow(name: 'Time', value: data.time),
                     if (data.date != null)
-                    _DetailRow(name: 'Date', value: formattedDate(data.date)),
+                      _DetailRow(name: 'Date', value: formattedDate(data.date)),
                     if (data.weatherCondition != null)
-                    _DetailRow(name: 'Weather Condition', value: ReCase(data.weatherCondition).titleCase),
+                      _DetailRow(name: 'Weather Condition', value: ReCase(data.weatherCondition).titleCase),
                     if (data.windDirection != null)
-                    _DetailRow(name: 'Wind Direction', value: ReCase(data.windDirection).titleCase),
+                      _DetailRow(name: 'Wind Direction', value: ReCase(data.windDirection).titleCase),
                     if (data.temperature != null)
-                    _DetailRow(name: 'Temperature', value: formattedTemperature((data.temperature))),
-                    HouseTexts.subheading('Notes:'),
-                    SizedBox(height: 16),
-                    HouseTexts.body(data.notes),
-                    SizedBox(height: 16),
+                      _DetailRow(name: 'Temperature', value: formattedTemperature((data.temperature))),
+                    if (data.notes != null)
+                      _DetailRow(name: 'Notes', value: data.notes)
                   ],
                 ),
               )

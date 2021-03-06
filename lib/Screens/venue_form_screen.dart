@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:fisheri/Components/form_builder_image_picker_custom.dart';
 import 'package:fisheri/Components/form_fields/fishing_types_field.dart';
 import 'package:fisheri/Components/form_fields/social_media_field.dart';
 import 'package:fisheri/Screens/venue_form_edit_screen.dart';
@@ -22,6 +21,7 @@ import 'package:recase/recase.dart';
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'package:fisheri/Components/form_fields/operational_hours_field.dart';
+import 'package:fisheri/types/fish_stock_list.dart';
 
 class VenueDetailedConstants {
   static const String name = "name";
@@ -323,20 +323,20 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
     Future uploadFiles(VenueDetailed venue, String venueID) async {
       print('uploading files started');
       final List<dynamic> _images = _valueFor(attribute: 'images');
-      final List<ImageType> parsedImageTypes = _images.map((image) {
+      final parsedImageTypes = _images.map((image) {
         if (image is File) {
-          return ImageType(type: "FILE", file: image);
+          return ImageType(type: 'FILE', file: image);
         } else if (image is String) {
-          return ImageType(type: "STRING", url: image);
+          return ImageType(type: 'STRING', url: image);
         } else {
           return null;
         }
       }).toList();
       print('filesToUpload value -------');
       parsedImageTypes.forEach((imageType) {
-        if (imageType.type == "URL") {
+        if (imageType.type == 'URL') {
           print('imageType is: ${imageType.url}');
-        } else if (imageType.type == "FILE") {
+        } else if (imageType.type == 'FILE') {
           print('imageType is: ${imageType.file}');
         }
       });
@@ -534,7 +534,9 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
                               ),
                             ),
                             SizedBox(height: 16),
-                            FormBuilderImagePicker(name: 'images'),
+                            FormBuilderImagePicker(
+                              name: 'images',
+                            ),
 //                            FormBuilderImagePickerCustom(
 //                              attribute: 'images',
 //                            )
@@ -552,11 +554,11 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
                                       .collection('venues_detail')
                                       .add(data)
                                       .then((doc) {
-                                    final double _latitude = double.parse(
+                                    final  _latitude = double.parse(
                                         _valueFor(
                                             attribute: 'coordinates_latitude'));
                                     assert(_latitude is double);
-                                    final double _longitude = double.parse(
+                                    final _longitude = double.parse(
                                         _valueFor(
                                             attribute:
                                                 'coordinates_longitude'));
@@ -861,34 +863,6 @@ class _ContactDetailsSection extends StatelessWidget {
       ],
     );
   }
-}
-
-enum FishStockList {
-  barbel,
-  bream,
-  brownTrout,
-  chub,
-  commonCarp,
-  crucianCarp,
-  dace,
-  eel,
-  grassCarp,
-  grayling,
-  gudgeon,
-  ide,
-  koiCarp,
-  mirrorCarp,
-  orfe,
-  perch,
-  pike,
-  rainbowTrout,
-  roach,
-  rudd,
-  ruffe,
-  salmon,
-  tench,
-  welsCatfish,
-  zander
 }
 
 class _FishStockedSection extends StatelessWidget {

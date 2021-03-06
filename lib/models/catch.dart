@@ -31,6 +31,7 @@ class Catch {
     this.weatherCondition,
     this.weight,
     this.windDirection,
+    this.images,
   });
 
   String catchType;
@@ -45,4 +46,5 @@ class Catch {
   String weatherCondition;
   double weight;
   String windDirection;
+  List<String> images;
 }

@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import '../venue_form_screen.dart';
+import '../../types/fish_stock_list.dart';
 import 'grid_item.dart';
 import 'package:recase/recase.dart';
 
@@ -16,7 +16,7 @@ class FishStockSectionFactory {
   }
 
   static FishStockSection fromStringArray(List<String> array) {
-    final List<FishStock> fishStock = array.map((e) => FishStock(name: ReCase(e).titleCase)).toList();
+    final fishStock = array.map((e) => FishStock(name: ReCase(e).titleCase)).toList();
     return FishStockSection(fishStock: fishStock);
   }
 }
@@ -33,7 +33,7 @@ class FishStockSection extends StatelessWidget {
   final bool showHeader;
 
   List<FishStock> _fishStockSortedByPriority(List<FishStock> fishStock) {
-    List<FishStockList> fishStockOrder = [
+    final fishStockOrder = [
       FishStockList.commonCarp,
       FishStockList.mirrorCarp,
       FishStockList.koiCarp,

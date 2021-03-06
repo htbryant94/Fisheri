@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'fish_stock.dart';
+part of 'venue_fish_stock.dart';
 
 // **************************************************************************
 // JaguarSerializerGenerator
