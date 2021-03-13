@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:fisheri/house_colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:form_builder_image_picker/form_builder_image_picker.dart';
+import 'package:uuid/uuid.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 // DateFormat
 import 'package:intl/intl.dart';
@@ -22,7 +25,8 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
   final _fbKey = GlobalKey<FormBuilderState>();
   bool isDayOnly;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  String selectedReportType = "lake";
+  String selectedReportType = 'lake';
+  List<String> imageURLs = [];
 
   @override
   void initState() {
@@ -36,15 +40,15 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
       body: SafeArea(
         child: ListView(
           padding: EdgeInsets.fromLTRB(24, 24, 24, 100),
-          children: <Widget>[
+          children: [
             FormBuilder(
               key: _fbKey,
               initialValue: {
-                'catch_type': "lake",
+                'catch_type': 'lake',
               },
               autovalidateMode: AutovalidateMode.always,
               child: Column(
-                children: <Widget>[
+                children: [
                   HouseTexts.heading('New Report'),
                   SizedBox(height: 16),
                   FormBuilderRadioGroup(
@@ -67,7 +71,7 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
                   ),
                   SizedBox(height: 16),
                   Visibility(
-                    visible: selectedReportType == "lake",
+                    visible: selectedReportType == 'lake',
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Container(
@@ -76,7 +80,7 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
                           children: [
                             HouseTexts.subheading('Specified Lake *'),
                             _LakesDropDownMenu(
-                              isEnabled: selectedReportType == "lake",
+                              isEnabled: selectedReportType == 'lake',
                               snapshotLakes: widget.availableLakes,
                             ),
                           ],
@@ -85,13 +89,13 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
                     ),
                   ),
                   Visibility(
-                    visible: selectedReportType == "custom",
+                    visible: selectedReportType == 'custom',
                     child: Column(
                       children: [
                         HouseTexts.subheading('Custom Name *'),
                         FormBuilderTextField(
-                          name: "custom_name",
-                          validator: selectedReportType == "custom" ?
+                          name: 'custom_name',
+                          validator: selectedReportType == 'custom' ?
                               FormBuilderValidators.compose(
                                   [
                                     FormBuilderValidators.required(context),
@@ -139,7 +143,8 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
                         }
                       },
                     ),
-                  )
+                  ),
+                  FormBuilderImagePicker(name: 'images'),
                 ],
               ),
             ),
@@ -152,44 +157,63 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
                 ),
               ),
               color: HouseColors.accentGreen,
-              onPressed: () {
+              onPressed: () async {
                 if (_fbKey.currentState.validate()) {
 
-                  CatchReport _report;
+                  final uniqueID = Uuid().v1();
 
-                  DateTime _startDate =
-                      _fbKey.currentState.fields['date_start'].value;
-                  String _dateEnd = isDayOnly ? 'date_start' : 'date_end';
-                  DateTime _endDate =
-                      _fbKey.currentState.fields[_dateEnd].value;
+                  // 1. Upload images to storage
+                  final _images = _valueFor(attribute: 'images');
+                  var index = 0;
 
-                  if (selectedReportType == "lake") {
-                    String _documentID = _fbKey.currentState.fields['lake_name'].value;
-                    DocumentSnapshot _document = widget.availableLakes.docs
-                        .firstWhere((lake) => lake.id == _documentID);
-                    final _lakeID = _document.id;
-                    String _lakeName = _document['name'];
-                    _report = CatchReport(
-                      lakeID: _lakeID,
-                      lakeName: _lakeName,
-                      startDate: _startDate.toIso8601String(),
-                      endDate: _endDate.toIso8601String(),
-                    );
-                  } else if (selectedReportType == "custom") {
-                    String _customName = _fbKey.currentState.fields['custom_name'].value;
-                    _report = CatchReport(
-                      lakeID: null,
-                      lakeName: _customName,
-                      startDate: _startDate.toIso8601String(),
-                      endDate: _endDate.toIso8601String(),
-                    );
-                  }
+                  print('uploading images: $_images');
+                  
+                  await Future.forEach(_images, (image) async {
+                    final reference = FirebaseStorage.instance.ref().child('catch_reports/$uniqueID/images/$index');
 
-                  final _reportJSON = CatchReportJSONSerializer().toMap(
-                      _report);
-                  _firestore
+                    await reference.putFile(image).whenComplete(() async {
+                      print('putting file');
+                      await reference.getDownloadURL().then((fileURL) {
+                        print('getting download URL');
+                        setState(() {
+                          print('setting imageURLs');
+                          imageURLs.add(fileURL);
+                        });
+                      });
+                    }).catchError((error) {
+                      print('error putting file: $error');
+                    });
+                    index += 1;
+                  });
+
+                  print('finished uploading images');
+
+                  // 2. Create CatchReport Model
+                  print ('creating CatchReport model');
+                  String _lakeID = _valueFor(attribute: 'lake_name');
+                  DocumentSnapshot _document = widget.availableLakes.docs.firstWhere((lake) => lake.id == _lakeID);
+                  DateTime _startDate =  _valueFor(attribute: 'date_start');
+                  DateTime _endDate = isDayOnly ? _valueFor(attribute: 'date_start') : _valueFor(attribute: 'date_end');
+                  final _isCustomLake = selectedReportType == 'custom';
+
+                  final _catchReport = CatchReport(
+                    lakeID: _isCustomLake ? null : _document.id,
+                    lakeName: _isCustomLake ? _valueFor(attribute: 'custom_name') : _document['name'],
+                    startDate: _startDate.toIso8601String(),
+                    endDate: _endDate.toIso8601String(),
+                    images: imageURLs.isNotEmpty ? imageURLs : null,
+                  );
+
+                  print('created');
+
+                  // 3. Upload Model to DB
+                  print('uploading catch report');
+                  final _catchReportJSON = CatchReportJSONSerializer().toMap(_catchReport);
+
+                  await _firestore
                       .collection('catch_reports')
-                      .add(_reportJSON)
+                      .doc(uniqueID)
+                      .set(_catchReportJSON)
                       .whenComplete(() {
                     print('catch report added successfully');
                     showDialog(
@@ -202,7 +226,7 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
                               child: Text(
                                   'Tap Return to dismiss this page.'),
                             ),
-                            actions: <Widget>[
+                            actions: [
                               FlatButton(
                                 child: Text('Return'),
                                 onPressed: () {
@@ -215,7 +239,7 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
                         });
                   });
                 } else {
-                  showDialog(
+                  await showDialog(
                       context: context,
                       barrierDismissible: false,
                       builder: (BuildContext context) {
@@ -226,7 +250,7 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
                             child: Text(
                                 'Please correct any incorrect entries and try again.'),
                           ),
-                          actions: <Widget>[
+                          actions: [
                             FlatButton(
                               child: Text('OK'),
                               onPressed: () {
@@ -243,6 +267,10 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
         ),
       ),
     );
+  }
+
+  dynamic _valueFor({String attribute}) {
+    return _fbKey.currentState.fields[attribute].value;
   }
 }
 

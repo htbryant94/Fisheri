@@ -1,9 +1,9 @@
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fisheri/Components/add_button.dart';
 import 'package:fisheri/Screens/catch_form_screen_full.dart';
 import 'package:fisheri/WeightConverter.dart';
 import 'package:fisheri/coordinator.dart';
 import 'package:fisheri/models/catch.dart';
+import 'package:fisheri/models/catch_report.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -15,23 +15,22 @@ import '../design_system.dart';
 
 class CatchReportScreen extends StatelessWidget {
   CatchReportScreen({
-    @required this.startDate,
-    @required this.endDate,
-    @required this.id,
+    @required this.catchReport,
+    @required this.catchReportID,
   });
 
-  final DateTime startDate;
-  final DateTime endDate;
-  final String id;
+  final CatchReport catchReport;
+  final String catchReportID;
 
   @override
   Widget build(BuildContext context) {
+    print('Catch Report id: $catchReportID');
     return Scaffold(
       body: SafeArea(
         child: Flex(
           direction: Axis.vertical,
           children: [
-            Expanded(child: _CatchListBuilder(id: id)),
+            Expanded(child: _CatchListBuilder(id: catchReportID)),
             _NewCatchButton(onPressed: () {
               _pushNewCatchForm(context);
             }),
@@ -42,6 +41,9 @@ class CatchReportScreen extends StatelessWidget {
   }
 
   void _pushNewCatchForm(BuildContext context) {
+    final startDate = DateTime.parse(catchReport.startDate);
+    final endDate = DateTime.parse(catchReport.endDate);
+
     var dateRange = List.generate(
         endDate.difference(startDate).inDays + 1,
         (day) =>
@@ -50,7 +52,7 @@ class CatchReportScreen extends StatelessWidget {
         currentPageTitle: 'Catches',
         screen: CatchFormScreenFull(
           dateRange: dateRange,
-          catchReportID: id,
+          catchReportID: catchReportID,
         ),
         screenTitle: 'New Catch');
   }
@@ -97,6 +99,7 @@ class _CatchListBuilder extends StatelessWidget {
             itemBuilder: (context, index) {
               final _catch = snapshot.data.docs[index];
               final _data = CatchJSONSerializer().fromMap(_catch.data());
+//              print('catch index: $index with id: ${_catch.id}');
               return CatchCell(
                 catchData: _data,
               );

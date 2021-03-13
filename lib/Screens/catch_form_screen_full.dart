@@ -242,7 +242,7 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                                 final storageReference = FirebaseStorage
                                     .instance
                                     .ref()
-                                    .child('catch_reports/catches/${widget.catchReportID}/${result.id}/$index');
+                                    .child('catch_reports/${widget.catchReportID}/${result.id}/$index');
 
                                 await storageReference
                                     .putFile(image)

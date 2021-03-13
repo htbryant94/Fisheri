@@ -21,10 +21,12 @@ class CatchReport {
     this.lakeName,
     this.startDate,
     this.endDate,
+    this.images,
   });
 
   String lakeID;
   String lakeName;
   String startDate;
   String endDate;
+  List<String> images;
 }

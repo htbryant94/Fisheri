@@ -7,6 +7,7 @@ import 'package:fisheri/Screens/catch_report_screen.dart';
 import 'package:fisheri/Screens/detail_screen/detail_screen.dart';
 import 'package:fisheri/Screens/venue_form_screen.dart';
 import 'package:fisheri/models/catch.dart';
+import 'package:fisheri/models/catch_report.dart';
 import 'package:fisheri/models/venue_detailed.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -52,7 +53,7 @@ class Coordinator {
     ));
   }
 
-  static void pushCatchReportScreen(BuildContext context, {String currentPageTitle, DateTime startDate, DateTime endDate, String id }) {
+  static void pushCatchReportScreen(BuildContext context, {String currentPageTitle, CatchReport catchReport, String catchReportID}) {
     pushCupertinoPageRoute(context,
       CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(
@@ -60,9 +61,8 @@ class Coordinator {
           middle: Text('Your Catches'),
         ),
         child: CatchReportScreen(
-          startDate: startDate,
-          endDate: endDate,
-          id: id,
+          catchReport: catchReport,
+          catchReportID: catchReportID,
         ),
       )
     );

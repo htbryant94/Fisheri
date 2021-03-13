@@ -15,6 +15,8 @@ abstract class _$CatchReportJSONSerializer implements Serializer<CatchReport> {
     setMapValue(ret, 'lake_name', model.lakeName);
     setMapValue(ret, 'start_date', model.startDate);
     setMapValue(ret, 'end_date', model.endDate);
+    setMapValue(
+        ret, 'images', codeIterable(model.images, (val) => val as String));
     return ret;
   }
 
@@ -26,6 +28,8 @@ abstract class _$CatchReportJSONSerializer implements Serializer<CatchReport> {
     obj.lakeName = map['lake_name'] as String;
     obj.startDate = map['start_date'] as String;
     obj.endDate = map['end_date'] as String;
+    obj.images =
+        codeIterable<String>(map['images'] as Iterable, (val) => val as String);
     return obj;
   }
 }

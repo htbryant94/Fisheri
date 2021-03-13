@@ -66,20 +66,33 @@ class CatchDetailScreen extends StatelessWidget {
                     TitleSection(
                       title: _makeTitle(),
                     ),
+                    DSComponents.paragraphSpacer(),
                     if (data.weight != null)
-                      _DetailRow(name: 'Weight', value: WeightConverter.gramsToPoundsAndOunces(data.weight)),
+                      _DetailRow(name: 'Weight', emoji: '⚖️', value: WeightConverter.gramsToPoundsAndOunces(data.weight)),
                     if (data.time != null)
-                      _DetailRow(name: 'Time', value: data.time),
+                      _DetailRow(name: 'Time', emoji: '⏱', value: data.time),
                     if (data.date != null)
-                      _DetailRow(name: 'Date', value: formattedDate(data.date)),
+                      _DetailRow(name: 'Date', emoji: '🗓', value: formattedDate(data.date)),
                     if (data.weatherCondition != null)
-                      _DetailRow(name: 'Weather Condition', value: ReCase(data.weatherCondition).titleCase),
+                      _DetailRow(name: 'Weather Condition', emoji: '🌤', value: ReCase(data.weatherCondition).titleCase),
                     if (data.windDirection != null)
-                      _DetailRow(name: 'Wind Direction', value: ReCase(data.windDirection).titleCase),
+                      _DetailRow(name: 'Wind Direction', emoji: '🧭', value: ReCase(data.windDirection).titleCase),
                     if (data.temperature != null)
-                      _DetailRow(name: 'Temperature', value: formattedTemperature((data.temperature))),
+                      _DetailRow(name: 'Temperature', emoji: '🌡', value: formattedTemperature((data.temperature))),
                     if (data.notes != null)
-                      _DetailRow(name: 'Notes', value: data.notes)
+                      Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text('📝'),
+                              DSComponents.singleSpacer(),
+                              DSComponents.subheader(text: 'Notes'),
+                            ],
+                          ),
+                          DSComponents.doubleSpacer(),
+                          DSComponents.body(text: data.notes),
+                        ],
+                      )
                   ],
                 ),
               )
@@ -92,10 +105,12 @@ class CatchDetailScreen extends StatelessWidget {
 class _DetailRow extends StatelessWidget {
   _DetailRow({
     this.name,
+    this.emoji,
     this.value,
 });
 
   final String name;
+  final String emoji;
   final dynamic value;
 
   @override
@@ -103,10 +118,19 @@ class _DetailRow extends StatelessWidget {
     return Column(
       children: [
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            HouseTexts.subheading('$name:'),
-            DSComponents.singleSpacer(),
-            HouseTexts.heading('$value'),
+            if (emoji != null)
+            Row(
+              children: [
+                Text(emoji),
+                DSComponents.singleSpacer(),
+                DSComponents.subheader(text: name),
+              ],
+            ),
+            if (emoji == null)
+              DSComponents.subheader(text: name),
+            DSComponents.body(text: '$value')
           ],
         ),
         DSComponents.doubleSpacer()
