@@ -22,6 +22,7 @@ class CatchReportScreen extends StatelessWidget {
   final CatchReport catchReport;
   final String catchReportID;
 
+
   @override
   Widget build(BuildContext context) {
     print('Catch Report id: $catchReportID');

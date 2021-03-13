@@ -1,9 +1,9 @@
+import 'package:fisheri/design_system.dart';
 import 'package:fisheri/house_texts.dart';
 import 'package:fisheri/models/catch_report.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:fisheri/house_colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:form_builder_image_picker/form_builder_image_picker.dart';
 import 'package:uuid/uuid.dart';
@@ -39,7 +39,7 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
     return Scaffold(
       body: SafeArea(
         child: ListView(
-          padding: EdgeInsets.fromLTRB(24, 24, 24, 100),
+          padding: EdgeInsets.all(24),
           children: [
             FormBuilder(
               key: _fbKey,
@@ -49,8 +49,6 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
               autovalidateMode: AutovalidateMode.always,
               child: Column(
                 children: [
-                  HouseTexts.heading('New Report'),
-                  SizedBox(height: 16),
                   FormBuilderRadioGroup(
                     name: 'catch_type',
                     options: [
@@ -92,7 +90,7 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
                     visible: selectedReportType == 'custom',
                     child: Column(
                       children: [
-                        HouseTexts.subheading('Custom Name *'),
+                        HouseTexts.subheading('Your Title *'),
                         FormBuilderTextField(
                           name: 'custom_name',
                           validator: selectedReportType == 'custom' ?
@@ -107,56 +105,82 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
                     ),
                   ),
                   SizedBox(height: 16),
-                  FormBuilderDateTimePicker(
-                    name: 'date_start',
-                    inputType: InputType.date,
-                    format: DateFormat('dd-MM-yyyy'),
-                    decoration: InputDecoration(labelText: 'Start date'),
-                    onChanged: (date) {
-                      if (date != null) {
-                        print('date set to: ${date.toIso8601String()}');
-                      }
-                    },
-                  ),
-                  FormBuilderCheckbox(
-                    name: 'date_one_day_only',
-                    initialValue: false,
-                    title: Text('Day only?'),
-                    onChanged: (value) {
-                      setState(() {
-                        setState(() {
-                          isDayOnly = value;
-                        });
-                      });
-                    },
+                  Row(
+                    children: [
+                      Flexible(
+                        flex: 2,
+                          child: Container(
+                            width: 150,
+                            child: FormBuilderDateTimePicker(
+                              name: 'date_start',
+                              inputType: InputType.date,
+                              format: DateFormat('dd-MM-yyyy'),
+                              decoration: InputDecoration(labelText: 'Start date'),
+                              onChanged: (date) {
+                                if (date != null) {
+                                  print('date set to: ${date.toIso8601String()}');
+                                }
+                              },
+                            ),
+                          ),
+                      ),
+                      Flexible(
+                        flex: 1,
+                          child: FormBuilderCheckbox(
+                            name: 'date_one_day_only',
+                            initialValue: false,
+                            title: Text('Day only'),
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                            ),
+                            onChanged: (value) {
+                              setState(() {
+                                setState(() {
+                                  isDayOnly = value;
+                                });
+                              });
+                            },
+                          ),
+                      ),
+                    ],
                   ),
                   Visibility(
                     visible: !isDayOnly,
-                    child: FormBuilderDateTimePicker(
-                      name: 'date_end',
-                      inputType: InputType.date,
-                      format: DateFormat('dd-MM-yyyy'),
-                      decoration: InputDecoration(labelText: 'End date'),
-                      onChanged: (date) {
-                        if (date != null) {
-                          print('date set to: ${date.toIso8601String()}');
-                        }
-                      },
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        width: 150,
+                        child: FormBuilderDateTimePicker(
+                          name: 'date_end',
+                          inputType: InputType.date,
+                          format: DateFormat('dd-MM-yyyy'),
+                          decoration: InputDecoration(labelText: 'End date'),
+                          onChanged: (date) {
+                            if (date != null) {
+                              print('date set to: ${date.toIso8601String()}');
+                            }
+                          },
+                        ),
+                      ),
                     ),
                   ),
-                  FormBuilderImagePicker(name: 'images'),
+                  DSComponents.paragraphSpacer(),
+                  DSComponents.header(text: 'Photos'),
+                  DSComponents.singleSpacer(),
+                  DSComponents.subheaderSmall(text: 'The first photo will be the cover of your report'),
+                  DSComponents.singleSpacer(),
+                  FormBuilderImagePicker(
+                    name: 'images',
+                    decoration: InputDecoration(
+                      border: InputBorder.none
+                    ),
+                  ),
                 ],
               ),
             ),
             SizedBox(height: 16),
-            MaterialButton(
-              child: Text(
-                'Create',
-                style: TextStyle(
-                  color: HouseColors.primaryGreen,
-                ),
-              ),
-              color: HouseColors.accentGreen,
+            DSComponents.primaryButton(
+              text: 'Create',
               onPressed: () async {
                 if (_fbKey.currentState.validate()) {
 
@@ -167,7 +191,7 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
                   var index = 0;
 
                   print('uploading images: $_images');
-                  
+
                   await Future.forEach(_images, (image) async {
                     final reference = FirebaseStorage.instance.ref().child('catch_reports/$uniqueID/images/$index');
 

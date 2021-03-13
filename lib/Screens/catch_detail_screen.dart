@@ -1,6 +1,5 @@
 import 'package:fisheri/WeightConverter.dart';
 import 'package:fisheri/design_system.dart';
-import 'package:fisheri/house_texts.dart';
 import 'package:fisheri/Screens/detail_screen/title_section.dart';
 import 'package:flutter/material.dart';
 import 'package:fisheri/models/catch.dart';
@@ -50,6 +49,22 @@ class CatchDetailScreen extends StatelessWidget {
     }
   }
 
+  String _makeImageURL(String fish) {
+    if (fish != null) {
+      final sanitisedFish = ReCase(fish).snakeCase;
+      return 'https://firebasestorage.googleapis.com/v0/b/fishing-finder-594f0.appspot.com/o/fish%2Fstock_new%2F$sanitisedFish.png?alt=media&token=b8893ebd-5647-42a2-bfd3-9c2026f2703d';
+    }
+    return null;
+  }
+
+  List<String> _carouselImages() {
+    if (data.images != null && data.images.isNotEmpty) {
+      return data.images;
+    } else  {
+      return [_makeImageURL(data.typeOfFish)];
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,12 +72,13 @@ class CatchDetailScreen extends StatelessWidget {
           child: ListView(
             children: [
               ImageCarousel(
-                  imageURLs: data.images
+                  imageURLs: _carouselImages()
               ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
                 child: Column(
-                  children: <Widget>[
+                  children: [
+                    DSComponents.paragraphSpacer(),
                     TitleSection(
                       title: _makeTitle(),
                     ),
