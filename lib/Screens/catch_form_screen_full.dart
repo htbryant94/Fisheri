@@ -48,286 +48,294 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
 
     return Scaffold(
       body: SafeArea(
-        child: ListView(
-          padding: EdgeInsets.fromLTRB(24, 24, 24, 100),
-          children: <Widget>[
-            Column(
-              children: <Widget>[
-                FormBuilder(
-                  key: _fbKey,
-                  initialValue: {},
-                  autovalidateMode: AutovalidateMode.always,
-                  child: Column(
-                    children: <Widget>[
-                      HouseTexts.heading('Catch Type'),
-                      FormBuilderRadioGroup(
-                        name: 'catch_type',
-                        options: catchTypes.map((type) =>
-                            FormBuilderFieldOption(
-                                value: type,
-                                child: Text(StringUtils.capitalize(describeEnum(type))))
-                        ).toList(),
-                        onChanged: (value) {
-                          print('$value');
-                          setState(() {
-                            selectedCatchType = value;
-                          });
-                        },
-                      ),
-                      SizedBox(height: 16),
-                      CatchReportVisibility(
-                        catchType: selectedCatchType,
-                        supportedCatchTypes: [CatchType.single, CatchType.multi],
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Container(
-                            width: 200,
-                            child: _TypeOfFishSection(
-                              title: 'Type of Fish *',
-                              attribute: 'fish_type',
+        child: Listener(
+          onPointerDown: (_) {
+            final currentFocus = FocusScope.of(context);
+            if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
+              currentFocus.focusedChild.unfocus();
+            }
+          },
+          child: ListView(
+            padding: EdgeInsets.fromLTRB(24, 24, 24, 100),
+            children: [
+              Column(
+                children: [
+                  FormBuilder(
+                    key: _fbKey,
+                    initialValue: {},
+                    autovalidateMode: AutovalidateMode.always,
+                    child: Column(
+                      children: [
+                        HouseTexts.heading('Catch Type'),
+                        FormBuilderRadioGroup(
+                          name: 'catch_type',
+                          options: catchTypes.map((type) =>
+                              FormBuilderFieldOption(
+                                  value: type,
+                                  child: Text(StringUtils.capitalize(describeEnum(type))))
+                          ).toList(),
+                          onChanged: (value) {
+                            print('$value');
+                            setState(() {
+                              selectedCatchType = value;
+                            });
+                          },
+                        ),
+                        SizedBox(height: 16),
+                        CatchReportVisibility(
+                          catchType: selectedCatchType,
+                          supportedCatchTypes: [CatchType.single, CatchType.multi],
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Container(
+                              width: 200,
+                              child: _TypeOfFishSection(
+                                title: 'Type of Fish *',
+                                attribute: 'fish_type',
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      CatchReportVisibility(
-                        catchType: selectedCatchType,
-                        supportedCatchTypes: [CatchType.multi],
-                        child: _NumberOfFishSection(),
-                      ),
-                      CatchReportVisibility(
-                        catchType: selectedCatchType,
-                        supportedCatchTypes: CatchType.values,
-                        child: _FishWeight(
-                          isRequired: (selectedCatchType != CatchType.multi),
+                        CatchReportVisibility(
+                          catchType: selectedCatchType,
+                          supportedCatchTypes: [CatchType.multi],
+                          child: _NumberOfFishSection(),
                         ),
-                      ),
-                      CatchReportVisibility(
-                        catchType: selectedCatchType,
-                        supportedCatchTypes: [CatchType.match],
-                        child: _PositionSection(
-                          title: 'Position',
-                          attribute: 'position',
-                        ),
-                      ),
-                      CatchReportVisibility(
-                        catchType: selectedCatchType,
-                        supportedCatchTypes: [CatchType.single],
-                        child: _TimePickerBuilder(
-                          title: 'Time',
-                          attribute: 'time',
-                        ),
-                      ),
-                      CatchReportVisibility(
-                        catchType: selectedCatchType,
-                        supportedCatchTypes: [CatchType.single],
-                        child: _DropDownMenuDatesBuilder(
-                          title: 'Date',
-                          attribute: 'date',
-                          items: widget.dateRange,
-                        ),
-                      ),
-                      CatchReportVisibility(
-                        catchType: selectedCatchType,
-                        supportedCatchTypes: CatchType.values,
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Container(
-                            width: 200,
-                            child: _DropDownMenuBuilder(
-                              title: 'Weather Conditions',
-                              attribute: 'weather_condition',
-                                items: WeatherCondition.values.map((condition) => describeEnum(condition)).toList()
-                            ),
-                          ),
-                        ),
-                      ),
-                      CatchReportVisibility(
-                        catchType: selectedCatchType,
-                        supportedCatchTypes: CatchType.values,
-                        child: _DropDownMenuBuilder(
-                          title: 'Wind Direction',
-                          attribute: 'wind_direction',
-                          items: WindDirection.values.map((windDirection) => describeEnum(windDirection)).toList(),
-                        ),
-                      ),
-                      CatchReportVisibility(
+                        CatchReportVisibility(
                           catchType: selectedCatchType,
                           supportedCatchTypes: CatchType.values,
-                          child: _TemperatureSlider()
-                      ),
-                      CatchReportVisibility(
-                        catchType: selectedCatchType,
-                        supportedCatchTypes: CatchType.values,
-                        child: FormBuilderTextField(
-                          keyboardType: TextInputType.multiline,
-                          minLines: 5,
-                          maxLines: null,
-                          name: 'notes',
-                          decoration: InputDecoration(
-                              labelText: 'Notes', border: OutlineInputBorder()),
+                          child: _FishWeight(
+                            isRequired: (selectedCatchType != CatchType.multi),
+                          ),
                         ),
-                      ),
-                      FormBuilderImagePicker(
-                        name: 'images',
-                      ),
-                      MaterialButton(
-                        child: Text('Submit'),
-                        onPressed: () async {
-                          if(_fbKey.currentState.validate()) {
+                        CatchReportVisibility(
+                          catchType: selectedCatchType,
+                          supportedCatchTypes: [CatchType.match],
+                          child: _PositionSection(
+                            title: 'Position',
+                            attribute: 'position',
+                          ),
+                        ),
+                        CatchReportVisibility(
+                          catchType: selectedCatchType,
+                          supportedCatchTypes: [CatchType.single],
+                          child: _TimePickerBuilder(
+                            title: 'Time',
+                            attribute: 'time',
+                          ),
+                        ),
+                        CatchReportVisibility(
+                          catchType: selectedCatchType,
+                          supportedCatchTypes: [CatchType.single],
+                          child: _DropDownMenuDatesBuilder(
+                            title: 'Date',
+                            attribute: 'date',
+                            items: widget.dateRange,
+                          ),
+                        ),
+                        CatchReportVisibility(
+                          catchType: selectedCatchType,
+                          supportedCatchTypes: CatchType.values,
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Container(
+                              width: 200,
+                              child: _DropDownMenuBuilder(
+                                title: 'Weather Conditions',
+                                attribute: 'weather_condition',
+                                  items: WeatherCondition.values.map((condition) => describeEnum(condition)).toList()
+                              ),
+                            ),
+                          ),
+                        ),
+                        CatchReportVisibility(
+                          catchType: selectedCatchType,
+                          supportedCatchTypes: CatchType.values,
+                          child: _DropDownMenuBuilder(
+                            title: 'Wind Direction',
+                            attribute: 'wind_direction',
+                            items: WindDirection.values.map((windDirection) => describeEnum(windDirection)).toList(),
+                          ),
+                        ),
+                        CatchReportVisibility(
+                            catchType: selectedCatchType,
+                            supportedCatchTypes: CatchType.values,
+                            child: _TemperatureSlider()
+                        ),
+                        CatchReportVisibility(
+                          catchType: selectedCatchType,
+                          supportedCatchTypes: CatchType.values,
+                          child: FormBuilderTextField(
+                            keyboardType: TextInputType.multiline,
+                            minLines: 5,
+                            maxLines: null,
+                            name: 'notes',
+                            decoration: InputDecoration(
+                                labelText: 'Notes', border: OutlineInputBorder()),
+                          ),
+                        ),
+                        FormBuilderImagePicker(
+                          name: 'images',
+                        ),
+                        MaterialButton(
+                          child: Text('Submit'),
+                          onPressed: () async {
+                            if(_fbKey.currentState.validate()) {
 
-                            // 1. Create CatchModel
-                            Catch catchModel;
-                            // COMMON
-                            final weight = _convertFishWeight();
-                            String typeOfFish;
+                              // 1. Create CatchModel
+                              Catch catchModel;
+                              // COMMON
+                              final weight = _convertFishWeight();
+                              String typeOfFish;
 
-                            DateTime time;
-                            final weatherCondition = _valueFor(attribute: CatchFormConstants.weatherCondition);
-                            final windDirection = _valueFor(attribute: CatchFormConstants.windDirection);
-                            final temperature = _valueFor(attribute: CatchFormConstants.temperature);
-                            final notes = _valueFor(attribute: CatchFormConstants.notes);
-                            DateTime date;
-                            int numberOfFish;
-                            int position;
+                              DateTime time;
+                              final weatherCondition = _valueFor(attribute: CatchFormConstants.weatherCondition);
+                              final windDirection = _valueFor(attribute: CatchFormConstants.windDirection);
+                              final temperature = _valueFor(attribute: CatchFormConstants.temperature);
+                              final notes = _valueFor(attribute: CatchFormConstants.notes);
+                              DateTime date;
+                              int numberOfFish;
+                              int position;
 
-                            if (selectedCatchType == CatchType.single) {
-                              typeOfFish = _valueFor(attribute: CatchFormConstants.typeOfFish);
-                              time = _valueFor(attribute: CatchFormConstants.time);
-                              date = _valueFor(attribute: CatchFormConstants.date);
-                            }
-                            else if (selectedCatchType == CatchType.multi) {
-                              typeOfFish = _valueFor(attribute: CatchFormConstants.typeOfFish);
-                              numberOfFish = _valueFor(attribute: CatchFormConstants.numberOfFish);
-                            }
-                            else if (selectedCatchType == CatchType.match) {
-                              position = _valueFor(attribute: CatchFormConstants.position);
-                            }
+                              if (selectedCatchType == CatchType.single) {
+                                typeOfFish = _valueFor(attribute: CatchFormConstants.typeOfFish);
+                                time = _valueFor(attribute: CatchFormConstants.time);
+                                date = _valueFor(attribute: CatchFormConstants.date);
+                              }
+                              else if (selectedCatchType == CatchType.multi) {
+                                typeOfFish = _valueFor(attribute: CatchFormConstants.typeOfFish);
+                                numberOfFish = _valueFor(attribute: CatchFormConstants.numberOfFish);
+                              }
+                              else if (selectedCatchType == CatchType.match) {
+                                position = _valueFor(attribute: CatchFormConstants.position);
+                              }
 
-                            print('creating catch');
+                              print('creating catch');
 
-                            catchModel = Catch(
-                              catchType: describeEnum(selectedCatchType),
-                              catchReportID: widget.catchReportID,
-                              date: date != null ? date.toIso8601String() : null,
-                              notes: notes,
-                              numberOfFish: numberOfFish,
-                              position: position != null ? position : null,
-                              temperature: temperature,
-                              time: time != null ? DateFormat('HH:mm').format(time) : null,
-                              typeOfFish: typeOfFish,
-                              weatherCondition: weatherCondition,
-                              weight: weight,
-                              windDirection: windDirection,
-                              images: null
-                            );
-                            
-                            print('catch report successfully created:');
-                            print('catchType: ${catchModel.catchType}');
+                              catchModel = Catch(
+                                catchType: describeEnum(selectedCatchType),
+                                catchReportID: widget.catchReportID,
+                                date: date != null ? date.toIso8601String() : null,
+                                notes: notes,
+                                numberOfFish: numberOfFish,
+                                position: position != null ? position : null,
+                                temperature: temperature,
+                                time: time != null ? DateFormat('HH:mm').format(time) : null,
+                                typeOfFish: typeOfFish,
+                                weatherCondition: weatherCondition,
+                                weight: weight,
+                                windDirection: windDirection,
+                                images: null
+                              );
 
-                            // 2. Upload catch to database
-                            final catchJSON = CatchJSONSerializer().toMap(catchModel);
-                            await FirebaseFirestore.instance
-                                .collection('catches')
-                                .add(catchJSON)
-                                .then((result) async {
+                              print('catch report successfully created:');
+                              print('catchType: ${catchModel.catchType}');
 
-                              print('catch added successfully: ${result.id}');
-                              print('uploading images');
+                              // 2. Upload catch to database
+                              final catchJSON = CatchJSONSerializer().toMap(catchModel);
+                              await FirebaseFirestore.instance
+                                  .collection('catches')
+                                  .add(catchJSON)
+                                  .then((result) async {
 
-                              // 3. Upload images to storage
-                              final _images = _valueFor(attribute: 'images');
-                              var index = 0;
+                                print('catch added successfully: ${result.id}');
+                                print('uploading images');
 
-                              await Future.forEach(_images, (image) async {
-                                final storageReference = FirebaseStorage
-                                    .instance
-                                    .ref()
-                                    .child('catch_reports/${widget.catchReportID}/${result.id}/$index');
+                                // 3. Upload images to storage
+                                final _images = _valueFor(attribute: 'images');
+                                var index = 0;
 
-                                await storageReference
-                                    .putFile(image)
-                                    .whenComplete(() async {
+                                await Future.forEach(_images, (image) async {
+                                  final storageReference = FirebaseStorage
+                                      .instance
+                                      .ref()
+                                      .child('catch_reports/${widget.catchReportID}/${result.id}/$index');
+
                                   await storageReference
-                                      .getDownloadURL()
-                                      .then((fileURL) {
-                                    // 4. Fetch downloadURLs and populate imageURLs
-                                    setState(() {
-                                      imageURLs.add(fileURL);
+                                      .putFile(image)
+                                      .whenComplete(() async {
+                                    await storageReference
+                                        .getDownloadURL()
+                                        .then((fileURL) {
+                                      // 4. Fetch downloadURLs and populate imageURLs
+                                      setState(() {
+                                        imageURLs.add(fileURL);
+                                      });
                                     });
                                   });
+                                  index += 1;
                                 });
-                                index += 1;
-                              });
 
-                              print('finished uploading images');
+                                print('finished uploading images');
 
-                              // 5. Amend database entry with imageURLs
-                              if (imageURLs.isNotEmpty) {
-                                print('amending Catch');
+                                // 5. Amend database entry with imageURLs
+                                if (imageURLs.isNotEmpty) {
+                                  print('amending Catch');
 
-                                catchModel.images = imageURLs;
-                                final amendedCatchJSON = CatchJSONSerializer().toMap(catchModel);
+                                  catchModel.images = imageURLs;
+                                  final amendedCatchJSON = CatchJSONSerializer().toMap(catchModel);
 
-                                await FirebaseFirestore.instance
-                                    .collection('catches')
-                                    .doc(result.id)
-                                    .set(amendedCatchJSON)
-                                    .whenComplete(() {
-                                      showDialog(
-                                          context: context,
-                                          barrierDismissible: false,
-                                          builder: (BuildContext context) {
-                                            return AlertDialog(
-                                              title: Text('Form successfully submitted'),
-                                              content: SingleChildScrollView(
-                                                child: Text(
-                                                    'Tap Return to dismiss this page.'),
-                                              ),
-                                              actions: <Widget>[
-                                                FlatButton(
-                                                  child: Text('Return'),
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                    _fbKey.currentState.reset();
-                                                    },
-                                                )
-                                              ],
-                                            );
-                                          });
-                                    });
-                              }
-                                });
-                          } else {
-                            await showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: Text(
-                                        'There was an issue trying to submit your form'),
-                                    content: SingleChildScrollView(
-                                      child: Text(
-                                          'Please correct any incorrect entries and try again.'),
-                                    ),
-                                    actions: <Widget>[
-                                      FlatButton(
-                                        child: Text('OK'),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      )
-                                    ],
-                                  );
-                                });
-                          }
-                          },
-                      )
-                    ],
-                  ),
-                )
-              ],
-            )
-          ],
+                                  await FirebaseFirestore.instance
+                                      .collection('catches')
+                                      .doc(result.id)
+                                      .set(amendedCatchJSON)
+                                      .whenComplete(() {
+                                        showDialog(
+                                            context: context,
+                                            barrierDismissible: false,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                title: Text('Form successfully submitted'),
+                                                content: SingleChildScrollView(
+                                                  child: Text(
+                                                      'Tap Return to dismiss this page.'),
+                                                ),
+                                                actions: [
+                                                  FlatButton(
+                                                    child: Text('Return'),
+                                                    onPressed: () {
+                                                      Navigator.of(context).pop();
+                                                      _fbKey.currentState.reset();
+                                                      },
+                                                  )
+                                                ],
+                                              );
+                                            });
+                                      });
+                                }
+                                  });
+                            } else {
+                              await showDialog(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text(
+                                          'There was an issue trying to submit your form'),
+                                      content: SingleChildScrollView(
+                                        child: Text(
+                                            'Please correct any incorrect entries and try again.'),
+                                      ),
+                                      actions: [
+                                        FlatButton(
+                                          child: Text('OK'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        )
+                                      ],
+                                    );
+                                  });
+                            }
+                            },
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -544,11 +552,11 @@ class _FishWeight extends StatelessWidget {
     }
 
     return Column(
-      children: <Widget>[
+      children: [
         HouseTexts.heading('Weight'),
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
+          children: [
             Container(
               width: 50,
               child: FormBuilderTextField(
