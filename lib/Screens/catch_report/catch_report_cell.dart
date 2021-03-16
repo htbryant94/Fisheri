@@ -21,7 +21,7 @@ class CatchReportCell extends StatelessWidget {
       final _formattedDate = DateFormat('dd/MM/yy').format(DateTime.parse(catchReport.startDate));
       _presentableDate = _formattedDate;
     }
-    if (catchReport.endDate != null) {
+    if (catchReport.endDate != null && catchReport.endDate != catchReport.startDate) {
       final _formattedDate = DateFormat('dd/MM/yy').format(DateTime.parse(catchReport.endDate));
       _presentableDate += ' - $_formattedDate';
     }

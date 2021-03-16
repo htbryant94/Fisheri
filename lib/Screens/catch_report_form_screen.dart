@@ -122,6 +122,11 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
                                   inputType: InputType.date,
                                   format: DateFormat('dd-MM-yyyy'),
                                   decoration: InputDecoration(labelText: 'Start date'),
+                                  validator: FormBuilderValidators.compose(
+                                      [
+                                        FormBuilderValidators.required(context)
+                                      ]
+                                  ),
                                   onChanged: (date) {
                                     if (date != null) {
                                       print('date set to: ${date.toIso8601String()}');
@@ -189,43 +194,63 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
                   text: 'Create',
                   onPressed: () async {
                     if (_fbKey.currentState.validate()) {
-                      _setLoadingState(true, message: 'Saving your Photos...');
+                      _setLoadingState(true, message: 'Please wait...');
 
                       final uniqueID = Uuid().v1();
 
                       // 1. Upload images to storage
-                      final _images = _valueFor(attribute: 'images');
-                      var index = 0;
+                      if (_valueFor(attribute: 'images') != null) {
+                        _updateLoadingMessage('Saving your Photos...');
+                        final _images = _valueFor(attribute: 'images');
+                        var index = 0;
 
-                      print('uploading images: $_images');
+                        print('uploading images: $_images');
 
-                      await Future.forEach(_images, (image) async {
-                        final reference = FirebaseStorage.instance.ref().child('catch_reports/$uniqueID/images/$index');
+                        await Future.forEach(_images, (image) async {
+                          final reference = FirebaseStorage.instance.ref().child('catch_reports/$uniqueID/images/$index');
 
-                        await reference.putFile(image).whenComplete(() async {
-                          print('putting file');
-                          await reference.getDownloadURL().then((fileURL) {
-                            print('getting download URL');
-                            setState(() {
-                              print('setting imageURLs');
-                              imageURLs.add(fileURL);
+                          await reference.putFile(image).whenComplete(() async {
+                            print('putting file');
+                            await reference.getDownloadURL().then((fileURL) {
+                              print('getting download URL');
+                              setState(() {
+                                print('setting imageURLs');
+                                imageURLs.add(fileURL);
+                              });
                             });
+                          }).catchError((error) {
+                            print('error putting file: $error');
                           });
-                        }).catchError((error) {
-                          print('error putting file: $error');
+                          index += 1;
                         });
-                        index += 1;
-                      });
 
-                      print('finished uploading images');
+                        print('finished uploading images');
+                      }
+
                       _updateLoadingMessage('Creating your Catch Report...');
 
                       // 2. Create CatchReport Model
                       print ('creating CatchReport model');
-                      String _lakeID = _valueFor(attribute: 'lake_name');
-                      DocumentSnapshot _document = widget.availableLakes.docs.firstWhere((lake) => lake.id == _lakeID);
-                      DateTime _startDate =  _valueFor(attribute: 'date_start');
-                      DateTime _endDate = isDayOnly ? _valueFor(attribute: 'date_start') : _valueFor(attribute: 'date_end');
+                      String _lakeID;
+                      DocumentSnapshot _document;
+                      DateTime _startDate;
+                      DateTime _endDate;
+
+                      if (selectedReportType == 'lake') {
+                        _lakeID = _valueFor(attribute: 'lake_name');
+                        _document = widget.availableLakes.docs.firstWhere((lake) => lake.id == _lakeID);
+                      }
+
+                      if (_valueFor(attribute: 'date_start') != null) {
+                        _startDate =  _valueFor(attribute: 'date_start');
+                      }
+
+                      if (!isDayOnly && _valueFor(attribute: 'date_end') != null) {
+                        _endDate = _valueFor(attribute: 'date_end');
+                      }  else {
+                        _endDate = _startDate;
+                      }
+
                       final _isCustomLake = selectedReportType == 'custom';
 
                       final _catchReport = CatchReport(
@@ -251,7 +276,7 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
                         print('catch report added successfully');
 
                         _setLoadingState(false);
-                        
+
                         showDialog(
                             context: context,
                             barrierDismissible: false,

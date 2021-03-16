@@ -39,15 +39,8 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
 
   @override
   Widget build(BuildContext context) {
-    double _convertFishWeight() {
-      final String weightWhole = _valueFor(attribute: CatchFormConstants.weightWhole);
-      final String weightFraction = _valueFor(attribute: CatchFormConstants.weightFraction);
-      if (weightWhole.isNotEmpty  && weightFraction.isNotEmpty) {
-        final pounds = int.parse(weightWhole);
-        final ounces = int.parse(weightFraction);
-        return WeightConverter.poundsAndOuncesToGrams(pounds: pounds, ounces: ounces);
-      }
-      return null;
+    double _convertFishWeight({int whole, int fraction}) {
+      return WeightConverter.poundsAndOuncesToGrams(pounds: whole, ounces: fraction);
     };
 
     return Scaffold(
@@ -192,14 +185,45 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                                   // 1. Create CatchModel
                                   Catch catchModel;
                                   // COMMON
-                                  final weight = _convertFishWeight();
+
                                   String typeOfFish;
 
                                   DateTime time;
-                                  final weatherCondition = _valueFor(attribute: CatchFormConstants.weatherCondition);
-                                  final windDirection = _valueFor(attribute: CatchFormConstants.windDirection);
-                                  final temperature = _valueFor(attribute: CatchFormConstants.temperature);
-                                  final notes = _valueFor(attribute: CatchFormConstants.notes);
+                                  var _weight;
+                                  var _weatherCondition;
+                                  var _windDirection;
+                                  var _temperature;
+                                  var _notes;
+
+                                  if (_valueFor(attribute: CatchFormConstants.weightWhole) != null) {
+                                    var _weightFraction = 0;
+
+                                    if (_valueFor(attribute: CatchFormConstants.weightFraction) != null) {
+                                      _weightFraction = int.parse(_valueFor(attribute: CatchFormConstants.weightFraction));
+                                    }
+
+                                    _weight = _convertFishWeight(
+                                      whole: int.parse(_valueFor(attribute: CatchFormConstants.weightWhole)),
+                                      fraction: _weightFraction
+                                    );
+                                  }
+
+                                  if (_valueFor(attribute: CatchFormConstants.weatherCondition) != null) {
+                                    _weatherCondition = _valueFor(attribute: CatchFormConstants.weatherCondition);
+                                  }
+
+                                  if (_valueFor(attribute: CatchFormConstants.windDirection) != null) {
+                                    _windDirection = _valueFor(attribute: CatchFormConstants.windDirection);
+                                  }
+
+                                  if (_valueFor(attribute: CatchFormConstants.temperature) != null) {
+                                    _temperature = _valueFor(attribute: CatchFormConstants.temperature);
+                                  }
+
+                                  if (_valueFor(attribute: CatchFormConstants.notes) != null) {
+                                    _notes = _valueFor(attribute: CatchFormConstants.notes);
+                                  }
+
                                   DateTime date;
                                   int numberOfFish;
                                   int position;
@@ -223,15 +247,15 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                                     catchType: describeEnum(selectedCatchType),
                                     catchReportID: widget.catchReportID,
                                     date: date != null ? date.toIso8601String() : null,
-                                    notes: notes,
+                                    notes: _notes,
                                     numberOfFish: numberOfFish,
                                     position: position != null ? position : null,
-                                    temperature: temperature,
+                                    temperature: _temperature,
                                     time: time != null ? DateFormat('HH:mm').format(time) : null,
                                     typeOfFish: typeOfFish,
-                                    weatherCondition: weatherCondition,
-                                    weight: weight,
-                                    windDirection: windDirection,
+                                    weatherCondition: _weatherCondition,
+                                    weight: _weight,
+                                    windDirection: _windDirection,
                                     images: null
                                   );
 
@@ -248,37 +272,39 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                                       .then((result) async {
 
                                     print('catch added successfully: ${result.id}');
-                                    print('uploading images');
-
-                                    _updateLoadingMessage('Saving your Photos...');
 
                                     // 3. Upload images to storage
-                                    final _images = _valueFor(attribute: 'images');
-                                    var index = 0;
+                                    if (_valueFor(attribute: 'images') != null) {
+                                      print('uploading images');
+                                      _updateLoadingMessage('Saving your Photos...');
 
-                                    await Future.forEach(_images, (image) async {
-                                      final storageReference = FirebaseStorage
-                                          .instance
-                                          .ref()
-                                          .child('catch_reports/${widget.catchReportID}/${result.id}/$index');
+                                      final _images = _valueFor(attribute: 'images');
+                                      var index = 0;
 
-                                      await storageReference
-                                          .putFile(image)
-                                          .whenComplete(() async {
+                                      await Future.forEach(_images, (image) async {
+                                        final storageReference = FirebaseStorage
+                                            .instance
+                                            .ref()
+                                            .child('catch_reports/${widget.catchReportID}/${result.id}/$index');
+
                                         await storageReference
-                                            .getDownloadURL()
-                                            .then((fileURL) {
-                                          // 4. Fetch downloadURLs and populate imageURLs
-                                          setState(() {
-                                            imageURLs.add(fileURL);
+                                            .putFile(image)
+                                            .whenComplete(() async {
+                                          await storageReference
+                                              .getDownloadURL()
+                                              .then((fileURL) {
+                                            // 4. Fetch downloadURLs and populate imageURLs
+                                            setState(() {
+                                              imageURLs.add(fileURL);
+                                            });
                                           });
                                         });
+                                        index += 1;
                                       });
-                                      index += 1;
-                                    });
 
-                                    _updateLoadingMessage('Finalising...');
-                                    print('finished uploading images');
+                                      _updateLoadingMessage('Finalising...');
+                                      print('finished uploading images');
+                                    }
 
                                     // 5. Amend database entry with imageURLs
                                     if (imageURLs.isNotEmpty) {
@@ -316,6 +342,29 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                                                 });
                                           });
                                     }
+
+                                    _setLoadingState(false);
+                                    await showDialog(
+                                        context: context,
+                                        barrierDismissible: false,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: Text('Form successfully submitted'),
+                                            content: SingleChildScrollView(
+                                              child: Text(
+                                                  'Tap Return to dismiss this page.'),
+                                            ),
+                                            actions: [
+                                              FlatButton(
+                                                child: Text('Return'),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                  _fbKey.currentState.reset();
+                                                },
+                                              )
+                                            ],
+                                          );
+                                        });
                                       });
                                 } else {
                                   await showDialog(
@@ -587,7 +636,6 @@ class _FishWeight extends StatelessWidget {
      List<FormFieldValidator<String>> _weightFractionValidators() {
       if (isRequired) {
         return [
-          FormBuilderValidators.required(context, errorText: 'required'),
           FormBuilderValidators.numeric(context),
           FormBuilderValidators.max(context, 16),
         ];
