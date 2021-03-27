@@ -36,6 +36,7 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
   List<String> imageURLs = [];
   bool _isLoading = false;
   String _loadingText = 'Loading...';
+  bool _didSetTemperature = false;
 
   @override
   Widget build(BuildContext context) {
@@ -159,7 +160,13 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                             CatchReportVisibility(
                                 catchType: selectedCatchType,
                                 supportedCatchTypes: CatchType.values,
-                                child: _TemperatureSlider()
+                                child: _TemperatureSlider(
+                                  valueChanged: (_) {
+                                    setState(() {
+                                      _didSetTemperature = true;
+                                    });
+                                  },
+                                )
                             ),
                             CatchReportVisibility(
                               catchType: selectedCatchType,
@@ -216,7 +223,7 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                                     _windDirection = _valueFor(attribute: CatchFormConstants.windDirection);
                                   }
 
-                                  if (_valueFor(attribute: CatchFormConstants.temperature) != null) {
+                                  if (_valueFor(attribute: CatchFormConstants.temperature) != null && _didSetTemperature) {
                                     _temperature = _valueFor(attribute: CatchFormConstants.temperature);
                                   }
 
@@ -594,6 +601,12 @@ class _DropDownMenuBuilder extends StatelessWidget {
 }
 
 class _TemperatureSlider extends StatelessWidget {
+  _TemperatureSlider({
+    this.valueChanged
+});
+
+  final ValueChanged<double> valueChanged;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -601,9 +614,10 @@ class _TemperatureSlider extends StatelessWidget {
         HouseTexts.heading('Temperature'),
         FormBuilderSlider(
           name: 'temperature',
-          initialValue: 20,
+          initialValue: 0,
           max: 40,
-          min: 0,
+          min: -20,
+          onChanged: valueChanged
         )
       ],
     );
