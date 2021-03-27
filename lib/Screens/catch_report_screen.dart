@@ -49,7 +49,7 @@ class CatchReportScreen extends StatelessWidget {
         endDate.difference(startDate).inDays + 1,
         (day) =>
             DateTime(startDate.year, startDate.month, startDate.day + day));
-    Coordinator.push(context,
+    Coordinator.present(context,
         currentPageTitle: 'Catches',
         screen: CatchFormScreenFull(
           dateRange: dateRange,

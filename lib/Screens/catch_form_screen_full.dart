@@ -340,7 +340,7 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                                                       FlatButton(
                                                         child: Text('Return'),
                                                         onPressed: () {
-                                                          Navigator.of(context).pop();
+                                                          Navigator.of(context).popUntil((route) => route.isFirst);
                                                           _fbKey.currentState.reset();
                                                           },
                                                       )
@@ -365,7 +365,7 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                                               FlatButton(
                                                 child: Text('Return'),
                                                 onPressed: () {
-                                                  Navigator.of(context).pop();
+                                                  Navigator.of(context).popUntil((route) => route.isFirst);
                                                   _fbKey.currentState.reset();
                                                 },
                                               )
