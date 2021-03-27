@@ -29,9 +29,9 @@ class CatchDetailScreen extends StatelessWidget {
 
   String formattedTemperature(double temp) {
     if (temp != null) {
-      return "${temp.toStringAsFixed(1)} °C";
+      return '${temp.toStringAsFixed(1)} °C';
     }
-    return "No information";
+    return 'No information';
   }
 
   String formattedDate(String date) {
@@ -57,10 +57,23 @@ class CatchDetailScreen extends StatelessWidget {
     return null;
   }
 
+  String _makeMatchPositionImageURL(int position) {
+    if (position != null) {
+      return 'https://firebasestorage.googleapis.com/v0/b/fishing-finder-594f0.appspot.com/o/position%2F$position.png?alt=media&token=840bfbfb-a8a6-4295-a7fc-1e0d8a9ed3c6';
+    }
+    return null;
+  }
+
+  bool _isMatch() {
+    return data.catchType == 'match';
+  }
+
   List<String> _carouselImages() {
     if (data.images != null && data.images.isNotEmpty) {
       return data.images;
-    } else  {
+    } else if (data.images == null && _isMatch()) {
+      return [_makeMatchPositionImageURL(data.position)];
+    } else {
       return [_makeImageURL(data.typeOfFish)];
     }
   }
