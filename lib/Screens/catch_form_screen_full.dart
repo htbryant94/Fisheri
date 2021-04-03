@@ -5,7 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fisheri/Screens/venue_form_edit_screen.dart';
 import 'package:fisheri/WeightConverter.dart';
-import 'package:fisheri/house_texts.dart';
 import 'package:fisheri/types/weather_condition.dart';
 import 'package:fisheri/types/wind_direction.dart';
 import 'package:flutter/foundation.dart';
@@ -15,6 +14,8 @@ import 'package:form_builder_image_picker/form_builder_image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:fisheri/models/catch.dart';
 import 'package:recase/recase.dart';
+
+import '../design_system.dart';
 
 class CatchFormScreenFull extends StatefulWidget {
   CatchFormScreenFull({
@@ -66,7 +67,7 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                         autovalidateMode: AutovalidateMode.always,
                         child: Column(
                           children: [
-                            HouseTexts.heading('Catch Type'),
+                            DSComponents.header(text: 'Catch Type'),
                             FormBuilderRadioGroup(
                               name: 'catch_type',
                               options: catchTypes.map((type) =>
@@ -182,9 +183,13 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                             ),
                             FormBuilderImagePicker(
                               name: 'images',
+                              decoration: InputDecoration(
+                                border: InputBorder.none
+                              ),
                             ),
-                            MaterialButton(
-                              child: Text('Submit'),
+                            DSComponents.doubleSpacer(),
+                            DSComponents.primaryButton(
+                              text: 'Log your Catch',
                               onPressed: () async {
                                 if(_fbKey.currentState.validate()) {
                                   _setLoadingState(true, message: 'Creating your Catch...');
@@ -417,7 +422,7 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                           children: [
                             CircularProgressIndicator(),
                             SizedBox(height: 24),
-                            HouseTexts.heading(_loadingText, alignment: Alignment.center),
+                            DSComponents.header(text: _loadingText, alignment: Alignment.center),
                           ],
                         ),
                       ),
@@ -456,7 +461,7 @@ class _NumberOfFishSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        HouseTexts.heading('Number of Fish'),
+        DSComponents.header(text: 'Number of Fish'),
         FormBuilderTouchSpin(
           name: 'num_of_fish',
           initialValue: 0,
@@ -482,7 +487,7 @@ class _PositionSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        HouseTexts.heading(title),
+        DSComponents.header(text: title),
         FormBuilderTouchSpin(
           name: attribute,
           initialValue: 1,
@@ -508,7 +513,7 @@ class _TimePickerBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        HouseTexts.heading(title),
+        DSComponents.header(text: title),
         FormBuilderDateTimePicker(
           name: attribute,
           inputType: InputType.time,
@@ -553,7 +558,7 @@ class _DropDownMenuDatesBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        HouseTexts.heading(title),
+        DSComponents.header(text: title),
         FormBuilderDropdown(
             name: attribute,
             items: items
@@ -585,7 +590,7 @@ class _DropDownMenuBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        HouseTexts.heading(title),
+        DSComponents.header(text: title),
         FormBuilderDropdown(
             name: attribute,
             validator: isRequired ? FormBuilderValidators.required(context) : null,
@@ -611,7 +616,7 @@ class _TemperatureSlider extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        HouseTexts.heading('Temperature'),
+        DSComponents.header(text: 'Temperature'),
         FormBuilderSlider(
           name: 'temperature',
           initialValue: 0,
@@ -663,12 +668,13 @@ class _FishWeight extends StatelessWidget {
 
     return Column(
       children: [
-        HouseTexts.heading('Weight'),
+        DSComponents.header(text: 'Weight'),
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Container(
               width: 50,
+              height: 75,
               child: FormBuilderTextField(
                 name: 'fish_weight_whole',
                 keyboardType: TextInputType.number,
@@ -680,6 +686,7 @@ class _FishWeight extends StatelessWidget {
             SizedBox(width: 16),
             Container(
               width: 50,
+              height: 75,
               child: FormBuilderTextField(
                 name: 'fish_weight_fraction',
                 keyboardType: TextInputType.number,
