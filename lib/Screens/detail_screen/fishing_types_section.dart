@@ -1,7 +1,6 @@
 import 'package:fisheri/Components/pill.dart';
 import 'package:fisheri/design_system.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:recase/recase.dart';
 
 class FishingTypesSection extends StatefulWidget {
@@ -116,14 +115,20 @@ class GridItem extends StatelessWidget {
             padding: EdgeInsets.all(16),
             child: AspectRatio(
               aspectRatio: 1.5,
-              child: image,
+              child: ColorFiltered(
+                child: image,
+                colorFilter: ColorFilter.mode(
+                    DSColors.green,
+                    BlendMode.modulate,
+                )
+              ),
             ),
           ),
           DSComponents.singleSpacer(),
           SizedBox(
             width: 65,
             child: Pill(
-              title: "Fishing",
+              title: 'Fishing',
               titleColor: item.hasFishing ? DSColors.blue : DSColors.blue.withOpacity(0.5),
               color: item.hasFishing ? DSColors.pastelBlue : DSColors.pastelBlue.withOpacity(0.5),
             ),
@@ -132,7 +137,7 @@ class GridItem extends StatelessWidget {
           SizedBox(
             width: 65,
             child: Pill(
-              title: "Tackle",
+              title: 'Tackle',
               titleColor: item.hasTackles ? DSColors.green : DSColors.green.withOpacity(0.5),
               color: item.hasTackles ? DSColors.pastelGreen : DSColors.pastelGreen.withOpacity(0.5),
             ),
@@ -159,41 +164,13 @@ class _FishingTypeGridItem extends StatefulWidget {
 class __FishingTypeGridItemState extends State<_FishingTypeGridItem> {
   @override
   Widget build(BuildContext context) {
-    Future<Image> _getImage() async {
-      String imageURL = await FirebaseStorage.instance
-          .ref()
-          .child('fishing')
-          .child('types')
-          .child(('${widget.item.name}.png'))
-          .getDownloadURL();
-      return await Image.network(imageURL);
-    }
-
-    return FutureBuilder<Image>(
-      future: _getImage(),
-      builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return GridItem(
-            item: widget.item,
-            image: Image.asset('images/question_mark.png'),
-            width: widget.itemWidth,
-          );
-        } else {
-          if (snapshot.hasError) {
-            return GridItem(
-              item: widget.item,
-              image: Image.asset('images/question_mark.png'),
-              width: widget.itemWidth,
-            );
-          } else {
-            return GridItem(
-              item: widget.item,
-              image: snapshot.data,
-              width: widget.itemWidth,
-            );
-          }
-        }
-      },
+    return GridItem(
+      item: widget.item,
+      image: Image.asset(
+        'images/icons/fishing_types/${widget.item.name}.png',
+        color: DSColors.green,
+      ),
+      width: widget.itemWidth,
     );
   }
 }

@@ -94,6 +94,7 @@ flutter:
     - images/icons/amenities/night_fishing.png
     - images/icons/amenities/showers.png
     - images/icons/amenities/snacks.png
+    - images/icons/amenities/tackle_hire.png
     - images/icons/amenities/tackle_shop.png
     - images/icons/amenities/takeaway_friendly.png
     - images/icons/amenities/toilets.png
@@ -101,6 +102,13 @@ flutter:
     - images/icons/amenities/tuition.png
     - images/icons/amenities/wheelchair_access.png
     - images/icons/amenities/wifi.png
+    - images/icons/fishing_types/carp.png
+    - images/icons/fishing_types/catfish.png
+    - images/icons/fishing_types/coarse.png
+    - images/icons/fishing_types/fly.png
+    - images/icons/fishing_types/match.png
+    - images/icons/fishing_types/predator.png
+    - images/icons/fishing_types/sea.png
     - images/placeholders/events_calendar_create.png
     - images/placeholders/events_calendar_main.png
     - images/placeholders/fishing_license.png
