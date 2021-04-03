@@ -342,6 +342,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.5"
+  flutter_cube:
+    dependency: transitive
+    description:
+      name: flutter_cube
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.6"
   flutter_datetime_picker:
     dependency: transitive
     description:
@@ -697,6 +704,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.4.1"
+  panorama:
+    dependency: "direct main"
+    description:
+      name: panorama
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.2"
   path:
     dependency: transitive
     description:

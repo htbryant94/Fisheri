@@ -21,6 +21,7 @@ import 'package:fisheri/Screens/detail_screen/amenities_section.dart';
 import 'package:fisheri/Screens/detail_screen/fishing_types_section.dart';
 import 'package:fisheri/Screens/detail_screen/fish_stocked_section.dart';
 import 'package:flutter/rendering.dart';
+import 'package:panorama/panorama.dart';
 
 class DetailScreen extends StatelessWidget {
   DetailScreen({
@@ -51,7 +52,7 @@ class DetailScreen extends StatelessWidget {
         venue.social.youtube != null && venue.social.youtube.isNotEmpty;
   }
 
-  List<Widget> buildSections(VenueDetailed venue) {
+  List<Widget> buildSections(BuildContext context, VenueDetailed venue) {
     List<Widget> sections = [];
 
     String _buildLocationString(List<String> items) {
@@ -185,13 +186,21 @@ class DetailScreen extends StatelessWidget {
               scrollDirection: Axis.vertical,
               child: Column(
                 children: [
-                  ImageCarousel(
-                    imageURLs: venue.images,
+                  Stack(
+                    children: [
+                      ImageCarousel(
+                        imageURLs: venue.images,
+                      ),
+                      Positioned(
+                        left: 24,
+                        bottom: 16,
+                        child: ThreeSixtyImageButton(),
+                      ),
+                    ],
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 30, horizontal: 24),
-                    child: Column(children: buildSections(venue)),
+                    padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 24),
+                    child: Column(children: buildSections(context, venue)),
                   ),
                 ],
               ),
@@ -213,6 +222,33 @@ class DetailScreen extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class ThreeSixtyImageButton extends StatelessWidget {
+  const ThreeSixtyImageButton({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      child: Image.asset(
+        'images/icons/360-degrees.png',
+        color: Colors.white,
+        height: 32,
+        width: 32,
+      ),
+      onTap: () {
+        Coordinator.present(
+            context,
+            screenTitle: '360° View',
+            screen: Panorama(
+              child: Image.asset('images/placeholders/panorama.jpg'),
+            )
+        );
+      },
     );
   }
 }

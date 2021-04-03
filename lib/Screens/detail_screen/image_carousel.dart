@@ -55,7 +55,7 @@ class _ImageCarouselState extends State<ImageCarousel> {
           },
         ),
         Positioned(
-          bottom: 24,
+          bottom: 16,
           right: 24,
           child: FavouriteButton(),
         ),
