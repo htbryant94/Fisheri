@@ -84,12 +84,15 @@ flutter:
     - images/icons/amenities/animal_friendly.png
     - images/icons/amenities/camping.png
     - images/icons/amenities/electricity.png
+    - images/icons/amenities/equipment_hire.png
     - images/icons/amenities/food_and_drink.png
     - images/icons/amenities/guests_allowed.png
     - images/icons/amenities/night_fishing.png
     - images/icons/amenities/showers.png
     - images/icons/amenities/takeaway_friendly.png
     - images/icons/amenities/toilets.png
+    - images/icons/amenities/trolley_hire.png
+    - images/icons/amenities/tuition.png
     - images/icons/amenities/wheelchair_access.png
     - images/icons/amenities/wifi.png
     - images/placeholders/events_calendar_create.png
