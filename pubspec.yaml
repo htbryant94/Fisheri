@@ -82,13 +82,19 @@ flutter:
     - images/flags/spain.png
     - images/icons/map_icon.png
     - images/icons/amenities/animal_friendly.png
+    - images/icons/amenities/bait_freezer.png
+    - images/icons/amenities/beverages.png
     - images/icons/amenities/camping.png
+    - images/icons/amenities/carp_care_equipment_provided.png
     - images/icons/amenities/electricity.png
     - images/icons/amenities/equipment_hire.png
+    - images/icons/amenities/food.png
     - images/icons/amenities/food_and_drink.png
     - images/icons/amenities/guests_allowed.png
     - images/icons/amenities/night_fishing.png
     - images/icons/amenities/showers.png
+    - images/icons/amenities/snacks.png
+    - images/icons/amenities/tackle_shop.png
     - images/icons/amenities/takeaway_friendly.png
     - images/icons/amenities/toilets.png
     - images/icons/amenities/trolley_hire.png
