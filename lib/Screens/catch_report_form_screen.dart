@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:fisheri/coordinator.dart';
 import 'package:fisheri/design_system.dart';
 import 'package:fisheri/house_texts.dart';
 import 'package:fisheri/models/catch_report.dart';
@@ -45,7 +46,7 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
         child: Stack(
           children: [
             ListView(
-              padding: EdgeInsets.all(24),
+              padding: EdgeInsets.symmetric(horizontal: 24),
               children: [
                 FormBuilder(
                   key: _fbKey,
@@ -291,7 +292,12 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
                                   FlatButton(
                                     child: Text('Return'),
                                     onPressed: () {
-                                      Navigator.of(context).pop();
+                                      Navigator.of(context).popUntil((route) => route.isFirst);
+                                      Coordinator.pushCatchReportScreen(
+                                        context,
+                                        catchReportID: uniqueID,
+                                        catchReport: _catchReport
+                                      );
                                       _fbKey.currentState.reset();
                                     },
                                   )

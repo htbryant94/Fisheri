@@ -36,7 +36,7 @@ class _AddNewCatchReportButton extends StatelessWidget {
             .collection('venues_search')
             .get()
             .then((documents) {
-          Coordinator.push(context,
+          Coordinator.present(context,
               currentPageTitle: '',
               screen: CatchReportFormScreen(availableLakes: documents),
               screenTitle: 'New Catch Report');
