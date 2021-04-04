@@ -57,7 +57,7 @@ class DetailScreen extends StatelessWidget {
 
     String _buildLocationString(List<String> items) {
       items.removeWhere((item) => item == null || item.isEmpty);
-      return items.join(", ");
+      return items.join(', ');
     }
 
     sections.add(TitleSection(
@@ -87,7 +87,7 @@ class DetailScreen extends StatelessWidget {
 
     sections.add(DSComponents.paragraphSpacer());
 
-    sections.add(DSComponents.subheaderSmall(text: "ID: $id", alignment: Alignment.centerLeft));
+    sections.add(DSComponents.subheaderSmall(text: 'ID: $id', alignment: Alignment.centerLeft));
 
     sections.add(DSComponents.doubleSpacer());
 
@@ -99,13 +99,13 @@ class DetailScreen extends StatelessWidget {
 
     sections.add(ContentsSection(
       contents: [
-        "Location",
-        "Amenities",
-        "Fishing Types",
-        "Fish",
-        "Rules",
-        "Opening Hours",
-        "Social Media"
+        'Location',
+        'Amenities',
+        'Fishing Types',
+        'Fish',
+        'Rules',
+        'Opening Hours',
+        'Social Media',
       ],
     ));
 
@@ -113,9 +113,9 @@ class DetailScreen extends StatelessWidget {
 
     sections.add(StatsSection(
       stats: [
-        Stat(name: "Catch Reports", value: 1247),
-        Stat(name: "Upcoming Events", value: 2),
-        Stat(name: "Check-Ins Today", value: 16),
+        Stat(name: 'Catch Reports', value: 1247),
+        Stat(name: 'Upcoming Events', value: 2),
+        Stat(name: 'Check-Ins Today', value: 16),
       ],
     ));
 
@@ -127,9 +127,9 @@ class DetailScreen extends StatelessWidget {
 
     sections.add(ContactSection(
       contactItems: [
-        "Call",
-        "Website",
-        "Email",
+        'Call',
+        'Website',
+        'Email',
       ],
     ));
 
@@ -149,16 +149,17 @@ class DetailScreen extends StatelessWidget {
       sections.add(DSComponents.divider());
     }
 
-    sections.add(FishingTypesSection(
-      title: 'Fishing Types & Tackle',
-      fishTypes: venue.fishingTypes,
-      fishTackles: venue.fishingTackles,
-    ));
-
-    sections.add(DSComponents.divider());
+    if(venue.fishingTackles != null || venue.fishingTypes != null) {
+      sections.add(FishingTypesSection(
+        title: 'Fishing Types & Tackle',
+        fishTypes: venue.fishingTypes,
+        fishTackles: venue.fishingTackles,
+      ));
+      sections.add(DSComponents.divider());
+    }
     
-    if (isLake()) {
-      final fishingRulesList = venue.fishingRules.split("*");
+    if (isLake() && venue.fishingRules != null && venue.fishingRules.isNotEmpty) {
+      final fishingRulesList = venue.fishingRules.split('*');
       fishingRulesList.removeAt(0);
       sections.add(FishingRulesSection(fishingRules: fishingRulesList));
       sections.add(DSComponents.divider());
@@ -212,9 +213,9 @@ class DetailScreen extends StatelessWidget {
                   padding: EdgeInsets.fromLTRB(52, 0, 52, 8),
                   alignment: Alignment.bottomCenter,
                   child: DSComponents.primaryButton(
-                    text: "Book Tickets from £39",
+                    text: 'Book Tickets from £39',
                     onPressed: () {
-                      Coordinator.present(context, screenTitle: "Tickets", screen: BookTicketsScreen());
+                      Coordinator.present(context, screenTitle: 'Tickets', screen: BookTicketsScreen());
                     }
                   )
               ),
@@ -262,7 +263,7 @@ class MapViewSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        DSComponents.header(text: "Location"),
+        DSComponents.header(text: 'Location'),
         DSComponents.paragraphSpacer(),
         Container(
           decoration: BoxDecoration(
@@ -279,15 +280,15 @@ class MapViewSection extends StatelessWidget {
         ),
         DSComponents.paragraphSpacer(),
         DSComponents.body(
-            text: "${address.street}", alignment: Alignment.center),
+            text: '${address.street}', alignment: Alignment.center),
         DSComponents.singleSpacer(),
-        DSComponents.body(text: "${address.town}", alignment: Alignment.center),
-        DSComponents.singleSpacer(),
-        DSComponents.body(
-            text: "${address.county}", alignment: Alignment.center),
+        DSComponents.body(text: '${address.town}', alignment: Alignment.center),
         DSComponents.singleSpacer(),
         DSComponents.body(
-            text: "${address.postcode}", alignment: Alignment.center),
+            text: '${address.county}', alignment: Alignment.center),
+        DSComponents.singleSpacer(),
+        DSComponents.body(
+            text: '${address.postcode}', alignment: Alignment.center),
       ],
     );
   }

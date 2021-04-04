@@ -171,7 +171,7 @@ class __FishStockGridItemState extends State<_FishStockGridItem> {
           } else {
             return GridItem(
               title: widget.fishStock.name,
-              subtitle: widget.fishStock.weight != null ? 'to: ${WeightConverter.gramsToPoundsWhole(widget.fishStock.weight.toDouble())}' : null,
+              subtitle: _subtitle(widget.fishStock.weight),
               image: snapshot.data,
               width: widget.itemWidth,
             );
@@ -179,5 +179,13 @@ class __FishStockGridItemState extends State<_FishStockGridItem> {
         }
       },
     );
+  }
+
+  String _subtitle(int weightInGrams) {
+    if (weightInGrams != null) {
+      final weightInPounds = WeightConverter.gramsToPoundsWhole(weightInGrams.toDouble());
+      return weightInPounds > 0 ? 'to: ${WeightConverter.gramsToPoundsWhole(weightInGrams.toDouble())} Ibs' : null;
+    }
+    return null;
   }
 }

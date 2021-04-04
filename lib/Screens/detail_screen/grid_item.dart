@@ -1,5 +1,6 @@
 import 'package:fisheri/design_system.dart';
 import 'package:flutter/material.dart';
+import 'package:recase/recase.dart';
 
 class GridItem extends StatelessWidget {
   GridItem({
@@ -24,9 +25,9 @@ class GridItem extends StatelessWidget {
             child: image,
           ),
           DSComponents.singleSpacer(),
-          DSComponents.bodySmall(text: title, color: DSColors.black, alignment: Alignment.center),
+          DSComponents.bodySmall(text: ReCase(title).titleCase, color: DSColors.black, alignment: Alignment.center),
           if(subtitle != null)
-          DSComponents.bodySmall(text: subtitle, color: DSColors.black, alignment: Alignment.center),
+          DSComponents.bodySmall(text: subtitle, color: DSColors.grey, alignment: Alignment.center),
         ]));
   }
 }

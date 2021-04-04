@@ -32,7 +32,7 @@ class _ImageCarouselState extends State<ImageCarousel> {
       children: [
         CarouselSlider.builder(
           viewportFraction: 1.0,
-          enableInfiniteScroll: imageURLsHasValue(),
+          enableInfiniteScroll: false,
           itemCount: imageURLsHasValue() ? widget.imageURLs.length : 1,
           height: 268,
           itemBuilder: (BuildContext context, int itemIndex) =>
@@ -40,10 +40,10 @@ class _ImageCarouselState extends State<ImageCarousel> {
                   ? Container(
                       child: CachedNetworkImage(
                         imageUrl: widget.imageURLs[itemIndex],
-                        fit: BoxFit.fitWidth,
+                        fit: BoxFit.cover,
                         placeholder: (context, url) => Align(
                           alignment: Alignment.center,
-                          child: CircularProgressIndicator(),
+                          child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(DSColors.green)),
                         ),
                       ),
                     )
