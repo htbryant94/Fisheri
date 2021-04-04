@@ -211,7 +211,9 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                                     var _weightFraction = 0;
 
                                     if (_valueFor(attribute: CatchFormConstants.weightFraction) != null) {
-                                      _weightFraction = int.parse(_valueFor(attribute: CatchFormConstants.weightFraction));
+                                      _weightFraction = int.parse(
+                                          _valueFor(attribute: CatchFormConstants.weightFraction),
+                                          onError: (_) { return 0; });
                                     }
 
                                     _weight = _convertFishWeight(

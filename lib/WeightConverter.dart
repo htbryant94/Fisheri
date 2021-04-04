@@ -1,15 +1,17 @@
 class WeightConverter {
 
   static double poundsAndOuncesToGrams({int pounds, int ounces}) {
-    final int totalOunces = _poundsToOunces(pounds: pounds) + ounces;
-    return _ouncesToGrams(ounces: totalOunces);
+    final poundsToGrams = _poundsToGrams(pounds);
+    final ouncesToGrams = _ouncesToGrams(ounces: ounces);
+    return poundsToGrams + ouncesToGrams;
   }
 
   static String gramsToPoundsAndOunces(double grams) {
-    double ounces = _gramsToOunces(grams);
-    int pounds = (ounces / 16).round();
-    int relativeOunces = (ounces % 16).round();
-    return "$pounds Ibs, $relativeOunces oz";
+    final ounces = _gramsToOunces(grams);
+    final pounds = (ounces / 16);
+    final fraction = pounds % 1;
+    final relativeOunces = fraction * 16;
+    return '${pounds.truncate()} Ibs, ${relativeOunces.truncate()} oz';
   }
 
   static int gramsToPoundsWhole(double grams) {
@@ -20,6 +22,10 @@ class WeightConverter {
 
   static int _poundsToOunces({int pounds}) {
     return pounds * 16;
+  }
+
+  static double _poundsToGrams(int pounds) {
+    return pounds * 453.59237;
   }
 
   static double _ouncesToGrams({int ounces}) {
