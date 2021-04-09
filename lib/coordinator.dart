@@ -16,18 +16,12 @@ import 'Screens/search_results_screen.dart';
 
 class Coordinator {
 
-  static void pushSearchResultsScreen(BuildContext context, String currentPageTitle, {List<SearchResult> venues, GeoPoint userCurrentLocation}) {
-    Navigator.push(context,
-        CupertinoPageRoute(
-          builder: (context) =>
-              CupertinoPageScaffold(
-                navigationBar: CupertinoNavigationBar(
-                  previousPageTitle: currentPageTitle,
-                  middle: Text('${venues.length} ' + (venues.length == 1 ? 'Result' : 'Results')),
-                ),
-                child: SearchResultsScreen(searchResults: venues, userCurrentLocation: userCurrentLocation),
-              ),
-        ));
+  static void searchResultsScreen(BuildContext context, String currentPageTitle, {List<SearchResult> venues, GeoPoint userCurrentLocation}) {
+    Coordinator.present(
+      context,
+      screenTitle: '${venues.length} ' + (venues.length == 1 ? 'Result' : 'Results'),
+      screen: SearchResultsScreen(searchResults: venues, userCurrentLocation: userCurrentLocation),
+    );
   }
 
   static void pushListViewScreen(BuildContext context, {String currentPageTitle, String nextPageTitle, List<ListViewItem> items}) {

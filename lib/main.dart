@@ -1,12 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fisheri/Screens/catch_report/catch_reports_screen.dart';
 import 'package:fisheri/Screens/holiday_countries_screen.dart';
 import 'package:fisheri/Screens/profile_screen.dart';
-import 'package:fisheri/Screens/venue_form_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'Screens/auth_screen.dart';
-import 'Screens/search_results_screen.dart';
 import 'Screens/search_screen.dart';
 
 void main() async {
@@ -30,16 +29,25 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => HomePageState();
 }
 
-class HomePageState extends State<HomePage>
-    with SingleTickerProviderStateMixin {
-
+class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
   TabController _tabController;
-  int _selectedTab = 0;
+  bool _shouldShowAuthScreen = false;
+  FirebaseAuth auth = FirebaseAuth.instance;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 5, vsync: this);
+    auth
+        .authStateChanges()
+        .listen((User user) {
+          if (user != null) {
+            print('user: ${user.email}');
+            _shouldShowAuthScreen = false;
+          } else {
+            _shouldShowAuthScreen = true;
+          }
+    });
   }
 
   @override
@@ -48,83 +56,73 @@ class HomePageState extends State<HomePage>
     _tabController.dispose();
   }
 
-  void _tabSelected(int newIndex) {
-    setState(() {
-      _selectedTab = newIndex;
-      _tabController.index = newIndex;
-    });
-  }
-
-  Widget _buildTabContent() {
-    return TabBarView(
-      controller: _tabController,
-      children: [
-        AuthScreen(),
-        CatchReportsScreen(),
-        SearchScreen(),
-        SearchResultsScreen(),
-        VenueFormScreen(),
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    return CupertinoTabScaffold(
-      tabBar: CupertinoTabBar(
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
-          BottomNavigationBarItem(icon: Icon(Icons.description), label: 'Catch'),
-          BottomNavigationBarItem(icon: Icon(Icons.wb_sunny), label: 'Holidays'),
-          BottomNavigationBarItem(icon: Icon(Icons.account_circle), label: 'Profile'),
-//          BottomNavigationBarItem(icon: Icon(Icons.assignment), title: Text('Venue')),
-//          BottomNavigationBarItem(icon: Icon(Icons.explore), title: Text('Login')),
-        ],
-      ),
-      tabBuilder: (context, index) {
-        switch (index) {
-          case 0:
-            return SafeArea(
-              child: CupertinoTabView(builder: (context) {
-                return CupertinoPageScaffold(
-                  child: SearchScreen(),
+    return Stack(
+      children: [
+        CupertinoTabScaffold(
+          tabBar: CupertinoTabBar(
+            items: [
+              BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
+              BottomNavigationBarItem(icon: Icon(Icons.description), label: 'Catch'),
+              BottomNavigationBarItem(icon: Icon(Icons.wb_sunny), label: 'Holidays'),
+              BottomNavigationBarItem(icon: Icon(Icons.account_circle), label: 'Profile'),
+            ],
+          ),
+          tabBuilder: (context, index) {
+            switch (index) {
+              case 0:
+                return SafeArea(
+                  child: CupertinoTabView(builder: (context) {
+                    return CupertinoPageScaffold(
+                      child: SearchScreen(),
+                    );
+                  }),
                 );
-              }),
-            );
-          case 1:
-            return SafeArea(
-              child: CupertinoTabView(builder: (context) {
-                return CupertinoPageScaffold(
-                  navigationBar: CupertinoNavigationBar(
-                    middle: Text('Your Catch Reports'),
-                  ),
-                  child: CatchReportsScreen(),
+              case 1:
+                return SafeArea(
+                  child: CupertinoTabView(builder: (context) {
+                    return CupertinoPageScaffold(
+                      navigationBar: CupertinoNavigationBar(
+                        middle: Text('Your Catch Reports'),
+                      ),
+                      child: Stack(
+                        children: [
+                          CatchReportsScreen(),
+                          Visibility(
+                              visible: _shouldShowAuthScreen,
+                              child: CupertinoPageScaffold(child: AuthScreen())
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
                 );
-              }),
-            );
-          case 2:
-            return SafeArea(
-              child: CupertinoTabView(builder: (context) {
-                return CupertinoPageScaffold(
-                  navigationBar: CupertinoNavigationBar(
-                    middle: Text('Holidays'),
-                  ),
-                  child: HolidayCountriesScreen(),
+              case 2:
+                return SafeArea(
+                  child: CupertinoTabView(builder: (context) {
+                    return CupertinoPageScaffold(
+                      navigationBar: CupertinoNavigationBar(
+                        middle: Text('Holidays'),
+                      ),
+                      child: HolidayCountriesScreen(),
+                    );
+                  }),
                 );
-              }),
-            );
-          case 3:
-            return SafeArea(
-              child: CupertinoTabView(builder: (context) {
-                return CupertinoPageScaffold(
-                  child: ProfileScreen(),
+              case 3:
+                return SafeArea(
+                  child: CupertinoTabView(builder: (context) {
+                    return CupertinoPageScaffold(
+                      child: ProfileScreen(),
+                    );
+                  }),
                 );
-              }),
-            );
-          default:
-            return Container();
-        };
-      },
+              default:
+                return Container();
+            };
+          },
+        ),
+      ],
     );
   }
 }

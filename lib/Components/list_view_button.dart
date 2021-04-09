@@ -29,7 +29,7 @@ class ListViewButtonState extends State<ListViewButton> {
     return GestureDetector(
       onTapUp: (tapDetails) {
         if (widget.venues != null) {
-          Coordinator.pushSearchResultsScreen(
+          Coordinator.searchResultsScreen(
               context,
               'Map',
               venues: widget.venues,

@@ -109,6 +109,26 @@ class DSComponents {
     );
   }
 
+  static RaisedButton secondaryButton({
+    String text,
+    VoidCallback onPressed
+  }) {
+    return RaisedButton(
+      elevation: 4,
+      highlightColor: DSColors.black,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(50),
+      ),
+      color: DSColors.pastelGreen,
+      child: DSComponents.subheader(
+          text: text,
+          color: DSColors.green,
+          alignment: Alignment.center
+      ),
+      onPressed: onPressed,
+    );
+  }
+
   static SizedBox halfSpacer() {
     return SizedBox(height: 4, width: 4);
   }

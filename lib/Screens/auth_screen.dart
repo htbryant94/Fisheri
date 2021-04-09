@@ -1,5 +1,10 @@
+import 'package:fisheri/Screens/register_screen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fisheri/house_colors.dart';
+
+import '../coordinator.dart';
+import '../design_system.dart';
+import 'login_screen.dart';
 
 class AuthScreen extends StatelessWidget {
   AuthScreen();
@@ -9,19 +14,58 @@ class AuthScreen extends StatelessWidget {
     return SafeArea(
       child: Align(
           alignment: Alignment.center,
-          child: Column(
-            children: [
-              _Logo('images/logo.png'),
-              Expanded(
-                  child: Column(
-                children: [
-                  _Button(title: 'Log In With Google', backgroundColor: Colors.red, textColor: Colors.white),
-                  _Button(title: 'Log In With Facebook', backgroundColor: Colors.blue, textColor: Colors.white),
-                  _Button(title: 'Log In With Email', backgroundColor: HouseColors.accentGreen, textColor: HouseColors.primaryGreen),
-                  _Button(title: 'Sign Up', backgroundColor: HouseColors.primaryGreen, textColor: HouseColors.accentGreen),
-                ],
-              )),
-            ],
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Column(
+              children: [
+                _Logo('images/logo.png'),
+                Expanded(
+                    child: Container(
+                      width: 200,
+                      child: Column(
+                        children: [
+                      // _Button(
+                      //   title: 'Log In With Google',
+                      //   backgroundColor: Colors.red,
+                      //   textColor: Colors.white,
+                      // ),
+                      // _Button(
+                      //   title: 'Log In With Facebook',
+                      //   backgroundColor: Colors.blue,
+                      //   textColor: Colors.white,
+                      // ),
+                          Container(
+                            height: 44,
+                            child: DSComponents.primaryButton(
+                                text: 'Sign in',
+                                onPressed: () {
+                                  Coordinator.present(
+                                      context,
+                                      screenTitle: 'Sign in',
+                                      screen: LoginScreen()
+                                  );
+                                }
+                            ),
+                          ),
+                          DSComponents.sectionSpacer(),
+                          Container(
+                            height: 44,
+                            child: DSComponents.secondaryButton(
+                                text: 'Register',
+                                onPressed: () {
+                                  Coordinator.present(
+                                      context,
+                                      screenTitle: 'Register',
+                                      screen: RegisterScreen()
+                                  );
+                                }
+                            ),
+                          ),
+                        ],
+                      ),
+                    )),
+              ],
+            ),
           )),
     );
   }
@@ -40,35 +84,6 @@ class _Logo extends StatelessWidget {
         imageURL,
         height: MediaQuery.of(context).size.height / 2,
         width: MediaQuery.of(context).size.width / 2,
-      ),
-    );
-  }
-}
-
-class _Button extends StatelessWidget {
-  _Button({
-    Key key,
-    this.title,
-    this.backgroundColor,
-    this.textColor}) : super(key: key);
-
-  final String title;
-  final Color backgroundColor;
-  final Color textColor;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(top: 10, bottom: 10),
-      child: SizedBox(
-        width: 250,
-        height: 48,
-        child: RaisedButton(
-          color: backgroundColor,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          onPressed: () {},
-          child: Text(title, style: TextStyle(fontSize: 18, color: textColor)),
-        ),
       ),
     );
   }
