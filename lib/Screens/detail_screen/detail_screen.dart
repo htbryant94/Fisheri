@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fisheri/Screens/book_tickets_screen.dart';
 import 'package:fisheri/Screens/detail_screen/contact_section.dart';
 import 'package:fisheri/Screens/detail_screen/contents_section.dart';
@@ -22,6 +23,7 @@ import 'package:fisheri/Screens/detail_screen/fishing_types_section.dart';
 import 'package:fisheri/Screens/detail_screen/fish_stocked_section.dart';
 import 'package:flutter/rendering.dart';
 import 'package:panorama/panorama.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DetailScreen extends StatelessWidget {
   DetailScreen({
@@ -51,7 +53,7 @@ class DetailScreen extends StatelessWidget {
         venue.social.instagram != null && venue.social.instagram.isNotEmpty ||
         venue.social.youtube != null && venue.social.youtube.isNotEmpty;
   }
-
+  
   List<Widget> buildSections(BuildContext context, VenueDetailed venue) {
     List<Widget> sections = [];
 
@@ -121,7 +123,12 @@ class DetailScreen extends StatelessWidget {
 
     sections.add(DSComponents.divider());
 
-    sections.add(MapViewSection(address: venue.address));
+    sections.add(
+        MapViewSection(
+          address: venue.address,
+          coordinates: venue.coordinates,
+        )
+    );
 
     sections.add(DSComponents.paragraphSpacer());
 
@@ -255,9 +262,24 @@ class ThreeSixtyImageButton extends StatelessWidget {
 }
 
 class MapViewSection extends StatelessWidget {
-  MapViewSection({@required this.address});
+  MapViewSection({
+    @required this.address,
+    this.coordinates,
+  });
 
   final VenueAddress address;
+  final GeoPoint coordinates;
+
+  static void navigateTo(double lat, double lng) async {
+    var uri = Uri.parse('comgooglemaps://?q=$lat, $lng');
+    if (await canLaunch(uri.toString())) {
+      print(uri.toString());
+      await launch(uri.toString());
+    } else {
+      print('could not launch URL: ${uri.toString()}');
+      throw 'Could not launch ${uri.toString()}';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -277,6 +299,22 @@ class MapViewSection extends StatelessWidget {
                 fit: BoxFit.cover),
             Image.asset('images/icons/map_marker_new.png'),
           ]),
+        ),
+        Visibility(
+          visible: coordinates != null,
+          child: Column(
+            children: [
+              DSComponents.paragraphSpacer(),
+              Container(
+                width: 200,
+                  child: DSComponents.secondaryButton(
+                      text: 'Get Directions',
+                      onPressed: () {
+                        navigateTo(coordinates.latitude, coordinates.longitude);
+                      }),
+              ),
+            ],
+          ),
         ),
         DSComponents.paragraphSpacer(),
         DSComponents.body(
