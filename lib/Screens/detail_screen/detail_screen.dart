@@ -246,7 +246,7 @@ class ThreeSixtyImageButton extends StatelessWidget {
             context,
             screenTitle: '360° View',
             screen: Panorama(
-              child: Image.asset('images/placeholders/panorama.jpg'),
+              child: Image.asset('images/placeholders/panorama2.jpg'),
             )
         );
       },

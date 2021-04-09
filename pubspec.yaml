@@ -83,6 +83,7 @@ flutter:
     - images/flags/spain.png
     - images/icons/map_icon.png
     - images/icons/amenities/animal_friendly.png
+    - images/icons/amenities/bait.png
     - images/icons/amenities/bait_freezer.png
     - images/icons/amenities/beverages.png
     - images/icons/amenities/camping.png
@@ -116,6 +117,7 @@ flutter:
     - images/placeholders/lake_map_view.png
     - images/placeholders/book_tickets.png
     - images/placeholders/panorama.jpg
+    - images/placeholders/panorama2.jpg
     - images/icons/social_media/facebook.png
     - images/icons/social_media/instagram.png
     - images/icons/social_media/twitter.png
