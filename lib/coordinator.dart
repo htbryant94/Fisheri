@@ -16,11 +16,23 @@ import 'Screens/search_results_screen.dart';
 
 class Coordinator {
 
-  static void searchResultsScreen(BuildContext context, String currentPageTitle, {List<SearchResult> venues, GeoPoint userCurrentLocation}) {
+  static void searchResultsScreen({
+    BuildContext context,
+    String currentPageTitle,
+    List<SearchResult> venues,
+    GeoPoint userCurrentLocation,
+    int searchRadius,
+    String searchTown,
+  }) {
     Coordinator.present(
       context,
-      screenTitle: '${venues.length} ' + (venues.length == 1 ? 'Result' : 'Results'),
-      screen: SearchResultsScreen(searchResults: venues, userCurrentLocation: userCurrentLocation),
+      screen: SearchResultsScreen(
+        searchResults: venues,
+        userCurrentLocation: userCurrentLocation,
+        searchRadius: searchRadius,
+        searchTown: searchTown,
+      ),
+      showNavigationBar: false,
     );
   }
 
@@ -125,14 +137,23 @@ class Coordinator {
     );
   }
 
-  static void present(BuildContext context, {String currentPageTitle, @required String screenTitle, Widget screen, Widget navBarIcon}) {
+  static void present(
+      BuildContext context,
+      {
+        String currentPageTitle,
+        String screenTitle,
+        Widget screen,
+        Widget navBarIcon,
+        bool showNavigationBar = true
+      }) {
+
     presentCupertinoPageRoute(context,
         CupertinoPageScaffold(
-          navigationBar: CupertinoNavigationBar(
+          navigationBar: showNavigationBar ? CupertinoNavigationBar(
             previousPageTitle: currentPageTitle,
             middle: Text(screenTitle),
             trailing: navBarIcon,
-          ),
+          ) : null,
           child: screen,
         )
     );

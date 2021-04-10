@@ -1,8 +1,6 @@
 import 'dart:ui';
-
-import 'package:fisheri/design_system.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'FilterDistancePill.dart';
 
 class VerticalSlider extends StatefulWidget {
   VerticalSlider({
@@ -128,44 +126,11 @@ class _VerticalSliderState extends State<VerticalSlider> {
               opacity: _indicatorVisible ? 1 : 0,
               duration: Duration(milliseconds: 175),
               child: Container(
-                width: 50,
-                height: 26,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(13),
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.grey.withOpacity(0.4),
-                        blurRadius: 4,
-                        offset: Offset(1,2)
-                    )
-                  ],
-                ),
-                child: Align(
-                    alignment: Alignment.center,
-                    child: RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                              text: '${_sliderValue.round()}',
-                              style: GoogleFonts.dMSans(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 12,
-                                color: DSColors.black
-                              ),
-                          ),
-                          TextSpan(
-                            text: 'km',
-                            style: GoogleFonts.dMSans(
-                                fontWeight: FontWeight.normal,
-                                fontSize: 12,
-                                color: DSColors.black
-                            ),
-                          )
-                        ]
-                      ),
-                    )
-                ),
+                  width: 56,
+                  child: FilterDistancePill(
+                    distance: _sliderValue.round(),
+                    showShadow: true,
+                  )
               ),
             ),
           )

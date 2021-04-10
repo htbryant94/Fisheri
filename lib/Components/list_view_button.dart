@@ -10,12 +10,18 @@ class ListViewButton extends StatefulWidget {
   ListViewButton({
     this.venues,
     this.userCurrentLocation,
+    this.searchRadius,
+    this.searchTown,
   });
 
   @required
   final List<SearchResult> venues;
   @required
   final Position userCurrentLocation;
+  @required
+  final int searchRadius;
+  @required
+  final String searchTown;
 
   @override
   ListViewButtonState createState() => ListViewButtonState();
@@ -30,13 +36,15 @@ class ListViewButtonState extends State<ListViewButton> {
       onTapUp: (tapDetails) {
         if (widget.venues != null) {
           Coordinator.searchResultsScreen(
-              context,
-              'Map',
+              context: context,
+              currentPageTitle: 'Map',
               venues: widget.venues,
               userCurrentLocation: GeoPoint(
                   widget.userCurrentLocation.latitude,
                   widget.userCurrentLocation.longitude,
-              )
+              ),
+            searchRadius: widget.searchRadius,
+            searchTown: widget.searchTown,
           );
         }
         setState(() {

@@ -240,6 +240,8 @@ class _SearchScreenState extends State<SearchScreen> {
                     ListViewButton(
                       venues: _venues,
                       userCurrentLocation: _getPosition(),
+                      searchRadius: _lastRadius != null ? _lastRadius.round() : null,
+                      searchTown: _currentSearchText,
                     ),
                   ],
                 )

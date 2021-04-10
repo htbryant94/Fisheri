@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:fisheri/Screens/catch_report/catch_reports_screen.dart';
 import 'package:fisheri/Screens/holiday_countries_screen.dart';
 import 'package:fisheri/Screens/profile_screen.dart';
+import 'package:fisheri/design_system.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'Screens/auth_screen.dart';
