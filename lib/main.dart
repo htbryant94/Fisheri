@@ -63,6 +63,7 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin 
       children: [
         CupertinoTabScaffold(
           tabBar: CupertinoTabBar(
+            activeColor: DSColors.green,
             items: [
               BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
               BottomNavigationBarItem(icon: Icon(Icons.description), label: 'Catch'),
