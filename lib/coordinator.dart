@@ -41,8 +41,6 @@ class Coordinator {
   static void pushVenueDetailScreen(BuildContext context, String currentPageTitle, VenueDetailed venue, String imageURL, String id) {
     presentCupertinoPageRoute(context,
     CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(
-      ),
       child: DetailScreen(venue: venue, imageURL: imageURL, id: id),
     ));
   }

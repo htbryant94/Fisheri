@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fisheri/Components/fisheri_icon_button.dart';
 import 'package:fisheri/Screens/book_tickets_screen.dart';
 import 'package:fisheri/Screens/detail_screen/contact_section.dart';
 import 'package:fisheri/Screens/detail_screen/contents_section.dart';
@@ -226,6 +227,14 @@ class DetailScreen extends StatelessWidget {
                     }
                   )
               ),
+            ),
+            Positioned(
+                top: 16,
+                left: 16,
+                child: FisheriIconButton(
+                  icon: Icon(Icons.chevron_left, color: Colors.white, size: 32),
+                  onTap:  Navigator.of(context).pop,
+                )
             ),
           ],
         ),
