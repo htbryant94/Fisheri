@@ -133,15 +133,13 @@ class DetailScreen extends StatelessWidget {
 
     sections.add(DSComponents.paragraphSpacer());
 
-    sections.add(ContactSection(
-      contactItems: [
-        'Call',
-        'Website',
-        'Email',
-      ],
-    ));
-
-    sections.add(DSComponents.divider());
+    if (venue.websiteURL != null || venue.contactDetails != null) {
+      sections.add(ContactSection(
+        contactDetails: venue.contactDetails,
+        websiteURL: venue.websiteURL,
+      ));
+      sections.add(DSComponents.divider());
+    }
 
     if (isLake()) {
       sections.add(AmenitiesSection(venue.amenities));

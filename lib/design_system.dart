@@ -85,12 +85,14 @@ class DSComponents {
 
   static Widget iconButton({
     Image image,
-    VoidCallback onPressed
+    VoidCallback onPressed,
+    Color highlightColor = DSColors.green,
+    Color backgroundColor = DSColors.black,
   }) {
     return RaisedButton(
       shape: CircleBorder(),
-      highlightColor: DSColors.green,
-      color: DSColors.black,
+      highlightColor: highlightColor,
+      color: backgroundColor,
       child: image,
       onPressed: onPressed,
     );
