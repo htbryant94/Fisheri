@@ -302,7 +302,8 @@ class RemoteImageBaseCell extends StatelessWidget {
             width: double.maxFinite,
             clipBehavior: Clip.antiAliasWithSaveLayer,
             decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: DSColors.grey.withOpacity(0.5), width: 0.5),
             ),
             child: CachedNetworkImage(
                   fit: BoxFit.cover,
