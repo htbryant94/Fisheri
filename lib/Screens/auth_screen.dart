@@ -20,49 +20,40 @@ class AuthScreen extends StatelessWidget {
               children: [
                 _Logo('images/logo.png'),
                 Expanded(
-                    child: Container(
-                      width: 200,
-                      child: Column(
-                        children: [
-                      // _Button(
-                      //   title: 'Log In With Google',
-                      //   backgroundColor: Colors.red,
-                      //   textColor: Colors.white,
-                      // ),
-                      // _Button(
-                      //   title: 'Log In With Facebook',
-                      //   backgroundColor: Colors.blue,
-                      //   textColor: Colors.white,
-                      // ),
-                          Container(
-                            height: 44,
-                            child: DSComponents.primaryButton(
-                                text: 'Sign in',
-                                onPressed: () {
-                                  Coordinator.present(
-                                      context,
-                                      screenTitle: 'Sign in',
-                                      screen: LoginScreen()
-                                  );
-                                }
-                            ),
-                          ),
-                          DSComponents.sectionSpacer(),
-                          Container(
-                            height: 44,
-                            child: DSComponents.secondaryButton(
-                                text: 'Register',
-                                onPressed: () {
-                                  Coordinator.present(
-                                      context,
-                                      screenTitle: 'Register',
-                                      screen: RegisterScreen()
-                                  );
-                                }
-                            ),
-                          ),
-                        ],
-                      ),
+                    child: Column(
+                      children: [
+                    // _Button(
+                    //   title: 'Log In With Google',
+                    //   backgroundColor: Colors.red,
+                    //   textColor: Colors.white,
+                    // ),
+                    // _Button(
+                    //   title: 'Log In With Facebook',
+                    //   backgroundColor: Colors.blue,
+                    //   textColor: Colors.white,
+                    // ),
+                        DSComponents.primaryButton(
+                            text: 'Sign in',
+                            onPressed: () {
+                              Coordinator.present(
+                                  context,
+                                  screenTitle: 'Sign in',
+                                  screen: LoginScreen()
+                              );
+                            }
+                        ),
+                        DSComponents.sectionSpacer(),
+                        DSComponents.secondaryButton(
+                            text: 'Register',
+                            onPressed: () {
+                              Coordinator.present(
+                                  context,
+                                  screenTitle: 'Register',
+                                  screen: RegisterScreen()
+                              );
+                            }
+                        ),
+                      ],
                     )),
               ],
             ),

@@ -135,13 +135,12 @@ class HolidayDetailScreen extends StatelessWidget {
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(
-                  height: 58,
-                  padding: EdgeInsets.fromLTRB(52, 0, 52, 8),
+                  padding: EdgeInsets.symmetric(horizontal: 24),
                   alignment: Alignment.bottomCenter,
                   child: DSComponents.primaryButton(
-                      text: "Book Tickets from £39",
+                      text: 'Book Tickets from £39',
                       onPressed: () {
-                        Coordinator.present(context, screenTitle: "Tickets", screen: BookTicketsScreen());
+                        Coordinator.present(context, screenTitle: 'Tickets', screen: BookTicketsScreen());
                       }
                   )
               ),

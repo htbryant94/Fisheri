@@ -217,9 +217,8 @@ class DetailScreen extends StatelessWidget {
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(
-                  height: 58,
-                  padding: EdgeInsets.fromLTRB(52, 0, 52, 8),
                   alignment: Alignment.bottomCenter,
+                  padding: EdgeInsets.symmetric(horizontal: 24),
                   child: DSComponents.primaryButton(
                     text: 'Book Tickets from £39',
                     onPressed: () {
@@ -314,14 +313,11 @@ class MapViewSection extends StatelessWidget {
           child: Column(
             children: [
               DSComponents.paragraphSpacer(),
-              Container(
-                width: 200,
-                  child: DSComponents.secondaryButton(
-                      text: 'Get Directions',
-                      onPressed: () {
-                        navigateTo(coordinates.latitude, coordinates.longitude);
-                      }),
-              ),
+              DSComponents.secondaryButton(
+                  text: 'Get Directions',
+                  onPressed: () {
+                    navigateTo(coordinates.latitude, coordinates.longitude);
+                  }),
             ],
           ),
         ),

@@ -96,43 +96,49 @@ class DSComponents {
     );
   }
 
-  static RaisedButton primaryButton({
+  static Widget primaryButton({
     String text,
     VoidCallback onPressed
   }) {
-    return RaisedButton(
-      elevation: 4,
-      highlightColor: DSColors.black,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(50),
+    return Container(
+      height: 44,
+      child: RaisedButton(
+        elevation: 4,
+        highlightColor: DSColors.black,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(50),
+        ),
+        color: DSColors.green,
+        child: DSComponents.subheader(
+            text: text,
+            color: Colors.white,
+            alignment: Alignment.center
+        ),
+        onPressed: onPressed,
       ),
-      color: DSColors.green,
-      child: DSComponents.subheader(
-          text: text,
-          color: Colors.white,
-          alignment: Alignment.center
-      ),
-      onPressed: onPressed,
     );
   }
 
-  static RaisedButton secondaryButton({
+  static Widget secondaryButton({
     String text,
     VoidCallback onPressed
   }) {
-    return RaisedButton(
-      elevation: 4,
-      highlightColor: DSColors.black,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(50),
+    return Container(
+      height: 44,
+      child: RaisedButton(
+        elevation: 4,
+        highlightColor: DSColors.black,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(50),
+        ),
+        color: DSColors.pastelGreen,
+        child: DSComponents.subheader(
+            text: text,
+            color: DSColors.green,
+            alignment: Alignment.center
+        ),
+        onPressed: onPressed,
       ),
-      color: DSColors.pastelGreen,
-      child: DSComponents.subheader(
-          text: text,
-          color: DSColors.green,
-          alignment: Alignment.center
-      ),
-      onPressed: onPressed,
     );
   }
 

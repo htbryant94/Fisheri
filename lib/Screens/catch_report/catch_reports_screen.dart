@@ -1,6 +1,7 @@
 import 'package:fisheri/Components/add_button.dart';
 import 'package:fisheri/Screens/catch_report_form_screen.dart';
 import 'package:fisheri/coordinator.dart';
+import 'package:fisheri/design_system.dart';
 import 'package:fisheri/models/catch_report.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,11 +15,15 @@ class CatchReportsScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: Flex(
-          direction: Axis.vertical,
+        child: Stack(
           children: [
-            Expanded(child: _CatchReportListBuilder()),
-            _AddNewCatchReportButton(),
+            _CatchReportListBuilder(),
+            Positioned(
+              bottom: 12,
+              left: 24,
+              right: 24,
+              child: _AddNewCatchReportButton(),
+            ),
           ],
         ),
       ),
@@ -29,8 +34,8 @@ class CatchReportsScreen extends StatelessWidget {
 class _AddNewCatchReportButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return AddButton(
-      title: 'New Catch Report',
+    return DSComponents.primaryButton(
+      text: 'New Catch Report',
       onPressed: () {
         FirebaseFirestore.instance
             .collection('venues_search')
@@ -58,7 +63,7 @@ class _CatchReportListBuilder extends StatelessWidget {
           );
         }
         return ListView.builder(
-            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+            padding: EdgeInsets.fromLTRB(24, 24, 24, 68),
             itemCount: snapshot.data.docs.length,
             itemBuilder: (context, index) {
               final _document = snapshot.data.docs[index];

@@ -28,13 +28,17 @@ class CatchReportScreen extends StatelessWidget {
     print('Catch Report id: $catchReportID');
     return Scaffold(
       body: SafeArea(
-        child: Flex(
-          direction: Axis.vertical,
+        child: Stack(
           children: [
-            Expanded(child: _CatchListBuilder(id: catchReportID)),
-            _NewCatchButton(onPressed: () {
-              _pushNewCatchForm(context);
-            }),
+            _CatchListBuilder(id: catchReportID),
+            Positioned(
+              bottom: 12,
+              left: 24,
+              right: 24,
+              child: _NewCatchButton(onPressed: () {
+                _pushNewCatchForm(context);
+              }),
+            ),
           ],
         ),
       ),
@@ -68,8 +72,8 @@ class _NewCatchButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AddButton(
-      title: 'New Catch',
+    return DSComponents.primaryButton(
+      text: 'New Catch',
       onPressed: onPressed,
     );
   }
@@ -93,7 +97,7 @@ class _CatchListBuilder extends StatelessWidget {
         }
         return ListView.separated(
             itemCount: snapshot.data.docs.length,
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+            padding: EdgeInsets.fromLTRB(8, 24, 8, 68),
             separatorBuilder: (BuildContext context, int index) {
               return DSComponents.singleSpacer();
             },
