@@ -10,10 +10,12 @@ class ImageCarousel extends StatefulWidget {
   ImageCarousel({
     @required this.imageURLs,
     this.index,
+    this.fit = BoxFit.cover,
   });
 
   final List<String> imageURLs;
   final int index;
+  final BoxFit fit;
 
   @override
   _ImageCarouselState createState() => _ImageCarouselState();
@@ -40,7 +42,7 @@ class _ImageCarouselState extends State<ImageCarousel> {
                   ? Container(
                       child: CachedNetworkImage(
                         imageUrl: widget.imageURLs[itemIndex],
-                        fit: BoxFit.cover,
+                        fit: widget.fit,
                         placeholder: (context, url) => Align(
                           alignment: Alignment.center,
                           child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(DSColors.green)),
