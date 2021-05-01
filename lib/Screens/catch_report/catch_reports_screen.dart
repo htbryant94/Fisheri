@@ -55,7 +55,11 @@ class _CatchReportListBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: FirebaseFirestore.instance.collection('catch_reports').snapshots(),
+      stream: FirebaseFirestore
+          .instance
+          .collection('catch_reports')
+          .orderBy('start_date', descending: true)
+          .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (!snapshot.hasData) {
           return Center(
