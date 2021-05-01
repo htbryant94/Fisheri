@@ -13,19 +13,6 @@ class CatchDetailScreen extends StatelessWidget {
   });
 
   final Catch data;
-//
-//  String convertGramsToPoundsAndOunces(double grams) {
-//    if (grams != null) {
-//      double ounces = convertGramsToOunces(grams);
-//      int pounds = (ounces / 16).floor();
-//      int relativeOunces = (ounces % 16).floor();
-//      return "$pounds Ibs, $relativeOunces oz";
-//    }
-//  }
-//
-//  double convertGramsToOunces(double grams) {
-//    return grams / 28.34952;
-//  }
 
   String formattedTemperature(double temp) {
     if (temp != null) {
@@ -113,7 +100,7 @@ class CatchDetailScreen extends StatelessWidget {
                         children: [
                           Row(
                             children: [
-                              Text('📝'),
+                              Text('📝', style: TextStyle(fontSize: 20)),
                               DSComponents.singleSpacer(),
                               DSComponents.subheader(text: 'Notes'),
                             ],
@@ -152,7 +139,7 @@ class _DetailRow extends StatelessWidget {
             if (emoji != null)
             Row(
               children: [
-                Text(emoji),
+                Text(emoji, style: TextStyle(fontSize: 20)),
                 DSComponents.singleSpacer(),
                 DSComponents.subheader(text: name),
               ],
