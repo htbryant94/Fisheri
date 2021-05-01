@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'Screens/auth_screen.dart';
 import 'Screens/search_screen.dart';
+import 'fonts/custom_icons_icons.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -66,7 +67,7 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin 
             activeColor: DSColors.green,
             items: [
               BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
-              BottomNavigationBarItem(icon: Icon(Icons.description), label: 'Catch'),
+              BottomNavigationBarItem(icon: Icon(CustomIcons.fishing), label: 'Catch'),
               BottomNavigationBarItem(icon: Icon(Icons.wb_sunny), label: 'Holidays'),
               BottomNavigationBarItem(icon: Icon(Icons.account_circle), label: 'Profile'),
             ],
