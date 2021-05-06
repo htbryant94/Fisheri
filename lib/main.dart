@@ -66,10 +66,10 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin 
           tabBar: CupertinoTabBar(
             activeColor: DSColors.green,
             items: [
-              BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
-              BottomNavigationBarItem(icon: Icon(CustomIcons.fishing), label: 'Catch'),
-              BottomNavigationBarItem(icon: Icon(Icons.wb_sunny), label: 'Holidays'),
-              BottomNavigationBarItem(icon: Icon(Icons.account_circle), label: 'Profile'),
+              BottomNavigationBarItem(icon: Icon(CustomIcons.search, size: 24), label: 'Search'),
+              BottomNavigationBarItem(icon: Icon(CustomIcons.fishing, size: 24), label: 'Catch'),
+              BottomNavigationBarItem(icon: Icon(CustomIcons.sunset, size: 24), label: 'Holidays'),
+              BottomNavigationBarItem(icon: Icon(Icons.account_circle_outlined, size: 24), label: 'Profile',),
             ],
           ),
           tabBuilder: (context, index) {
