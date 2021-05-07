@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fisheri/Components/fisheri_icon_button.dart';
 import 'package:fisheri/Screens/book_tickets_screen.dart';
 import 'package:fisheri/Screens/detail_screen/contact_section.dart';
@@ -10,7 +9,6 @@ import 'package:fisheri/Screens/detail_screen/stats_section.dart';
 import 'package:fisheri/Screens/detail_screen/swims_list_view.dart';
 import 'package:fisheri/coordinator.dart';
 import 'package:fisheri/design_system.dart';
-import 'package:fisheri/models/venue_address.dart';
 import 'package:fisheri/models/venue_detailed.dart';
 import 'package:fisheri/search_result_cell.dart';
 import 'package:flutter/cupertino.dart';
@@ -25,7 +23,8 @@ import 'package:fisheri/Screens/detail_screen/fishing_types_section.dart';
 import 'package:fisheri/Screens/detail_screen/fish_stocked_section.dart';
 import 'package:flutter/rendering.dart';
 import 'package:panorama/panorama.dart';
-import 'package:url_launcher/url_launcher.dart';
+
+import 'map_view_section.dart';
 
 class DetailScreen extends StatelessWidget {
   DetailScreen({
@@ -277,74 +276,6 @@ class ThreeSixtyImageButton extends StatelessWidget {
             )
         );
       },
-    );
-  }
-}
-
-class MapViewSection extends StatelessWidget {
-  MapViewSection({
-    @required this.address,
-    this.coordinates,
-  });
-
-  final VenueAddress address;
-  final GeoPoint coordinates;
-
-  static void navigateTo(double lat, double lng) async {
-    var uri = Uri.parse('comgooglemaps://?q=$lat, $lng');
-    if (await canLaunch(uri.toString())) {
-      print(uri.toString());
-      await launch(uri.toString());
-    } else {
-      print('could not launch URL: ${uri.toString()}');
-      throw 'Could not launch ${uri.toString()}';
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        DSComponents.header(text: 'Location'),
-        DSComponents.paragraphSpacer(),
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          clipBehavior: Clip.antiAliasWithSaveLayer,
-          height: 200,
-          width: double.infinity,
-          child: Stack(fit: StackFit.expand, children: [
-            Image.asset('images/placeholders/lake_map_view.png',
-                fit: BoxFit.cover),
-            Image.asset('images/icons/map_marker_new.png'),
-          ]),
-        ),
-        Visibility(
-          visible: coordinates != null,
-          child: Column(
-            children: [
-              DSComponents.paragraphSpacer(),
-              DSComponents.secondaryButton(
-                  text: 'Get Directions',
-                  onPressed: () {
-                    navigateTo(coordinates.latitude, coordinates.longitude);
-                  }),
-            ],
-          ),
-        ),
-        DSComponents.paragraphSpacer(),
-        DSComponents.body(
-            text: '${address.street}', alignment: Alignment.center),
-        DSComponents.singleSpacer(),
-        DSComponents.body(text: '${address.town}', alignment: Alignment.center),
-        DSComponents.singleSpacer(),
-        DSComponents.body(
-            text: '${address.county}', alignment: Alignment.center),
-        DSComponents.singleSpacer(),
-        DSComponents.body(
-            text: '${address.postcode}', alignment: Alignment.center),
-      ],
     );
   }
 }

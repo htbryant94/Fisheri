@@ -18,6 +18,8 @@ import 'package:fisheri/Screens/detail_screen/amenities_section.dart';
 import 'package:fisheri/Screens/detail_screen/fish_stocked_section.dart';
 import 'package:flutter/rendering.dart';
 
+import 'detail_screen/map_view_section.dart';
+
 class HolidayDetailScreen extends StatelessWidget {
   HolidayDetailScreen({
     @required this.venue,
@@ -81,7 +83,12 @@ class HolidayDetailScreen extends StatelessWidget {
 
     sections.add(DSComponents.paragraphSpacer());
 
-    sections.add(MapViewSection(address: venue.address));
+    sections.add(
+        MapViewSection(
+          address: venue.address,
+          coordinates: venue.coordinates,
+        )
+    );
 
     sections.add(DSComponents.paragraphSpacer());
 
@@ -146,46 +153,6 @@ class HolidayDetailScreen extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class MapViewSection extends StatelessWidget {
-  MapViewSection({@required this.address});
-
-  final VenueAddress address;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        DSComponents.header(text: "Location"),
-        DSComponents.paragraphSpacer(),
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          clipBehavior: Clip.antiAliasWithSaveLayer,
-          height: 200,
-          width: double.infinity,
-          child: Stack(fit: StackFit.expand, children: [
-            Image.asset('images/placeholders/lake_map_view.png',
-                fit: BoxFit.cover),
-            Image.asset('images/icons/map_marker_new.png'),
-          ]),
-        ),
-        DSComponents.paragraphSpacer(),
-        DSComponents.body(
-            text: "${address.street}", alignment: Alignment.center),
-        DSComponents.singleSpacer(),
-        DSComponents.body(text: "${address.town}", alignment: Alignment.center),
-        DSComponents.singleSpacer(),
-        DSComponents.body(
-            text: "${address.county}", alignment: Alignment.center),
-        DSComponents.singleSpacer(),
-        DSComponents.body(
-            text: "${address.postcode}", alignment: Alignment.center),
-      ],
     );
   }
 }
