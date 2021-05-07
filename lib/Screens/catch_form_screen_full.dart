@@ -356,29 +356,8 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                                                 });
                                           });
                                     }
-
                                     _setLoadingState(false);
-                                    await showDialog(
-                                        context: context,
-                                        barrierDismissible: false,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            title: Text('Form successfully submitted'),
-                                            content: SingleChildScrollView(
-                                              child: Text(
-                                                  'Tap Return to dismiss this page.'),
-                                            ),
-                                            actions: [
-                                              FlatButton(
-                                                child: Text('Return'),
-                                                onPressed: () {
-                                                  Navigator.of(context).popUntil((route) => route.isFirst);
-                                                  _fbKey.currentState.reset();
-                                                },
-                                              )
-                                            ],
-                                          );
-                                        });
+                                    Navigator.of(context).pop();
                                       });
                                 } else {
                                   await showDialog(
