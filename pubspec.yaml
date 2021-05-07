@@ -149,6 +149,12 @@ flutter:
     - images/icons/weather/thunderstorms.png
     - images/icons/weather/windy.png
     - images/icons/360-degrees.png
+    - images/placeholders/swims/swim_1.jpg
+    - images/placeholders/swims/swim_2.jpg
+    - images/placeholders/swims/swim_3.jpg
+    - images/placeholders/swims/swim_4.jpg
+    - images/placeholders/swims/swim_5.jpg
+    - images/placeholders/swims/swim_6.jpg
 
   # To add assets to your application, add an assets section, like this:
   # assets:

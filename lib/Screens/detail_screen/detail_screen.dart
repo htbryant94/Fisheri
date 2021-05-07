@@ -7,6 +7,7 @@ import 'package:fisheri/Screens/detail_screen/fishing_rules_section.dart';
 import 'package:fisheri/Screens/detail_screen/opening_hours_section.dart';
 import 'package:fisheri/Screens/detail_screen/social_media_section.dart';
 import 'package:fisheri/Screens/detail_screen/stats_section.dart';
+import 'package:fisheri/Screens/detail_screen/swims_list_view.dart';
 import 'package:fisheri/coordinator.dart';
 import 'package:fisheri/design_system.dart';
 import 'package:fisheri/models/venue_address.dart';
@@ -39,6 +40,15 @@ class DetailScreen extends StatelessWidget {
   final String imageURL;
   final int index;
   final String id;
+
+  final _swimsData = [
+    Swim(name: 'Car-park Bay', imageURL: 'images/placeholders/swims/swim_1.jpg'),
+    Swim(name: 'Narrow Point', imageURL: 'images/placeholders/swims/swim_2.jpg'),
+    Swim(name: 'Right-hand Bank', imageURL: 'images/placeholders/swims/swim_3.jpg'),
+    Swim(name: 'A1 Bay', imageURL: 'images/placeholders/swims/swim_4.jpg'),
+    Swim(name: 'Overgrown', imageURL: 'images/placeholders/swims/swim_5.jpg'),
+    Swim(name: 'Far Bay', imageURL: 'images/placeholders/swims/swim_6.jpg'),
+  ];
 
   bool isLake() {
     return venue.categories.contains('lake');
@@ -90,13 +100,17 @@ class DetailScreen extends StatelessWidget {
 
     sections.add(DSComponents.paragraphSpacer());
 
-    sections.add(DSComponents.subheaderSmall(text: 'ID: $id', alignment: Alignment.centerLeft));
+    sections.add(SwimsListView(swims: _swimsData));
 
-    sections.add(DSComponents.doubleSpacer());
+    sections.add(DSComponents.divider());
 
     sections.add(DescriptionSection(
       text: venue.description,
     ));
+
+    sections.add(DSComponents.doubleSpacer());
+
+    sections.add(DSComponents.subheaderSmall(text: 'ID: $id', alignment: Alignment.centerLeft));
 
     sections.add(DSComponents.paragraphSpacer());
 
