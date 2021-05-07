@@ -104,7 +104,7 @@ class _CatchListBuilder extends StatelessWidget {
             itemBuilder: (context, index) {
               final _catch = snapshot.data.docs[index];
               final _data = CatchJSONSerializer().fromMap(_catch.data());
-//              print('catch index: $index with id: ${_catch.id}');
+             print('catch index: $index with id: ${_catch.id}');
               return CatchCell(
                 catchData: _data,
               );

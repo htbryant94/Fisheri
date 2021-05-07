@@ -64,6 +64,7 @@ class _SearchScreenState extends State<SearchScreen> {
     super.initState();
 
     radius.value = 15;
+    _lastRadius = radius.value;
 
     _center = _convertPositionToGeoPoint(_getPosition());
 
