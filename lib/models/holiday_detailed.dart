@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fisheri/Screens/holiday_countries_screen.dart';
 import 'package:fisheri/models/venue_address.dart';
 import 'package:fisheri/models/venue_detailed.dart';
 
@@ -51,4 +50,10 @@ class HolidayDetailed {
   Social social;
   String websiteURL;
   String bookingURL;
+}
+
+enum FishingDifficulty {
+  amateur,
+  intermediate,
+  professional,
 }

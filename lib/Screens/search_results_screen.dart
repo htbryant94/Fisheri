@@ -210,7 +210,6 @@ class ListViewScreen extends StatelessWidget {
                 return GestureDetector(
                   onTap: () {
                     Coordinator.present(context, screenTitle: "Holiday", currentPageTitle: "France", screen: HolidayDetailScreen(venue: item.venue));
-                    print("something");
                   },
                   child: NewLocalImageBaseCell(
                     title: item.title,

@@ -1,14 +1,17 @@
+import 'package:basic_utils/basic_utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fisheri/Screens/catch_report/catch_reports_screen.dart';
-import 'package:fisheri/Screens/holiday_countries_screen.dart';
 import 'package:fisheri/Screens/profile_screen.dart';
+import 'package:fisheri/Screens/search_results_screen.dart';
 import 'package:fisheri/design_system.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'Screens/auth_screen.dart';
 import 'Screens/search_screen.dart';
 import 'fonts/custom_icons_icons.dart';
+import 'holiday_data.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -104,11 +107,22 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin 
               case 2:
                 return SafeArea(
                   child: CupertinoTabView(builder: (context) {
+                    final _items = HolidayData.franceResults.map(
+                            (holiday) => ListViewItem(
+                            title: holiday.name,
+                            subtitle: '🇫🇷 ${holiday.country} • 🛬 ${holiday.airport}',
+                            additionalInformation: [
+                              '${holiday.lakeSize} acres',
+                              StringUtils.capitalize(describeEnum(holiday.difficulty)),
+                            ],
+                            venue: holiday
+                        )
+                    ).toList();
                     return CupertinoPageScaffold(
                       navigationBar: CupertinoNavigationBar(
                         middle: Text('Holidays'),
                       ),
-                      child: HolidayCountriesScreen(),
+                      child: ListViewScreen(items: _items),
                     );
                   }),
                 );
