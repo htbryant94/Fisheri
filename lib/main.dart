@@ -110,7 +110,7 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin 
                     final _items = HolidayData.franceResults.map(
                             (holiday) => ListViewItem(
                             title: holiday.name,
-                            subtitle: '🇫🇷 ${holiday.country} • 🛬 ${holiday.airport}',
+                            subtitle: '🇫🇷 ${holiday.country} • ⛴ ${holiday.airport}',
                             additionalInformation: [
                               '${holiday.lakeSize} acres',
                               StringUtils.capitalize(describeEnum(holiday.difficulty)),
