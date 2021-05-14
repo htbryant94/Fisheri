@@ -4,6 +4,7 @@ import 'package:fisheri/Components/VerticalSlider.dart';
 import 'package:fisheri/Components/fisheri_icon_button.dart';
 import 'package:fisheri/Components/list_view_button.dart';
 import 'package:fisheri/Components/search_bar.dart';
+import 'package:fisheri/Screens/search_filter_screen.dart';
 import 'package:fisheri/models/venue_search.dart';
 import 'package:fisheri/search_result_cell.dart';
 import 'package:flutter/cupertino.dart';
@@ -29,6 +30,7 @@ class _SearchScreenState extends State<SearchScreen> {
   final Geoflutterfire _geoFire = Geoflutterfire();
   final Position _defaultPosition = Position(latitude: 51.979900, longitude: -0.214280);
   final double _selectedVenueCellHeight = 106.0;
+  SearchFilters searchFilters = SearchFilters();
 
   GoogleMapController _mapController;
   final _firestore = FirebaseFirestore.instance;
@@ -39,6 +41,9 @@ class _SearchScreenState extends State<SearchScreen> {
 
   BitmapDescriptor _pinLocationIcon;
   BitmapDescriptor _pinLocationIconGreen;
+
+  Query _currentCollectionReference;
+  final  _defaultCollectionReference = FirebaseFirestore.instance.collection('venues_search');
 
   BehaviorSubject<double> radius = BehaviorSubject();
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
@@ -67,6 +72,7 @@ class _SearchScreenState extends State<SearchScreen> {
     _lastRadius = radius.value;
 
     _center = _convertPositionToGeoPoint(_getPosition());
+    _currentCollectionReference = _defaultCollectionReference;
 
     BitmapDescriptor.fromAssetImage(
         ImageConfiguration(),
@@ -83,16 +89,15 @@ class _SearchScreenState extends State<SearchScreen> {
     });
 
     stream = radius.switchMap((rad) {
-      var collectionReference = _firestore.collection('venues_search');
       if (rad.floor() < _maxSearchRadius) {
-        return _geoFire.collection(collectionRef: collectionReference).within(
+        return _geoFire.collection(collectionRef: _currentCollectionReference).within(
           center: _center,
           radius: rad,
           field: 'position',
           strictMode: true,
         );
       } else {
-        return _geoFire.collection(collectionRef: collectionReference).within(
+        return _geoFire.collection(collectionRef: _currentCollectionReference).within(
           center: _center,
           radius: 1000,
           field: 'position',
@@ -112,6 +117,31 @@ class _SearchScreenState extends State<SearchScreen> {
 
   bool _isVenueSelected() {
     return _selectedVenue != null;
+  }
+
+  void _applyCategoriesFilter(List<String> categories) {
+    print('applying categories filter: $categories');
+    Query _newCollectionReference;
+
+    if (categories.length == 1) {
+      _newCollectionReference = _defaultCollectionReference.where('categories', arrayContains: categories.first);
+    } else {
+      _newCollectionReference = _defaultCollectionReference.where('categories', isEqualTo: categories);
+    }
+
+    setState(() {
+      _currentCollectionReference = _newCollectionReference;
+      radius.value = _lastRadius;
+    });
+  }
+
+  void _resetFilters() {
+    print('resetting filters');
+    setState(() {
+      searchFilters = SearchFilters();
+      _currentCollectionReference = _defaultCollectionReference;
+      radius.value = _lastRadius;
+    });
   }
 
   Future<void> _openGooglePlacesAutocomplete() async {
@@ -236,7 +266,42 @@ class _SearchScreenState extends State<SearchScreen> {
                   children: [
                     SearchBar(
                       text: _currentSearchText,
-                      onTap: _openGooglePlacesAutocomplete
+                      onTap: _openGooglePlacesAutocomplete,
+                      onFiltersPressed: () {
+                        Coordinator.present(
+                          context,
+                          screen: SearchFilterScreen(
+                            searchFilters: searchFilters,
+                            onResetPressed: _resetFilters,
+                            onChanged: (newSearchFilters) {
+                              searchFilters = newSearchFilters;
+                              List<String> _categories = [];
+
+                              print('onChanged');
+
+                              if (searchFilters.lake != null) {
+                                if (searchFilters.lake) {
+                                  _categories.add('lake');
+                                }
+                              }
+
+                              if (searchFilters.shop != null) {
+                                if (searchFilters.shop) {
+                                  _categories.add('shop');
+                                }
+                              }
+
+                              if (_categories.isNotEmpty) {
+                                _applyCategoriesFilter(_categories);
+                              } else {
+                                print('no filters applied, resetting');
+                                _resetFilters();
+                              }
+                            },
+                          ),
+                          screenTitle: 'Filters',
+                        );
+                      },
                     ),
                     ListViewButton(
                       venues: _venues,

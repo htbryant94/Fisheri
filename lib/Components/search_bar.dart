@@ -1,16 +1,16 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../design_system.dart';
 
 class SearchBar extends StatelessWidget {
   const SearchBar({
-    Key key,
-    this.text,
     this.onTap,
-  }) : super(key: key);
+    this.onFiltersPressed,
+    this.text,
+  });
 
   final VoidCallback onTap;
+  final VoidCallback onFiltersPressed;
   final String text;
 
   @override
@@ -43,7 +43,10 @@ class SearchBar extends StatelessWidget {
                 enableFeedback: false,
               )
             ),
-            Image.asset('images/icons/filter.png', height: 24, width: 24),
+            GestureDetector(
+              child: Image.asset('images/icons/filter.png', height: 24, width: 24),
+              onTap: onFiltersPressed,
+            )
           ],
         ),
       ),

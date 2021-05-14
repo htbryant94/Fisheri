@@ -80,7 +80,9 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
     super.initState();
     print('EDITING VENUE WITH ID: ${widget.venueID}');
 
-    selectedCategories = widget.venue.categories.cast<String>();
+    if (widget.venue.categories != null) {
+      selectedCategories = widget.venue.categories.cast<String>();
+    }
 
     _operationalHoursEnabled = false;
 
@@ -120,6 +122,12 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
     Function _valueFor = ({String attribute}) {
       return _fbKey.currentState.fields[attribute].value;
     };
+
+    List<String> _sortedCategories() {
+      final List<String> selectedCategories = _valueFor(attribute: 'categories');
+      selectedCategories.sort((a, b) => a.toString().compareTo(b.toString()));
+      return selectedCategories;
+    }
 
     HoursOfOperation getOperationalHours() {
       OpeningHoursDay monday;
@@ -200,7 +208,7 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
     VenueDetailed makeVenueDetailed() {
       return VenueDetailed(
         name: _valueFor(attribute: VenueDetailedConstants.name),
-        categories: _valueFor(attribute: 'categories'),
+        categories: _sortedCategories(),
         description: _valueFor(attribute: VenueDetailedConstants.description),
         address: VenueAddress(
           street: _valueFor(attribute: 'address_street'),

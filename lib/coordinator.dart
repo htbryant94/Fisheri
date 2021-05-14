@@ -151,7 +151,7 @@ class Coordinator {
         CupertinoPageScaffold(
           navigationBar: showNavigationBar ? CupertinoNavigationBar(
             previousPageTitle: currentPageTitle,
-            middle: Text(screenTitle),
+            middle: screenTitle != null ? Text(screenTitle) : null,
             trailing: navBarIcon,
           ) : null,
           child: screen,

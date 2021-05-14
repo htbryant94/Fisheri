@@ -78,6 +78,12 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
       return _fbKey.currentState.fields[attribute].value;
     };
 
+    List<String> _sortedCategories() {
+      final List<String> selectedCategories = _valueFor(attribute: 'categories');
+      selectedCategories.sort((a, b) => a.toString().compareTo(b.toString()));
+      return selectedCategories;
+    }
+
     HoursOfOperation getOperationalHours() {
       OpeningHoursDay monday;
       OpeningHoursDay tuesday;
@@ -168,7 +174,7 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
     VenueDetailed makeVenueDetailed() {
       return VenueDetailed(
         name: _valueFor(attribute: VenueDetailedConstants.name),
-        categories: _valueFor(attribute: 'categories'),
+        categories: _sortedCategories(),
         description: _valueFor(attribute: VenueDetailedConstants.description),
         address: VenueAddress(
           street: _valueFor(attribute: 'address_street'),

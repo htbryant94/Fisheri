@@ -136,7 +136,7 @@ class DSComponents {
         color: DSColors.pastelGreen,
         child: DSComponents.subheader(
             text: text,
-            color: DSColors.green,
+            color: (onPressed != null) ? DSColors.green : DSColors.grey.withOpacity(0.5),
             alignment: Alignment.center
         ),
         onPressed: onPressed,
