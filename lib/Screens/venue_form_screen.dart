@@ -23,6 +23,8 @@ import 'package:intl/intl.dart';
 import 'package:fisheri/Components/form_fields/operational_hours_field.dart';
 import 'package:fisheri/types/fish_stock_list.dart';
 
+import '../alert_dialog_factory.dart';
+
 class VenueDetailedConstants {
   static const String name = "name";
   static const String isLake = "is_lake";
@@ -591,22 +593,7 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
                                       context: context,
                                       barrierDismissible: false,
                                       builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          title: Text(
-                                              'There was an issue trying to submit your form'),
-                                          content: SingleChildScrollView(
-                                            child: Text(
-                                                'Please correct any incorrect entries and try again.'),
-                                          ),
-                                          actions: <Widget>[
-                                            FlatButton(
-                                              child: Text('OK'),
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                            )
-                                          ],
-                                        );
+                                        return AlertDialogFactory.invalidFormSubmission(context);
                                       });
                                 }
                               }),

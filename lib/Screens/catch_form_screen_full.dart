@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fisheri/Screens/venue_form_edit_screen.dart';
 import 'package:fisheri/WeightConverter.dart';
+import 'package:fisheri/alert_dialog_factory.dart';
 import 'package:fisheri/types/weather_condition.dart';
 import 'package:fisheri/types/wind_direction.dart';
 import 'package:flutter/foundation.dart';
@@ -333,27 +334,7 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                                           .set(amendedCatchJSON)
                                           .whenComplete(() {
                                             _setLoadingState(false);
-                                            showDialog(
-                                                context: context,
-                                                barrierDismissible: false,
-                                                builder: (BuildContext context) {
-                                                  return AlertDialog(
-                                                    title: Text('Form successfully submitted'),
-                                                    content: SingleChildScrollView(
-                                                      child: Text(
-                                                          'Tap Return to dismiss this page.'),
-                                                    ),
-                                                    actions: [
-                                                      FlatButton(
-                                                        child: Text('Return'),
-                                                        onPressed: () {
-                                                          Navigator.of(context).popUntil((route) => route.isFirst);
-                                                          _fbKey.currentState.reset();
-                                                          },
-                                                      )
-                                                    ],
-                                                  );
-                                                });
+                                            Navigator.of(context).popUntil((route) => route.isFirst);
                                           });
                                     }
                                     _setLoadingState(false);
@@ -364,22 +345,7 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                                       context: context,
                                       barrierDismissible: false,
                                       builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          title: Text(
-                                              'There was an issue trying to submit your form'),
-                                          content: SingleChildScrollView(
-                                            child: Text(
-                                                'Please correct any incorrect entries and try again.'),
-                                          ),
-                                          actions: [
-                                            FlatButton(
-                                              child: Text('OK'),
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                            )
-                                          ],
-                                        );
+                                        return AlertDialogFactory.invalidFormSubmission(context);
                                       });
                                 }
                                 },

@@ -100,12 +100,13 @@ class DSComponents {
 
   static Widget primaryButton({
     String text,
-    VoidCallback onPressed
+    VoidCallback onPressed,
+    bool shadowEnabled = true
   }) {
     return Container(
       height: 44,
       child: RaisedButton(
-        elevation: 4,
+        elevation: shadowEnabled ? 4 : 0,
         highlightColor: DSColors.black,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(50),

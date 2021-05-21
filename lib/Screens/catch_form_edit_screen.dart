@@ -1,5 +1,6 @@
 import 'package:basic_utils/basic_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fisheri/alert_dialog_factory.dart';
 import 'package:fisheri/house_texts.dart';
 import 'package:fisheri/types/fish_stock_list.dart';
 import 'package:fisheri/types/weather_condition.dart';
@@ -311,22 +312,7 @@ class _CatchFormEditScreenState extends State<CatchFormEditScreen> {
                                 context: context,
                                 barrierDismissible: false,
                                 builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: Text(
-                                        'There was an issue trying to submit your form'),
-                                    content: SingleChildScrollView(
-                                      child: Text(
-                                          'Please correct any incorrect entries and try again.'),
-                                    ),
-                                    actions: <Widget>[
-                                      FlatButton(
-                                        child: Text('OK'),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      )
-                                    ],
-                                  );
+                                  return AlertDialogFactory.invalidFormSubmission(context);
                                 });
                           }
                         },

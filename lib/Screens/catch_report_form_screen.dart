@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:fisheri/alert_dialog_factory.dart';
 import 'package:fisheri/coordinator.dart';
 import 'package:fisheri/design_system.dart';
 import 'package:fisheri/house_texts.dart';
@@ -278,54 +279,19 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
 
                         _setLoadingState(false);
 
-                        showDialog(
-                            context: context,
-                            barrierDismissible: false,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Text('Form successfully submitted'),
-                                content: SingleChildScrollView(
-                                  child: Text(
-                                      'Tap Return to dismiss this page.'),
-                                ),
-                                actions: [
-                                  FlatButton(
-                                    child: Text('Return'),
-                                    onPressed: () {
-                                      Navigator.of(context).popUntil((route) => route.isFirst);
-                                      Coordinator.pushCatchReportScreen(
-                                        context,
-                                        catchReportID: uniqueID,
-                                        catchReport: _catchReport
-                                      );
-                                      _fbKey.currentState.reset();
-                                    },
-                                  )
-                                ],
-                              );
-                            });
+                        Navigator.of(context).popUntil((route) => route.isFirst);
+                        Coordinator.pushCatchReportScreen(
+                            context,
+                            catchReportID: uniqueID,
+                            catchReport: _catchReport
+                        );
                       });
                     } else {
                       await showDialog(
                           context: context,
                           barrierDismissible: false,
                           builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text(
-                                  'There was an issue trying to submit your form'),
-                              content: SingleChildScrollView(
-                                child: Text(
-                                    'Please correct any incorrect entries and try again.'),
-                              ),
-                              actions: [
-                                FlatButton(
-                                  child: Text('OK'),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                )
-                              ],
-                            );
+                            return AlertDialogFactory.invalidFormSubmission(context);
                           });
                     }
                   },

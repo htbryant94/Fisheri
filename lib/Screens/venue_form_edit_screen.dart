@@ -668,7 +668,7 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
                                               'There was an issue trying to submit your form'),
                                           content: SingleChildScrollView(
                                             child: Text(
-                                                'Please correct any incorrect entries and try again.'),
+                                                'Please check any incorrect entries and try again.'),
                                           ),
                                           actions: <Widget>[
                                             FlatButton(
