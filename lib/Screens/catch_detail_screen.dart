@@ -30,10 +30,14 @@ class CatchDetailScreen extends StatelessWidget {
 
   String _makeTitle() {
     if (data.typeOfFish != null) {
-      return '${ReCase(data.catchType).titleCase} Catch - ${ReCase(data.typeOfFish).titleCase}';
+      return '${ReCase(data.typeOfFish).titleCase}';
     } else {
-      return '${ReCase(data.catchType).titleCase} Catch';
+      return '${ReCase(data.catchType).titleCase} Your Catch';
     }
+  }
+
+  String _makeSubtitle() {
+    return '${ReCase(data.catchType).titleCase} Catch';
   }
 
   String _makeImageURL(String fish) {
@@ -65,55 +69,76 @@ class CatchDetailScreen extends StatelessWidget {
     }
   }
 
+  List<Widget> _buildSections() {
+    return [
+      ImageCarousel(
+        imageURLs: _carouselImages(),
+        fit: BoxFit.contain,
+      ),
+      Column(
+        children: [
+          DSComponents.paragraphSpacer(),
+          TitleSection(
+            title: _makeTitle(),
+            subtitle: _makeSubtitle(),
+          ),
+        ],
+      ),
+      if (data.weight != null)
+        _DetailRow(name: 'Weight', emoji: '⚖️', value: WeightConverter.gramsToPoundsAndOunces(data.weight)),
+      if (data.time != null)
+        _DetailRow(name: 'Time', emoji: '⏱', value: data.time),
+      if (data.date != null)
+        _DetailRow(name: 'Date', emoji: '🗓', value: formattedDate(data.date)),
+      if (data.weatherCondition != null)
+        _DetailRow(name: 'Weather Condition', emoji: '🌤', value: ReCase(data.weatherCondition).titleCase),
+      if (data.windDirection != null)
+        _DetailRow(name: 'Wind Direction', emoji: '🧭', value: ReCase(data.windDirection).titleCase),
+      if (data.temperature != null)
+        _DetailRow(name: 'Temperature', emoji: '🌡', value: formattedTemperature((data.temperature))),
+      if (data.notes != null)
+        Column(
+          children: [
+            Row(
+              children: [
+                Text('📝', style: TextStyle(fontSize: 20)),
+                DSComponents.singleSpacer(),
+                DSComponents.subheader(text: 'Notes'),
+              ],
+            ),
+            DSComponents.doubleSpacer(),
+            DSComponents.body(text: data.notes),
+          ],
+        )
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
+    final _rows = _buildSections();
+
     return Scaffold(
         body: SafeArea(
-          child: ListView(
-            children: [
-              ImageCarousel(
-                imageURLs: _carouselImages(),
-                fit: BoxFit.contain,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-                child: Column(
-                  children: [
-                    DSComponents.paragraphSpacer(),
-                    TitleSection(
-                      title: _makeTitle(),
-                    ),
-                    DSComponents.paragraphSpacer(),
-                    if (data.weight != null)
-                      _DetailRow(name: 'Weight', emoji: '⚖️', value: WeightConverter.gramsToPoundsAndOunces(data.weight)),
-                    if (data.time != null)
-                      _DetailRow(name: 'Time', emoji: '⏱', value: data.time),
-                    if (data.date != null)
-                      _DetailRow(name: 'Date', emoji: '🗓', value: formattedDate(data.date)),
-                    if (data.weatherCondition != null)
-                      _DetailRow(name: 'Weather Condition', emoji: '🌤', value: ReCase(data.weatherCondition).titleCase),
-                    if (data.windDirection != null)
-                      _DetailRow(name: 'Wind Direction', emoji: '🧭', value: ReCase(data.windDirection).titleCase),
-                    if (data.temperature != null)
-                      _DetailRow(name: 'Temperature', emoji: '🌡', value: formattedTemperature((data.temperature))),
-                    if (data.notes != null)
-                      Column(
-                        children: [
-                          Row(
-                            children: [
-                              Text('📝', style: TextStyle(fontSize: 20)),
-                              DSComponents.singleSpacer(),
-                              DSComponents.subheader(text: 'Notes'),
-                            ],
-                          ),
-                          DSComponents.doubleSpacer(),
-                          DSComponents.body(text: data.notes),
-                        ],
-                      )
-                  ],
-                ),
-              )
-            ],
+          child: ListView.separated(
+            padding: EdgeInsets.only(bottom: 24),
+            itemCount: _rows.length,
+            separatorBuilder: (context, index) {
+              if (index > 0) {
+                return Divider(indent: 64);
+              } else {
+                return Container();
+              }
+            },
+            itemBuilder: (context, index) {
+              if (index > 0 ) {
+                return Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                  child: _rows[index],
+                );
+              } else {
+                return _rows[index];
+              }
+            },
           ),
         ));
   }
@@ -150,7 +175,6 @@ class _DetailRow extends StatelessWidget {
             DSComponents.body(text: '$value')
           ],
         ),
-        DSComponents.doubleSpacer()
       ],
     );
   }
