@@ -56,6 +56,10 @@ class DetailScreen extends StatelessWidget {
   bool isShop() {
     return venue.categories.contains('shop');
   }
+  
+  bool canShowBookNowButton() {
+    return venue.tickets != null && venue.tickets.contains('day');
+  }
 
   bool hasSocialLinks() {
     return venue.social.facebook != null && venue.social.facebook.isNotEmpty ||
@@ -225,6 +229,7 @@ class DetailScreen extends StatelessWidget {
                 ],
               ),
             ),
+            if (canShowBookNowButton())
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(
