@@ -148,6 +148,7 @@ class DetailScreen extends StatelessWidget {
 
     sections.add(StatsSection(
       stats: [
+        if (isLake())
         Stat(name: 'Catch Reports', value: 1247),
         Stat(name: 'Upcoming Events', value: 2),
         Stat(name: 'Check-Ins Today', value: 16),

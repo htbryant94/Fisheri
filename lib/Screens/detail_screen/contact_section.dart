@@ -18,7 +18,7 @@ class ContactSection extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        if (contactDetails.phone != null)
+        if (contactDetails.phone != null && contactDetails.phone.isNotEmpty)
           _ContactItem(
             name: 'Call',
             onPressed: () async  {
@@ -26,14 +26,14 @@ class ContactSection extends StatelessWidget {
               await launch('tel:${contactDetails.phone}');
             },
           ),
-        if (websiteURL != null)
+        if (websiteURL != null && websiteURL.isNotEmpty)
           _ContactItem(
             name: 'Website',
             onPressed: () async {
               await launch('https:$websiteURL');
             },
           ),
-        if (contactDetails.email != null)
+        if (contactDetails.email != null && contactDetails.email.isNotEmpty)
           _ContactItem(
             name: 'Email',
             onPressed: () async {
