@@ -73,6 +73,14 @@ class DetailScreen extends StatelessWidget {
         venue.social.instagram != null && venue.social.instagram.isNotEmpty ||
         venue.social.youtube != null && venue.social.youtube.isNotEmpty;
   }
+
+  bool canShowSwims() {
+    return id == 'MshwqxCOXrfdI8mnoYNK' || id == 'O2HrBE1LqynNfXN2AvHX'; // Harry's Fishery & Manor Farm Lakes ID
+  }
+
+  bool canShow360Images() {
+    return id == 'MshwqxCOXrfdI8mnoYNK' || id == 'O2HrBE1LqynNfXN2AvHX'; // Harry's Fishery & Manor Farm Lakes ID
+  }
   
   List<Widget> buildSections(BuildContext context, VenueDetailed venue) {
     List<Widget> sections = [];
@@ -109,9 +117,10 @@ class DetailScreen extends StatelessWidget {
 
     sections.add(DSComponents.paragraphSpacer());
 
-    sections.add(SwimsListView(swims: _swimsData));
-
-    sections.add(DSComponents.divider());
+    if (canShowSwims()) {
+      sections.add(SwimsListView(swims: _swimsData));
+      sections.add(DSComponents.divider());
+    }
 
     sections.add(DescriptionSection(
       text: venue.description,
@@ -221,6 +230,7 @@ class DetailScreen extends StatelessWidget {
                       ImageCarousel(
                         imageURLs: venue.images,
                       ),
+                      if (canShow360Images())
                       Positioned(
                         left: 24,
                         bottom: 16,
