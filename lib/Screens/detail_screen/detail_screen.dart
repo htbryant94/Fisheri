@@ -56,9 +56,15 @@ class DetailScreen extends StatelessWidget {
   bool isShop() {
     return venue.categories.contains('shop');
   }
-  
+
   bool canShowBookNowButton() {
     return venue.tickets != null && venue.tickets.contains('day');
+  }
+
+  bool canShowJoinWaitingListButton() {
+    return !canShowBookNowButton() &&
+        venue.tickets != null &&
+        (venue.tickets.contains('season') || venue.tickets.contains('syndicate') || venue.tickets.contains('club_water'));
   }
 
   bool hasSocialLinks() {
@@ -243,6 +249,20 @@ class DetailScreen extends StatelessWidget {
                   )
               ),
             ),
+            if (canShowJoinWaitingListButton())
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                    alignment: Alignment.bottomCenter,
+                    padding: EdgeInsets.symmetric(horizontal: 24),
+                    child: DSComponents.primaryButton(
+                        text: 'Join Waiting List',
+                        onPressed: () {
+                          Coordinator.present(context, screenTitle: 'Tickets', screen: BookTicketsScreen());
+                        }
+                    )
+                ),
+              ),
             Positioned(
                 top: 16,
                 left: 16,
