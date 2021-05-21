@@ -115,6 +115,7 @@ flutter:
     - images/icons/fishing_types/sea.png
     - images/placeholders/events_calendar_create.png
     - images/placeholders/events_calendar_main.png
+    - images/placeholders/achievements_screen.png
     - images/placeholders/fishing_license.png
     - images/placeholders/lake_map_view.png
     - images/placeholders/book_tickets.png

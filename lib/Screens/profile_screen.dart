@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fisheri/Screens/achievements_screen.dart';
 import 'package:fisheri/Screens/auth_screen.dart';
 import 'package:fisheri/Screens/events_calendar_screen.dart';
 import 'package:fisheri/Screens/create_event_screen.dart';
@@ -51,18 +52,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       ProfileListItem(
         screen: FishingLicenseScreen(),
-        title: 'Fishing License - WIP',
+        title: 'Fishing License - PoC',
         icon: Icon(Icons.description, color: Colors.green),
       ),
       ProfileListItem(
+        screen: AchievementsScreen(),
+        title: 'Achievements - PoC',
+        icon: Icon(Icons.whatshot, color: Colors.orange)
+      ),
+      ProfileListItem(
         screen: EventsCalendarScreen(),
-        title: 'Events - WIP',
+        title: 'Events - PoC',
         icon: Icon(Icons.calendar_today, color: Colors.red[600]),
         navBarIcon: CupertinoButton(
           padding: EdgeInsets.only(bottom: 8, top: 8),
           child: Icon(Icons.add),
           onPressed: () {
-            Coordinator.push(
+            Coordinator.present(
               context,
               currentPageTitle: 'Profile',
               screen: CreateEventScreen(),
