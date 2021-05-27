@@ -178,6 +178,15 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
                         ),
                       ),
                       DSComponents.paragraphSpacer(),
+                      FormBuilderTextField(
+                        keyboardType: TextInputType.multiline,
+                        minLines: 5,
+                        maxLines: null,
+                        name: 'notes',
+                        decoration: InputDecoration(
+                            labelText: 'Notes', border: OutlineInputBorder()),
+                      ),
+                      DSComponents.paragraphSpacer(),
                       DSComponents.header(text: 'Photos'),
                       DSComponents.singleSpacer(),
                       DSComponents.subheaderSmall(text: 'The first photo will be the cover of your report'),
@@ -261,6 +270,7 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
                         startDate: _startDate.toIso8601String(),
                         endDate: _endDate.toIso8601String(),
                         images: imageURLs.isNotEmpty ? imageURLs : null,
+                        notes: _valueFor(attribute: 'notes'),
                       );
 
                       print('created');
