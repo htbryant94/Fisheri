@@ -1,3 +1,5 @@
+import 'package:carousel_slider/carousel_controller.dart';
+import 'package:fisheri/Screens/detail_screen/fullscreen_image_carousel.dart';
 import 'package:fisheri/WeightConverter.dart';
 import 'package:fisheri/design_system.dart';
 import 'package:fisheri/Screens/detail_screen/title_section.dart';
@@ -7,12 +9,22 @@ import 'package:fisheri/Screens/detail_screen/image_carousel.dart';
 import 'package:intl/intl.dart';
 import 'package:recase/recase.dart';
 
-class CatchDetailScreen extends StatelessWidget {
+import '../coordinator.dart';
+
+class CatchDetailScreen extends StatefulWidget {
   CatchDetailScreen({
     this.data,
   });
 
   final Catch data;
+
+  @override
+  _CatchDetailScreenState createState() => _CatchDetailScreenState();
+}
+
+class _CatchDetailScreenState extends State<CatchDetailScreen> {
+  final _carouselController = CarouselController();
+  int _currentImageCarouselIndex = 0;
 
   String formattedTemperature(double temp) {
     if (temp != null) {
@@ -29,15 +41,15 @@ class CatchDetailScreen extends StatelessWidget {
   }
 
   String _makeTitle() {
-    if (data.typeOfFish != null) {
-      return '${ReCase(data.typeOfFish).titleCase}';
+    if (widget.data.typeOfFish != null) {
+      return '${ReCase(widget.data.typeOfFish).titleCase}';
     } else {
-      return '${ReCase(data.catchType).titleCase} Your Catch';
+      return '${ReCase(widget.data.catchType).titleCase} Your Catch';
     }
   }
 
   String _makeSubtitle() {
-    return '${ReCase(data.catchType).titleCase} Catch';
+    return '${ReCase(widget.data.catchType).titleCase} Catch';
   }
 
   String _makeImageURL(String fish) {
@@ -56,24 +68,45 @@ class CatchDetailScreen extends StatelessWidget {
   }
 
   bool _isMatch() {
-    return data.catchType == 'match';
+    return widget.data.catchType == 'match';
   }
 
   List<String> _carouselImages() {
-    if (data.images != null && data.images.isNotEmpty) {
-      return data.images;
-    } else if (data.images == null && _isMatch()) {
-      return [_makeMatchPositionImageURL(data.position)];
+    if (widget.data.images != null && widget.data.images.isNotEmpty) {
+      return widget.data.images;
+    } else if (widget.data.images == null && _isMatch()) {
+      return [_makeMatchPositionImageURL(widget.data.position)];
     } else {
-      return [_makeImageURL(data.typeOfFish)];
+      return [_makeImageURL(widget.data.typeOfFish)];
     }
   }
 
   List<Widget> _buildSections() {
     return [
-      ImageCarousel(
-        imageURLs: _carouselImages(),
-        fit: BoxFit.contain,
+      GestureDetector(
+        onTap: () {
+          Coordinator.present(
+            context,
+            showNavigationBar: false,
+            screen: FullscreenImageCarousel(
+              carouselController: _carouselController,
+              images: _carouselImages(),
+              initialIndex: _currentImageCarouselIndex,
+            )
+          );
+        },
+        child: ImageCarousel(
+          imageURLs: _carouselImages(),
+          index: _currentImageCarouselIndex,
+          controller: _carouselController,
+          height: 268,
+          indexChanged: (index) {
+            setState(() {
+              _currentImageCarouselIndex = index;
+            });
+          },
+          fit: BoxFit.contain,
+        ),
       ),
       Column(
         children: [
@@ -84,19 +117,19 @@ class CatchDetailScreen extends StatelessWidget {
           ),
         ],
       ),
-      if (data.weight != null)
-        _DetailRow(name: 'Weight', emoji: '⚖️', value: WeightConverter.gramsToPoundsAndOunces(data.weight)),
-      if (data.time != null)
-        _DetailRow(name: 'Time', emoji: '⏱', value: data.time),
-      if (data.date != null)
-        _DetailRow(name: 'Date', emoji: '🗓', value: formattedDate(data.date)),
-      if (data.weatherCondition != null)
-        _DetailRow(name: 'Weather Condition', emoji: '🌤', value: ReCase(data.weatherCondition).titleCase),
-      if (data.windDirection != null)
-        _DetailRow(name: 'Wind Direction', emoji: '🧭', value: ReCase(data.windDirection).titleCase),
-      if (data.temperature != null)
-        _DetailRow(name: 'Temperature', emoji: '🌡', value: formattedTemperature((data.temperature))),
-      if (data.notes != null)
+      if (widget.data.weight != null)
+        _DetailRow(name: 'Weight', emoji: '⚖️', value: WeightConverter.gramsToPoundsAndOunces(widget.data.weight)),
+      if (widget.data.time != null)
+        _DetailRow(name: 'Time', emoji: '⏱', value: widget.data.time),
+      if (widget.data.date != null)
+        _DetailRow(name: 'Date', emoji: '🗓', value: formattedDate(widget.data.date)),
+      if (widget.data.weatherCondition != null)
+        _DetailRow(name: 'Weather Condition', emoji: '🌤', value: ReCase(widget.data.weatherCondition).titleCase),
+      if (widget.data.windDirection != null)
+        _DetailRow(name: 'Wind Direction', emoji: '🧭', value: ReCase(widget.data.windDirection).titleCase),
+      if (widget.data.temperature != null)
+        _DetailRow(name: 'Temperature', emoji: '🌡', value: formattedTemperature((widget.data.temperature))),
+      if (widget.data.notes != null)
         Column(
           children: [
             Row(
@@ -107,7 +140,7 @@ class CatchDetailScreen extends StatelessWidget {
               ],
             ),
             DSComponents.doubleSpacer(),
-            DSComponents.body(text: data.notes),
+            DSComponents.body(text: widget.data.notes),
           ],
         )
     ];
