@@ -1,8 +1,10 @@
+import 'package:carousel_slider/carousel_controller.dart';
 import 'package:fisheri/Components/fisheri_icon_button.dart';
 import 'package:fisheri/Screens/book_tickets_screen.dart';
 import 'package:fisheri/Screens/detail_screen/contact_section.dart';
 import 'package:fisheri/Screens/detail_screen/contents_section.dart';
 import 'package:fisheri/Screens/detail_screen/fishing_rules_section.dart';
+import 'package:fisheri/Screens/detail_screen/fullscreen_image_carousel.dart';
 import 'package:fisheri/Screens/detail_screen/opening_hours_section.dart';
 import 'package:fisheri/Screens/detail_screen/social_media_section.dart';
 import 'package:fisheri/Screens/detail_screen/stats_section.dart';
@@ -26,7 +28,7 @@ import 'package:panorama/panorama.dart';
 
 import 'map_view_section.dart';
 
-class DetailScreen extends StatelessWidget {
+class DetailScreen extends StatefulWidget {
   DetailScreen({
     @required this.venue,
     this.imageURL,
@@ -34,11 +36,19 @@ class DetailScreen extends StatelessWidget {
     this.id,
   });
 
-  List<String> sectionContents = [];
   final VenueDetailed venue;
   final String imageURL;
   final int index;
   final String id;
+
+  @override
+  _DetailScreenState createState() => _DetailScreenState();
+}
+
+class _DetailScreenState extends State<DetailScreen> {
+  List<String> sectionContents = [];
+  int _currentImageCarouselIndex = 0;
+  final _carouselController = CarouselController();
 
   final _swimsData = [
     Swim(name: 'Car-park Bay', imageURL: 'images/placeholders/swims/swim_1.jpg'),
@@ -50,38 +60,38 @@ class DetailScreen extends StatelessWidget {
   ];
 
   bool isLake() {
-    return venue.categories.contains('lake');
+    return widget.venue.categories.contains('lake');
   }
 
   bool isShop() {
-    return venue.categories.contains('shop');
+    return widget.venue.categories.contains('shop');
   }
 
   bool canShowBookNowButton() {
-    return venue.tickets != null && venue.tickets.contains('day');
+    return widget.venue.tickets != null && widget.venue.tickets.contains('day');
   }
 
   bool canShowJoinWaitingListButton() {
     return !canShowBookNowButton() &&
-        venue.tickets != null &&
-        (venue.tickets.contains('season') || venue.tickets.contains('syndicate') || venue.tickets.contains('club_water'));
+        widget.venue.tickets != null &&
+        (widget.venue.tickets.contains('season') || widget.venue.tickets.contains('syndicate') || widget.venue.tickets.contains('club_water'));
   }
 
   bool hasSocialLinks() {
-    return venue.social.facebook != null && venue.social.facebook.isNotEmpty ||
-        venue.social.twitter != null && venue.social.twitter.isNotEmpty ||
-        venue.social.instagram != null && venue.social.instagram.isNotEmpty ||
-        venue.social.youtube != null && venue.social.youtube.isNotEmpty;
+    return widget.venue.social.facebook != null && widget.venue.social.facebook.isNotEmpty ||
+        widget.venue.social.twitter != null && widget.venue.social.twitter.isNotEmpty ||
+        widget.venue.social.instagram != null && widget.venue.social.instagram.isNotEmpty ||
+        widget.venue.social.youtube != null && widget.venue.social.youtube.isNotEmpty;
   }
 
   bool canShowSwims() {
-    return id == 'MshwqxCOXrfdI8mnoYNK' || id == 'O2HrBE1LqynNfXN2AvHX'; // Harry's Fishery & Manor Farm Lakes ID
+    return widget.id == 'MshwqxCOXrfdI8mnoYNK' || widget.id == 'O2HrBE1LqynNfXN2AvHX'; // Harry's Fishery & Manor Farm Lakes ID
   }
 
   bool canShow360Images() {
-    return id == 'MshwqxCOXrfdI8mnoYNK' || id == 'O2HrBE1LqynNfXN2AvHX'; // Harry's Fishery & Manor Farm Lakes ID
+    return widget.id == 'MshwqxCOXrfdI8mnoYNK' || widget.id == 'O2HrBE1LqynNfXN2AvHX'; // Harry's Fishery & Manor Farm Lakes ID
   }
-  
+
   List<Widget> buildSections(BuildContext context, VenueDetailed venue) {
     List<Widget> sections = [];
 
@@ -128,7 +138,7 @@ class DetailScreen extends StatelessWidget {
 
     sections.add(DSComponents.doubleSpacer());
 
-    sections.add(DSComponents.subheaderSmall(text: 'ID: $id', alignment: Alignment.centerLeft));
+    sections.add(DSComponents.subheaderSmall(text: 'ID: ${widget.id}', alignment: Alignment.centerLeft));
 
     sections.add(DSComponents.paragraphSpacer());
 
@@ -196,7 +206,7 @@ class DetailScreen extends StatelessWidget {
       ));
       sections.add(DSComponents.divider());
     }
-    
+
     if (isLake() && venue.fishingRules != null && venue.fishingRules.isNotEmpty) {
       final fishingRulesList = venue.fishingRules.split('*');
       fishingRulesList.removeAt(0);
@@ -228,8 +238,29 @@ class DetailScreen extends StatelessWidget {
                 children: [
                   Stack(
                     children: [
-                      ImageCarousel(
-                        imageURLs: venue.images,
+                      GestureDetector(
+                        onTap: () {
+                          Coordinator.present(
+                              context,
+                              showNavigationBar: false,
+                              screen: FullscreenImageCarousel(
+                                carouselController: _carouselController,
+                                images: widget.venue.images,
+                                initialIndex: _currentImageCarouselIndex,
+                              )
+                          );
+                        },
+                        child: ImageCarousel(
+                          imageURLs: widget.venue.images,
+                          index: _currentImageCarouselIndex,
+                          controller: _carouselController,
+                          height: 268,
+                          indexChanged: (index) {
+                            setState(() {
+                              _currentImageCarouselIndex = index;
+                            });
+                          },
+                        ),
                       ),
                       if (canShow360Images())
                       Positioned(
@@ -241,7 +272,7 @@ class DetailScreen extends StatelessWidget {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 24),
-                    child: Column(children: buildSections(context, venue)),
+                    child: Column(children: buildSections(context, widget.venue)),
                   ),
                 ],
               ),

@@ -12,9 +12,13 @@ import 'Screens/auth_screen.dart';
 import 'Screens/search_screen.dart';
 import 'fonts/custom_icons_icons.dart';
 import 'holiday_data.dart';
+import 'package:flutter/services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp
+  ]);
   await Firebase.initializeApp();
   runApp(MyApp());
 }
