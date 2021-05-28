@@ -71,6 +71,7 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                             DSComponents.header(text: 'Catch Type'),
                             FormBuilderRadioGroup(
                               name: 'catch_type',
+                              orientation: OptionsOrientation.horizontal,
                               options: catchTypes.map((type) =>
                                   FormBuilderFieldOption(
                                       value: type,
@@ -105,7 +106,7 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                             ),
                             CatchReportVisibility(
                               catchType: selectedCatchType,
-                              supportedCatchTypes: CatchType.values,
+                              supportedCatchTypes: [CatchType.single, CatchType.multi, CatchType.match],
                               child: _FishWeight(
                                 isRequired: (selectedCatchType != CatchType.multi),
                               ),
@@ -120,7 +121,7 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                             ),
                             CatchReportVisibility(
                               catchType: selectedCatchType,
-                              supportedCatchTypes: [CatchType.single],
+                              supportedCatchTypes: [CatchType.single, CatchType.missed],
                               child: _TimePickerBuilder(
                                 title: 'Time',
                                 attribute: 'time',
@@ -128,7 +129,7 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                             ),
                             CatchReportVisibility(
                               catchType: selectedCatchType,
-                              supportedCatchTypes: [CatchType.single],
+                              supportedCatchTypes: [CatchType.single, CatchType.missed],
                               child: _DropDownMenuDatesBuilder(
                                 title: 'Date',
                                 attribute: 'date',
@@ -690,5 +691,6 @@ class CatchFormConstants {
 enum CatchType {
   single,
   multi,
-  match
+  match,
+  missed
 }
