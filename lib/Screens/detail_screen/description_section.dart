@@ -12,27 +12,6 @@ class DescriptionSection extends StatelessWidget {
       child: Column(
         children: [
           DSComponents.body(text: text)
-//          SizedBox(height: 16),
-//          Row(children: [
-//            Icon(
-//              Icons.assignment,
-//              color: Colors.green,
-//            ),
-//            SizedBox(width: 8),
-//            HouseTexts.body('1,247 catch reports')
-//          ]),
-//          SizedBox(height: 16),
-//          Row(children: [
-//            Icon(Icons.calendar_today, color: Colors.red),
-//            SizedBox(width: 8),
-//            HouseTexts.body('2 upcoming events')
-//          ]),
-//          SizedBox(height: 16),
-//          Row(children: [
-//            Icon(Icons.pin_drop, color: Colors.red),
-//            SizedBox(width: 8),
-//            HouseTexts.body('16 check-ins today'),
-//          ]),
         ],
       ),
     );

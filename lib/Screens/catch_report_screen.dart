@@ -1,7 +1,12 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fisheri/Components/add_button.dart';
+import 'package:fisheri/Components/fisheri_icon_button.dart';
 import 'package:fisheri/Screens/catch_form_screen_full.dart';
+import 'package:fisheri/Screens/detail_screen/description_section.dart';
+import 'package:fisheri/Screens/detail_screen/image_carousel.dart';
 import 'package:fisheri/WeightConverter.dart';
 import 'package:fisheri/coordinator.dart';
+import 'package:fisheri/firestore_request_service.dart';
 import 'package:fisheri/models/catch.dart';
 import 'package:fisheri/models/catch_report.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,7 +18,7 @@ import 'package:intl/intl.dart';
 
 import '../design_system.dart';
 
-class CatchReportScreen extends StatelessWidget {
+class CatchReportScreen extends StatefulWidget {
   CatchReportScreen({
     @required this.catchReport,
     @required this.catchReportID,
@@ -22,23 +27,113 @@ class CatchReportScreen extends StatelessWidget {
   final CatchReport catchReport;
   final String catchReportID;
 
+  @override
+  _CatchReportScreenState createState() => _CatchReportScreenState();
+}
+
+class _CatchReportScreenState extends State<CatchReportScreen> {
+  final int _initialPageValue = 0;
+  int _segmentedControlSelectedValue;
+  PageController _pageController;
+  Future<List<Catch>> _catches;
+
+  @override
+  void initState() {
+    _catches = FirestoreRequestService.defaultService().getCatches(catchReportID: widget.catchReportID);
+    _pageController = PageController(initialPage: _initialPageValue);
+    _segmentedControlSelectedValue = _initialPageValue;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    print('Catch Report id: $catchReportID');
+    print('Catch Report id: ${widget.catchReportID}');
     return Scaffold(
       body: SafeArea(
-        child: Stack(
+        child: Column(
           children: [
-            _CatchListBuilder(id: catchReportID),
-            Positioned(
-              bottom: 12,
-              left: 24,
-              right: 24,
-              child: _NewCatchButton(onPressed: () {
-                _pushNewCatchForm(context);
-              }),
+            DSComponents.doubleSpacer(),
+            CupertinoSegmentedControl(
+                borderColor: DSColors.green,
+                selectedColor: DSColors.green,
+                groupValue: _segmentedControlSelectedValue,
+                children: {
+                  0: Container(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text('Catches'),
+                      )
+                  ),
+                  1: Container(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text('Summary'),
+                      )
+                  ),
+                },
+                onValueChanged: (value) {
+                  setState(() {
+                    _segmentedControlSelectedValue = value;
+                  });
+                  _pageController.jumpToPage(_segmentedControlSelectedValue);
+                }
             ),
+            Flexible(
+              child: Stack(
+                children: [
+                  PageView(
+                    controller: _pageController,
+                    children: [
+                      FutureBuilder<List<Catch>>(
+                        future: _catches,
+                        builder: (BuildContext context, AsyncSnapshot<List<Catch>> snapshot) {
+                          if (snapshot.hasData) {
+                            return _CatchListBuilder(catches: snapshot.data);
+                          } else {
+                            return Center(child: CircularProgressIndicator());
+                          }
+                        },
+                      ),
+                      SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            DSComponents.doubleSpacer(),
+                            ImageCarousel(
+                              imageURLs: widget.catchReport.images,
+                              showFavouriteButton: false,
+                              height: 300,
+                            ),
+                            if (widget.catchReport.notes != null)
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(24, 24, 24, 68),
+                                child: Column(
+                                  children: [
+                                    DSComponents.header(text: 'Notes'),
+                                    DSComponents.doubleSpacer(),
+                                    DescriptionSection(
+                                      text: widget.catchReport.notes,
+                                    ),
+                                  ],
+                                ),
+                              )
+                          ],
+                        ),
+                      )
+
+                    ],
+
+                  ),
+                  Positioned(
+                    bottom: 12,
+                    left: 24,
+                    right: 24,
+                    child: _NewCatchButton(onPressed: () {
+                      _pushNewCatchForm(context);
+                    }),
+                  ),
+                ],
+              ),
+            )
           ],
         ),
       ),
@@ -46,8 +141,8 @@ class CatchReportScreen extends StatelessWidget {
   }
 
   void _pushNewCatchForm(BuildContext context) {
-    final startDate = DateTime.parse(catchReport.startDate);
-    final endDate = DateTime.parse(catchReport.endDate);
+    final startDate = DateTime.parse(widget.catchReport.startDate);
+    final endDate = DateTime.parse(widget.catchReport.endDate);
 
     var dateRange = List.generate(
         endDate.difference(startDate).inDays + 1,
@@ -57,7 +152,7 @@ class CatchReportScreen extends StatelessWidget {
         currentPageTitle: 'Catches',
         screen: CatchFormScreenFull(
           dateRange: dateRange,
-          catchReportID: catchReportID,
+          catchReportID: widget.catchReportID,
         ),
         screenTitle: 'New Catch');
   }
@@ -80,37 +175,24 @@ class _NewCatchButton extends StatelessWidget {
 }
 
 class _CatchListBuilder extends StatelessWidget {
-  _CatchListBuilder({@required this.id});
+  _CatchListBuilder({@required this.catches});
 
-  final String id;
+  final List<Catch> catches;
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: FirebaseFirestore.instance
-          .collection('catches')
-          .where('catch_report_id', isEqualTo: id)
-          .snapshots(),
-      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (!snapshot.hasData) {
-          return SizedBox(height: 0);
-        }
-        return ListView.separated(
-            itemCount: snapshot.data.docs.length,
-            padding: EdgeInsets.fromLTRB(8, 24, 8, 68),
-            separatorBuilder: (BuildContext context, int index) {
-              return DSComponents.singleSpacer();
-            },
-            itemBuilder: (context, index) {
-              final _catch = snapshot.data.docs[index];
-              final _data = CatchJSONSerializer().fromMap(_catch.data());
-             print('catch index: $index with id: ${_catch.id}');
-              return CatchCell(
-                catchData: _data,
-              );
-            });
-      },
-    );
+    return ListView.separated(
+        itemCount: catches.length,
+        padding: EdgeInsets.fromLTRB(8, 24, 8, 68),
+        separatorBuilder: (BuildContext context, int index) {
+          return DSComponents.singleSpacer();
+        },
+        itemBuilder: (context, index) {
+          final _catch = catches[index];
+          return CatchCell(
+            catchData: _catch,
+          );
+        });
   }
 }
 

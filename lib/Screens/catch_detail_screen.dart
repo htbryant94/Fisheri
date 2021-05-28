@@ -99,7 +99,7 @@ class _CatchDetailScreenState extends State<CatchDetailScreen> {
           imageURLs: _carouselImages(),
           index: _currentImageCarouselIndex,
           controller: _carouselController,
-          height: 268,
+          height: 300,
           indexChanged: (index) {
             setState(() {
               _currentImageCarouselIndex = index;

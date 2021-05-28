@@ -2,6 +2,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fisheri/models/venue_detailed.dart';
 
+import 'models/catch.dart';
+
 class FirestoreRequestService {
   static const venuesDetail = 'venues_detail';
 
@@ -26,6 +28,21 @@ class FirestoreRequestService {
       print('getVenueDetailed request error: $error');
     });
   }
+
+  Future<List<Catch>> getCatches({String catchReportID}) async {
+    print('----- FETCHING CATCHES -----');
+    final snapshots = await firestore
+        .collection('catches')
+        .where('catch_report_id', isEqualTo: catchReportID)
+        .snapshots();
+
+    return snapshots.first.then((snapshot) {
+      return snapshot.docs.map((doc) {
+        return CatchJSONSerializer().fromMap(doc.data());
+      }).toList();
+    });
+  }
+
 }
 
 class FireStorageRequestService {

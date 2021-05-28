@@ -56,16 +56,14 @@ class _ImageCarouselState extends State<ImageCarousel> {
           itemCount: imageURLsHasValue() ? widget.imageURLs.length : 1,
           itemBuilder: (BuildContext context, int index, int realIndex) =>
               imageURLsHasValue()
-                  ? Container(
-                      child: CachedNetworkImage(
-                        imageUrl: widget.imageURLs[index],
-                        fit: widget.fit,
-                        placeholder: (context, url) => Align(
-                          alignment: Alignment.center,
-                          child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(DSColors.green)),
-                        ),
-                      ),
-                    )
+                  ? CachedNetworkImage(
+                    imageUrl: widget.imageURLs[index],
+                    fit: widget.fit,
+                    placeholder: (context, url) => Align(
+                      alignment: Alignment.center,
+                      child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(DSColors.green)),
+                    ),
+                  )
                   : Image.asset('images/lake.jpg', fit: BoxFit.cover),
         ),
         if (widget.showFavouriteButton)
