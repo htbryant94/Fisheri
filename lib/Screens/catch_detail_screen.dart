@@ -44,12 +44,15 @@ class _CatchDetailScreenState extends State<CatchDetailScreen> {
     if (widget.data.typeOfFish != null) {
       return '${ReCase(widget.data.typeOfFish).titleCase}';
     } else {
-      return '${ReCase(widget.data.catchType).titleCase} Your Catch';
+      return '${ReCase(widget.data.catchType).titleCase} Catch';
     }
   }
 
   String _makeSubtitle() {
-    return '${ReCase(widget.data.catchType).titleCase} Catch';
+    if (widget.data.catchType != 'missed' && widget.data.catchType != 'match') {
+      return '${ReCase(widget.data.catchType).titleCase} Catch';
+    }
+    return null;
   }
 
   String _makeImageURL(String fish) {
@@ -76,13 +79,14 @@ class _CatchDetailScreenState extends State<CatchDetailScreen> {
       return widget.data.images;
     } else if (widget.data.images == null && _isMatch()) {
       return [_makeMatchPositionImageURL(widget.data.position)];
-    } else {
+    } else if (widget.data.images == null && widget.data.typeOfFish != null) {
       return [_makeImageURL(widget.data.typeOfFish)];
     }
   }
 
   List<Widget> _buildSections() {
     return [
+      if (widget.data.catchType != 'missed')
       GestureDetector(
         onTap: () {
           Coordinator.present(
@@ -100,6 +104,7 @@ class _CatchDetailScreenState extends State<CatchDetailScreen> {
           index: _currentImageCarouselIndex,
           controller: _carouselController,
           height: 300,
+          showFavouriteButton: false,
           indexChanged: (index) {
             setState(() {
               _currentImageCarouselIndex = index;
@@ -163,7 +168,7 @@ class _CatchDetailScreenState extends State<CatchDetailScreen> {
               }
             },
             itemBuilder: (context, index) {
-              if (index > 0 ) {
+              if (index > 0 || widget.data.catchType == 'missed') {
                 return Padding(
                   padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
                   child: _rows[index],

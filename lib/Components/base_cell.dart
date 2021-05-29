@@ -227,6 +227,7 @@ class RemoteImageBaseCell extends StatelessWidget {
     this.elements,
     this.layout = BaseCellLayout.thumbnail,
     this.imageBoxFit = BoxFit.fitHeight,
+    this.showImage = true,
   });
 
   final String defaultImagePath;
@@ -237,6 +238,7 @@ class RemoteImageBaseCell extends StatelessWidget {
   final List<Widget> elements;
   final BaseCellLayout layout;
   final BoxFit imageBoxFit;
+  final bool showImage;
 
   List<Widget> _children() {
     var stuff = <Widget>[
@@ -256,6 +258,7 @@ class RemoteImageBaseCell extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
+          if (showImage)
           AspectRatio(
               aspectRatio: 1,
               child: imageURL != null

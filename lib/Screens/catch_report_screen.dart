@@ -41,6 +41,10 @@ class _CatchReportScreenState extends State<CatchReportScreen> {
     super.initState();
   }
 
+  bool _shouldShowSummarySection() {
+    return widget.catchReport.images != null || widget.catchReport.notes != null;
+  }
+
   @override
   Widget build(BuildContext context) {
     print('Catch Report id: ${widget.catchReportID}');
@@ -101,10 +105,11 @@ class _CatchReportScreenState extends State<CatchReportScreen> {
                           }
                         },
                       ),
-                      SingleChildScrollView(
+                      _shouldShowSummarySection() ? SingleChildScrollView(
                         child: Column(
                           children: [
                             DSComponents.doubleSpacer(),
+                            if(widget.catchReport.images != null)
                             ImageCarousel(
                               imageURLs: widget.catchReport.images,
                               showFavouriteButton: false,
@@ -125,8 +130,10 @@ class _CatchReportScreenState extends State<CatchReportScreen> {
                               )
                           ],
                         ),
-                      )
-
+                      ) : DSComponents.titleLarge(
+                          text: 'No Summary  📝',
+                          alignment: Alignment.center
+                      ),
                     ],
 
                   ),
@@ -206,6 +213,7 @@ class _CatchListBuilder extends StatelessWidget {
           final _catch = catches[index];
           return CatchCell(
             catchData: _catch,
+            height: _catch.catchType == 'missed' ? 200 : 275,
           );
         });
   }
@@ -214,9 +222,11 @@ class _CatchListBuilder extends StatelessWidget {
 class CatchCell extends StatelessWidget {
   CatchCell({
     this.catchData,
+    this.height = 275
   });
 
   final Catch catchData;
+  final double height;
 
   void _openCatchScreen(BuildContext context) {
     Coordinator.pushCatchDetailScreen(context,
@@ -231,8 +241,6 @@ class CatchCell extends StatelessWidget {
   String _subtitle() {
     if (catchData.weight != null) {
       return WeightConverter.gramsToPoundsAndOunces(catchData.weight);
-    } else if (catchData.catchType != null) {
-      return 'Type: ${ReCase(catchData.catchType).titleCase}';
     }
     return null;
   }
@@ -241,7 +249,7 @@ class CatchCell extends StatelessWidget {
     if (catchData.typeOfFish != null) {
       return ReCase(catchData.typeOfFish).titleCase;
     } else {
-      return 'Match';
+      return ReCase(catchData.catchType).titleCase;
     }
   }
 
@@ -303,8 +311,9 @@ class CatchCell extends StatelessWidget {
         child: Stack(
           children: [
             RemoteImageBaseCell(
+              showImage: catchData.catchType != 'missed',
               title: _title(),
-              subtitle: _subtitle(),
+              subtitle: catchData.catchType != 'missed' ? _subtitle() : null,
               imageURL: _fetchImageURL(catchData),
               elements: [
                 if (_isMulti())
@@ -317,11 +326,11 @@ class CatchCell extends StatelessWidget {
                 if (_isMatch())
                   DSComponents.subheaderSmall(text: 'Position: ' + _formattedPosition(catchData.position)),
               ],
-              height: 275,
+              height: height,
               layout: BaseCellLayout.thumbnail,
               imageBoxFit: _isMatch() ? BoxFit.scaleDown : BoxFit.fitWidth,
             ),
-            if (catchData.weatherCondition != null)
+            if (catchData.weatherCondition != null && catchData.catchType != 'missed')
             Positioned(
               right: 16,
               top: 16,

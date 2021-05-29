@@ -211,19 +211,21 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                                   var _temperature;
                                   var _notes;
 
-                                  if (_valueFor(attribute: CatchFormConstants.weightWhole) != null) {
-                                    var _weightFraction = 0;
+                                  if (selectedCatchType != CatchType.missed) {
+                                    if (_valueFor(attribute: CatchFormConstants.weightWhole) != null) {
+                                      var _weightFraction = 0;
 
-                                    if (_valueFor(attribute: CatchFormConstants.weightFraction) != null) {
-                                      _weightFraction = int.parse(
-                                          _valueFor(attribute: CatchFormConstants.weightFraction),
-                                          onError: (_) { return 0; });
+                                      if (_valueFor(attribute: CatchFormConstants.weightFraction) != null) {
+                                        _weightFraction = int.parse(
+                                            _valueFor(attribute: CatchFormConstants.weightFraction),
+                                            onError: (_) { return 0; });
+                                      }
+
+                                      _weight = _convertFishWeight(
+                                          whole: int.parse(_valueFor(attribute: CatchFormConstants.weightWhole)),
+                                          fraction: _weightFraction
+                                      );
                                     }
-
-                                    _weight = _convertFishWeight(
-                                      whole: int.parse(_valueFor(attribute: CatchFormConstants.weightWhole)),
-                                      fraction: _weightFraction
-                                    );
                                   }
 
                                   if (_valueFor(attribute: CatchFormConstants.weatherCondition) != null) {
@@ -257,6 +259,10 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                                   }
                                   else if (selectedCatchType == CatchType.match) {
                                     position = _valueFor(attribute: CatchFormConstants.position);
+                                  }
+                                  else if (selectedCatchType == CatchType.missed) {
+                                    time = _valueFor(attribute: CatchFormConstants.time);
+                                    date = _valueFor(attribute: CatchFormConstants.date);
                                   }
 
                                   print('creating catch');
