@@ -1,22 +1,18 @@
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:fisheri/Components/add_button.dart';
-import 'package:fisheri/Components/fisheri_icon_button.dart';
 import 'package:fisheri/Screens/catch_form_screen_full.dart';
 import 'package:fisheri/Screens/detail_screen/description_section.dart';
 import 'package:fisheri/Screens/detail_screen/image_carousel.dart';
 import 'package:fisheri/WeightConverter.dart';
 import 'package:fisheri/coordinator.dart';
-import 'package:fisheri/firestore_request_service.dart';
 import 'package:fisheri/models/catch.dart';
 import 'package:fisheri/models/catch_report.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fisheri/Components/base_cell.dart';
 import 'package:recase/recase.dart';
 import 'package:intl/intl.dart';
 
 import '../design_system.dart';
+import '../firestore_request_service.dart';
 
 class CatchReportScreen extends StatefulWidget {
   CatchReportScreen({
@@ -83,11 +79,22 @@ class _CatchReportScreenState extends State<CatchReportScreen> {
                 children: [
                   PageView(
                     controller: _pageController,
+                    onPageChanged: (index) {
+                      setState(() {
+                        _segmentedControlSelectedValue = index;
+                      });
+                    },
                     children: [
                       FutureBuilder<List<Catch>>(
                         future: _catches,
                         builder: (BuildContext context, AsyncSnapshot<List<Catch>> snapshot) {
                           if (snapshot.hasData) {
+                            if (snapshot.data.isEmpty) {
+                              return DSComponents.titleLarge(
+                                  text: 'No Catches  🎣',
+                                  alignment: Alignment.center
+                              );
+                            }
                             return _CatchListBuilder(catches: snapshot.data);
                           } else {
                             return Center(child: CircularProgressIndicator());
@@ -128,7 +135,14 @@ class _CatchReportScreenState extends State<CatchReportScreen> {
                     left: 24,
                     right: 24,
                     child: _NewCatchButton(onPressed: () {
-                      _pushNewCatchForm(context);
+                      _pushNewCatchForm(
+                        context: context,
+                        onDismiss: () {
+                          setState(() {
+                            _catches = FirestoreRequestService.defaultService().getCatches(catchReportID: widget.catchReportID);
+                          });
+                        }
+                      );
                     }),
                   ),
                 ],
@@ -140,7 +154,7 @@ class _CatchReportScreenState extends State<CatchReportScreen> {
     );
   }
 
-  void _pushNewCatchForm(BuildContext context) {
+  void _pushNewCatchForm({BuildContext context, VoidCallback onDismiss}) {
     final startDate = DateTime.parse(widget.catchReport.startDate);
     final endDate = DateTime.parse(widget.catchReport.endDate);
 
@@ -153,6 +167,7 @@ class _CatchReportScreenState extends State<CatchReportScreen> {
         screen: CatchFormScreenFull(
           dateRange: dateRange,
           catchReportID: widget.catchReportID,
+          onDismiss: onDismiss
         ),
         screenTitle: 'New Catch');
   }

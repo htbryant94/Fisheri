@@ -22,10 +22,12 @@ class CatchFormScreenFull extends StatefulWidget {
   CatchFormScreenFull({
     @required this.dateRange,
     @required this.catchReportID,
+    this.onDismiss,
   });
 
   final List<DateTime> dateRange;
   final String catchReportID;
+  final VoidCallback onDismiss;
 
   @override
   _CatchFormScreenFullState createState() => _CatchFormScreenFullState();
@@ -335,10 +337,12 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                                           .set(amendedCatchJSON)
                                           .whenComplete(() {
                                             _setLoadingState(false);
+                                            widget.onDismiss();
                                             Navigator.of(context).popUntil((route) => route.isFirst);
                                           });
                                     }
                                     _setLoadingState(false);
+                                    widget.onDismiss();
                                     Navigator.of(context).pop();
                                       });
                                 } else {
