@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fisheri/Screens/catch_form_screen_full.dart';
 import 'package:fisheri/Screens/detail_screen/description_section.dart';
 import 'package:fisheri/Screens/detail_screen/image_carousel.dart';
@@ -31,11 +32,11 @@ class _CatchReportScreenState extends State<CatchReportScreen> {
   final int _initialPageValue = 0;
   int _segmentedControlSelectedValue;
   PageController _pageController;
-  Future<List<Catch>> _catches;
+  // Future<List<Catch>> _catches;
 
   @override
   void initState() {
-    _catches = FirestoreRequestService.defaultService().getCatches(catchReportID: widget.catchReportID);
+    // _catches = FirestoreRequestService.defaultService().getCatches(catchReportID: widget.catchReportID);
     _pageController = PageController(initialPage: _initialPageValue);
     _segmentedControlSelectedValue = _initialPageValue;
     super.initState();
@@ -89,22 +90,23 @@ class _CatchReportScreenState extends State<CatchReportScreen> {
                       });
                     },
                     children: [
-                      FutureBuilder<List<Catch>>(
-                        future: _catches,
-                        builder: (BuildContext context, AsyncSnapshot<List<Catch>> snapshot) {
-                          if (snapshot.hasData) {
-                            if (snapshot.data.isEmpty) {
-                              return DSComponents.titleLarge(
-                                  text: 'No Catches  🎣',
-                                  alignment: Alignment.center
-                              );
-                            }
-                            return _CatchListBuilder(catches: snapshot.data);
-                          } else {
-                            return Center(child: CircularProgressIndicator());
-                          }
-                        },
-                      ),
+                      // FutureBuilder<List<Catch>>(
+                      //   future: _catches,
+                      //   builder: (BuildContext context, AsyncSnapshot<List<Catch>> snapshot) {
+                      //     if (snapshot.hasData) {
+                      //       if (snapshot.data.isEmpty) {
+                      //         return DSComponents.titleLarge(
+                      //             text: 'No Catches  🎣',
+                      //             alignment: Alignment.center
+                      //         );
+                      //       }
+                      //       return _CatchListBuilder(catches: snapshot.data);
+                      //     } else {
+                      //       return Center(child: CircularProgressIndicator());
+                      //     }
+                      //   },
+                      // ),
+                      _CatchListBuilder(catchReportID: widget.catchReportID),
                       _shouldShowSummarySection() ? SingleChildScrollView(
                         child: Column(
                           children: [
@@ -144,11 +146,6 @@ class _CatchReportScreenState extends State<CatchReportScreen> {
                     child: _NewCatchButton(onPressed: () {
                       _pushNewCatchForm(
                         context: context,
-                        onDismiss: () {
-                          setState(() {
-                            _catches = FirestoreRequestService.defaultService().getCatches(catchReportID: widget.catchReportID);
-                          });
-                        }
                       );
                     }),
                   ),
@@ -161,7 +158,7 @@ class _CatchReportScreenState extends State<CatchReportScreen> {
     );
   }
 
-  void _pushNewCatchForm({BuildContext context, VoidCallback onDismiss}) {
+  void _pushNewCatchForm({BuildContext context}) {
     final startDate = DateTime.parse(widget.catchReport.startDate);
     final endDate = DateTime.parse(widget.catchReport.endDate);
 
@@ -174,7 +171,6 @@ class _CatchReportScreenState extends State<CatchReportScreen> {
         screen: CatchFormScreenFull(
           dateRange: dateRange,
           catchReportID: widget.catchReportID,
-          onDismiss: onDismiss
         ),
         screenTitle: 'New Catch');
   }
@@ -196,26 +192,77 @@ class _NewCatchButton extends StatelessWidget {
   }
 }
 
-class _CatchListBuilder extends StatelessWidget {
-  _CatchListBuilder({@required this.catches});
+class _CatchListBuilder extends StatefulWidget {
+  _CatchListBuilder({@required this.catchReportID});
 
-  final List<Catch> catches;
+  final String catchReportID;
+
+  @override
+  __CatchListBuilderState createState() => __CatchListBuilderState();
+}
+
+class __CatchListBuilderState extends State<_CatchListBuilder> {
+  Stream<QuerySnapshot> _stream;
+
+  @override
+  void initState() {
+    _stream = FirebaseFirestore.instance
+        .collection('catches')
+        .where('catch_report_id', isEqualTo: widget.catchReportID)
+        .snapshots();
+
+    _stream.listen((event) {
+      print ('----- STREAM UPDATED -----');
+    });
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-        itemCount: catches.length,
-        padding: EdgeInsets.fromLTRB(8, 24, 8, 68),
-        separatorBuilder: (BuildContext context, int index) {
-          return DSComponents.singleSpacer();
-        },
-        itemBuilder: (context, index) {
-          final _catch = catches[index];
-          return CatchCell(
-            catchData: _catch,
-            height: _catch.catchType == 'missed' ? 200 : 275,
-          );
-        });
+    return StreamBuilder(
+      stream: _stream,
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (!snapshot.hasData) {
+          return Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.data.docs.isEmpty) {
+            return DSComponents.titleLarge(
+                text: 'No Catches  🎣',
+                alignment: Alignment.center
+            );
+          } else {
+            return ListView.separated(
+                itemCount: snapshot.data.docs.length,
+                padding: EdgeInsets.fromLTRB(8, 24, 8, 68),
+                separatorBuilder: (BuildContext context, int index) {
+                  return DSComponents.singleSpacer();
+                },
+                itemBuilder: (context, index) {
+                  final _catch = snapshot.data.docs[index];
+                  final _data = CatchJSONSerializer().fromMap(_catch.data());
+                  print('catch index: $index with id: ${_catch.id}');
+                  return CatchCell(
+                    catchData: _data,
+                    height: _data.catchType == 'missed' ? 200 : 275,
+                  );
+                });
+          }
+      },
+    );
+    // return ListView.separated(
+    //     itemCount: catches.length,
+    //     padding: EdgeInsets.fromLTRB(8, 24, 8, 68),
+    //     separatorBuilder: (BuildContext context, int index) {
+    //       return DSComponents.singleSpacer();
+    //     },
+    //     itemBuilder: (context, index) {
+    //       final _catch = catches[index];
+    //       return CatchCell(
+    //         catchData: _catch,
+    //         height: _catch.catchType == 'missed' ? 200 : 275,
+    //       );
+    //     });
   }
 }
 
