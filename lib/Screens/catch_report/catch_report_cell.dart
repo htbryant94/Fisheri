@@ -68,13 +68,12 @@ class CatchReportCell extends StatelessWidget {
               layout: BaseCellLayout.cover,
             );
           } else {
-            return RemoteImageBaseCell(
-              title: catchReport.lakeName,
-              subtitle: dateLabel(),
-              imageURL: null,
-              height: 278,
-              layout: BaseCellLayout.cover,
-            );
+              return Container(
+                height: 278,
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
           }
       },
       ),
