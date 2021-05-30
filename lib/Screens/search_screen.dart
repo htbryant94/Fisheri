@@ -1,5 +1,6 @@
 import 'dart:async';
-import 'dart:ui';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 import 'package:fisheri/Components/VerticalSlider.dart';
 import 'package:fisheri/Components/fisheri_icon_button.dart';
 import 'package:fisheri/Components/list_view_button.dart';
@@ -9,6 +10,7 @@ import 'package:fisheri/models/venue_search.dart';
 import 'package:fisheri/search_result_cell.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -31,6 +33,7 @@ class _SearchScreenState extends State<SearchScreen> {
   final Position _defaultPosition = Position(latitude: 51.979900, longitude: -0.214280);
   final double _selectedVenueCellHeight = 106.0;
   SearchFilters searchFilters = SearchFilters();
+  final iconSize = 125;
 
   GoogleMapController _mapController;
   final _firestore = FirebaseFirestore.instance;
@@ -39,8 +42,10 @@ class _SearchScreenState extends State<SearchScreen> {
   Stream<List<DocumentSnapshot>> stream;
   Set<Circle> _circles;
 
-  BitmapDescriptor _pinLocationIcon;
-  BitmapDescriptor _pinLocationIconGreen;
+  BitmapDescriptor _mapMarkerLakeUnselectedIcon;
+  BitmapDescriptor _mapMarkerLakeSelectedIcon;
+  BitmapDescriptor _mapMarkerShopUnselectedIcon;
+  BitmapDescriptor _mapMarkerShopSelectedIcon;
 
   Query _currentCollectionReference;
   final  _defaultCollectionReference = FirebaseFirestore.instance.collection('venues_search');
@@ -64,6 +69,18 @@ class _SearchScreenState extends State<SearchScreen> {
   double _zoomLevel = 8;
   double _lastRadius;
 
+  Future<Uint8List> getBytesFromAsset(String path, int width) async {
+    ByteData data = await rootBundle.load(path);
+    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(), targetWidth: width);
+    ui.FrameInfo fi = await codec.getNextFrame();
+    return (await fi.image.toByteData(format: ui.ImageByteFormat.png)).buffer.asUint8List();
+  }
+
+  Future<BitmapDescriptor> getBitmapDescriptorFromAssetBytes(String path, int width) async {
+    final Uint8List imageData = await getBytesFromAsset(path, width);
+    return BitmapDescriptor.fromBytes(imageData);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -74,18 +91,29 @@ class _SearchScreenState extends State<SearchScreen> {
     _center = _convertPositionToGeoPoint(_getPosition());
     _currentCollectionReference = _defaultCollectionReference;
 
-    BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(),
-        'images/icons/map_marker_unselected.png'
-    ).then((onValue) {
-      _pinLocationIcon = onValue;
+    getBitmapDescriptorFromAssetBytes('images/icons/map_marker_lake_unselected.png',iconSize)
+        .then((value) {
+          setState(() {
+            _mapMarkerLakeUnselectedIcon = value;
+          });
     });
-
-    BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(),
-        'images/icons/map_marker_selected.png'
-    ).then((onValue) {
-      _pinLocationIconGreen = onValue;
+    getBitmapDescriptorFromAssetBytes('images/icons/map_marker_lake_selected.png',iconSize)
+        .then((value) {
+      setState(() {
+        _mapMarkerLakeSelectedIcon = value;
+      });
+    });
+    getBitmapDescriptorFromAssetBytes('images/icons/map_marker_shop_unselected.png',iconSize)
+        .then((value) {
+      setState(() {
+        _mapMarkerShopUnselectedIcon = value;
+      });
+    });
+    getBitmapDescriptorFromAssetBytes('images/icons/map_marker_shop_selected.png',iconSize)
+        .then((value) {
+      setState(() {
+        _mapMarkerShopSelectedIcon = value;
+      });
     });
 
     stream = radius.switchMap((rad) {
@@ -485,8 +513,28 @@ class _SearchScreenState extends State<SearchScreen> {
     });
   }
 
+  BitmapDescriptor _getMapMarkerIcon(VenueSearch venue) {
+    if (_selectedVenue != null) {
+      if (venue.id == _selectedVenue.id && venue.categories.contains('lake')) {
+        return _mapMarkerLakeSelectedIcon;
+      } else if (venue.id != _selectedVenue.id && venue.categories.contains('lake')) {
+        return _mapMarkerLakeUnselectedIcon;
+      } else if (venue.id == _selectedVenue.id && !venue.categories.contains('lake')) {
+        return _mapMarkerShopSelectedIcon;
+      } else if (venue.id != _selectedVenue.id && !venue.categories.contains('lake')) {
+        return _mapMarkerShopUnselectedIcon;
+      }
+    } else {
+      if (venue.categories.contains('lake')) {
+        return _mapMarkerLakeUnselectedIcon;
+      } else {
+        return _mapMarkerShopUnselectedIcon;
+      }
+    }
+  }
+
   void _addMarker(
-      {VenueSearch venue, double lat, double long, String venueType}) {
+      {VenueSearch venue, double lat, double long, String venueType}) async {
     final markerId = MarkerId(venue.id);
     var _marker = Marker(
       onTap: () async {
@@ -498,7 +546,7 @@ class _SearchScreenState extends State<SearchScreen> {
       markerId: markerId,
       position: LatLng(lat, long),
       zIndex: _selectedVenue != null ? (venue.id == _selectedVenue.id ? 1.0 : 0.0) : 0.0,
-      icon: _selectedVenue != null ? (venue.id == _selectedVenue.id ? _pinLocationIconGreen : _pinLocationIcon) : _pinLocationIcon,
+      icon: _getMapMarkerIcon(venue),
     );
     setState(() {
       markers[markerId] = _marker;
