@@ -209,6 +209,8 @@ class __CatchListBuilderState extends State<_CatchListBuilder> {
     _stream = FirebaseFirestore.instance
         .collection('catches')
         .where('catch_report_id', isEqualTo: widget.catchReportID)
+        .orderBy('date', descending: true)
+        .orderBy('time', descending: true)
         .snapshots();
 
     _stream.listen((event) {
