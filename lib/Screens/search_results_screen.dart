@@ -209,7 +209,7 @@ class ListViewScreen extends StatelessWidget {
               if (item.image != null) {
                 return GestureDetector(
                   onTap: () {
-                    Coordinator.present(context, screenTitle: "Holiday", currentPageTitle: "France", screen: HolidayDetailScreen(venue: item.venue));
+                    Coordinator.present(context, screenTitle: 'Holiday', currentPageTitle: 'France', screen: HolidayDetailScreen(venue: item.venue));
                   },
                   child: NewLocalImageBaseCell(
                     title: item.title,
@@ -219,16 +219,23 @@ class ListViewScreen extends StatelessWidget {
                   ),
                 );
               } else if (item.imageURL != null) {
-                return RemoteImageBaseCell(
-                  title: item.title,
-                  subtitle: item.subtitle,
-                  imageURL: item.imageURL,
-                  elements: item.additionalInformation.map((info) => DSComponents.body(text: info)).toList(),
+                return GestureDetector(
+                  onTap: () {
+                    Coordinator.present(context, screenTitle: 'Holiday', currentPageTitle: 'France', screen: HolidayDetailScreen(venue: item.venue));
+                  },
+                  child: RemoteImageBaseCell(
+                    title: item.title,
+                    subtitle: item.subtitle,
+                    imageURL: item.imageURL,
+                    layout: BaseCellLayout.cover,
+                    height: 278,
+                    elements: item.additionalInformation.map((info) => DSComponents.body(text: info)).toList(),
+                  ),
                 );
               } else {
                 return GestureDetector(
                   onTap: () {
-                    Coordinator.present(context, screenTitle: "Holiday", currentPageTitle: "France", screen: HolidayDetailScreen(venue: item.venue));
+                    Coordinator.present(context, screenTitle: 'Holiday', currentPageTitle: 'France"', screen: HolidayDetailScreen(venue: item.venue));
                   },
                   child: RemoteImageBaseCell(
                     title: item.title,

@@ -8,6 +8,7 @@ import 'package:fisheri/design_system.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:recase/recase.dart';
 import 'Screens/auth_screen.dart';
 import 'Screens/search_screen.dart';
 import 'fonts/custom_icons_icons.dart';
@@ -111,17 +112,32 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin 
               case 2:
                 return SafeArea(
                   child: CupertinoTabView(builder: (context) {
-                    final _items = HolidayData.franceResults.map(
+                    var _items = HolidayData.franceResults.map(
                             (holiday) => ListViewItem(
                             title: holiday.name,
-                            subtitle: '🇫🇷 ${holiday.country} • ⛴ ${holiday.airport}',
+                            imageURL: holiday.images != null ? holiday.images.first : null,
+                            subtitle: '🇫🇷 ${holiday.country}',
                             additionalInformation: [
-                              '${holiday.lakeSize} acres',
-                              StringUtils.capitalize(describeEnum(holiday.difficulty)),
+                              'From Calais: ${holiday.distanceFromCalais} miles',
+                              ReCase(describeEnum(holiday.difficulty)).titleCase,
                             ],
                             venue: holiday
                         )
                     ).toList();
+
+                    _items += HolidayData.belgiumResults.map(
+                            (holiday) => ListViewItem(
+                            title: holiday.name,
+                            imageURL: holiday.images != null ? holiday.images.first : null,
+                            subtitle: '🇧🇪 ${holiday.country}',
+                            additionalInformation: [
+                              'From Calais: ${holiday.distanceFromCalais} miles',
+                              ReCase(describeEnum(holiday.difficulty)).titleCase,
+                            ],
+                            venue: holiday
+                        )
+                    ).toList();
+
                     return CupertinoPageScaffold(
                       navigationBar: CupertinoNavigationBar(
                         middle: Text('Holidays'),

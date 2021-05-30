@@ -49,7 +49,9 @@ class _ImageCarouselState extends State<ImageCarousel> {
                 setState(() {
                   _currentPageNotifier.value = index;
                 });
-                widget.indexChanged(_currentPageNotifier.value);
+                if (widget.indexChanged != null) {
+                  widget.indexChanged(_currentPageNotifier.value);
+                }
               },
           ),
           carouselController: widget.controller,

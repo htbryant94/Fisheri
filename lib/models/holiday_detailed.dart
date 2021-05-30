@@ -4,56 +4,53 @@ import 'package:fisheri/models/venue_detailed.dart';
 
 class HolidayDetailed {
   HolidayDetailed({
-    this.coordinates,
     this.country,
     this.name,
-    this.airport,
-    this.distanceFromAirport,
+    this.distanceFromCalais,
+    this.bookingURL,
     this.difficulty,
     this.fishStocked,
     this.largestCarp,
     this.largestCatfish,
     this.maxAnglers,
-    this.lakeSize,
     this.description,
     this.priceInfo,
     this.amenities,
+    this.coordinates,
     this.address,
     this.images,
     this.videos,
-    this.contactDetails,
     this.fishingRules,
-    this.social,
+    this.contactDetails,
     this.websiteURL,
-    this.bookingURL,
+    this.social,
 });
 
-  GeoPoint coordinates;
   String country;
   String name;
-  String airport;
-  String distanceFromAirport;
+  String distanceFromCalais;
+  String bookingURL;
   FishingDifficulty difficulty;
-  List<String> fishStocked;
+  List<FishStock> fishStocked;
   String largestCarp;
   String largestCatfish;
   int maxAnglers;
-  int lakeSize;
   String description;
   String priceInfo;
   List<String> amenities;
+  GeoPoint coordinates;
   VenueAddress address;
   List<String> images;
   List<String> videos;
-  ContactDetails contactDetails;
   List<String> fishingRules;
-  Social social;
+  ContactDetails contactDetails;
   String websiteURL;
-  String bookingURL;
+  Social social;
 }
 
 enum FishingDifficulty {
-  amateur,
-  intermediate,
-  professional,
+  easy,
+  moderate,
+  hard,
+  easyToHard,
 }

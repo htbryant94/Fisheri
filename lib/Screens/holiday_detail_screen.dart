@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_controller.dart';
 import 'package:fisheri/Screens/book_tickets_screen.dart';
 import 'package:fisheri/Screens/detail_screen/contact_section.dart';
 import 'package:fisheri/Screens/detail_screen/contents_section.dart';
@@ -6,7 +7,6 @@ import 'package:fisheri/Screens/detail_screen/social_media_section.dart';
 import 'package:fisheri/coordinator.dart';
 import 'package:fisheri/design_system.dart';
 import 'package:fisheri/models/holiday_detailed.dart';
-import 'package:fisheri/models/venue_address.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -18,23 +18,32 @@ import 'package:fisheri/Screens/detail_screen/amenities_section.dart';
 import 'package:fisheri/Screens/detail_screen/fish_stocked_section.dart';
 import 'package:flutter/rendering.dart';
 
+import 'detail_screen/fullscreen_image_carousel.dart';
 import 'detail_screen/map_view_section.dart';
 
-class HolidayDetailScreen extends StatelessWidget {
+class HolidayDetailScreen extends StatefulWidget {
   HolidayDetailScreen({
     @required this.venue,
     this.imageURL,
   });
 
-  List<String> sectionContents = [];
   final HolidayDetailed venue;
   final String imageURL;
 
+  @override
+  _HolidayDetailScreenState createState() => _HolidayDetailScreenState();
+}
+
+class _HolidayDetailScreenState extends State<HolidayDetailScreen> {
+  List<String> sectionContents = [];
+  int _currentImageCarouselIndex = 0;
+  final _carouselController = CarouselController();
+
   bool hasSocialLinks() {
-    return venue.social.facebook != null && venue.social.facebook.isNotEmpty ||
-        venue.social.twitter != null && venue.social.twitter.isNotEmpty ||
-        venue.social.instagram != null && venue.social.instagram.isNotEmpty ||
-        venue.social.youtube != null && venue.social.youtube.isNotEmpty;
+    return widget.venue.social.facebook != null && widget.venue.social.facebook.isNotEmpty ||
+        widget.venue.social.twitter != null && widget.venue.social.twitter.isNotEmpty ||
+        widget.venue.social.instagram != null && widget.venue.social.instagram.isNotEmpty ||
+        widget.venue.social.youtube != null && widget.venue.social.youtube.isNotEmpty;
   }
 
   List<Widget> buildSections(HolidayDetailed venue) {
@@ -103,11 +112,13 @@ class HolidayDetailScreen extends StatelessWidget {
     sections.add(AmenitiesSection(venue.amenities));
     sections.add(DSComponents.divider());
 
-    sections.add(FishStockSectionFactory.fromStringArray(venue.fishStocked));
+    sections.add(FishStockSectionFactory.standard(venue.fishStocked));
     sections.add(DSComponents.divider());
 
-    sections.add(FishingRulesSection(fishingRules: venue.fishingRules));
-    sections.add(DSComponents.divider());
+    if (venue.fishingRules != null) {
+      sections.add(FishingRulesSection(fishingRules: venue.fishingRules));
+      sections.add(DSComponents.divider());
+    }
 
     sections.add(SocialMediaSection(social: venue.social));
 
@@ -126,13 +137,34 @@ class HolidayDetailScreen extends StatelessWidget {
               scrollDirection: Axis.vertical,
               child: Column(
                 children: [
-                  ImageCarousel(
-                    imageURLs: venue.images,
+                  GestureDetector(
+                    onTap: () {
+                      Coordinator.present(
+                          context,
+                          showNavigationBar: false,
+                          screen: FullscreenImageCarousel(
+                            carouselController: _carouselController,
+                            images: widget.venue.images,
+                            initialIndex: _currentImageCarouselIndex,
+                          )
+                      );
+                    },
+                    child: ImageCarousel(
+                      imageURLs: widget.venue.images,
+                      index: _currentImageCarouselIndex,
+                      controller: _carouselController,
+                      height: 268,
+                      indexChanged: (index) {
+                        setState(() {
+                          _currentImageCarouselIndex = index;
+                        });
+                      },
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(
                         vertical: 30, horizontal: 24),
-                    child: Column(children: buildSections(venue)),
+                    child: Column(children: buildSections(widget.venue)),
                   ),
                 ],
               ),

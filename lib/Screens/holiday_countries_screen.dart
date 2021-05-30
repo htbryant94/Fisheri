@@ -19,9 +19,8 @@ class HolidayCountriesScreen extends StatelessWidget {
             results: HolidayData.franceResults.map(
                     (holiday) => ListViewItem(
                       title: holiday.name,
-                      subtitle: holiday.airport,
+                      subtitle: 'Distance from Calais: ${holiday.distanceFromCalais}',
                       additionalInformation: [
-                        "${holiday.lakeSize} acres",
                         StringUtils.capitalize(describeEnum(holiday.difficulty)),
                       ],
                       venue: holiday

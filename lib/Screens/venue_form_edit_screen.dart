@@ -8,6 +8,8 @@ import 'package:fisheri/models/hours_of_operation.dart';
 import 'package:fisheri/models/venue_address.dart';
 import 'package:fisheri/models/venue_detailed.dart';
 import 'package:fisheri/models/venue_search.dart';
+import 'package:fisheri/types/amenities.dart';
+import 'package:fisheri/types/fish_stock_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -820,23 +822,6 @@ class _AddressSection extends StatelessWidget {
   }
 }
 
-enum Amenities {
-  toilets,
-  showers,
-  foodAndDrink,
-  nightFishing,
-  wheelchairAccess,
-  guestsAllowed,
-  trolleyHire,
-  takeawayFriendly,
-  animalFriendly,
-  tuition,
-  electricity,
-  equipmentHire,
-  wifi,
-  camping,
-}
-
 class _AmenitiesSection extends StatelessWidget {
   final ReCase toilets = ReCase(describeEnum(Amenities.toilets));
   final ReCase showers = ReCase(describeEnum(Amenities.showers));
@@ -961,41 +946,13 @@ class _ContactDetailsSection extends StatelessWidget {
   }
 }
 
-enum FishStock {
-  barbel,
-  bream,
-  brownTrout,
-  chub,
-  commonCarp,
-  crucianCarp,
-  dace,
-  eel,
-  grassCarp,
-  grayling,
-  gudgeon,
-  ide,
-  koiCarp,
-  mirrorCarp,
-  orfe,
-  perch,
-  pike,
-  rainbowTrout,
-  roach,
-  rudd,
-  ruffe,
-  salmon,
-  tench,
-  welsCatfish,
-  zander
-}
-
 class _FishStockedSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
 
     List<FormBuilderFieldOption> options() {
-      final fishStocked = FishStock.values;
+      final fishStocked = FishStockList.values;
       return fishStocked.map((fish) =>
       FormBuilderFieldOption(
         value: ReCase(describeEnum(fish)).snakeCase,

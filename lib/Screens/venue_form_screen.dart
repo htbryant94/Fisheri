@@ -8,6 +8,7 @@ import 'package:fisheri/models/hours_of_operation.dart';
 import 'package:fisheri/models/venue_address.dart';
 import 'package:fisheri/models/venue_detailed.dart';
 import 'package:fisheri/models/venue_search.dart';
+import 'package:fisheri/types/amenities.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';

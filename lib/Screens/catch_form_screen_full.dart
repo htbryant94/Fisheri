@@ -3,9 +3,9 @@ import 'dart:ui';
 import 'package:basic_utils/basic_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:fisheri/Screens/venue_form_edit_screen.dart';
 import 'package:fisheri/WeightConverter.dart';
 import 'package:fisheri/alert_dialog_factory.dart';
+import 'package:fisheri/types/fish_stock_list.dart';
 import 'package:fisheri/types/weather_condition.dart';
 import 'package:fisheri/types/wind_direction.dart';
 import 'package:flutter/foundation.dart';
@@ -489,7 +489,7 @@ class _TypeOfFishSection extends StatelessWidget {
       return _DropDownMenuBuilder(
         title: title,
         attribute: attribute,
-        items: FishStock.values.map((fish) => describeEnum(fish)).toList(),
+        items: FishStockList.values.map((fish) => describeEnum(fish)).toList(),
         isRequired: true,
       );
   }
