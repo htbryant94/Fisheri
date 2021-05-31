@@ -46,6 +46,7 @@ class _SearchScreenState extends State<SearchScreen> {
   BitmapDescriptor _mapMarkerLakeSelectedIcon;
   BitmapDescriptor _mapMarkerShopUnselectedIcon;
   BitmapDescriptor _mapMarkerShopSelectedIcon;
+  BitmapDescriptor _mapMarkerEmbryoIcon;
 
   Query _currentCollectionReference;
   final  _defaultCollectionReference = FirebaseFirestore.instance.collection('venues_search');
@@ -113,6 +114,12 @@ class _SearchScreenState extends State<SearchScreen> {
         .then((value) {
       setState(() {
         _mapMarkerShopSelectedIcon = value;
+      });
+    });
+    getBitmapDescriptorFromAssetBytes('images/icons/map_marker_embryo.png', 100)
+        .then((value) {
+      setState(() {
+        _mapMarkerEmbryoIcon = value;
       });
     });
 
@@ -514,7 +521,9 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   BitmapDescriptor _getMapMarkerIcon(VenueSearch venue) {
-    if (_selectedVenue != null) {
+    if (venue.name.contains('Embryo Angling')) {
+      return _mapMarkerEmbryoIcon;
+    } else if (_selectedVenue != null) {
       if (venue.id == _selectedVenue.id && venue.categories.contains('lake')) {
         return _mapMarkerLakeSelectedIcon;
       } else if (venue.id != _selectedVenue.id && venue.categories.contains('lake')) {
