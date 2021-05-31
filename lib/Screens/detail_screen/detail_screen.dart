@@ -93,7 +93,7 @@ class _DetailScreenState extends State<DetailScreen> {
   }
 
   bool canShowSwims() {
-    return widget.id == 'MshwqxCOXrfdI8mnoYNK' || widget.id == 'O2HrBE1LqynNfXN2AvHX'; // Harry's Fishery & Manor Farm Lakes ID
+    return widget.id == 'O2HrBE1LqynNfXN2AvHX'; // Manor Farm Lakes
   }
 
   bool canShowShops() {
@@ -101,7 +101,7 @@ class _DetailScreenState extends State<DetailScreen> {
   }
 
   bool canShow360Images() {
-    return widget.id == 'MshwqxCOXrfdI8mnoYNK' || widget.id == 'O2HrBE1LqynNfXN2AvHX'; // Harry's Fishery & Manor Farm Lakes ID
+    return widget.id == 'O2HrBE1LqynNfXN2AvHX'; // Manor Farm Lakes
   }
 
   List<Widget> buildSections(BuildContext context, VenueDetailed venue) {
@@ -153,9 +153,8 @@ class _DetailScreenState extends State<DetailScreen> {
       text: venue.description,
     ));
 
-    sections.add(DSComponents.doubleSpacer());
-
-    sections.add(DSComponents.subheaderSmall(text: 'ID: ${widget.id}', alignment: Alignment.centerLeft));
+    // sections.add(DSComponents.doubleSpacer());
+    // sections.add(DSComponents.subheaderSmall(text: 'ID: ${widget.id}', alignment: Alignment.centerLeft));
 
     sections.add(DSComponents.paragraphSpacer());
 
