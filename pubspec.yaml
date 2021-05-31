@@ -163,6 +163,11 @@ flutter:
     - images/placeholders/swims/swim_4.jpg
     - images/placeholders/swims/swim_5.jpg
     - images/placeholders/swims/swim_6.jpg
+    - images/placeholders/shops/Waltham_Cross_1.jpg
+    - images/placeholders/shops/Waltham_Cross_2.jpg
+    - images/placeholders/shops/Waltham_Cross_3.jpg
+    - images/placeholders/shops/Waltham_Cross_4.jpg
+    - images/placeholders/shops/Waltham_Cross_5.jpg
 
   # To add assets to your application, add an assets section, like this:
   # assets:

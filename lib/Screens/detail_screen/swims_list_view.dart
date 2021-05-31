@@ -4,35 +4,42 @@ import 'package:panorama/panorama.dart';
 import '../../coordinator.dart';
 import '../../design_system.dart';
 
-class Swim {
-  Swim({
+class PanoramaItem {
+  PanoramaItem({
     this.name,
     this.imageURL,
   });
-
+  
   final String name;
   final String imageURL;
 }
 
-class SwimsListView extends StatelessWidget {
-  SwimsListView({
-    @required this.swims,
+class PanoramaRail extends StatelessWidget {
+  PanoramaRail({
+    this.title,
+    @required this.items,
   });
 
-  final List<Swim> swims;
+  final String title;
+  final List<PanoramaItem> items;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        DSComponents.header(text: 'Swims'),
-        DSComponents.paragraphSpacer(),
+        if (title != null)
+        Column(
+          children: [
+            DSComponents.header(text: title),
+            DSComponents.paragraphSpacer(),
+          ],
+        ),
         Container(
             height: 200,
             child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 padding: EdgeInsets.all(0),
-                itemCount: swims.length,
+                itemCount: items.length,
                 separatorBuilder: (BuildContext context, int index) {
                   return DSComponents.doubleSpacer();
                 },
@@ -49,7 +56,7 @@ class SwimsListView extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 clipBehavior: Clip.antiAliasWithSaveLayer,
-                                child: Image.asset(swims[index].imageURL, fit: BoxFit.fill)
+                                child: Image.asset(items[index].imageURL, fit: BoxFit.fill)
                             ),
                           ),
                           onTap: () {
@@ -57,14 +64,19 @@ class SwimsListView extends StatelessWidget {
                                 context,
                                 screenTitle: '360° View',
                                 screen: Panorama(
-                                  child: Image.asset(swims[index].imageURL),
+                                  child: Image.asset(items[index].imageURL),
                                 )
                             );
                           },
                         ),
                       ),
-                      DSComponents.singleSpacer(),
-                      DSComponents.subheader(text: swims[index].name)
+                      if (items[index].name != null)
+                      Column(
+                        children: [
+                          DSComponents.singleSpacer(),
+                          DSComponents.subheader(text: items[index].name)
+                        ],
+                      )
                     ],
                   );
                 })

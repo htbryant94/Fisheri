@@ -51,12 +51,20 @@ class _DetailScreenState extends State<DetailScreen> {
   final _carouselController = CarouselController();
 
   final _swimsData = [
-    Swim(name: 'Car-park Bay', imageURL: 'images/placeholders/swims/swim_1.jpg'),
-    Swim(name: 'Narrow Point', imageURL: 'images/placeholders/swims/swim_2.jpg'),
-    Swim(name: 'Right-hand Bank', imageURL: 'images/placeholders/swims/swim_3.jpg'),
-    Swim(name: 'A1 Bay', imageURL: 'images/placeholders/swims/swim_4.jpg'),
-    Swim(name: 'Overgrown', imageURL: 'images/placeholders/swims/swim_5.jpg'),
-    Swim(name: 'Far Bay', imageURL: 'images/placeholders/swims/swim_6.jpg'),
+    PanoramaItem(name: 'Car-park Bay', imageURL: 'images/placeholders/swims/swim_1.jpg'),
+    PanoramaItem(name: 'Narrow Point', imageURL: 'images/placeholders/swims/swim_2.jpg'),
+    PanoramaItem(name: 'Right-hand Bank', imageURL: 'images/placeholders/swims/swim_3.jpg'),
+    PanoramaItem(name: 'A1 Bay', imageURL: 'images/placeholders/swims/swim_4.jpg'),
+    PanoramaItem(name: 'Overgrown', imageURL: 'images/placeholders/swims/swim_5.jpg'),
+    PanoramaItem(name: 'Far Bay', imageURL: 'images/placeholders/swims/swim_6.jpg'),
+  ];
+
+  final _shopData = [
+    PanoramaItem(name: null, imageURL: 'images/placeholders/shops/Waltham_Cross_1.jpg'),
+    PanoramaItem(name: null, imageURL: 'images/placeholders/shops/Waltham_Cross_2.jpg'),
+    PanoramaItem(name: null, imageURL: 'images/placeholders/shops/Waltham_Cross_3.jpg'),
+    PanoramaItem(name: null, imageURL: 'images/placeholders/shops/Waltham_Cross_4.jpg'),
+    PanoramaItem(name: null, imageURL: 'images/placeholders/shops/Waltham_Cross_5.jpg'),
   ];
 
   bool isLake() {
@@ -86,6 +94,10 @@ class _DetailScreenState extends State<DetailScreen> {
 
   bool canShowSwims() {
     return widget.id == 'MshwqxCOXrfdI8mnoYNK' || widget.id == 'O2HrBE1LqynNfXN2AvHX'; // Harry's Fishery & Manor Farm Lakes ID
+  }
+
+  bool canShowShops() {
+    return widget.id == 'PAgCOwaht3K6wJqUo6fo'; // Angling Direct Chelmsford
   }
 
   bool canShow360Images() {
@@ -128,7 +140,12 @@ class _DetailScreenState extends State<DetailScreen> {
     sections.add(DSComponents.paragraphSpacer());
 
     if (canShowSwims()) {
-      sections.add(SwimsListView(swims: _swimsData));
+      sections.add(PanoramaRail(title: 'Swims', items: _swimsData));
+      sections.add(DSComponents.divider());
+    }
+
+    if (canShowShops()) {
+      sections.add(PanoramaRail(title: null, items: _shopData));
       sections.add(DSComponents.divider());
     }
 
