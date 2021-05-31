@@ -10,7 +10,7 @@ import 'package:fisheri/models/venue_search.dart';
 import 'package:fisheri/search_result_cell.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -36,6 +36,7 @@ class _SearchScreenState extends State<SearchScreen> {
   final iconSize = 125;
 
   GoogleMapController _mapController;
+  String _mapStyle;
   final _firestore = FirebaseFirestore.instance;
 
   StreamSubscription<Position> positionStream;
@@ -91,6 +92,10 @@ class _SearchScreenState extends State<SearchScreen> {
 
     _center = _convertPositionToGeoPoint(_getPosition());
     _currentCollectionReference = _defaultCollectionReference;
+
+    rootBundle.loadString('assets/map_style.txt').then((string) {
+      _mapStyle = string;
+    });
 
     getBitmapDescriptorFromAssetBytes('images/icons/map_marker_lake_unselected.png',iconSize)
         .then((value) {
@@ -580,7 +585,7 @@ class _SearchScreenState extends State<SearchScreen> {
     setState(() {
       _mapController = controller;
     });
-
+    _mapController.setMapStyle(_mapStyle);
     _getCurrentLocation();
   }
 }
