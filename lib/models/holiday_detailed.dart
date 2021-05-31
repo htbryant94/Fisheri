@@ -24,6 +24,7 @@ class HolidayDetailed {
     this.contactDetails,
     this.websiteURL,
     this.social,
+    this.isSponsored,
 });
 
   String country;
@@ -46,6 +47,7 @@ class HolidayDetailed {
   ContactDetails contactDetails;
   String websiteURL;
   Social social;
+  bool isSponsored;
 }
 
 enum FishingDifficulty {

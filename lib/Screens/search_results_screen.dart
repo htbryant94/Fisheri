@@ -191,7 +191,8 @@ class ListViewItem {
     this.imageURL,
     this.image,
     this.additionalInformation,
-    this.venue
+    this.venue,
+    this.isSponsored = false
 });
 
   final String title;
@@ -200,6 +201,7 @@ class ListViewItem {
   final Image image;
   final List<String> additionalInformation;
   final HolidayDetailed venue;
+  final bool isSponsored;
 }
 
 class ListViewScreen extends StatelessWidget {
@@ -246,6 +248,7 @@ class ListViewScreen extends StatelessWidget {
                     layout: BaseCellLayout.cover,
                     height: 278,
                     elements: item.additionalInformation.map((info) => DSComponents.body(text: info)).toList(),
+                    isSponsored: item.isSponsored,
                   ),
                 );
               } else {

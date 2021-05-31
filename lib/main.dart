@@ -121,7 +121,8 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin 
                               'From Calais: ${holiday.distanceFromCalais} miles',
                               ReCase(describeEnum(holiday.difficulty)).titleCase,
                             ],
-                            venue: holiday
+                                venue: holiday,
+                                isSponsored: holiday.isSponsored
                         )
                     ).toList();
 

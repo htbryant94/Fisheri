@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fisheri/Components/favourite_button.dart';
+import 'package:fisheri/Components/pill.dart';
 import 'package:fisheri/design_system.dart';
 import 'package:fisheri/house_texts.dart';
 import 'package:flutter/material.dart';
@@ -228,6 +229,7 @@ class RemoteImageBaseCell extends StatelessWidget {
     this.layout = BaseCellLayout.thumbnail,
     this.imageBoxFit = BoxFit.fitHeight,
     this.showImage = true,
+    this.isSponsored = false,
   });
 
   final String defaultImagePath;
@@ -239,6 +241,7 @@ class RemoteImageBaseCell extends StatelessWidget {
   final BaseCellLayout layout;
   final BoxFit imageBoxFit;
   final bool showImage;
+  final bool isSponsored;
 
   List<Widget> _children() {
     var stuff = <Widget>[
@@ -306,7 +309,7 @@ class RemoteImageBaseCell extends StatelessWidget {
             clipBehavior: Clip.antiAliasWithSaveLayer,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: DSColors.grey.withOpacity(0.5), width: 0.5),
+              border: !isSponsored ? Border.all(color: DSColors.grey.withOpacity(0.5), width: 0.5) : Border.all(color: DSColors.green, width: 6),
             ),
             child: CachedNetworkImage(
                   fit: BoxFit.cover,
@@ -324,6 +327,17 @@ class RemoteImageBaseCell extends StatelessWidget {
                     right: 16,
                     bottom: 16,
                     child: FavouriteButton(),
+                  ),
+                  if (isSponsored)
+                  Positioned(
+                    top: 12,
+                    left: 12,
+                    child: Pill(
+                      color: DSColors.pastelGreen,
+                      title: 'Sponsored',
+                      titleColor: DSColors.green,
+                      icon: Icon(Icons.star_outline_outlined, color: DSColors.green, size: 18),
+                    )
                   )
                 ],
               ) : Container(

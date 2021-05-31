@@ -24,6 +24,7 @@ class HolidayData {
   static final _giganticaMain = HolidayDetailed(
     country: 'France',
     name: 'Gigantica (Main Lake)',
+    isSponsored: true,
     distanceFromCalais: '245',
     bookingURL: 'http://www.gigantica-carp.com/availability',
     difficulty: FishingDifficulty.hard,
@@ -92,6 +93,7 @@ class HolidayData {
   static final _giganticaRoad = HolidayDetailed(
     country: 'France',
     name: 'Gigantica (Road Lake)',
+    isSponsored: false,
     distanceFromCalais: '245',
     bookingURL: 'http://www.gigantica-carp.com/availability',
     difficulty: FishingDifficulty.moderate,
@@ -158,6 +160,7 @@ class HolidayData {
   static final _carpinsula = HolidayDetailed(
     country: 'Belgium',
     name: 'Carpinsula',
+    isSponsored: false,
     distanceFromCalais: '145',
     bookingURL: 'https://www.thecarpspecialist.co.uk/carp-lakes/carpinsula-belly-pool',
     difficulty: FishingDifficulty.easyToHard,
