@@ -118,13 +118,15 @@ class SearchResultCell extends StatelessWidget {
     @required this.venue,
     this.index,
     this.layout,
-    this.distanceIndicator
+    this.distanceIndicator,
+    this.userCurrentPosition,
   });
 
   final VenueSearch venue;
   final int index;
   final BaseCellLayout layout;
   final Widget distanceIndicator;
+  final GeoPoint userCurrentPosition;
 
   @override
   Widget build(BuildContext context) {
@@ -138,7 +140,13 @@ class SearchResultCell extends StatelessWidget {
             print('detail screen for venueID: ${venue.id}');
             final _venue = VenueDetailedJSONSerializer().fromMap(document.data());
             Coordinator.pushVenueDetailScreen(
-                context, 'Map', _venue, venue.imageURL, venue.id);
+                context,
+                'Map',
+                _venue,
+                venue.imageURL,
+                venue.id,
+                userCurrentPosition,
+            );
           });
         },
         child: RemoteImageBaseCell(

@@ -103,6 +103,7 @@ class SearchResultsScreen extends StatelessWidget {
                           return SearchResultCell(
                             venue: venue,
                             layout: BaseCellLayout.cover,
+                            userCurrentPosition: userCurrentLocation,
                             distanceIndicator: DistanceIndicator(
                                 selectedVenueLocation: searchResults[index].geoPoint,
                                 userCurrentLocation: userCurrentLocation

@@ -1,4 +1,6 @@
 import 'package:carousel_slider/carousel_controller.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fisheri/Components/distance_indicator.dart';
 import 'package:fisheri/Components/fisheri_icon_button.dart';
 import 'package:fisheri/Screens/book_tickets_screen.dart';
 import 'package:fisheri/Screens/detail_screen/contact_section.dart';
@@ -34,12 +36,14 @@ class DetailScreen extends StatefulWidget {
     this.imageURL,
     this.index,
     this.id,
+    this.userCurrentLocation,
   });
 
   final VenueDetailed venue;
   final String imageURL;
   final int index;
   final String id;
+  final GeoPoint userCurrentLocation;
 
   @override
   _DetailScreenState createState() => _DetailScreenState();
@@ -120,15 +124,15 @@ class _DetailScreenState extends State<DetailScreen> {
 
     sections.add(DSComponents.doubleSpacer());
 
-    sections.add(Row(
-      children: [
-        Icon(Icons.location_on, color: Colors.green, size: 20),
-        DSComponents.halfSpacer(),
-        DSComponents.body(text: '5.6 miles')
-      ],
-    ));
-
-    sections.add(DSComponents.doubleSpacer());
+    if (venue.coordinates != null && widget.userCurrentLocation != null) {
+      sections.add(
+          DistanceIndicator(
+            selectedVenueLocation: venue.coordinates,
+            userCurrentLocation: widget.userCurrentLocation,
+          )
+      );
+      sections.add(DSComponents.doubleSpacer());
+    }
 
     if (venue.categories != null) {
       sections.add(VenueCategoriesSection(

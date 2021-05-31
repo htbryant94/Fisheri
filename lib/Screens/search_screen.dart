@@ -359,6 +359,7 @@ class _SearchScreenState extends State<SearchScreen> {
               child: _SelectedVenueCell(
                   selectedVenueCellHeight: _selectedVenueCellHeight,
                   selectedVenue: _selectedVenue,
+                  currentPosition: GeoPoint(_currentPosition.latitude, _currentPosition.longitude),
               ),
             ),
                 Align(
@@ -595,13 +596,16 @@ class _SelectedVenueCell extends StatelessWidget {
     Key key,
     @required double selectedVenueCellHeight,
     @required VenueSearch selectedVenue,
+    @required GeoPoint currentPosition,
   }) :
         _selectedVenueCellHeight = selectedVenueCellHeight,
         _selectedVenue = selectedVenue,
+        _currentPosition = currentPosition,
         super(key: key);
 
   final double _selectedVenueCellHeight;
   final VenueSearch _selectedVenue;
+  final GeoPoint _currentPosition;
 
   @override
   Widget build(BuildContext context) {
@@ -618,7 +622,13 @@ class _SelectedVenueCell extends StatelessWidget {
             onTap: () async {
               await FirestoreRequestService.defaultService().getVenueDetailed(_selectedVenue.id).then((venue) {
                 if (venue != null) {
-                  Coordinator.pushVenueDetailScreen(context, 'Map', venue, _selectedVenue.imageURL, _selectedVenue.id);
+                  Coordinator.pushVenueDetailScreen(
+                    context,
+                    'Map',
+                    venue, _selectedVenue.imageURL,
+                    _selectedVenue.id,
+                    _currentPosition
+                  );
                 }
               });
             },

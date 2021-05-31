@@ -50,10 +50,22 @@ class Coordinator {
         ));
   }
 
-  static void pushVenueDetailScreen(BuildContext context, String currentPageTitle, VenueDetailed venue, String imageURL, String id) {
+  static void pushVenueDetailScreen(
+      BuildContext context,
+      String currentPageTitle,
+      VenueDetailed venue,
+      String imageURL,
+      String id,
+      GeoPoint userCurrentLocation,
+      ) {
     presentCupertinoPageRoute(context,
     CupertinoPageScaffold(
-      child: DetailScreen(venue: venue, imageURL: imageURL, id: id),
+      child: DetailScreen(
+        venue: venue,
+        imageURL: imageURL,
+        id: id,
+        userCurrentLocation: userCurrentLocation,
+      ),
     ));
   }
 
