@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fisheri/alert_dialog_factory.dart';
 import 'package:fisheri/coordinator.dart';
 import 'package:fisheri/design_system.dart';
@@ -265,6 +266,7 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
                       final _isCustomLake = selectedReportType == 'custom';
 
                       final _catchReport = CatchReport(
+                        userID: FirebaseAuth.instance.currentUser.uid,
                         lakeID: _isCustomLake ? null : _document.id,
                         lakeName: _isCustomLake ? _valueFor(attribute: 'custom_name') : _document['name'],
                         startDate: _startDate.toIso8601String(),

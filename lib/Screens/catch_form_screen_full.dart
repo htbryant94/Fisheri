@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:basic_utils/basic_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fisheri/WeightConverter.dart';
 import 'package:fisheri/alert_dialog_factory.dart';
@@ -266,6 +267,7 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                                   print('creating catch');
 
                                   catchModel = Catch(
+                                    userID: FirebaseAuth.instance.currentUser.uid,
                                     catchType: describeEnum(selectedCatchType),
                                     catchReportID: widget.catchReportID,
                                     date: date != null ? date.toIso8601String() : null,

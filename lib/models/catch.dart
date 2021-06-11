@@ -11,6 +11,7 @@ part 'catch.jser.dart';
     'typeOfFish': EnDecode(alias: 'type_of_fish'),
     'weatherCondition': EnDecode(alias: 'weather_condition'),
     'windDirection': EnDecode(alias: 'wind_direction'),
+    'userID': EnDecode(alias: 'user_id'),
   },
 )
 
@@ -19,6 +20,7 @@ class CatchJSONSerializer extends Serializer<Catch>
 
 class Catch {
   Catch({
+    this.userID,
     this.catchType,
     this.catchReportID,
     this.date,
@@ -34,6 +36,7 @@ class Catch {
     this.images,
   });
 
+  String userID;
   String catchType;
   String catchReportID;
   String date;

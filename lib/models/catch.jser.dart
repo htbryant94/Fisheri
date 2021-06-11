@@ -11,6 +11,7 @@ abstract class _$CatchJSONSerializer implements Serializer<Catch> {
   Map<String, dynamic> toMap(Catch model) {
     if (model == null) return null;
     Map<String, dynamic> ret = <String, dynamic>{};
+    setMapValue(ret, 'user_id', model.userID);
     setMapValue(ret, 'catch_type', model.catchType);
     setMapValue(ret, 'catch_report_id', model.catchReportID);
     setMapValue(ret, 'date', model.date);
@@ -32,6 +33,7 @@ abstract class _$CatchJSONSerializer implements Serializer<Catch> {
   Catch fromMap(Map map) {
     if (map == null) return null;
     final obj = Catch();
+    obj.userID = map['user_id'] as String;
     obj.catchType = map['catch_type'] as String;
     obj.catchReportID = map['catch_report_id'] as String;
     obj.date = map['date'] as String;

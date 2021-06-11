@@ -9,6 +9,7 @@ part 'catch_report.jser.dart';
     'lakeName': EnDecode(alias: 'lake_name'),
     'startDate': EnDecode(alias: 'start_date'),
     'endDate': EnDecode(alias: 'end_date'),
+    'userID': EnDecode(alias: 'user_id'),
   },
 )
 
@@ -17,6 +18,7 @@ class CatchReportJSONSerializer extends Serializer<CatchReport>
 
 class CatchReport {
   CatchReport({
+    this.userID,
     this.lakeID,
     this.lakeName,
     this.startDate,
@@ -25,6 +27,7 @@ class CatchReport {
     this.notes,
   });
 
+  String userID;
   String lakeID;
   String lakeName;
   String startDate;

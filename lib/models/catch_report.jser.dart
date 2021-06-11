@@ -11,6 +11,7 @@ abstract class _$CatchReportJSONSerializer implements Serializer<CatchReport> {
   Map<String, dynamic> toMap(CatchReport model) {
     if (model == null) return null;
     Map<String, dynamic> ret = <String, dynamic>{};
+    setMapValue(ret, 'user_id', model.userID);
     setMapValue(ret, 'lake_id', model.lakeID);
     setMapValue(ret, 'lake_name', model.lakeName);
     setMapValue(ret, 'start_date', model.startDate);
@@ -25,6 +26,7 @@ abstract class _$CatchReportJSONSerializer implements Serializer<CatchReport> {
   CatchReport fromMap(Map map) {
     if (map == null) return null;
     final obj = CatchReport();
+    obj.userID = map['user_id'] as String;
     obj.lakeID = map['lake_id'] as String;
     obj.lakeName = map['lake_name'] as String;
     obj.startDate = map['start_date'] as String;
