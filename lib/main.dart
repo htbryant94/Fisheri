@@ -99,7 +99,8 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin 
                       ),
                       child: Stack(
                         children: [
-                          CatchReportsScreen(),
+                          if (!_shouldShowAuthScreen)
+                            CatchReportsScreen(),
                           Visibility(
                               visible: _shouldShowAuthScreen,
                               child: CupertinoPageScaffold(child: AuthScreen())

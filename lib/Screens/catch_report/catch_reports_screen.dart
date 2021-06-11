@@ -1,4 +1,4 @@
-import 'package:fisheri/Components/add_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fisheri/Screens/catch_report_form_screen.dart';
 import 'package:fisheri/coordinator.dart';
 import 'package:fisheri/design_system.dart';
@@ -58,6 +58,7 @@ class _CatchReportListBuilder extends StatelessWidget {
       stream: FirebaseFirestore
           .instance
           .collection('catch_reports')
+          .where('user_id', isEqualTo: FirebaseAuth.instance.currentUser.uid)
           .orderBy('start_date', descending: true)
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {

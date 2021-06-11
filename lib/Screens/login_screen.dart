@@ -91,8 +91,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 text: 'Auto Login',
                 onPressed: () {
                   setState(() {
-                    _emailTextFieldValue = 'harry@fisheri.co.uk';
-                    _passwordTextFieldValue = 'password123';
+                    _emailTextFieldValue = 'test@fisheri.co.uk';
+                    _passwordTextFieldValue = 'password';
                   });
                   _loginAction();
                 },
