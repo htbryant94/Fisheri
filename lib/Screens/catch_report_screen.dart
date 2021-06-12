@@ -106,7 +106,10 @@ class _CatchReportScreenState extends State<CatchReportScreen> {
                       //     }
                       //   },
                       // ),
-                      _CatchListBuilder(catchReportID: widget.catchReportID),
+                      _CatchListBuilder(
+                        catchReportID: widget.catchReportID,
+                        catchReport: widget.catchReport,
+                      ),
                       _shouldShowSummarySection() ? SingleChildScrollView(
                         child: Column(
                           children: [
@@ -159,18 +162,12 @@ class _CatchReportScreenState extends State<CatchReportScreen> {
   }
 
   void _pushNewCatchForm({BuildContext context}) {
-    final startDate = DateTime.parse(widget.catchReport.startDate);
-    final endDate = DateTime.parse(widget.catchReport.endDate);
-
-    var dateRange = List.generate(
-        endDate.difference(startDate).inDays + 1,
-        (day) =>
-            DateTime(startDate.year, startDate.month, startDate.day + day));
     Coordinator.present(context,
         currentPageTitle: 'Catches',
         screen: CatchFormScreenFull(
-          dateRange: dateRange,
           catchReportID: widget.catchReportID,
+          catchReport: widget.catchReport,
+          catchID: null,
         ),
         screenTitle: 'New Catch');
   }
@@ -193,9 +190,13 @@ class _NewCatchButton extends StatelessWidget {
 }
 
 class _CatchListBuilder extends StatefulWidget {
-  _CatchListBuilder({@required this.catchReportID});
+  _CatchListBuilder({
+    @required this.catchReportID,
+    @required this.catchReport,
+  });
 
   final String catchReportID;
+  final CatchReport catchReport;
 
   @override
   __CatchListBuilderState createState() => __CatchListBuilderState();
@@ -246,6 +247,9 @@ class __CatchListBuilderState extends State<_CatchListBuilder> {
                   print('catch index: $index with id: ${_catch.id}');
                   return CatchCell(
                     catchData: _data,
+                    catchID: _catch.id,
+                    catchReport: widget.catchReport,
+                    catchReportID: widget.catchReportID,
                     height: _data.catchType == 'missed' ? 200 : 275,
                   );
                 });
@@ -271,15 +275,27 @@ class __CatchListBuilderState extends State<_CatchListBuilder> {
 class CatchCell extends StatelessWidget {
   CatchCell({
     this.catchData,
+    this.catchID,
+    this.catchReport,
+    this.catchReportID,
     this.height = 275
   });
 
   final Catch catchData;
+  final String catchID;
+  final CatchReport catchReport;
+  final String catchReportID;
   final double height;
 
   void _openCatchScreen(BuildContext context) {
-    Coordinator.pushCatchDetailScreen(context,
-        currentPageTitle: 'Report', catchData: catchData);
+    Coordinator.pushCatchDetailScreen(
+      context: context,
+      currentPageTitle: 'Report',
+      catchData: catchData,
+      catchID: catchID,
+      catchReport: catchReport,
+      catchReportID: catchReportID
+    );
   }
 
   String _formattedDate(String date) {

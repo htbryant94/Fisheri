@@ -14,14 +14,18 @@ class WeightConverter {
     return '${pounds.truncate()} Ibs, ${relativeOunces.truncate()} oz';
   }
 
+  static Weight gramsToWeight(double grams) {
+    final ounces = _gramsToOunces(grams);
+    final pounds = (ounces / 16);
+    final fraction = pounds % 1;
+    final relativeOunces = fraction * 16;
+    return Weight(pounds: pounds.truncate(), ounces: relativeOunces.truncate());
+  }
+
   static int gramsToPoundsWhole(double grams) {
     final ounces = _gramsToOunces(grams);
     final poundsWhole = (ounces / 16).round();
     return poundsWhole;
-  }
-
-  static int _poundsToOunces({int pounds}) {
-    return pounds * 16;
   }
 
   static double _poundsToGrams(int pounds) {
@@ -35,4 +39,14 @@ class WeightConverter {
     return grams / 28.34952;
   }
 
+}
+
+class Weight {
+  Weight({
+    this.pounds,
+    this.ounces,
+});
+
+  final int pounds;
+  final int ounces;
 }

@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fisheri/WeightConverter.dart';
 import 'package:fisheri/alert_dialog_factory.dart';
+import 'package:fisheri/models/catch_report.dart';
 import 'package:fisheri/types/fish_stock_list.dart';
 import 'package:fisheri/types/weather_condition.dart';
 import 'package:fisheri/types/wind_direction.dart';
@@ -16,17 +17,38 @@ import 'package:form_builder_image_picker/form_builder_image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:fisheri/models/catch.dart';
 import 'package:recase/recase.dart';
+import 'package:uuid/uuid.dart';
 
 import '../design_system.dart';
 
+class CatchFormConstants {
+  static const String catchType = 'catch_type';
+  static const String date = 'date';
+  static const String notes = 'notes';
+  static const String numberOfFish = 'number_of_fish';
+  static const String position = 'position';
+  static const String temperature = 'temperature';
+  static const String time = 'time';
+  static const String typeOfFish = 'type_of_fish';
+  static const String weatherCondition = 'weather_condition';
+  static const String weightWhole = 'fish_weight_whole';
+  static const String weightFraction = 'fish_weight_fraction';
+  static const String windDirection = 'wind_direction';
+  static const String images = 'images';
+}
+
 class CatchFormScreenFull extends StatefulWidget {
   CatchFormScreenFull({
-    @required this.dateRange,
     @required this.catchReportID,
+    this.catchReport,
+    this.catchID,
+    this.catchData,
   });
 
-  final List<DateTime> dateRange;
   final String catchReportID;
+  final String catchID;
+  final Catch catchData;
+  final CatchReport catchReport;
 
   @override
   _CatchFormScreenFullState createState() => _CatchFormScreenFullState();
@@ -36,17 +58,138 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
   final _fbKey = GlobalKey<FormBuilderState>();
   final List<CatchType> catchTypes = CatchType.values;
   CatchType selectedCatchType;
+  List<DateTime> dateRange;
   List<String> imageURLs = [];
   bool _isLoading = false;
   String _loadingText = 'Loading...';
   bool _didSetTemperature = false;
+  bool _isEditMode;
+
+  CatchType parseStringToCatchType(String catchType) {
+    switch (catchType) {
+    case 'single': return CatchType.single;
+    case 'multi': return CatchType.multi;
+    case 'match': return CatchType.match;
+    case 'missed': return CatchType.missed;
+    }
+    return null;
+  }
+
+  @override
+  void initState() {
+    _isEditMode = widget.catchData != null;
+
+    dateRange = makeDateRange(
+      startDate: DateTime.parse(widget.catchReport.startDate),
+      endDate: DateTime.parse(widget.catchReport.endDate),
+    );
+
+    if (_isEditMode) {
+      selectedCatchType = parseStringToCatchType(widget.catchData.catchType);
+    }
+
+    super.initState();
+  }
+
+  double _convertFishWeight({int whole, int fraction}) {
+    return WeightConverter.poundsAndOuncesToGrams(pounds: whole, ounces: fraction);
+  }
+
+  List<DateTime> makeDateRange({DateTime startDate, DateTime endDate}) {
+    return List.generate(
+        endDate.difference(startDate).inDays + 1,
+            (day) => DateTime(startDate.year, startDate.month, startDate.day + day)
+    );
+  }
+
+  Map<String, dynamic> populateSingleCatchValues(Catch catchData) {
+    Weight _weight;
+
+    if (catchData.weight != null) {
+      _weight = WeightConverter.gramsToWeight(catchData.weight);
+    }
+
+    return {
+      CatchFormConstants.catchType: CatchType.single,
+      CatchFormConstants.typeOfFish: catchData.typeOfFish,
+      CatchFormConstants.weightWhole: _weight.pounds.toString(),
+      CatchFormConstants.weightFraction: _weight.ounces.toString(),
+      CatchFormConstants.time: DateFormat('hh:mm').parse(catchData.time),
+      CatchFormConstants.date: DateTime.parse(catchData.date),
+      CatchFormConstants.weatherCondition: catchData.weatherCondition,
+      CatchFormConstants.windDirection: catchData.windDirection,
+      CatchFormConstants.notes: catchData.notes,
+      CatchFormConstants.images: catchData.images,
+    };
+  }
+
+  Map<String, dynamic> populateMultiCatchValues(Catch catchData) {
+    Weight _weight;
+
+    if (catchData.weight != null) {
+      _weight = WeightConverter.gramsToWeight(catchData.weight);
+    }
+
+    return {
+      CatchFormConstants.catchType: CatchType.multi,
+      CatchFormConstants.typeOfFish: catchData.typeOfFish,
+      CatchFormConstants.numberOfFish: catchData.numberOfFish,
+      CatchFormConstants.weightWhole: _weight.pounds.toString(),
+      CatchFormConstants.weightFraction: _weight.ounces.toString(),
+      CatchFormConstants.weatherCondition: catchData.weatherCondition,
+      CatchFormConstants.windDirection: catchData.windDirection,
+      CatchFormConstants.notes: catchData.notes,
+      CatchFormConstants.images: catchData.images,
+    };
+  }
+
+  Map<String, dynamic> populateMatchCatchValues(Catch catchData) {
+    Weight _weight;
+
+    if (catchData.weight != null) {
+      _weight = WeightConverter.gramsToWeight(catchData.weight);
+    }
+
+    return {
+      CatchFormConstants.catchType: CatchType.match,
+      CatchFormConstants.weightWhole: _weight.pounds.toString(),
+      CatchFormConstants.weightFraction: _weight.ounces.toString(),
+      CatchFormConstants.position: catchData.position,
+      CatchFormConstants.weatherCondition: catchData.weatherCondition,
+      CatchFormConstants.windDirection: catchData.windDirection,
+      CatchFormConstants.notes: catchData.notes,
+      CatchFormConstants.images: catchData.images,
+    };
+  }
+
+  Map<String, dynamic> populateMissedCatchValues(Catch catchData) {
+    return {
+      CatchFormConstants.catchType: CatchType.missed,
+      CatchFormConstants.time: DateFormat('hh:mm').parse(catchData.time),
+      CatchFormConstants.date: DateTime.parse(catchData.date),
+      CatchFormConstants.weatherCondition: catchData.weatherCondition,
+      CatchFormConstants.windDirection: catchData.windDirection,
+      CatchFormConstants.notes: catchData.notes,
+      CatchFormConstants.images: catchData.images,
+    };
+  }
+
+  Map<String, dynamic> populateRelevantValues({CatchType catchType, Catch catchData}) {
+    switch (catchType) {
+      case CatchType.single:
+        return populateSingleCatchValues(catchData);
+      case CatchType.multi:
+        return populateMultiCatchValues(catchData);
+      case CatchType.match:
+        return populateMatchCatchValues(catchData);
+      case CatchType.missed:
+        return populateMissedCatchValues(catchData);
+    }
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
-    double _convertFishWeight({int whole, int fraction}) {
-      return WeightConverter.poundsAndOuncesToGrams(pounds: whole, ounces: fraction);
-    };
-
     return Scaffold(
       body: SafeArea(
         child: Listener(
@@ -65,7 +208,11 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                     children: [
                       FormBuilder(
                         key: _fbKey,
-                        initialValue: {},
+                        initialValue: widget.catchData != null ?
+                        populateRelevantValues(
+                          catchData: widget.catchData,
+                          catchType: parseStringToCatchType(widget.catchData.catchType),
+                        ) : null,
                         autovalidateMode: AutovalidateMode.always,
                         child: Column(
                           children: [
@@ -95,7 +242,7 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                                   width: 200,
                                   child: _TypeOfFishSection(
                                     title: 'Type of Fish *',
-                                    attribute: 'fish_type',
+                                    attribute: CatchFormConstants.typeOfFish,
                                   ),
                                 ),
                               ),
@@ -103,7 +250,9 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                             CatchReportVisibility(
                               catchType: selectedCatchType,
                               supportedCatchTypes: [CatchType.multi],
-                              child: _NumberOfFishSection(),
+                              child: _NumberOfFishSection(
+                                initialValue: _isEditMode ? widget.catchData.numberOfFish : 0,
+                              ),
                             ),
                             CatchReportVisibility(
                               catchType: selectedCatchType,
@@ -117,7 +266,8 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                               supportedCatchTypes: [CatchType.match],
                               child: _PositionSection(
                                 title: 'Position',
-                                attribute: 'position',
+                                attribute: CatchFormConstants.position,
+                                initialValue: _isEditMode ? widget.catchData.position : 0,
                               ),
                             ),
                             CatchReportVisibility(
@@ -125,7 +275,7 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                               supportedCatchTypes: [CatchType.single, CatchType.missed],
                               child: _TimePickerBuilder(
                                 title: 'Time',
-                                attribute: 'time',
+                                attribute: CatchFormConstants.time,
                               ),
                             ),
                             CatchReportVisibility(
@@ -133,8 +283,8 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                               supportedCatchTypes: [CatchType.single, CatchType.missed],
                               child: _DropDownMenuDatesBuilder(
                                 title: 'Date',
-                                attribute: 'date',
-                                items: widget.dateRange,
+                                attribute: CatchFormConstants.date,
+                                items: dateRange,
                               ),
                             ),
                             CatchReportVisibility(
@@ -146,7 +296,7 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                                   width: 200,
                                   child: _DropDownMenuBuilder(
                                     title: 'Weather Conditions',
-                                    attribute: 'weather_condition',
+                                    attribute: CatchFormConstants.weatherCondition,
                                       items: WeatherCondition.values.map((condition) => describeEnum(condition)).toList()
                                   ),
                                 ),
@@ -157,7 +307,7 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                               supportedCatchTypes: CatchType.values,
                               child: _DropDownMenuBuilder(
                                 title: 'Wind Direction',
-                                attribute: 'wind_direction',
+                                attribute: CatchFormConstants.windDirection,
                                 items: WindDirection.values.map((windDirection) => describeEnum(windDirection)).toList(),
                               ),
                             ),
@@ -165,6 +315,7 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                                 catchType: selectedCatchType,
                                 supportedCatchTypes: CatchType.values,
                                 child: _TemperatureSlider(
+                                  initialValue: widget.catchData != null ? widget.catchData.temperature : 0,
                                   valueChanged: (_) {
                                     setState(() {
                                       _didSetTemperature = true;
@@ -179,15 +330,22 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                                 keyboardType: TextInputType.multiline,
                                 minLines: 5,
                                 maxLines: null,
-                                name: 'notes',
+                                name: CatchFormConstants.notes,
                                 decoration: InputDecoration(
                                     labelText: 'Notes', border: OutlineInputBorder()),
                               ),
                             ),
-                            FormBuilderImagePicker(
-                              name: 'images',
-                              decoration: InputDecoration(
-                                border: InputBorder.none
+                            Visibility(
+                              visible: _isEditMode ? widget.catchData.images != null : true,
+                              child: FormBuilderImagePicker(
+                                name: CatchFormConstants.images,
+                                enabled: !_isEditMode,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none
+                                ),
+                                onChanged: (value) {
+                                  print('image value changes: $value');
+                                },
                               ),
                             ),
                             DSComponents.doubleSpacer(),
@@ -288,17 +446,20 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
 
                                   _updateLoadingMessage('Saving your Catch...');
 
+                                  final _catchID = _isEditMode ? widget.catchID : Uuid().v1();
+
                                   // 2. Upload catch to database
                                   final catchJSON = CatchJSONSerializer().toMap(catchModel);
                                   await FirebaseFirestore.instance
                                       .collection('catches')
-                                      .add(catchJSON)
-                                      .then((result) async {
+                                      .doc(_catchID)
+                                      .set(catchJSON, SetOptions(merge: false))
+                                      .whenComplete(() async {
 
-                                    print('catch added successfully: ${result.id}');
+                                    print('catch added successfully: $_catchID');
 
                                     // 3. Upload images to storage
-                                    if (_valueFor(attribute: 'images') != null) {
+                                    if (_valueFor(attribute: 'images') != null && !_isEditMode) {
                                       print('uploading images');
                                       _updateLoadingMessage('Saving your Photos...');
 
@@ -309,7 +470,7 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                                         final storageReference = FirebaseStorage
                                             .instance
                                             .ref()
-                                            .child('catch_reports/${widget.catchReportID}/${result.id}/$index');
+                                            .child('catch_reports/${widget.catchReportID}/$_catchID/$index');
 
                                         await storageReference
                                             .putFile(image)
@@ -339,13 +500,18 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
 
                                       await FirebaseFirestore.instance
                                           .collection('catches')
-                                          .doc(result.id)
+                                          .doc(_catchID)
                                           .set(amendedCatchJSON)
                                           .whenComplete(() {
                                           });
                                     }
                                     _setLoadingState(false);
                                     Navigator.of(context).pop();
+
+                                    // Dismisses the Detail Screen after edit is complete
+                                    if (_isEditMode) {
+                                      Navigator.of(context).pop();
+                                    }
                                       });
                                 } else {
                                   await showDialog(
@@ -411,17 +577,24 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
 }
 
 class _NumberOfFishSection extends StatelessWidget {
+  _NumberOfFishSection({
+    this.initialValue,
+});
+
+  final int initialValue;
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         DSComponents.header(text: 'Number of Fish'),
         FormBuilderTouchSpin(
-          name: 'num_of_fish',
-          initialValue: 0,
+          name: CatchFormConstants.numberOfFish,
+          initialValue: initialValue ?? 0,
           min: 0,
           max: 100,
           step: 1,
+          validator: FormBuilderValidators.min(context, 1, errorText: 'Please specify the number of fish caught.'),
         ),
       ],
     );
@@ -433,9 +606,11 @@ class _PositionSection extends StatelessWidget {
   _PositionSection({
     @required this.title,
     @required this.attribute,
+    this.initialValue,
   });
   final String title;
   final String attribute;
+  final int initialValue;
 
   @override
   Widget build(BuildContext context) {
@@ -444,10 +619,11 @@ class _PositionSection extends StatelessWidget {
         DSComponents.header(text: title),
         FormBuilderTouchSpin(
           name: attribute,
-          initialValue: 1,
+          initialValue: initialValue ?? 0,
           min: 1,
           max: 10,
           step: 1,
+          validator: FormBuilderValidators.min(context, 1, errorText: 'Please specify the position.'),
         )
       ],
     );
@@ -561,10 +737,12 @@ class _DropDownMenuBuilder extends StatelessWidget {
 
 class _TemperatureSlider extends StatelessWidget {
   _TemperatureSlider({
-    this.valueChanged
+    this.valueChanged,
+    this.initialValue,
 });
 
   final ValueChanged<double> valueChanged;
+  final double initialValue;
 
   @override
   Widget build(BuildContext context) {
@@ -572,8 +750,8 @@ class _TemperatureSlider extends StatelessWidget {
       children: [
         DSComponents.header(text: 'Temperature'),
         FormBuilderSlider(
-          name: 'temperature',
-          initialValue: 0,
+          name: CatchFormConstants.temperature,
+          initialValue: initialValue ?? 0,
           max: 40,
           min: -20,
           onChanged: valueChanged
@@ -630,7 +808,7 @@ class _FishWeight extends StatelessWidget {
               width: 50,
               height: 75,
               child: FormBuilderTextField(
-                name: 'fish_weight_whole',
+                name: CatchFormConstants.weightWhole,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(suffixText: 'Ib'),
                 textAlign: TextAlign.center,
@@ -642,7 +820,7 @@ class _FishWeight extends StatelessWidget {
               width: 50,
               height: 75,
               child: FormBuilderTextField(
-                name: 'fish_weight_fraction',
+                name: CatchFormConstants.weightFraction,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(suffixText: 'oz'),
                 validator: FormBuilderValidators.compose(_weightFractionValidators()),
@@ -678,20 +856,6 @@ final Widget child;
       ),
     );
   }
-}
-
-class CatchFormConstants {
-  static const String typeOfFish = 'fish_type';
-  static const String numberOfFish = 'num_of_fish';
-  static const String position = 'position';
-  static const String time = 'time';
-  static const String date = 'date';
-  static const String weightWhole = 'fish_weight_whole';
-  static const String weightFraction = 'fish_weight_fraction';
-  static const String weatherCondition = 'weather_condition';
-  static const String windDirection = 'wind_direction';
-  static const String temperature = 'temperature';
-  static const String notes = 'notes';
 }
 
 enum CatchType {

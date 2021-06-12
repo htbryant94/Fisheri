@@ -3,6 +3,7 @@ import 'package:fisheri/Components/list_view_button.dart';
 import 'package:fisheri/Screens/auth_screen.dart';
 import 'package:fisheri/Screens/catch_detail_screen.dart';
 import 'package:fisheri/Screens/catch_form_edit_screen.dart';
+import 'package:fisheri/Screens/catch_form_screen_full.dart';
 import 'package:fisheri/Screens/catch_report_screen.dart';
 import 'package:fisheri/Screens/detail_screen/detail_screen.dart';
 import 'package:fisheri/Screens/venue_form_screen.dart';
@@ -84,7 +85,14 @@ class Coordinator {
     );
   }
 
-  static void pushCatchDetailScreen(BuildContext context, {String currentPageTitle, Catch catchData}) {
+  static void pushCatchDetailScreen({
+    BuildContext context,
+    String currentPageTitle,
+    Catch catchData,
+    String catchID,
+    CatchReport catchReport,
+    String catchReportID,
+  }) {
     pushCupertinoPageRoute(context,
         CupertinoPageScaffold(
           navigationBar: CupertinoNavigationBar(
@@ -97,8 +105,11 @@ class Coordinator {
                 Coordinator.push(
                     context,
                     currentPageTitle: 'Your Catch',
-                    screen: CatchFormEditScreen(
+                    screen: CatchFormScreenFull(
                       catchData: catchData,
+                      catchID: catchID,
+                      catchReport: catchReport,
+                      catchReportID: catchReportID,
                     ),
                     screenTitle: 'New Catch'
                 );
