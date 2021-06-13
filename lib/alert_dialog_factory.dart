@@ -2,6 +2,7 @@
 
 
 import 'package:fisheri/design_system.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AlertDialogFactory {
@@ -22,6 +23,40 @@ class AlertDialogFactory {
               Navigator.of(context).pop();
             }
         )
+      ],
+    );
+  }
+
+  static AlertDialog deleteConfirmation({
+    BuildContext context,
+    VoidCallback onDeletePressed
+  }) {
+    return AlertDialog(
+      title: DSComponents.header(
+        text: 'Are you sure?',
+      ),
+      content: SingleChildScrollView(
+        child: DSComponents.body(
+            text: 'This action will remove all data including any images and cannot be reverted.'
+        ),
+      ),
+      actions: [
+        CupertinoButton(
+          child: DSComponents.body(
+            text: 'Delete',
+            color: Colors.red,
+          ),
+          onPressed: onDeletePressed,
+        ),
+        CupertinoButton(
+          child: DSComponents.body(
+            text: 'Cancel',
+            color: Colors.blue,
+          ),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
       ],
     );
   }

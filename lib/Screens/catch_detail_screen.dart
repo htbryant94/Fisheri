@@ -3,16 +3,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fisheri/Screens/detail_screen/fullscreen_image_carousel.dart';
 import 'package:fisheri/WeightConverter.dart';
+import 'package:fisheri/alert_dialog_factory.dart';
 import 'package:fisheri/design_system.dart';
 import 'package:fisheri/Screens/detail_screen/title_section.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fisheri/models/catch.dart';
 import 'package:fisheri/Screens/detail_screen/image_carousel.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:recase/recase.dart';
 
 import '../coordinator.dart';
+import '../firestore_request_service.dart';
 
 class CatchDetailScreen extends StatefulWidget {
   CatchDetailScreen({
@@ -154,18 +157,47 @@ class _CatchDetailScreenState extends State<CatchDetailScreen> {
           ],
         ),
       CupertinoButton(
-        child: DSComponents.body(text: 'Delete', color: Colors.red, alignment: Alignment.center),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(CupertinoIcons.delete_solid, color: Colors.red, size: 20),
+            DSComponents.body(
+                text: 'Delete',
+                color: Colors.red,
+                alignment: Alignment.center,
+            ),
+          ],
+        ),
           onPressed: () async {
-          await FirebaseFirestore
-              .instance
-              .collection('catches')
-              .doc(widget.catchID)
-              .delete()
-              .catchError((error) => print(error))
-              .whenComplete(() => {
-                Navigator.of(context).pop()
+          var _shouldDelete = false;
+
+          await showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (BuildContext context) {
+                return AlertDialogFactory.deleteConfirmation(
+                  context: context,
+                  onDeletePressed: () {
+                    _shouldDelete = true;
+                    Navigator.of(context).pop();
+                  }
+                );
               });
-          })
+
+            if (_shouldDelete) {
+              if (widget.data.images != null && widget.data.images.isNotEmpty) {
+                await FireStorageRequestService.defaultService().deleteImages(
+                    widget.data.images);
+              }
+
+              await FirestoreRequestService
+                  .defaultService()
+                  .deleteCatch(widget.catchID)
+                  .whenComplete(() {
+                Navigator.of(context).pop();
+              });
+            }
+        })
     ];
   }
 

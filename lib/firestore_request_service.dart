@@ -43,6 +43,15 @@ class FirestoreRequestService {
     });
   }
 
+  Future deleteCatch(String catchID) async {
+    await FirebaseFirestore
+        .instance
+        .collection('catches')
+        .doc(catchID)
+        .delete()
+        .catchError((error) => print(error));
+  }
+
 }
 
 class FireStorageRequestService {
@@ -66,6 +75,16 @@ class FireStorageRequestService {
     String imageURL = await firebaseStorage.ref().child('venues').child(assetPath).child('images').getDownloadURL();
     print('IMAGE URL: $imageURL');
     return await imageURL;
+  }
+
+  Future deleteImages(List<String> imageURLs) async {
+    await imageURLs.forEach((imageURL) async
+    {
+      await FirebaseStorage
+          .instance
+          .refFromURL(imageURL)
+          .delete();
+    });
   }
 
 }
