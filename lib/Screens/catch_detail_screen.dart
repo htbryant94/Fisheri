@@ -1,8 +1,11 @@
 import 'package:carousel_slider/carousel_controller.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fisheri/Screens/detail_screen/fullscreen_image_carousel.dart';
 import 'package:fisheri/WeightConverter.dart';
 import 'package:fisheri/design_system.dart';
 import 'package:fisheri/Screens/detail_screen/title_section.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fisheri/models/catch.dart';
 import 'package:fisheri/Screens/detail_screen/image_carousel.dart';
@@ -14,9 +17,11 @@ import '../coordinator.dart';
 class CatchDetailScreen extends StatefulWidget {
   CatchDetailScreen({
     this.data,
+    this.catchID,
   });
 
   final Catch data;
+  final String catchID;
 
   @override
   _CatchDetailScreenState createState() => _CatchDetailScreenState();
@@ -147,7 +152,20 @@ class _CatchDetailScreenState extends State<CatchDetailScreen> {
             DSComponents.doubleSpacer(),
             DSComponents.body(text: widget.data.notes),
           ],
-        )
+        ),
+      CupertinoButton(
+        child: DSComponents.body(text: 'Delete', color: Colors.red, alignment: Alignment.center),
+          onPressed: () async {
+          await FirebaseFirestore
+              .instance
+              .collection('catches')
+              .doc(widget.catchID)
+              .delete()
+              .catchError((error) => print(error))
+              .whenComplete(() => {
+                Navigator.of(context).pop()
+              });
+          })
     ];
   }
 

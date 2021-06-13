@@ -118,6 +118,7 @@ class Coordinator {
           ),
           child: CatchDetailScreen(
             data: catchData,
+            catchID: catchID,
           )
         )
     );
