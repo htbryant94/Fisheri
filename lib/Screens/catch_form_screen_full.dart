@@ -144,7 +144,9 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
       CatchFormConstants.catchType: CatchType.multi,
       CatchFormConstants.typeOfFish: catchData.typeOfFish,
       CatchFormConstants.numberOfFish: catchData.numberOfFish,
+      if (_weight != null)
       CatchFormConstants.weightWhole: _weight.pounds.toString(),
+      if (_weight != null)
       CatchFormConstants.weightFraction: _weight.ounces.toString(),
       CatchFormConstants.weatherCondition: catchData.weatherCondition,
       CatchFormConstants.windDirection: catchData.windDirection,
