@@ -29,9 +29,7 @@ dependencies:
   jaguar_serializer: ^2.2.12
   flutter_form_builder: ^4.2.0
   form_builder_image_picker: ^0.1.2
-  geoflutterfire:
-    git:
-      url: https://github.com/awaik/GeoFlutterFire
+  geoflutterfire: ^2.2.2
   google_fonts: ^0.3.9
   cached_network_image: ^2.0.0
   carousel_slider: ^3.0.0
