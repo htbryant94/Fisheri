@@ -13,6 +13,7 @@ import 'package:fisheri/models/venue_detailed.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
+import 'Screens/catch_report_form_screen.dart';
 import 'Screens/search_results_screen.dart';
 
 class Coordinator {
@@ -75,7 +76,19 @@ class Coordinator {
       CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(
           previousPageTitle: currentPageTitle,
-          middle: Text('Your Catches'),
+          middle: Text('Catch Report'),
+          trailing: CupertinoButton(
+            child: Icon(Icons.edit),
+            padding: EdgeInsets.all(8),
+            onPressed: () {
+              Coordinator.present(
+                  context,
+                  currentPageTitle: '',
+                  screen: CatchReportFormScreen(),
+                  screenTitle: 'New Catch Report'
+              );
+            },
+          ),
         ),
         child: CatchReportScreen(
           catchReport: catchReport,

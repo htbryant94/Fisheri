@@ -37,15 +37,12 @@ class _AddNewCatchReportButton extends StatelessWidget {
     return DSComponents.primaryButton(
       text: 'New Catch Report',
       onPressed: () {
-        FirebaseFirestore.instance
-            .collection('venues_search')
-            .get()
-            .then((documents) {
-          Coordinator.present(context,
-              currentPageTitle: '',
-              screen: CatchReportFormScreen(availableLakes: documents),
-              screenTitle: 'New Catch Report');
-        });
+        Coordinator.present(
+            context,
+            currentPageTitle: '',
+            screen: CatchReportFormScreen(),
+            screenTitle: 'New Catch Report'
+        );
       },
     );
   }

@@ -104,9 +104,19 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
 
   Map<String, dynamic> populateSingleCatchValues(Catch catchData) {
     Weight _weight;
+    DateTime _time;
+    DateTime _date;
 
     if (catchData.weight != null) {
       _weight = WeightConverter.gramsToWeight(catchData.weight);
+    }
+
+    if (catchData.time != null) {
+      _time = DateFormat('hh:mm').parse(catchData.time);
+    }
+
+    if (catchData.date != null) {
+      _date = DateTime.parse(catchData.date);
     }
 
     return {
@@ -114,8 +124,8 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
       CatchFormConstants.typeOfFish: catchData.typeOfFish,
       CatchFormConstants.weightWhole: _weight.pounds.toString(),
       CatchFormConstants.weightFraction: _weight.ounces.toString(),
-      CatchFormConstants.time: DateFormat('hh:mm').parse(catchData.time),
-      CatchFormConstants.date: DateTime.parse(catchData.date),
+      CatchFormConstants.time: _time,
+      CatchFormConstants.date: _date,
       CatchFormConstants.weatherCondition: catchData.weatherCondition,
       CatchFormConstants.windDirection: catchData.windDirection,
       CatchFormConstants.notes: catchData.notes,
@@ -163,10 +173,21 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
   }
 
   Map<String, dynamic> populateMissedCatchValues(Catch catchData) {
+    DateTime _time;
+    DateTime _date;
+
+    if (catchData.time != null) {
+      _time = DateFormat('hh:mm').parse(catchData.time);
+    }
+
+    if (catchData.date != null) {
+      _date = DateTime.parse(catchData.date);
+    }
+
     return {
       CatchFormConstants.catchType: CatchType.missed,
-      CatchFormConstants.time: DateFormat('hh:mm').parse(catchData.time),
-      CatchFormConstants.date: DateTime.parse(catchData.date),
+      CatchFormConstants.time: _time,
+      CatchFormConstants.date: _date,
       CatchFormConstants.weatherCondition: catchData.weatherCondition,
       CatchFormConstants.windDirection: catchData.windDirection,
       CatchFormConstants.notes: catchData.notes,
@@ -459,36 +480,42 @@ class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
                                     print('catch added successfully: $_catchID');
 
                                     // 3. Upload images to storage
-                                    if (_valueFor(attribute: 'images') != null && !_isEditMode) {
-                                      print('uploading images');
-                                      _updateLoadingMessage('Saving your Photos...');
+                                    if (!_isEditMode) {
+                                      if (_valueFor(attribute: 'images') != null) {
+                                        print('uploading images');
+                                        _updateLoadingMessage(
+                                            'Saving your Photos...');
 
-                                      final _images = _valueFor(attribute: 'images');
-                                      var index = 0;
+                                        final _images = _valueFor(
+                                            attribute: 'images');
+                                        var index = 0;
 
-                                      await Future.forEach(_images, (image) async {
-                                        final storageReference = FirebaseStorage
-                                            .instance
-                                            .ref()
-                                            .child('catch_reports/${widget.catchReportID}/$_catchID/$index');
+                                        await Future.forEach(
+                                            _images, (image) async {
+                                          final storageReference = FirebaseStorage
+                                              .instance
+                                              .ref()
+                                              .child('catch_reports/${widget
+                                              .catchReportID}/$_catchID/$index');
 
-                                        await storageReference
-                                            .putFile(image)
-                                            .whenComplete(() async {
                                           await storageReference
-                                              .getDownloadURL()
-                                              .then((fileURL) {
-                                            // 4. Fetch downloadURLs and populate imageURLs
-                                            setState(() {
-                                              imageURLs.add(fileURL);
+                                              .putFile(image)
+                                              .whenComplete(() async {
+                                            await storageReference
+                                                .getDownloadURL()
+                                                .then((fileURL) {
+                                              // 4. Fetch downloadURLs and populate imageURLs
+                                              setState(() {
+                                                imageURLs.add(fileURL);
+                                              });
                                             });
                                           });
+                                          index += 1;
                                         });
-                                        index += 1;
-                                      });
 
-                                      _updateLoadingMessage('Finalising...');
-                                      print('finished uploading images');
+                                        _updateLoadingMessage('Finalising...');
+                                        print('finished uploading images');
+                                      }
                                     }
 
                                     // 5. Amend database entry with imageURLs

@@ -18,9 +18,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:intl/intl.dart';
 
 class CatchReportFormScreen extends StatefulWidget {
-  CatchReportFormScreen({this.availableLakes});
-
-  final QuerySnapshot availableLakes;
+  CatchReportFormScreen();
 
   @override
   _CatchReportFormScreenState createState() => _CatchReportFormScreenState();
@@ -34,6 +32,7 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
   List<String> imageURLs = [];
   bool _isLoading = false;
   String _loadingText = 'Loading...';
+  QuerySnapshot _availableLakes;
 
   @override
   void initState() {
@@ -48,55 +47,17 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
         child: Stack(
           children: [
             ListView(
-              padding: EdgeInsets.symmetric(horizontal: 24),
+              padding: EdgeInsets.symmetric(horizontal: 24, vertical: 24),
               children: [
                 FormBuilder(
                   key: _fbKey,
                   initialValue: {
-                    'catch_type': 'lake',
                   },
                   autovalidateMode: AutovalidateMode.always,
                   child: Column(
                     children: [
-                      FormBuilderRadioGroup(
-                        name: 'catch_type',
-                        options: [
-                          FormBuilderFieldOption(
-                            value: 'lake',
-                            child: Text('Specified Lake'),
-                          ),
-                          FormBuilderFieldOption(
-                            value: 'custom',
-                            child: Text('Custom'),
-                          ),
-                        ],
-                        onChanged: (value) {
-                          setState(() {
-                            selectedReportType = value;
-                          });
-                        },
-                      ),
-                      SizedBox(height: 16),
                       Visibility(
-                        visible: selectedReportType == 'lake',
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Container(
-                            width: 300,
-                            child: Column(
-                              children: [
-                                HouseTexts.subheading('Specified Lake *'),
-                                _LakesDropDownMenu(
-                                  isEnabled: selectedReportType == 'lake',
-                                  snapshotLakes: widget.availableLakes,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      Visibility(
-                        visible: selectedReportType == 'custom',
+                        visible: true,
                         child: Column(
                           children: [
                             HouseTexts.subheading('Your Title *'),
@@ -114,6 +75,27 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
                         ),
                       ),
                       SizedBox(height: 16),
+                      if(_availableLakes != null)
+                        Column(
+                          children: [
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Container(
+                                width: 300,
+                                child: Column(
+                                  children: [
+                                    HouseTexts.subheading('Specified Lake *'),
+                                    _LakesDropDownMenu(
+                                      isEnabled: selectedReportType == 'lake',
+                                      snapshotLakes: _availableLakes,
+                                    ),
+                                    DSComponents.doubleSpacer(),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       Row(
                         children: [
                           Flexible(
@@ -250,7 +232,7 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
 
                       if (selectedReportType == 'lake') {
                         _lakeID = _valueFor(attribute: 'lake_name');
-                        _document = widget.availableLakes.docs.firstWhere((lake) => lake.id == _lakeID);
+                        // _document = widget.availableLakes.docs.firstWhere((lake) => lake.id == _lakeID);
                       }
 
                       if (_valueFor(attribute: 'date_start') != null) {
