@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fisheri/Screens/catch_form_screen_full.dart';
+import 'package:fisheri/Screens/catch_form_screen.dart';
 import 'package:fisheri/Screens/detail_screen/description_section.dart';
 import 'package:fisheri/Screens/detail_screen/image_carousel.dart';
 import 'package:fisheri/WeightConverter.dart';
@@ -164,7 +164,7 @@ class _CatchReportScreenState extends State<CatchReportScreen> {
   void _pushNewCatchForm({BuildContext context}) {
     Coordinator.present(context,
         currentPageTitle: 'Catches',
-        screen: CatchFormScreenFull(
+        screen: CatchFormScreen(
           catchReportID: widget.catchReportID,
           catchReport: widget.catchReport,
           catchID: null,

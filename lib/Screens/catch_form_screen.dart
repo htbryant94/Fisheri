@@ -37,8 +37,8 @@ class CatchFormConstants {
   static const String images = 'images';
 }
 
-class CatchFormScreenFull extends StatefulWidget {
-  CatchFormScreenFull({
+class CatchFormScreen extends StatefulWidget {
+  CatchFormScreen({
     @required this.catchReportID,
     this.catchReport,
     this.catchID,
@@ -51,10 +51,10 @@ class CatchFormScreenFull extends StatefulWidget {
   final CatchReport catchReport;
 
   @override
-  _CatchFormScreenFullState createState() => _CatchFormScreenFullState();
+  _CatchFormScreenState createState() => _CatchFormScreenState();
 }
 
-class _CatchFormScreenFullState extends State<CatchFormScreenFull> {
+class _CatchFormScreenState extends State<CatchFormScreen> {
   final _fbKey = GlobalKey<FormBuilderState>();
   final List<CatchType> catchTypes = CatchType.values;
   CatchType selectedCatchType;
