@@ -83,7 +83,10 @@ class Coordinator {
               Coordinator.present(
                   context,
                   currentPageTitle: '',
-                  screen: CatchReportFormScreen(),
+                  screen: CatchReportFormScreen(
+                    catchReport: catchReport,
+                    catchReportID: catchReportID,
+                  ),
                   screenTitle: 'New Catch Report'
               );
             },

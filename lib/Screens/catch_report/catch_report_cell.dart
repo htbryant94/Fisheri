@@ -56,7 +56,7 @@ class CatchReportCell extends StatelessWidget {
           catchReportID: catchReportID
         );
       },
-      child: FutureBuilder<String> (
+      child: (catchReport.images != null && catchReport.images.isNotEmpty) ? FutureBuilder<String> (
         future: _fetchImages(),
         builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
           if (snapshot.hasData) {
@@ -76,6 +76,13 @@ class CatchReportCell extends StatelessWidget {
               );
           }
       },
+      ) :
+      RemoteImageBaseCell(
+        showImage: false,
+        title: catchReport.lakeName,
+        subtitle: dateLabel(),
+        height: 278,
+        layout: BaseCellLayout.cover,
       ),
     );
   }
