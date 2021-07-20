@@ -50,7 +50,7 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
   String _loadingText = 'Loading...';
   QuerySnapshot _availableLakes;
   bool _isEditMode;
-  
+
   @override
   void initState() {
     _isEditMode = widget.catchReport != null;

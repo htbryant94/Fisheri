@@ -33,7 +33,7 @@ class _CatchDetailScreenState extends State<CatchDetailScreen> {
 
   String formattedTemperature(double temp) {
     if (temp != null) {
-      return '${temp.toStringAsFixed(1)} °C';
+      return '${temp.truncate()} °C';
     }
     return 'No information';
   }

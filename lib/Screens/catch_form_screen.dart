@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:ui';
 
 import 'package:basic_utils/basic_utils.dart';
@@ -12,13 +13,13 @@ import 'package:fisheri/types/weather_condition.dart';
 import 'package:fisheri/types/wind_direction.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_image_picker/form_builder_image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:fisheri/models/catch.dart';
 import 'package:recase/recase.dart';
 import 'package:uuid/uuid.dart';
-
 import '../design_system.dart';
 
 class CatchFormConstants {
@@ -339,7 +340,7 @@ class _CatchFormScreenState extends State<CatchFormScreen> {
                                 supportedCatchTypes: CatchType.values,
                                 child: _TemperatureSlider(
                                   initialValue: widget.catchData != null ? widget.catchData.temperature : 0,
-                                  valueChanged: (_) {
+                                  valueChanged: (value) {
                                     setState(() {
                                       _didSetTemperature = true;
                                     });
@@ -388,7 +389,7 @@ class _CatchFormScreenState extends State<CatchFormScreen> {
                                   var _weight;
                                   var _weatherCondition;
                                   var _windDirection;
-                                  var _temperature;
+                                  double _temperature;
                                   var _notes;
 
                                   if (selectedCatchType != CatchType.missed) {
@@ -764,7 +765,7 @@ class _DropDownMenuBuilder extends StatelessWidget {
   }
 }
 
-class _TemperatureSlider extends StatelessWidget {
+class _TemperatureSlider extends StatefulWidget {
   _TemperatureSlider({
     this.valueChanged,
     this.initialValue,
@@ -774,17 +775,55 @@ class _TemperatureSlider extends StatelessWidget {
   final double initialValue;
 
   @override
+  __TemperatureSliderState createState() => __TemperatureSliderState();
+}
+
+class __TemperatureSliderState extends State<_TemperatureSlider> {
+  final controller = TextEditingController();
+  double _currentValue;
+
+  @override
+  void initState() {
+    _currentValue = widget.initialValue ?? 0;
+    controller.text = '${_currentValue.toInt()}°C';
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         DSComponents.header(text: 'Temperature'),
-        FormBuilderSlider(
-          name: CatchFormConstants.temperature,
-          initialValue: initialValue ?? 0,
-          max: 40,
-          min: -20,
-          onChanged: valueChanged
-        )
+        Column(
+          children: [
+            FormBuilderSlider(
+                name: CatchFormConstants.temperature,
+                initialValue: _currentValue,
+                divisions: 80,
+                valueTransformer: (value) { return value.round(); },
+                decoration: InputDecoration(
+                  border: InputBorder.none
+                ),
+                displayValues: DisplayValues.none,
+                activeColor: DSColors.green,
+                inactiveColor: DSColors.pastelGreen,
+                max: 40,
+                min: -40,
+                onChanged: (value) {
+                  widget.valueChanged(value);
+                  setState(() {
+                    _currentValue = value;
+                    controller.text = '${value.toInt()}°C';
+                  });
+                }
+            ),
+            Text(
+              '${_currentValue.toInt()}°C',
+              style: DesignSystemFonts.header,
+              textAlign: TextAlign.center,
+            )
+          ],
+        ),
       ],
     );
   }

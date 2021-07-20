@@ -126,7 +126,7 @@ class Coordinator {
                       catchReport: catchReport,
                       catchReportID: catchReportID,
                     ),
-                    screenTitle: 'New Catch'
+                    screenTitle: 'Edit Catch'
                 );
               },
             ),
