@@ -34,18 +34,32 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final _auth = FirebaseAuth.instance;
+  final _adminUsers = [
+    'YB5taOmJkkS2yE7CQZd2Y1r3ohP2',
+    'Px6LdKOFy4RIImBg18Jvho5hYy93',
+    'CD0fIQ4BozOoYxBktmSBev5qiQh2'
+  ];
 
   @override
   Widget build(BuildContext context) {
-    bool _isLoggedIn = _auth.currentUser != null;
+    var _isLoggedIn = _auth.currentUser != null;
+
+    bool _isAdminUser() {
+      if (_isLoggedIn) {
+        return _adminUsers.contains(_auth.currentUser.uid);
+      }
+        return false;
+    }
 
     final items = [
+      if (_isLoggedIn && _isAdminUser())
       ProfileListItem(
           screen: VenueFormScreen(),
           title: 'Add a Venue',
           icon: Icon(Icons.add, color: Colors.green)
       ),
-      ProfileListItem(
+      if (_isLoggedIn && _isAdminUser())
+        ProfileListItem(
           screen: AllVenuesListBuilder(),
           title: 'Edit a Venue',
           icon: Icon(Icons.library_books, color: Colors.green)
