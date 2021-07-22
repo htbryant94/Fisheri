@@ -85,18 +85,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   onPressed: _emailAndPasswordHaveValues()
                       ? _loginAction
                       : null),
-
-              Spacer(),
-              DSComponents.secondaryButton(
-                text: 'Auto Login',
-                onPressed: () {
-                  setState(() {
-                    _emailTextFieldValue = 'test@fisheri.co.uk';
-                    _passwordTextFieldValue = 'password';
-                  });
-                  _loginAction();
-                },
-              )
             ],
           ),
         ),
