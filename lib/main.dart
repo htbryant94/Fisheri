@@ -76,7 +76,7 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin 
             items: [
               BottomNavigationBarItem(icon: Icon(CustomIcons.search, size: 24), label: 'Search'),
               BottomNavigationBarItem(icon: Icon(CustomIcons.fishing, size: 24), label: 'Catch'),
-              BottomNavigationBarItem(icon: Icon(CustomIcons.sunset, size: 24), label: 'Holidays'),
+              // BottomNavigationBarItem(icon: Icon(CustomIcons.sunset, size: 24), label: 'Holidays'),
               BottomNavigationBarItem(icon: Icon(Icons.account_circle_outlined, size: 24), label: 'Profile',),
             ],
           ),
@@ -113,44 +113,6 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin 
               case 2:
                 return SafeArea(
                   child: CupertinoTabView(builder: (context) {
-                    var _items = HolidayData.franceResults.map(
-                            (holiday) => ListViewItem(
-                            title: holiday.name,
-                            imageURL: holiday.images != null ? holiday.images.first : null,
-                            subtitle: '🇫🇷 ${holiday.country}',
-                            additionalInformation: [
-                              'From Calais: ${holiday.distanceFromCalais} miles',
-                              ReCase(describeEnum(holiday.difficulty)).titleCase,
-                            ],
-                                venue: holiday,
-                                isSponsored: holiday.isSponsored
-                        )
-                    ).toList();
-
-                    _items += HolidayData.belgiumResults.map(
-                            (holiday) => ListViewItem(
-                            title: holiday.name,
-                            imageURL: holiday.images != null ? holiday.images.first : null,
-                            subtitle: '🇧🇪 ${holiday.country}',
-                            additionalInformation: [
-                              'From Calais: ${holiday.distanceFromCalais} miles',
-                              ReCase(describeEnum(holiday.difficulty)).titleCase,
-                            ],
-                            venue: holiday
-                        )
-                    ).toList();
-
-                    return CupertinoPageScaffold(
-                      navigationBar: CupertinoNavigationBar(
-                        middle: Text('Holidays'),
-                      ),
-                      child: ListViewScreen(items: _items),
-                    );
-                  }),
-                );
-              case 3:
-                return SafeArea(
-                  child: CupertinoTabView(builder: (context) {
                     return CupertinoPageScaffold(
                       child: ProfileScreen(),
                     );
@@ -165,3 +127,47 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin 
     );
   }
 }
+
+class HolidaysTabView extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: CupertinoTabView(builder: (context) {
+        var _items = HolidayData.franceResults.map(
+                (holiday) => ListViewItem(
+                title: holiday.name,
+                imageURL: holiday.images != null ? holiday.images.first : null,
+                subtitle: '🇫🇷 ${holiday.country}',
+                additionalInformation: [
+                  'From Calais: ${holiday.distanceFromCalais} miles',
+                  ReCase(describeEnum(holiday.difficulty)).titleCase,
+                ],
+                venue: holiday,
+                isSponsored: holiday.isSponsored
+            )
+        ).toList();
+
+        _items += HolidayData.belgiumResults.map(
+                (holiday) => ListViewItem(
+                title: holiday.name,
+                imageURL: holiday.images != null ? holiday.images.first : null,
+                subtitle: '🇧🇪 ${holiday.country}',
+                additionalInformation: [
+                  'From Calais: ${holiday.distanceFromCalais} miles',
+                  ReCase(describeEnum(holiday.difficulty)).titleCase,
+                ],
+                venue: holiday
+            )
+        ).toList();
+
+        return CupertinoPageScaffold(
+          navigationBar: CupertinoNavigationBar(
+            middle: Text('Holidays'),
+          ),
+          child: ListViewScreen(items: _items),
+        );
+      }),
+    );
+  }
+}
+

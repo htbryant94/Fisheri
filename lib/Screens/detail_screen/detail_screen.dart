@@ -80,13 +80,15 @@ class _DetailScreenState extends State<DetailScreen> {
   }
 
   bool canShowBookNowButton() {
-    return widget.venue.tickets != null && widget.venue.tickets.contains('day');
+    return false;
+    // return widget.venue.tickets != null && widget.venue.tickets.contains('day');
   }
 
   bool canShowJoinWaitingListButton() {
-    return !canShowBookNowButton() &&
-        widget.venue.tickets != null &&
-        (widget.venue.tickets.contains('season') || widget.venue.tickets.contains('syndicate') || widget.venue.tickets.contains('club_water'));
+    return false;
+    // return !canShowBookNowButton() &&
+    //     widget.venue.tickets != null &&
+    //     (widget.venue.tickets.contains('season') || widget.venue.tickets.contains('syndicate') || widget.venue.tickets.contains('club_water'));
   }
 
   bool hasSocialLinks() {

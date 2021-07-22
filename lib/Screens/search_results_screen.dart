@@ -85,21 +85,9 @@ class SearchResultsScreen extends StatelessWidget {
                         },
                         itemBuilder: (context, int index) {
                         final venue = searchResults[index].venue;
-                        if (index > 0 && index % 5 == 0) {
-                          return Container(
-                            height: 180,
-                            clipBehavior: Clip.antiAliasWithSaveLayer,
-                            child: Image.asset(
-                              'images/placeholders/environment_banner.png',
-                              fit: BoxFit.fill,
-                            ),
-                            decoration: BoxDecoration(
-                              color: DSColors.green,
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(color: DSColors.grey.withOpacity(0.5), width: 0.5),
-                            ),
-                          );
-                        } else {
+                        // if (index > 0 && index % 5 == 0) {
+                          // return AdvertCell();
+                        // } else {
                           return SearchResultCell(
                             venue: venue,
                             layout: BaseCellLayout.cover,
@@ -109,7 +97,7 @@ class SearchResultsScreen extends StatelessWidget {
                                 userCurrentLocation: userCurrentLocation
                             ),
                           );
-                        }
+                        // }
                     }),
                   ),
                 ],
@@ -129,6 +117,29 @@ class SearchResultsScreen extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class AdvertCell extends StatelessWidget {
+  const AdvertCell({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 180,
+      clipBehavior: Clip.antiAliasWithSaveLayer,
+      child: Image.asset(
+        'images/placeholders/environment_banner.png',
+        fit: BoxFit.fill,
+      ),
+      decoration: BoxDecoration(
+        color: DSColors.green,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: DSColors.grey.withOpacity(0.5), width: 0.5),
       ),
     );
   }

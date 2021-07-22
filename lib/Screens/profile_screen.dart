@@ -50,48 +50,48 @@ class _ProfileScreenState extends State<ProfileScreen> {
           title: 'Edit a Venue',
           icon: Icon(Icons.library_books, color: Colors.green)
       ),
-      ProfileListItem(
-        screen: FishingLicenseScreen(),
-        title: 'Fishing License - PoC',
-        icon: Icon(Icons.description, color: Colors.green),
-      ),
-      ProfileListItem(
-        screen: AchievementsScreen(),
-        title: 'Achievements - PoC',
-        icon: Icon(Icons.whatshot, color: Colors.orange)
-      ),
-      ProfileListItem(
-        screen: EventsCalendarScreen(),
-        title: 'Events - PoC',
-        icon: Icon(Icons.calendar_today, color: Colors.red[600]),
-        navBarIcon: CupertinoButton(
-          padding: EdgeInsets.only(bottom: 8, top: 8),
-          child: Icon(Icons.add),
-          onPressed: () {
-            Coordinator.present(
-              context,
-              currentPageTitle: 'Profile',
-              screen: CreateEventScreen(),
-              screenTitle: 'Create Event'
-            );
-          },
-        )
-      ),
-      ProfileListItem(
-        screen: null,
-        title: 'My Favourites',
-        icon: Icon(Icons.favorite, color: Colors.pink),
-      ),
-      ProfileListItem(
-          screen: null,
-          title: 'Contact Us',
-          icon: Icon(Icons.phone, color: Colors.blue)
-      ),
-      ProfileListItem(
-        screen: null,
-        title: 'Settings',
-        icon: Icon(Icons.settings, color: Colors.blueGrey),
-      ),
+      // ProfileListItem(
+      //   screen: FishingLicenseScreen(),
+      //   title: 'Fishing License - PoC',
+      //   icon: Icon(Icons.description, color: Colors.green),
+      // ),
+      // ProfileListItem(
+      //   screen: AchievementsScreen(),
+      //   title: 'Achievements - PoC',
+      //   icon: Icon(Icons.whatshot, color: Colors.orange)
+      // ),
+      // ProfileListItem(
+      //   screen: EventsCalendarScreen(),
+      //   title: 'Events - PoC',
+      //   icon: Icon(Icons.calendar_today, color: Colors.red[600]),
+      //   navBarIcon: CupertinoButton(
+      //     padding: EdgeInsets.only(bottom: 8, top: 8),
+      //     child: Icon(Icons.add),
+      //     onPressed: () {
+      //       Coordinator.present(
+      //         context,
+      //         currentPageTitle: 'Profile',
+      //         screen: CreateEventScreen(),
+      //         screenTitle: 'Create Event'
+      //       );
+      //     },
+      //   )
+      // ),
+      // ProfileListItem(
+      //   screen: null,
+      //   title: 'My Favourites',
+      //   icon: Icon(Icons.favorite, color: Colors.pink),
+      // ),
+      // ProfileListItem(
+      //     screen: null,
+      //     title: 'Contact Us',
+      //     icon: Icon(Icons.phone, color: Colors.blue)
+      // ),
+      // ProfileListItem(
+      //   screen: null,
+      //   title: 'Settings',
+      //   icon: Icon(Icons.settings, color: Colors.blueGrey),
+      // ),
       if (_isLoggedIn)
       ProfileListItem(
         title: 'Sign out',
