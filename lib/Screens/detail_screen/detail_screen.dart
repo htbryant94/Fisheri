@@ -71,6 +71,17 @@ class _DetailScreenState extends State<DetailScreen> {
     PanoramaItem(name: null, imageURL: 'images/placeholders/shops/Waltham_Cross_5.jpg'),
   ];
 
+  bool hasValue(dynamic value) {
+    return value != null && value.isNotEmpty;
+  }
+
+  bool hasSocialMedia(Social socialMedia) {
+    return socialMedia.facebook != null ||
+    socialMedia.instagram != null ||
+    socialMedia.twitter != null ||
+    socialMedia.youtube != null;
+  }
+
   bool isLake() {
     return widget.venue.categories.contains('lake');
   }
@@ -167,25 +178,31 @@ class _DetailScreenState extends State<DetailScreen> {
     sections.add(ContentsSection(
       contents: [
         'Location',
+        if (hasValue(venue.amenities))
         'Amenities',
+        if (hasValue(venue.fishingTypes))
         'Fishing Types',
+        if (hasValue(venue.fishStock))
         'Fish',
+        if (hasValue(venue.fishingRules))
         'Rules',
+        if (hasValue(venue.operationalHours))
         'Opening Hours',
+        if (hasSocialMedia(venue.social))
         'Social Media',
       ],
     ));
 
-    sections.add(DSComponents.paragraphSpacer());
-
-    sections.add(StatsSection(
-      stats: [
-        if (isLake())
-        Stat(name: 'Catch Reports', value: 1247),
-        Stat(name: 'Upcoming Events', value: 2),
-        Stat(name: 'Check-Ins Today', value: 16),
-      ],
-    ));
+    // sections.add(DSComponents.paragraphSpacer());
+    //
+    // sections.add(StatsSection(
+    //   stats: [
+    //     if (isLake())
+    //     Stat(name: 'Catch Reports', value: 1247),
+    //     Stat(name: 'Upcoming Events', value: 2),
+    //     Stat(name: 'Check-Ins Today', value: 16),
+    //   ],
+    // ));
 
     sections.add(DSComponents.divider());
 
