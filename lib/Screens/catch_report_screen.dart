@@ -3,6 +3,7 @@ import 'package:fisheri/Screens/catch_form_screen.dart';
 import 'package:fisheri/Screens/detail_screen/description_section.dart';
 import 'package:fisheri/Screens/detail_screen/image_carousel.dart';
 import 'package:fisheri/WeightConverter.dart';
+import 'package:fisheri/alert_dialog_factory.dart';
 import 'package:fisheri/coordinator.dart';
 import 'package:fisheri/models/catch.dart';
 import 'package:fisheri/models/catch_report.dart';
@@ -132,7 +133,73 @@ class _CatchReportScreenState extends State<CatchReportScreen> {
                                     ),
                                   ],
                                 ),
-                              )
+                              ),
+                            CupertinoButton(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(CupertinoIcons.delete_solid, color: Colors.red, size: 20),
+                                    DSComponents.body(
+                                      text: 'Delete',
+                                      color: Colors.red,
+                                      alignment: Alignment.center,
+                                    ),
+                                  ],
+                                ),
+                                onPressed: () async {
+                                  var _shouldDelete = false;
+                                  await showDialog(
+                                      context: context,
+                                      barrierDismissible: false,
+                                      builder: (BuildContext context) {
+                                        return AlertDialogFactory.deleteConfirmation(
+                                            context: context,
+                                            onDeletePressed: () {
+                                              _shouldDelete = true;
+                                              Navigator.of(context).pop();
+                                            }
+                                        );
+                                      });
+
+                                  if (_shouldDelete) {
+                                    // delete Catch Report images
+                                    if (widget.catchReport.images != null &&
+                                        widget.catchReport.images.isNotEmpty) {
+                                      await FireStorageRequestService
+                                          .defaultService().deleteImages(
+                                          widget.catchReport.images);
+                                    }
+                                    // get all Catches for Catch Report
+                                    final catchDocuments = await FirestoreRequestService
+                                        .defaultService().getCatches(
+                                        catchReportID: widget.catchReportID);
+
+                                    // delete images for each Catch
+                                    catchDocuments.forEach((document) async {
+                                      if (document.images != null &&
+                                          document.images.isNotEmpty) {
+                                        await FireStorageRequestService
+                                            .defaultService().deleteImages(
+                                            document.images);
+                                      }
+                                    });
+
+                                    // delete Catches for Catch Report
+                                    await FirestoreRequestService
+                                        .defaultService()
+                                        .deleteCatchesForCatchReport(
+                                        widget.catchReportID);
+
+                                    // delete Catch Report
+                                    await FirestoreRequestService
+                                        .defaultService()
+                                        .deleteCatchReport(widget.catchReportID)
+                                        .whenComplete(() {
+                                      Navigator.of(context).pop();
+                                    });
+                                  }
+                                },
+                            )
                           ],
                         ),
                       ) : DSComponents.titleLarge(

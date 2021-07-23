@@ -20,6 +20,7 @@ class CatchJSONSerializer extends Serializer<Catch>
 
 class Catch {
   Catch({
+    this.id,
     this.userID,
     this.catchType,
     this.catchReportID,
@@ -36,6 +37,7 @@ class Catch {
     this.images,
   });
 
+  String id;
   String userID;
   String catchType;
   String catchReportID;

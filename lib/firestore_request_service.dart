@@ -38,7 +38,9 @@ class FirestoreRequestService {
 
     return snapshots.first.then((snapshot) {
       return snapshot.docs.map((doc) {
-        return CatchJSONSerializer().fromMap(doc.data());
+        var catchModel = CatchJSONSerializer().fromMap(doc.data());
+        catchModel.id = doc.id;
+        return catchModel;
       }).toList();
     });
   }
@@ -51,7 +53,29 @@ class FirestoreRequestService {
         .delete()
         .catchError((error) => print(error));
   }
+  
+  Future deleteCatchReport(String catchReportID) async {
+    await FirebaseFirestore
+        .instance
+        .collection('catch_reports')
+        .doc(catchReportID)
+        .delete()
+        .catchError((error) => print(error));
+  }
 
+  Future deleteCatchesForCatchReport(String catchReportID) async {
+    await firestore.collection('catches').where('catch_report_id', isEqualTo: catchReportID).get()
+        .then((querySnapshot) {
+        // Once we get the results, begin a batch
+        var batch = firestore.batch();
+        querySnapshot.docs.forEach((document) {
+        // For each doc, add a delete operation to the batch
+        batch.delete(document.reference);
+  });
+    // Commit the batch
+    return batch.commit();
+    });
+  }
 }
 
 class FireStorageRequestService {
@@ -66,13 +90,13 @@ class FireStorageRequestService {
   }
 
   Future<String> getVenueImageURL(String assetPath, int index) async {
-    String imageURL = await firebaseStorage.ref().child('venues').child(assetPath).child('images').child('lake_$index.jpg').getDownloadURL();
+    final imageURL = await firebaseStorage.ref().child('venues').child(assetPath).child('images').child('lake_$index.jpg').getDownloadURL();
     print('IMAGE URL: $imageURL');
     return await imageURL;
   }
 
   Future<String> getImages(String assetPath) async {
-    String imageURL = await firebaseStorage.ref().child('venues').child(assetPath).child('images').getDownloadURL();
+    final imageURL = await firebaseStorage.ref().child('venues').child(assetPath).child('images').getDownloadURL();
     print('IMAGE URL: $imageURL');
     return await imageURL;
   }
