@@ -3,6 +3,7 @@ import 'package:fisheri/Components/favourite_button.dart';
 import 'package:fisheri/Components/pill.dart';
 import 'package:fisheri/design_system.dart';
 import 'package:fisheri/house_texts.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fisheri/house_colors.dart';
 import 'package:flutter/rendering.dart';
@@ -230,6 +231,7 @@ class RemoteImageBaseCell extends StatelessWidget {
     this.imageBoxFit = BoxFit.fitHeight,
     this.showImage = true,
     this.isSponsored = false,
+    this.showFavouriteButton = false,
   });
 
   final String defaultImagePath;
@@ -242,6 +244,7 @@ class RemoteImageBaseCell extends StatelessWidget {
   final BoxFit imageBoxFit;
   final bool showImage;
   final bool isSponsored;
+  final bool showFavouriteButton;
 
   List<Widget> _children() {
     var stuff = <Widget>[
@@ -300,18 +303,17 @@ class RemoteImageBaseCell extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          imageURL != null
-              ? Stack(
-                children: [
-                  Container(
-            height: 180,
-            width: double.maxFinite,
-            clipBehavior: Clip.antiAliasWithSaveLayer,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              border: !isSponsored ? Border.all(color: DSColors.grey.withOpacity(0.5), width: 0.5) : Border.all(color: DSColors.green, width: 6),
-            ),
-            child: CachedNetworkImage(
+          Stack(
+            children: [
+              imageURL != null ? Container(
+                height: 180,
+                width: double.maxFinite,
+                clipBehavior: Clip.antiAliasWithSaveLayer,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  border: !isSponsored ? Border.all(color: DSColors.grey.withOpacity(0.5), width: 0.5) : Border.all(color: DSColors.green, width: 6),
+                ),
+                child: CachedNetworkImage(
                   fit: BoxFit.cover,
                   imageUrl: imageURL,
                   placeholder: (context, url) => Container(
@@ -321,15 +323,24 @@ class RemoteImageBaseCell extends StatelessWidget {
                         child: CircularProgressIndicator(),
                       )
                   ),
-            ),
-          ),
-                  Positioned(
-                    right: 16,
-                    bottom: 16,
-                    child: FavouriteButton(),
+                ),
+              ) : Container(
+                  height: 180,
+                  width: double.maxFinite,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                  if (isSponsored)
-                  Positioned(
+                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                  child: Image.asset(defaultImagePath ?? 'images/lake.jpg', fit: BoxFit.cover)
+              ),
+              if (showFavouriteButton)
+              Positioned(
+                right: 16,
+                bottom: 16,
+                child: FavouriteButton(),
+              ),
+              if (isSponsored)
+                Positioned(
                     top: 12,
                     left: 12,
                     child: Pill(
@@ -338,15 +349,8 @@ class RemoteImageBaseCell extends StatelessWidget {
                       titleColor: DSColors.green,
                       icon: Icon(Icons.star_outline_outlined, color: DSColors.green, size: 18),
                     )
-                  )
-                ],
-              ) : Container(
-              height: 180,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              clipBehavior: Clip.antiAliasWithSaveLayer,
-              child: Image.asset(defaultImagePath ?? 'images/lake.jpg', fit: BoxFit.cover)
+                )
+            ],
           ),
           DSComponents.doubleSpacer(),
           Column(
