@@ -55,7 +55,7 @@ class OpeningHoursSection extends StatelessWidget {
         child: Column(children: [
           DSComponents.header(text: 'Opening Hours'),
           DSComponents.doubleSpacer(),
-          HouseTexts.subheading("Couldn't retrieve information"),
+          HouseTexts.subheading('No information on opening hours available.'),
         ]),
       );
     }

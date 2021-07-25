@@ -186,7 +186,7 @@ class _DetailScreenState extends State<DetailScreen> {
         'Fish',
         if (hasValue(venue.fishingRules))
         'Rules',
-        if (hasValue(venue.operationalHours))
+        if (venue.operationalHours != null)
         'Opening Hours',
         if (hasSocialMedia(venue.social))
         'Social Media',
