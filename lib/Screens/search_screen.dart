@@ -338,6 +338,20 @@ class _SearchScreenState extends State<SearchScreen> {
                                 _resetFilters();
                               }
                             },
+                            searchRadiusChanged: (miles) {
+                              searchFilters.searchRadius = miles;
+                              final kilometres = (miles * 1.609344).toDouble();
+                              setState(() {
+                                radius.value = kilometres;
+                                _lastRadius = kilometres;
+                                if (kilometres < _maxSearchRadius) {
+                                  _setCircles(
+                                      center: _convertPositionToLatLng(_getPosition()),
+                                      radius: kilometres
+                                  );
+                                }
+                              });
+                            },
                           ),
                           screenTitle: 'Filters',
                         );
@@ -362,29 +376,29 @@ class _SearchScreenState extends State<SearchScreen> {
                   currentPosition: GeoPoint(_currentPosition.latitude, _currentPosition.longitude),
               ),
             ),
-                Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                        left: 24,
-                        bottom: _isVenueSelected() ? _selectedVenueCellHeight + 48 : 24
-                    ),
-                    child: VerticalSlider(
-                      onChanged: (value) {
-                        setState(() {
-                          radius.value = value;
-                          _lastRadius = value;
-                          if (value < _maxSearchRadius) {
-                            _setCircles(
-                              center: _convertPositionToLatLng(_getPosition()),
-                              radius: value
-                            );
-                          }
-                        });
-                      },
-                    ),
-                  ),
-                ),
+                // Align(
+                //   alignment: Alignment.bottomLeft,
+                //   child: Padding(
+                //     padding: EdgeInsets.only(
+                //         left: 24,
+                //         bottom: _isVenueSelected() ? _selectedVenueCellHeight + 48 : 24
+                //     ),
+                //     child: VerticalSlider(
+                //       onChanged: (value) {
+                //         setState(() {
+                //           radius.value = value;
+                //           _lastRadius = value;
+                //           if (value < _maxSearchRadius) {
+                //             _setCircles(
+                //               center: _convertPositionToLatLng(_getPosition()),
+                //               radius: value
+                //             );
+                //           }
+                //         });
+                //       },
+                //     ),
+                //   ),
+                // ),
           ]),
         ),
       ),
