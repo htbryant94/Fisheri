@@ -30,7 +30,18 @@ class PanoramaRail extends StatelessWidget {
         if (title != null)
         Column(
           children: [
-            DSComponents.header(text: title),
+            Row(
+              children: [
+                DSComponents.header(text: title),
+                DSComponents.singleSpacer(),
+                Image.asset(
+                  'images/icons/360-degrees.png',
+                  color: Colors.black,
+                  height: 32,
+                  width: 32,
+                ),
+              ],
+            ),
             DSComponents.paragraphSpacer(),
           ],
         ),

@@ -117,10 +117,6 @@ class _DetailScreenState extends State<DetailScreen> {
     return widget.id == 'PAgCOwaht3K6wJqUo6fo'; // Angling Direct Chelmsford
   }
 
-  bool canShow360Images() {
-    return widget.id == 'O2HrBE1LqynNfXN2AvHX'; // Manor Farm Lakes
-  }
-
   List<Widget> buildSections(BuildContext context, VenueDetailed venue) {
     List<Widget> sections = [];
 
@@ -162,7 +158,7 @@ class _DetailScreenState extends State<DetailScreen> {
     }
 
     if (canShowShops()) {
-      sections.add(PanoramaRail(title: null, items: _shopData));
+      sections.add(PanoramaRail(title: 'Gallery', items: _shopData));
       sections.add(DSComponents.divider());
     }
 
@@ -300,12 +296,6 @@ class _DetailScreenState extends State<DetailScreen> {
                             });
                           },
                         ),
-                      ),
-                      if (canShow360Images())
-                      Positioned(
-                        left: 24,
-                        bottom: 16,
-                        child: ThreeSixtyImageButton(),
                       ),
                     ],
                   ),
