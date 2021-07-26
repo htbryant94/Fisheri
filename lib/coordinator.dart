@@ -87,7 +87,7 @@ class Coordinator {
                     catchReport: catchReport,
                     catchReportID: catchReportID,
                   ),
-                  screenTitle: 'New Catch Report'
+                  screenTitle: 'Amend Catch Report'
               );
             },
           ),
@@ -126,7 +126,7 @@ class Coordinator {
                       catchReport: catchReport,
                       catchReportID: catchReportID,
                     ),
-                    screenTitle: 'Edit Catch'
+                    screenTitle: 'Amend Catch'
                 );
               },
             ),
