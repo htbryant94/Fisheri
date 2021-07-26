@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 class ProfileListItem {
   ProfileListItem({
     this.title,
+    this.subtitle,
     this.icon,
     this.screen,
     this.navBarIcon,
@@ -21,6 +22,7 @@ class ProfileListItem {
 });
 
   final String title;
+  final String subtitle;
   final Icon icon;
   final Widget screen;
   final VoidCallback action;
@@ -109,6 +111,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       if (_isLoggedIn)
       ProfileListItem(
         title: 'Sign out',
+        subtitle: _auth.currentUser.email,
         icon: Icon(Icons.logout),
         action: () {
           _auth.signOut().whenComplete(() {
@@ -144,6 +147,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               final item = items[index];
               return ListTile(
                   title: DSComponents.body(text: item.title),
+                  subtitle: item.subtitle != null ? DSComponents.body(text: item.subtitle) : null,
                   leading: item.icon,
                   onTap: _getAction(context, item)
               );
