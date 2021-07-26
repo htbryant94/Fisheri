@@ -58,6 +58,9 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
       final startDate = DateTime.parse(widget.catchReport.startDate);
       final endDate = DateTime.parse(widget.catchReport.endDate);
       isDayOnly = startDate == endDate;
+      if (widget.catchReport.images != null && widget.catchReport.images.isNotEmpty) {
+        imageURLs = widget.catchReport.images;
+      }
     } else {
       isDayOnly = false;
     }
