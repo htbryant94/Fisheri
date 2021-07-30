@@ -44,6 +44,7 @@ dependencies:
   panorama: ^0.0.2
   firebase_auth: ^0.20.1
   url_launcher: ^5.7.10
+  get: ^3.26.0
   flutter_google_places:
     git:
       url: https://github.com/hayderux/flutter_google_places

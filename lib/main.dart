@@ -10,6 +10,7 @@ import 'package:fisheri/routes/fisheri_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:recase/recase.dart';
 import 'Screens/auth_screen.dart';
 import 'Screens/search_screen.dart';
@@ -29,7 +30,7 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'Flutter Google Maps Demo',
       home: HomePage(),
       onGenerateRoute: (settings) {

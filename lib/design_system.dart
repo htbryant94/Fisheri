@@ -22,12 +22,14 @@ class DesignSystemFonts {
     fontSize: 24,
   );
 
-  static TextStyle title = GoogleFonts.dMSans(
-    color: DSColors.black,
-    fontWeight: FontWeight.bold,
-    letterSpacing: -0.2,
-    fontSize: 20,
-  );
+  static TextStyle title(Color color) {
+    return GoogleFonts.dMSans(
+      color: color,
+      fontWeight: FontWeight.bold,
+      letterSpacing: -0.2,
+      fontSize: 20,
+    );
+  }
 
   static TextStyle header = GoogleFonts.dMSans(
     color: DSColors.black,
@@ -192,13 +194,14 @@ class DSComponents {
 
   static Widget title({
     String text,
+    Color color = DSColors.black,
     AlignmentGeometry alignment = Alignment.centerLeft,
   }) {
     return Align(
       alignment: alignment,
       child: Text(
         text,
-        style: DesignSystemFonts.title,
+        style: DesignSystemFonts.title(color),
       ),
     );
   }

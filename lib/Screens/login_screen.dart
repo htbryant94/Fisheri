@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fisheri/Factories/alert_dialog_factory.dart';
+import 'package:fisheri/Factories/snack_bar_factory.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../design_system.dart';
 
@@ -34,6 +36,11 @@ class _LoginScreenState extends State<LoginScreen> {
     }).then((userCredential) {
       if (userCredential != null) {
         Navigator.of(context).popUntil((route) => route.isFirst);
+        SnackBarFactory.standard(
+            title: 'Welcome Back',
+            message: 'signed in as ${userCredential.user.email}',
+            position: SnackPosition.TOP
+        );
       }
     });
   }
