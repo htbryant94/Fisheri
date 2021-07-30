@@ -6,6 +6,30 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AlertDialogFactory {
+
+  static AlertDialog generic({
+    BuildContext context,
+    String title = 'There was a problem...',
+    String message
+  }) {
+    return AlertDialog(
+      title: DSComponents.header(text: title),
+      content: SingleChildScrollView(
+        child: DSComponents.body(text: message),
+      ),
+      actionsPadding: EdgeInsets.all(8),
+      actions: [
+        DSComponents.primaryButton(
+            text: 'OK',
+            shadowEnabled: false,
+            onPressed: () {
+              Navigator.of(context).pop();
+            }
+        )
+      ],
+    );
+  }
+
   static AlertDialog invalidFormSubmission(BuildContext context) {
     return AlertDialog(
       title: DSComponents.header(text: 'There was a problem...'),

@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fisheri/alert_dialog_factory.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -20,13 +21,20 @@ class _LoginScreenState extends State<LoginScreen> {
         (_passwordTextFieldValue != null && _passwordTextFieldValue.isNotEmpty);
   }
 
-  void _loginAction() {
-    FirebaseAuth.instance
+  void _loginAction() async {
+    await FirebaseAuth.instance
         .signInWithEmailAndPassword(email: _emailTextFieldValue, password: _passwordTextFieldValue)
-        .catchError((onError) {
+        .catchError((onError) async {
       print('error signing in: $onError');
-    }).whenComplete(() {
-      Navigator.of(context).popUntil((route) => route.isFirst);
+      final error = onError as FirebaseAuthException;
+      await showDialog(
+        context: context,
+        child: AlertDialogFactory.generic(context: context, message: error.message),
+      );
+    }).then((userCredential) {
+      if (userCredential != null) {
+        Navigator.of(context).popUntil((route) => route.isFirst);
+      }
     });
   }
 
