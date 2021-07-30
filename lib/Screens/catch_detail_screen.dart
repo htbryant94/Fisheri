@@ -1,7 +1,7 @@
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:fisheri/Screens/detail_screen/fullscreen_image_carousel.dart';
 import 'package:fisheri/WeightConverter.dart';
-import 'package:fisheri/alert_dialog_factory.dart';
+import 'package:fisheri/Factories/alert_dialog_factory.dart';
 import 'package:fisheri/design_system.dart';
 import 'package:fisheri/Screens/detail_screen/title_section.dart';
 import 'package:flutter/cupertino.dart';

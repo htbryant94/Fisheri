@@ -3,7 +3,7 @@ import 'package:fisheri/Screens/catch_form_screen.dart';
 import 'package:fisheri/Screens/detail_screen/description_section.dart';
 import 'package:fisheri/Screens/detail_screen/image_carousel.dart';
 import 'package:fisheri/WeightConverter.dart';
-import 'package:fisheri/alert_dialog_factory.dart';
+import 'package:fisheri/Factories/alert_dialog_factory.dart';
 import 'package:fisheri/coordinator.dart';
 import 'package:fisheri/models/catch.dart';
 import 'package:fisheri/models/catch_report.dart';

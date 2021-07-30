@@ -2,11 +2,11 @@ import 'dart:ui';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fisheri/Screens/catch_report_screen.dart';
-import 'package:fisheri/alert_dialog_factory.dart';
+import 'package:fisheri/Factories/alert_dialog_factory.dart';
 import 'package:fisheri/design_system.dart';
 import 'package:fisheri/house_texts.dart';
-import 'package:fisheri/main.dart';
 import 'package:fisheri/models/catch_report.dart';
+import 'package:fisheri/routes/arguments/catch_report_screen_arguments.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';

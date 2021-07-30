@@ -6,7 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fisheri/WeightConverter.dart';
-import 'package:fisheri/alert_dialog_factory.dart';
+import 'package:fisheri/Factories/alert_dialog_factory.dart';
 import 'package:fisheri/models/catch_report.dart';
 import 'package:fisheri/types/fish_stock_list.dart';
 import 'package:fisheri/types/weather_condition.dart';

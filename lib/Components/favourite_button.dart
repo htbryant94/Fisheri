@@ -1,3 +1,4 @@
+import 'package:fisheri/Factories/snack_bar_factory.dart';
 import 'package:flutter/material.dart';
 
 import '../design_system.dart';
@@ -22,11 +23,10 @@ class _FavouriteButtonState extends State<FavouriteButton> {
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: () {
-          Scaffold.of(context).showSnackBar(SnackBar(
-            content: const Text('Favourites feature coming soon!'),
-            duration: const Duration(seconds: 2),
-            backgroundColor: DSColors.green,
-          ));
+         SnackBarFactory.standard(
+             context: context,
+             content: Text('Favourites feature coming soon!')
+         );
           setState(() {
             isEnabled = !isEnabled;
           });

@@ -24,7 +24,7 @@ import 'package:intl/intl.dart';
 import 'package:fisheri/Components/form_fields/operational_hours_field.dart';
 import 'package:fisheri/types/fish_stock_list.dart';
 
-import '../alert_dialog_factory.dart';
+import '../Factories/alert_dialog_factory.dart';
 
 class VenueDetailedConstants {
   static const String name = "name";

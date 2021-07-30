@@ -124,7 +124,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       if (!_isLoggedIn)
       ProfileListItem(
         icon: Icon(Icons.account_circle, color: Colors.blue),
-        title: 'Sign in',
+        title: 'Sign in / Register',
         action: () {
           Coordinator.present(
             context,
