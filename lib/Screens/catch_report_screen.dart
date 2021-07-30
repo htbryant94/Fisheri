@@ -22,8 +22,10 @@ class CatchReportScreen extends StatefulWidget {
     @required this.catchReportID,
   });
 
+  static const routeName = '/catchReport';
   final CatchReport catchReport;
   final String catchReportID;
+
 
   @override
   _CatchReportScreenState createState() => _CatchReportScreenState();

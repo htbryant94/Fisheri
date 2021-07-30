@@ -1,10 +1,11 @@
-import 'package:basic_utils/basic_utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fisheri/Screens/catch_report/catch_reports_screen.dart';
 import 'package:fisheri/Screens/profile_screen.dart';
 import 'package:fisheri/Screens/search_results_screen.dart';
 import 'package:fisheri/design_system.dart';
+import 'package:fisheri/models/catch_report.dart';
+import 'package:fisheri/routes/fisheri_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,16 @@ import 'Screens/search_screen.dart';
 import 'fonts/custom_icons_icons.dart';
 import 'holiday_data.dart';
 import 'package:flutter/services.dart';
+
+class CatchReportScreenArguments {
+  CatchReportScreenArguments({
+    this.catchReport,
+    this.catchReportID
+  });
+
+  final CatchReport catchReport;
+  final String catchReportID;
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,6 +41,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Google Maps Demo',
       home: HomePage(),
+      onGenerateRoute: (settings) {
+        final args = settings.arguments as CatchReportScreenArguments;
+        return FisheriRoute.catchReport(args.catchReport, args.catchReportID);
+      },
     );
   }
 }
