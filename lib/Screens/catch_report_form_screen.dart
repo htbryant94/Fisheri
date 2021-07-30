@@ -32,10 +32,12 @@ class CatchReportFormScreen extends StatefulWidget {
   CatchReportFormScreen({
     this.catchReport,
     this.catchReportID,
+    this.onFormSubmitted
 });
 
   final CatchReport catchReport;
   final String catchReportID;
+  final ValueChanged<CatchReport> onFormSubmitted;
 
   @override
   _CatchReportFormScreenState createState() => _CatchReportFormScreenState();
@@ -323,6 +325,9 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
                               ),
                             );
                           } else {
+                            if (widget.onFormSubmitted != null) {
+                              widget.onFormSubmitted(_catchReport);
+                            }
                             Navigator.of(context).pop();
                           }
 

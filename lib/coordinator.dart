@@ -72,30 +72,9 @@ class Coordinator {
 
   static void pushCatchReportScreen(BuildContext context, {String currentPageTitle, CatchReport catchReport, String catchReportID}) {
     pushCupertinoPageRoute(context,
-      CupertinoPageScaffold(
-        navigationBar: CupertinoNavigationBar(
-          previousPageTitle: currentPageTitle,
-          middle: Text('Catch Report'),
-          trailing: CupertinoButton(
-            child: Icon(Icons.edit),
-            padding: EdgeInsets.all(8),
-            onPressed: () {
-              Coordinator.present(
-                  context,
-                  currentPageTitle: '',
-                  screen: CatchReportFormScreen(
-                    catchReport: catchReport,
-                    catchReportID: catchReportID,
-                  ),
-                  screenTitle: 'Amend Catch Report'
-              );
-            },
-          ),
-        ),
-        child: CatchReportScreen(
-          catchReport: catchReport,
-          catchReportID: catchReportID,
-        ),
+      CatchReportScreenWrapper(
+        catchReport: catchReport,
+        catchReportID: catchReportID,
       )
     );
   }
@@ -212,4 +191,61 @@ class Coordinator {
     );
   }
   
+}
+
+class CatchReportScreenWrapper extends StatefulWidget {
+  CatchReportScreenWrapper({
+    this.catchReportID,
+    this.catchReport
+});
+
+  final String catchReportID;
+  final CatchReport catchReport;
+
+  @override
+  _CatchReportScreenWrapperState createState() => _CatchReportScreenWrapperState();
+}
+
+class _CatchReportScreenWrapperState extends State<CatchReportScreenWrapper> {
+  CatchReport _currentCatchReport;
+
+  @override
+  void initState() {
+    _currentCatchReport = widget.catchReport;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoPageScaffold(
+      navigationBar: CupertinoNavigationBar(
+        previousPageTitle: '',
+        middle: Text('Catch Report'),
+        trailing: CupertinoButton(
+          child: Icon(Icons.edit),
+          padding: EdgeInsets.all(8),
+          onPressed: () {
+            Coordinator.present(
+                context,
+                currentPageTitle: '',
+                screen: CatchReportFormScreen(
+                  catchReport: _currentCatchReport,
+                  catchReportID: widget.catchReportID,
+                  onFormSubmitted: (catchReport) {
+                    setState(() {
+                      _currentCatchReport = catchReport;
+                    });
+                  },
+                ),
+                screenTitle: 'Amend Catch Report'
+            );
+          },
+        ),
+      ),
+      child: CatchReportScreen(
+        catchReport: _currentCatchReport,
+        catchReportID: widget.catchReportID,
+      ),
+    );
+  }
 }

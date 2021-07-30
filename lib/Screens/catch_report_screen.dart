@@ -286,7 +286,6 @@ class __CatchListBuilderState extends State<_CatchListBuilder> {
     _stream.listen((event) {
       print ('----- STREAM UPDATED -----');
     });
-
     super.initState();
   }
 
