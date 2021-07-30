@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fisheri/Factories/alert_dialog_factory.dart';
 import 'package:fisheri/Factories/snack_bar_factory.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -61,56 +60,78 @@ class _RegisterScreenState extends State<RegisterScreen> {
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-          child: Column(
-            children: [
-              DSComponents.header(text: 'Email'),
-              DSComponents.singleSpacer(),
-              CupertinoTextField(
-                autocorrect: false,
-                keyboardType: TextInputType.emailAddress,
-                onChanged: (input) {
-                  setState(() {
-                    _emailTextFieldValue = input;
-                  });
-                },
-              ),
-              Container(
-                height: 20,
-                child: Visibility(
-                  visible:
-                  _emailErrorText != null && _emailErrorText.isNotEmpty,
-                  child: DSComponents.body(
-                      text: _emailErrorText ?? '', color: Colors.red),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                DSComponents.header(text: 'Email'),
+                DSComponents.singleSpacer(),
+                CupertinoTextField(
+                  autocorrect: false,
+                  keyboardType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction.next,
+                  onChanged: (input) {
+                    setState(() {
+                      _emailTextFieldValue = input;
+                    });
+                  },
                 ),
-              ),
-              DSComponents.paragraphSpacer(),
-              DSComponents.header(text: 'Password'),
-              DSComponents.singleSpacer(),
-              CupertinoTextField(
-                autocorrect: false,
-                obscureText: true,
-                onChanged: (input) {
-                  setState(() {
-                    _passwordTextFieldValue = input;
-                  });
-                },
-              ),
-              Container(
-                height: 20,
-                child: Visibility(
-                  visible: _passwordErrorText != null &&
-                      _passwordErrorText.isNotEmpty,
-                  child: DSComponents.body(
-                      text: _passwordErrorText ?? '', color: Colors.red),
+                Container(
+                  height: 20,
+                  child: Visibility(
+                    visible:
+                    _emailErrorText != null && _emailErrorText.isNotEmpty,
+                    child: DSComponents.body(
+                        text: _emailErrorText ?? '', color: Colors.red),
+                  ),
                 ),
-              ),
-              DSComponents.sectionSpacer(),
-              DSComponents.primaryButton(
-                  text: 'Create Account',
-                  onPressed: _emailAndPasswordHaveValues()
-                      ? _createAccountAction
-                      : null),
-            ],
+                DSComponents.doubleSpacer(),
+                DSComponents.header(text: 'Password'),
+                DSComponents.singleSpacer(),
+                CupertinoTextField(
+                  autocorrect: false,
+                  obscureText: true,
+                  onChanged: (input) {
+                    setState(() {
+                      _passwordTextFieldValue = input;
+                    });
+                  },
+                ),
+                if (_passwordErrorText != null && _passwordErrorText.isNotEmpty)
+                Container(
+                  height: 20,
+                  child: Visibility(
+                    visible: _passwordErrorText != null &&
+                        _passwordErrorText.isNotEmpty,
+                    child: DSComponents.body(
+                        text: _passwordErrorText ?? '', color: Colors.red),
+                  ),
+                ),
+                DSComponents.doubleSpacer(),
+                DSComponents.primaryButton(
+                    text: 'Create Account',
+                    onPressed: _emailAndPasswordHaveValues()
+                        ? _createAccountAction
+                        : null),
+                DSComponents.sectionSpacer(),
+                DSComponents.subheaderSmall(
+                  text: 'Additional methods of authentication will be available in a future release',
+                  color: Colors.red,
+                ),
+                DSComponents.doubleSpacer(),
+                CupertinoButton(
+                  color: DSColors.black,
+                  child: Text('Sign up with Apple'),
+                  disabledColor: DSColors.black.withOpacity(0.20),
+                ),
+                DSComponents.doubleSpacer(),
+                CupertinoButton(
+                  color: DSColors.black,
+                  child: Text('Sign up with Google'),
+                  disabledColor: DSColors.black.withOpacity(0.20),
+                ),
+              ],
+            ),
           ),
         ),
       ),

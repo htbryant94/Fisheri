@@ -52,6 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 24, vertical: 24),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               DSComponents.header(text: 'Email'),
               DSComponents.singleSpacer(),
@@ -73,7 +74,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       text: _emailErrorText ?? '', color: Colors.red),
                 ),
               ),
-              DSComponents.paragraphSpacer(),
+              DSComponents.doubleSpacer(),
               DSComponents.header(text: 'Password'),
               DSComponents.singleSpacer(),
               CupertinoTextField(
@@ -94,12 +95,29 @@ class _LoginScreenState extends State<LoginScreen> {
                       text: _passwordErrorText ?? '', color: Colors.red),
                 ),
               ),
-              DSComponents.sectionSpacer(),
+              DSComponents.doubleSpacer(),
               DSComponents.primaryButton(
                   text: 'Sign in',
                   onPressed: _emailAndPasswordHaveValues()
                       ? _loginAction
                       : null),
+              DSComponents.sectionSpacer(),
+              DSComponents.subheaderSmall(
+                text: 'Additional methods of authentication will be available in a future release',
+                color: Colors.red,
+              ),
+              DSComponents.doubleSpacer(),
+              CupertinoButton(
+                color: DSColors.black,
+                child: Text('Sign in with Apple'),
+                disabledColor: DSColors.black.withOpacity(0.20),
+              ),
+              DSComponents.doubleSpacer(),
+              CupertinoButton(
+                color: DSColors.black,
+                child: Text('Sign in with Google'),
+                disabledColor: DSColors.black.withOpacity(0.20),
+              ),
             ],
           ),
         ),
