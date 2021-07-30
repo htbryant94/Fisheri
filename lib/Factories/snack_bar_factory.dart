@@ -8,7 +8,7 @@ class SnackBarFactory {
     String title,
     String message,
     int duration = 3,
-    SnackPosition position,
+    SnackPosition position = SnackPosition.TOP,
     Color backgroundColor = DSColors.green
   }) {
     final primaryColor = Colors.white;

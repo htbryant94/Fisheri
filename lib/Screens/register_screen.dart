@@ -1,4 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fisheri/Factories/alert_dialog_factory.dart';
+import 'package:fisheri/Factories/snack_bar_factory.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -25,7 +27,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
         .createUserWithEmailAndPassword(
         email: _emailTextFieldValue, password: _passwordTextFieldValue)
         .catchError((onError) {
-
       _emailErrorText = null;
       _passwordErrorText = null;
 
@@ -43,8 +44,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
           });
           break;
       }
-    }).whenComplete(() {
-      Navigator.of(context).popUntil((route) => route.isFirst);
+    }).then((userCredential) {
+      if (userCredential != null) {
+        Navigator.of(context).popUntil((route) => route.isFirst);
+        SnackBarFactory.standard(
+          title: 'Welcome!',
+          message: 'account created with username ${userCredential.user.email}',
+        );
+      }
     });
   }
 
