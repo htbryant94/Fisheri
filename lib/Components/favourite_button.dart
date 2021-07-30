@@ -22,7 +22,11 @@ class _FavouriteButtonState extends State<FavouriteButton> {
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: () {
-          print('heart tapped');
+          Scaffold.of(context).showSnackBar(SnackBar(
+            content: const Text('Favourites feature coming soon!'),
+            duration: const Duration(seconds: 2),
+            backgroundColor: DSColors.green,
+          ));
           setState(() {
             isEnabled = !isEnabled;
           });

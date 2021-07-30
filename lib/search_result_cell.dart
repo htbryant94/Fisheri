@@ -154,6 +154,7 @@ class SearchResultCell extends StatelessWidget {
           imageURL: venue.imageURL,
           height: layout == BaseCellLayout.cover ? 278 : 250,
           layout: layout,
+          showFavouriteButton: true,
           elements: <Widget>[
             DSComponents.singleSpacer(),
             Row(
