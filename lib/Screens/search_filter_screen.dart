@@ -17,6 +17,16 @@ class SearchFilters {
   }
 }
 
+class DistanceValue {
+  DistanceValue(
+      this.name,
+      this.value
+      );
+
+  final String name;
+  final int value;
+}
+
 class SearchFilterScreen extends StatefulWidget {
   SearchFilterScreen({
     this.onChanged,
@@ -34,31 +44,22 @@ class SearchFilterScreen extends StatefulWidget {
   _SearchFilterScreenState createState() => _SearchFilterScreenState();
 }
 
-class DistanceValue {
-  DistanceValue(
-      this.name,
-      this.value
-      );
-
-  final String name;
-  final int value;
-}
-
 class _SearchFilterScreenState extends State<SearchFilterScreen> {
   SearchFilters _searchFilters;
   double _currentSliderValue = 0;
 
+
   final _distanceValues = [
     DistanceValue('Within a mile', 1),
-    DistanceValue('Five miles', 5),
-    DistanceValue('Ten miles', 10),
-    DistanceValue('Fifteen miles', 15),
-    DistanceValue('Twenty miles', 20),
-    DistanceValue('Twenty five miles ', 25),
-    DistanceValue('Thirty miles ', 30),
-    DistanceValue('Forty miles', 40),
-    DistanceValue('Fifty miles', 50),
-    DistanceValue('One hundred miles', 100),
+    DistanceValue('5 miles', 5),
+    DistanceValue('10 miles', 10),
+    DistanceValue('15 miles', 15),
+    DistanceValue('20 miles', 20),
+    DistanceValue('25 miles ', 25),
+    DistanceValue('30 miles ', 30),
+    DistanceValue('40 miles', 40),
+    DistanceValue('50 miles', 50),
+    DistanceValue('100 miles', 100),
     DistanceValue('Nationwide', 1000),
   ];
 

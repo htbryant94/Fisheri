@@ -22,7 +22,7 @@ class Coordinator {
     String currentPageTitle,
     List<SearchResult> venues,
     GeoPoint userCurrentLocation,
-    int searchRadius,
+    double searchRadius,
     String searchTown,
   }) {
     Coordinator.present(

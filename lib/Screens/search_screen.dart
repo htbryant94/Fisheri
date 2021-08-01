@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
-import 'package:fisheri/Components/VerticalSlider.dart';
 import 'package:fisheri/Components/fisheri_icon_button.dart';
 import 'package:fisheri/Components/list_view_button.dart';
 import 'package:fisheri/Components/search_bar.dart';
@@ -339,6 +338,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               }
                             },
                             searchRadiusChanged: (miles) {
+                              print('search radius changed');
                               searchFilters.searchRadius = miles;
                               final kilometres = (miles * 1.609344).toDouble();
                               setState(() {
@@ -360,7 +360,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     ListViewButton(
                       venues: _venues,
                       userCurrentLocation: _getPosition(),
-                      searchRadius: _lastRadius != null ? _lastRadius.round() : null,
+                      searchRadius: _lastRadius,
                       searchTown: _currentSearchText,
                     ),
                   ],

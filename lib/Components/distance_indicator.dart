@@ -14,12 +14,12 @@ class DistanceIndicator extends StatelessWidget {
   final GeoPoint selectedVenueLocation;
 
   Future<double> distanceFromCurrentLocation() async {
-    return await Geolocator.distanceBetween(
+    return await (Geolocator.distanceBetween(
         userCurrentLocation.latitude,
         userCurrentLocation.longitude,
         selectedVenueLocation.latitude,
         selectedVenueLocation.longitude
-    ) * 0.001;
+    ) * 0.001) / 1.6;
   }
 
   @override
@@ -32,7 +32,7 @@ class DistanceIndicator extends StatelessWidget {
             children: [
               Icon(Icons.location_on, color: Colors.green, size: 20),
               DSComponents.halfSpacer(),
-              DSComponents.bodySmall(text: '${snapshot.data.toStringAsFixed(1)} km')
+              DSComponents.bodySmall(text: '${snapshot.data.toStringAsFixed(1)} miles')
             ],
           );
         } else {

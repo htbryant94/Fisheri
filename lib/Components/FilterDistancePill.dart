@@ -10,7 +10,7 @@ class FilterDistancePill extends StatelessWidget {
     this.showPlus = false,
   });
 
-  final int distance;
+  final double distance;
   final bool showShadow;
   final bool showPlus;
 
@@ -45,7 +45,7 @@ class FilterDistancePill extends StatelessWidget {
                       ),
                     ),
                   TextSpan(
-                    text: '$distance',
+                    text: distance.toStringAsFixed(0),
                     style: GoogleFonts.dMSans(
                         fontWeight: FontWeight.bold,
                         fontSize: 12,
@@ -53,7 +53,7 @@ class FilterDistancePill extends StatelessWidget {
                     ),
                   ),
                   TextSpan(
-                    text: 'km',
+                    text: (distance != 1) ? ' miles' : ' mile',
                     style: GoogleFonts.dMSans(
                         fontWeight: FontWeight.normal,
                         fontSize: 12,

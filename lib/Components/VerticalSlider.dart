@@ -128,7 +128,7 @@ class _VerticalSliderState extends State<VerticalSlider> {
               child: Container(
                   width: 56,
                   child: FilterDistancePill(
-                    distance: _sliderValue.round(),
+                    distance: _sliderValue.toDouble(),
                     showShadow: true,
                   )
               ),

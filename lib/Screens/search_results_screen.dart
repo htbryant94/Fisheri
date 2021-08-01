@@ -57,7 +57,7 @@ class SearchResultsScreen extends StatelessWidget {
 
   final List<SearchResult> searchResults;
   final GeoPoint userCurrentLocation;
-  final int searchRadius;
+  final double searchRadius;
   final String searchTown;
 
   @override
@@ -73,7 +73,7 @@ class SearchResultsScreen extends StatelessWidget {
                 children: [
                   _SearchHeader(
                     town: searchTown,
-                    distance: searchRadius,
+                    distance: searchRadius / 1.609344,
                     resultsCount: searchResults.length,
                   ),
                   DSComponents.doubleSpacer(),
@@ -153,7 +153,7 @@ class _SearchHeader extends StatelessWidget {
 });
 
   final String town;
-  final int distance;
+  final double distance;
   final int resultsCount;
 
   @override
@@ -162,7 +162,7 @@ class _SearchHeader extends StatelessWidget {
       if (town != null)
         DSComponents.body(text: town),
       if (distance != null)
-        FilterDistancePill(distance: distance, showPlus: true),
+        distance.truncate() != 1000 ? FilterDistancePill(distance: distance, showPlus: true) : DSComponents.body(text: 'Nationwide'),
       if (resultsCount > 1)
       DSComponents.body(text: '$resultsCount results'),
     ];

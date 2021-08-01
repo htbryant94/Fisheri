@@ -19,7 +19,7 @@ class ListViewButton extends StatefulWidget {
   @required
   final Position userCurrentLocation;
   @required
-  final int searchRadius;
+  final double searchRadius;
   @required
   final String searchTown;
 
