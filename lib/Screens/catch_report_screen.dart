@@ -341,9 +341,14 @@ class CatchCell extends StatelessWidget {
     return null;
   }
 
-  String _makeMatchPositionImageURL(int position) {
+  Image _getMatchPositionPlaceholderIcon(int position) {
     if (position != null && position <= 3) {
-      return 'https://firebasestorage.googleapis.com/v0/b/fishing-finder-594f0.appspot.com/o/position%2F$position.png?alt=media&token=840bfbfb-a8a6-4295-a7fc-1e0d8a9ed3c6';
+      return Image.asset(
+        'images/icons/match_positions/$position.png',
+        height: 32,
+        width: 32,
+        fit: BoxFit.scaleDown,
+      );
     }
     return null;
   }
@@ -374,7 +379,7 @@ class CatchCell extends StatelessWidget {
 
   String _fetchImageURL(Catch data) {
     if (_isMatch()) {
-      return _makeMatchPositionImageURL(catchData.position);
+      return null;
     } else if (data.images != null && data.images.isNotEmpty) {
       return data.images.first;
     } else {
@@ -403,6 +408,7 @@ class CatchCell extends StatelessWidget {
               title: _title(),
               subtitle: catchData.catchType != 'missed' ? _subtitle() : null,
               imageURL: _fetchImageURL(catchData),
+              image:_getMatchPositionPlaceholderIcon(catchData.position),
               elements: [
                 if (_isMulti())
                   DSComponents.subheaderSmall(text: 'x${catchData.numberOfFish}'),
@@ -417,6 +423,7 @@ class CatchCell extends StatelessWidget {
               height: height,
               layout: BaseCellLayout.thumbnail,
               imageBoxFit: _isMatch() ? BoxFit.scaleDown : BoxFit.fitWidth,
+              imagePadding: _isMatch() && catchData.images == null ? 24 : 0,
             ),
             if (catchData.weatherCondition != null && catchData.catchType != 'missed')
             Positioned(

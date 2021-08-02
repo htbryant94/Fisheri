@@ -222,7 +222,8 @@ class LocalImageBaseCell extends StatelessWidget {
 class RemoteImageBaseCell extends StatelessWidget {
   RemoteImageBaseCell({
     this.defaultImagePath,
-    @required this.imageURL,
+    this.imageURL,
+    this.image,
     @required this.title,
     this.subtitle,
     @required this.height,
@@ -232,10 +233,12 @@ class RemoteImageBaseCell extends StatelessWidget {
     this.showImage = true,
     this.isSponsored = false,
     this.showFavouriteButton = false,
+    this.imagePadding = 0,
   });
 
   final String defaultImagePath;
   final String imageURL;
+  final Image image;
   final String title;
   final String subtitle;
   final double height;
@@ -245,6 +248,7 @@ class RemoteImageBaseCell extends StatelessWidget {
   final bool showImage;
   final bool isSponsored;
   final bool showFavouriteButton;
+  final double imagePadding;
 
   List<Widget> _children() {
     var stuff = <Widget>[
@@ -258,6 +262,26 @@ class RemoteImageBaseCell extends StatelessWidget {
     return stuff;
   }
 
+  Widget _makeImage(String imageURL, Image image) {
+    if (imageURL != null) {
+      return CachedNetworkImage(
+        fit: imageBoxFit,
+        imageUrl: imageURL,
+        placeholder: (context, url) => Container(
+            padding: EdgeInsets.all(16),
+            child: Align(
+              alignment: Alignment.center,
+              child: CircularProgressIndicator(),
+            )
+        ),
+      );
+    } else if (image != null) {
+      return image;
+    } else {
+      return Image.asset(defaultImagePath ?? 'images/lake.jpg');
+    }
+  }
+
   Widget thumbnailView() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
@@ -266,21 +290,12 @@ class RemoteImageBaseCell extends StatelessWidget {
         children: [
           if (showImage)
           AspectRatio(
-              aspectRatio: 1,
-              child: imageURL != null
-                  ? CachedNetworkImage(
-                fit: imageBoxFit,
-                imageUrl: imageURL,
-                placeholder: (context, url) => Container(
-                    padding: EdgeInsets.all(16),
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: CircularProgressIndicator(),
-                    )
-                ),
-              )
-                  : Image.asset(defaultImagePath ?? 'images/lake.jpg',
-                  fit: BoxFit.fill)),
+            aspectRatio: 1,
+            child: Container(
+              padding: EdgeInsets.all(imagePadding),
+                child: _makeImage(imageURL, image)
+            ),
+          ),
           SizedBox(width: 8),
           Expanded(
             child: Padding(

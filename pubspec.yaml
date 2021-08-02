@@ -118,6 +118,9 @@ flutter:
     - images/icons/map_marker_shop_selected.png
     - images/icons/map_marker_shop_unselected.png
     - images/icons/map_marker_embryo.png
+    - images/icons/match_positions/1.png
+    - images/icons/match_positions/2.png
+    - images/icons/match_positions/3.png
     - images/placeholders/events_calendar_create.png
     - images/placeholders/events_calendar_main.png
     - images/placeholders/achievements_screen.png
