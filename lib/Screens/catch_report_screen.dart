@@ -136,77 +136,24 @@ class _CatchReportScreenState extends State<CatchReportScreen> {
                                   ],
                                 ),
                               ),
-                            CupertinoButton(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(CupertinoIcons.delete_solid, color: Colors.red, size: 20),
-                                    DSComponents.body(
-                                      text: 'Delete',
-                                      color: Colors.red,
-                                      alignment: Alignment.center,
-                                    ),
-                                  ],
-                                ),
-                                onPressed: () async {
-                                  var _shouldDelete = false;
-                                  await showDialog(
-                                      context: context,
-                                      barrierDismissible: false,
-                                      builder: (BuildContext context) {
-                                        return AlertDialogFactory.deleteConfirmation(
-                                            context: context,
-                                            onDeletePressed: () {
-                                              _shouldDelete = true;
-                                              Navigator.of(context).pop();
-                                            }
-                                        );
-                                      });
-
-                                  if (_shouldDelete) {
-                                    // delete Catch Report images
-                                    if (widget.catchReport.images != null &&
-                                        widget.catchReport.images.isNotEmpty) {
-                                      await FireStorageRequestService
-                                          .defaultService().deleteImages(
-                                          widget.catchReport.images);
-                                    }
-                                    // get all Catches for Catch Report
-                                    final catchDocuments = await FirestoreRequestService
-                                        .defaultService().getCatches(
-                                        catchReportID: widget.catchReportID);
-
-                                    // delete images for each Catch
-                                    catchDocuments.forEach((document) async {
-                                      if (document.images != null &&
-                                          document.images.isNotEmpty) {
-                                        await FireStorageRequestService
-                                            .defaultService().deleteImages(
-                                            document.images);
-                                      }
-                                    });
-
-                                    // delete Catches for Catch Report
-                                    await FirestoreRequestService
-                                        .defaultService()
-                                        .deleteCatchesForCatchReport(
-                                        widget.catchReportID);
-
-                                    // delete Catch Report
-                                    await FirestoreRequestService
-                                        .defaultService()
-                                        .deleteCatchReport(widget.catchReportID)
-                                        .whenComplete(() {
-                                      Navigator.of(context).pop();
-                                    });
-                                  }
-                                },
+                            _DeleteCatchButton(
+                                imageURLs: widget.catchReport.images,
+                                catchReportID: widget.catchReportID,
                             )
                           ],
                         ),
-                      ) : DSComponents.titleLarge(
-                          text: 'No Summary  📝',
-                          alignment: Alignment.center
+                      ) : Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          DSComponents.titleLarge(
+                              text: 'No Summary  📝',
+                              alignment: Alignment.center
+                          ),
+                          _DeleteCatchButton(
+                            imageURLs: widget.catchReport.images,
+                            catchReportID: widget.catchReportID,
+                          )
+                        ],
                       ),
                     ],
 
@@ -495,3 +442,84 @@ class CatchCell extends StatelessWidget {
         ));
   }
 }
+
+class _DeleteCatchButton extends StatelessWidget {
+  _DeleteCatchButton({
+    this.imageURLs,
+    this.catchReportID
+});
+
+  final List<String> imageURLs;
+  final String catchReportID;
+
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoButton(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(CupertinoIcons.delete_solid, color: Colors.red, size: 20),
+          DSComponents.body(
+            text: 'Delete',
+            color: Colors.red,
+            alignment: Alignment.center,
+          ),
+        ],
+      ),
+      onPressed: () async {
+        var _shouldDelete = false;
+        await showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) {
+          return AlertDialogFactory.deleteConfirmation(
+              context: context,
+              onDeletePressed: () {
+                _shouldDelete = true;
+                Navigator.of(context).pop();
+              }
+          );
+        });
+
+        if (_shouldDelete) {
+        // delete Catch Report images
+        if (imageURLs != null &&
+        imageURLs.isNotEmpty) {
+        await FireStorageRequestService
+            .defaultService().deleteImages(
+        imageURLs);
+        }
+        // get all Catches for Catch Report
+        final catchDocuments = await FirestoreRequestService
+            .defaultService().getCatches(
+        catchReportID: catchReportID);
+
+        // delete images for each Catch
+        catchDocuments.forEach((document) async {
+        if (document.images != null &&
+        document.images.isNotEmpty) {
+        await FireStorageRequestService
+            .defaultService().deleteImages(
+        document.images);
+        }
+        });
+
+        // delete Catches for Catch Report
+        await FirestoreRequestService
+            .defaultService()
+            .deleteCatchesForCatchReport(
+        catchReportID);
+
+        // delete Catch Report
+        await FirestoreRequestService
+            .defaultService()
+            .deleteCatchReport(catchReportID)
+            .whenComplete(() {
+        Navigator.of(context).pop();
+        });
+        }
+      },
+    );
+  }
+}
+
