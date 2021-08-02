@@ -69,7 +69,7 @@ class _CatchDetailScreenState extends State<CatchDetailScreen> {
   }
 
   String _makeMatchPositionImageURL(int position) {
-    if (position != null) {
+    if (position != null && position <= 3) {
       return 'https://firebasestorage.googleapis.com/v0/b/fishing-finder-594f0.appspot.com/o/position%2F$position.png?alt=media&token=840bfbfb-a8a6-4295-a7fc-1e0d8a9ed3c6';
     }
     return null;
@@ -89,9 +89,18 @@ class _CatchDetailScreenState extends State<CatchDetailScreen> {
     }
   }
 
+  bool _shouldShowImage(Catch catchData) {
+    if (catchData.catchType == 'missed' || (catchData.catchType == 'match' && catchData.images == null)) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+
   List<Widget> _buildSections() {
     return [
-      if (widget.data.catchType != 'missed')
+      if (_shouldShowImage(widget.data))
       GestureDetector(
         onTap: () {
           Coordinator.present(
@@ -127,6 +136,8 @@ class _CatchDetailScreenState extends State<CatchDetailScreen> {
           ),
         ],
       ),
+      if (widget.data.position != null)
+        _DetailRow(name: 'Position', emoji: '🏆', value: widget.data.position),
       if (widget.data.weight != null)
         _DetailRow(name: 'Weight', emoji: '⚖️', value: WeightConverter.gramsToPoundsAndOunces(widget.data.weight)),
       if (widget.data.time != null)
@@ -215,7 +226,7 @@ class _CatchDetailScreenState extends State<CatchDetailScreen> {
               }
             },
             itemBuilder: (context, index) {
-              if (index > 0 || widget.data.catchType == 'missed') {
+              if (index > 0 || !_shouldShowImage(widget.data)) {
                 return Padding(
                   padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
                   child: _rows[index],

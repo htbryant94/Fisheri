@@ -395,7 +395,7 @@ class CatchCell extends StatelessWidget {
   }
 
   String _makeMatchPositionImageURL(int position) {
-    if (position != null) {
+    if (position != null && position <= 3) {
       return 'https://firebasestorage.googleapis.com/v0/b/fishing-finder-594f0.appspot.com/o/position%2F$position.png?alt=media&token=840bfbfb-a8a6-4295-a7fc-1e0d8a9ed3c6';
     }
     return null;
@@ -435,6 +435,14 @@ class CatchCell extends StatelessWidget {
     }
   }
 
+  bool _shouldShowImage() {
+    if (catchData.catchType == 'missed' || (catchData.catchType == 'match' && catchData.position > 3)) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -444,7 +452,7 @@ class CatchCell extends StatelessWidget {
         child: Stack(
           children: [
             RemoteImageBaseCell(
-              showImage: catchData.catchType != 'missed',
+              showImage: _shouldShowImage(),
               title: _title(),
               subtitle: catchData.catchType != 'missed' ? _subtitle() : null,
               imageURL: _fetchImageURL(catchData),
