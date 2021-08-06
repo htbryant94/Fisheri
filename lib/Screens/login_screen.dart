@@ -31,7 +31,9 @@ class _LoginScreenState extends State<LoginScreen> {
       final error = onError as FirebaseAuthException;
       await showDialog(
         context: context,
-        child: AlertDialogFactory.generic(context: context, message: error.message),
+        builder: (BuildContext context) {
+          return AlertDialogFactory.generic(context: context, message: error.message);
+        },
       );
     }).then((userCredential) {
       if (userCredential != null) {
