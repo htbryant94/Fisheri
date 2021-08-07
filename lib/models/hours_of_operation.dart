@@ -1,13 +1,7 @@
-import 'package:jaguar_serializer/jaguar_serializer.dart';
+import 'package:json_annotation/json_annotation.dart';
+// part 'hours_of_operation.g.dart';
 
-part 'hours_of_operation.jser.dart';
-
-@GenSerializer(
-  serializers: [OpeningHoursDayJSONSerializer],
-)
-class HoursOfOperationJSONSerializer extends Serializer<HoursOfOperation>
-    with _$HoursOfOperationJSONSerializer {}
-
+@JsonSerializable()
 class HoursOfOperation {
   HoursOfOperation({
     this.monday,
@@ -26,12 +20,12 @@ class HoursOfOperation {
   OpeningHoursDay friday;
   OpeningHoursDay saturday;
   OpeningHoursDay sunday;
+
+  // factory HoursOfOperation.fromJson(Map<String, dynamic> json) => _$HoursOfOperationFromJson(json);
+  // Map<String, dynamic> toJson() => _$HoursOfOperationToJson(this);
 }
 
-@GenSerializer()
-class OpeningHoursDayJSONSerializer extends Serializer<OpeningHoursDay>
-    with _$OpeningHoursDayJSONSerializer {}
-
+@JsonSerializable()
 class OpeningHoursDay {
   OpeningHoursDay({
     this.open,
@@ -40,4 +34,7 @@ class OpeningHoursDay {
 
   String open;
   String close;
+
+  // factory OpeningHoursDay.fromJson(Map<String, dynamic> json) => _$OpeningHoursDayFromJson(json);
+  // Map<String, dynamic> toJson() => _$OpeningHoursDayToJson(this);
 }

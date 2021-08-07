@@ -35,7 +35,8 @@ class AllVenuesListBuilder extends StatelessWidget {
                 },
                 itemBuilder: (context, int index) {
                   final result =  snapshot.data.docs[index];
-                  final venue = VenueSearchJSONSerializer().fromMap(result.data());
+                  // final venue = VenueSearchJSONSerializer().fromMap(result.data());
+                  final venue = VenueSearch(); // TEMP
                   return EditVenueCell(
                     venue: venue,
                   );

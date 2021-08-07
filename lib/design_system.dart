@@ -15,7 +15,7 @@ class DSColors {
 }
 
 class DesignSystemFonts {
-  static TextStyle titleLarge = GoogleFonts.dMSans(
+  static TextStyle titleLarge = GoogleFonts.dmSans(
     color: DSColors.black,
     fontWeight: FontWeight.bold,
     letterSpacing: -0.2,
@@ -23,7 +23,7 @@ class DesignSystemFonts {
   );
 
   static TextStyle title(Color color) {
-    return GoogleFonts.dMSans(
+    return GoogleFonts.dmSans(
       color: color,
       fontWeight: FontWeight.bold,
       letterSpacing: -0.2,
@@ -31,7 +31,7 @@ class DesignSystemFonts {
     );
   }
 
-  static TextStyle header = GoogleFonts.dMSans(
+  static TextStyle header = GoogleFonts.dmSans(
     color: DSColors.black,
     fontWeight: FontWeight.bold,
     letterSpacing: -0.2,
@@ -39,7 +39,7 @@ class DesignSystemFonts {
   );
 
   static TextStyle subheader(Color color) {
-    return GoogleFonts.dMSans(
+    return GoogleFonts.dmSans(
       color: color,
       fontWeight: FontWeight.bold,
       letterSpacing: -0.2,
@@ -48,7 +48,7 @@ class DesignSystemFonts {
   }
 
   static TextStyle subheaderSmall(Color color) {
-    return GoogleFonts.dMSans(
+    return GoogleFonts.dmSans(
       color: color,
       fontWeight: FontWeight.bold,
       letterSpacing: -0.2,
@@ -57,7 +57,7 @@ class DesignSystemFonts {
   }
 
   static TextStyle body(Color color) {
-    return GoogleFonts.dMSans(
+    return GoogleFonts.dmSans(
       color: color,
       fontWeight: FontWeight.normal,
       letterSpacing: 0.1,
@@ -66,7 +66,7 @@ class DesignSystemFonts {
   }
 
   static TextStyle bodySmall(Color color) {
-    return GoogleFonts.dMSans(
+    return GoogleFonts.dmSans(
       color: color,
       fontWeight: FontWeight.normal,
       letterSpacing: 0,
@@ -75,7 +75,7 @@ class DesignSystemFonts {
   }
 
   static TextStyle link(Color color) {
-    return GoogleFonts.dMSans(
+    return GoogleFonts.dmSans(
       color: color,
       fontWeight: FontWeight.normal,
       letterSpacing: 0.1,
@@ -295,7 +295,7 @@ class DSComponents {
       alignment: alignment,
       child: Text(
         text,
-        style: GoogleFonts.dMSans(
+        style: GoogleFonts.dmSans(
           fontSize: fontSize,
           fontWeight: fontWeight,
           color: color,

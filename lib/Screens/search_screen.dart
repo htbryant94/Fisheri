@@ -506,10 +506,11 @@ class _SearchScreenState extends State<SearchScreen> {
     });
 
     documentList.forEach((DocumentSnapshot document) {
-      final result =
-          VenueSearchJSONSerializer().fromMap(document.data());
+      // final result = VenueSearchJSONSerializer().fromMap(document.data());
+      final result = VenueSearch(); // TEMP
       if (result != null) {
-        GeoPoint point = document.data()['position']['geopoint'];
+        final json = document.data() as Map<String, dynamic>;
+        GeoPoint point = json['position']['geopoint'];
         List<String> venueTypes = result.categories.cast<String>();
 
         String venueType;

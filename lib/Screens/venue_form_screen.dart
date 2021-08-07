@@ -13,7 +13,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:form_builder_extra_fields/form_builder_extra_fields.dart';
+import 'package:form_builder_fields/form_builder_fields.dart';
 import 'package:form_builder_image_picker/form_builder_image_picker.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:fisheri/house_texts.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -271,7 +274,8 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
       print('adding point');
       final _geo = Geoflutterfire();
       GeoFirePoint geoFirePoint = _geo.point(latitude: lat, longitude: long);
-      final result = VenueSearchJSONSerializer().toMap(venueSearch);
+      // final result = VenueSearchJSONSerializer().toMap(venueSearch);
+      final result = Map(); // TEMP
       result['position'] = geoFirePoint.data;
 
       FirebaseFirestore.instance
@@ -307,7 +311,8 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
     }
 
     Future amendVenue(String id, VenueDetailed venue) async {
-      var venueJSON = VenueDetailedJSONSerializer().toMap(venue);
+      // var venueJSON = VenueDetailedJSONSerializer().toMap(venue);
+      var venueJSON = Map(); // TEMP
       venueJSON = addCoordinatesIfValid(venueJSON);
 
       await FirebaseFirestore.instance
@@ -582,8 +587,9 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
                                     _isLoading = true;
                                   });
                                   var _venue = makeVenueDetailed();
-                                  var _venueJSON = VenueDetailedJSONSerializer()
-                                      .toMap(_venue);
+                                  // var _venueJSON = VenueDetailedJSONSerializer()
+                                  //     .toMap(_venue);
+                                  var _venueJSON = Map(); // TEMP
                                   _venueJSON =
                                       addCoordinatesIfValid(_venueJSON);
                                   print(_venueJSON);

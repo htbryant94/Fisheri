@@ -85,7 +85,8 @@ class EditVenueCell extends StatelessWidget {
               .doc(venue.id)
               .get()
               .then((DocumentSnapshot document) {
-            final VenueDetailed _venue = VenueDetailedJSONSerializer().fromMap(document.data());
+            // final VenueDetailed _venue = VenueDetailedJSONSerializer().fromMap(document.data());
+            final _venue = VenueDetailed(); // TEMP
               Coordinator.push(context, screenTitle: "Edit Venue", screen: VenueFormEditScreen(venue: _venue, venueID: venue.id));
           });
         },
@@ -138,7 +139,8 @@ class SearchResultCell extends StatelessWidget {
               .get()
               .then((DocumentSnapshot document) {
             print('detail screen for venueID: ${venue.id}');
-            final _venue = VenueDetailedJSONSerializer().fromMap(document.data());
+            // final _venue = VenueDetailedJSONSerializer().fromMap(document.data());
+            final _venue = VenueDetailed(); // TEMP
             Coordinator.pushVenueDetailScreen(
                 context,
                 'Map',

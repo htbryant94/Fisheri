@@ -69,7 +69,8 @@ class _CatchReportListBuilder extends StatelessWidget {
             itemCount: snapshot.data.docs.length,
             itemBuilder: (context, index) {
               final _document = snapshot.data.docs[index];
-              final _catchReport = CatchReportJSONSerializer().fromMap(_document.data());
+              // final _catchReport = CatchReportJSONSerializer().fromMap(_document.data());
+              final _catchReport = CatchReport(); // TEMP
               return CatchReportCell(
                 catchReport: _catchReport,
                 catchReportID: _document.id,

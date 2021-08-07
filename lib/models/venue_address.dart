@@ -1,26 +1,25 @@
-import 'package:jaguar_serializer/jaguar_serializer.dart';
+import 'package:json_annotation/json_annotation.dart';
+// part 'venue_address.g.dart';
 
-part 'venue_address.jser.dart';
-
-@GenSerializer()
-class VenueAddressJSONSerializer extends Serializer<VenueAddress>
-    with _$VenueAddressJSONSerializer {}
-
+@JsonSerializable()
 class VenueAddress {
   VenueAddress({
-    String street,
-    String town,
     String county,
     String postcode,
+    String street,
+    String town,
   }) {
-    this.street = street;
-    this.town = town;
     this.county = county;
     this.postcode = postcode;
+    this.street = street;
+    this.town = town;
   }
 
-  String street;
-  String town;
   String county;
   String postcode;
+  String street;
+  String town;
+
+  // factory VenueAddress.fromJson(Map<String, dynamic> json) => _$VenueAddressFromJson(json);
+  // Map<String, dynamic> toJson() => _$VenueAddressToJson(this);
 }

@@ -258,7 +258,8 @@ class __CatchListBuilderState extends State<_CatchListBuilder> {
                 },
                 itemBuilder: (context, index) {
                   final _catch = snapshot.data.docs[index];
-                  final _data = CatchJSONSerializer().fromMap(_catch.data());
+                  // final _data = CatchJSONSerializer().fromMap(_catch.data());
+                  final _data = Catch(); // TEMP
                   print('catch index: $index with id: ${_catch.id}');
                   return CatchCell(
                     catchData: _data,

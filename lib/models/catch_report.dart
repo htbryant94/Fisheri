@@ -1,37 +1,40 @@
-import 'package:jaguar_serializer/jaguar_serializer.dart';
+import 'package:json_annotation/json_annotation.dart';
+// part 'catch_report.g.dart';
 
-part 'catch_report.jser.dart';
-
-@GenSerializer(
-  serializers: [],
-  fields: {
-    'lakeID': EnDecode(alias: 'lake_id'),
-    'lakeName': EnDecode(alias: 'lake_name'),
-    'startDate': EnDecode(alias: 'start_date'),
-    'endDate': EnDecode(alias: 'end_date'),
-    'userID': EnDecode(alias: 'user_id'),
-  },
-)
-
-class CatchReportJSONSerializer extends Serializer<CatchReport>
-    with _$CatchReportJSONSerializer {}
-
+@JsonSerializable()
 class CatchReport {
   CatchReport({
-    this.userID,
-    this.lakeID,
-    this.lakeName,
-    this.startDate,
+    this.id,
     this.endDate,
     this.images,
+    this.lakeID,
+    this.lakeName,
     this.notes,
+    this.startDate,
+    this.userID,
   });
 
-  String userID;
-  String lakeID;
-  String lakeName;
-  String startDate;
+  String id;
+
+  @JsonKey(name: 'end_date')
   String endDate;
-  String notes;
+
   List<String> images;
+
+  @JsonKey(name: 'lake_id')
+  String lakeID;
+
+  @JsonKey(name: 'lake_name')
+  String lakeName;
+
+  String notes;
+
+  @JsonKey(name: 'user_id')
+  String userID;
+
+  @JsonKey(name: 'start_date')
+  String startDate;
+
+  // factory CatchReport.fromJson(Map<String, dynamic> json) => _$CatchReportFromJson(json);
+  // Map<String, dynamic> toJson() => _$CatchReportToJson(this);
 }

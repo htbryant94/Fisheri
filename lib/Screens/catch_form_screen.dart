@@ -15,7 +15,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_extra_fields/form_builder_extra_fields.dart';
+import 'package:form_builder_fields/form_builder_fields.dart';
 import 'package:form_builder_image_picker/form_builder_image_picker.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:intl/intl.dart';
 import 'package:fisheri/models/catch.dart';
 import 'package:recase/recase.dart';
@@ -473,7 +476,9 @@ class _CatchFormScreenState extends State<CatchFormScreen> {
                                   final _catchID = _isEditMode ? widget.catchID : Uuid().v1();
 
                                   // 2. Upload catch to database
-                                  final catchJSON = CatchJSONSerializer().toMap(catchModel);
+                                  // final catchJSON = CatchJSONSerializer().toMap(catchModel);
+                                  final catchJSON = Map(); // TEMP
+
                                   await FirebaseFirestore.instance
                                       .collection('catches')
                                       .doc(_catchID)
@@ -526,7 +531,8 @@ class _CatchFormScreenState extends State<CatchFormScreen> {
                                       print('amending Catch');
 
                                       catchModel.images = imageURLs;
-                                      final amendedCatchJSON = CatchJSONSerializer().toMap(catchModel);
+                                      // final amendedCatchJSON = CatchJSONSerializer().toMap(catchModel);
+                                      final amendedCatchJSON = Map(); // TEMP
 
                                       await FirebaseFirestore.instance
                                           .collection('catches')
