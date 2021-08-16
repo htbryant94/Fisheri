@@ -13,13 +13,13 @@ class HoursOfOperation {
     this.sunday,
   });
 
-  OpeningHoursDay monday;
-  OpeningHoursDay tuesday;
-  OpeningHoursDay wednesday;
-  OpeningHoursDay thursday;
-  OpeningHoursDay friday;
-  OpeningHoursDay saturday;
-  OpeningHoursDay sunday;
+  OpeningHoursDay? monday;
+  OpeningHoursDay? tuesday;
+  OpeningHoursDay? wednesday;
+  OpeningHoursDay? thursday;
+  OpeningHoursDay? friday;
+  OpeningHoursDay? saturday;
+  OpeningHoursDay? sunday;
 
   // factory HoursOfOperation.fromJson(Map<String, dynamic> json) => _$HoursOfOperationFromJson(json);
   // Map<String, dynamic> toJson() => _$HoursOfOperationToJson(this);
@@ -32,8 +32,8 @@ class OpeningHoursDay {
     this.close,
   });
 
-  String open;
-  String close;
+  String? open;
+  String? close;
 
   // factory OpeningHoursDay.fromJson(Map<String, dynamic> json) => _$OpeningHoursDayFromJson(json);
   // Map<String, dynamic> toJson() => _$OpeningHoursDayToJson(this);

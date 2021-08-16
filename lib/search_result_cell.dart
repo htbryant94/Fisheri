@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:basic_utils/basic_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fisheri/Components/pill.dart';

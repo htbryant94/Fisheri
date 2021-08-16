@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fisheri/Screens/achievements_screen.dart';
 import 'package:fisheri/Screens/auth_screen.dart';

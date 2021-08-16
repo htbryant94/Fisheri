@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fisheri/Screens/catch_report/catch_reports_screen.dart';

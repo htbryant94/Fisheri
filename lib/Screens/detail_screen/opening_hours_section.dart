@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:fisheri/design_system.dart';
 import 'package:fisheri/models/hours_of_operation.dart';
 import 'package:flutter/material.dart';

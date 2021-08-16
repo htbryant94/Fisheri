@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:fisheri/Factories/snack_bar_factory.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

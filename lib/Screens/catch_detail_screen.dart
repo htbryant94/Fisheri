@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:fisheri/Screens/detail_screen/fullscreen_image_carousel.dart';
 import 'package:fisheri/WeightConverter.dart';

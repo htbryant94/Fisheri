@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'dart:ffi';
 import 'dart:ui';
 
@@ -15,7 +17,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:form_builder_extra_fields/form_builder_extra_fields.dart';
 import 'package:form_builder_fields/form_builder_fields.dart';
 import 'package:form_builder_image_picker/form_builder_image_picker.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
@@ -624,14 +625,14 @@ class _NumberOfFishSection extends StatelessWidget {
     return Column(
       children: [
         DSComponents.header(text: 'Number of Fish'),
-        FormBuilderTouchSpin(
-          name: CatchFormConstants.numberOfFish,
-          initialValue: initialValue ?? 0,
-          min: 0,
-          max: 100,
-          step: 1,
-          validator: FormBuilderValidators.min(context, 1, errorText: 'Please specify the number of fish caught.'),
-        ),
+        // FormBuilderTouchSpin(
+        //   name: CatchFormConstants.numberOfFish,
+        //   initialValue: initialValue ?? 0,
+        //   min: 0,
+        //   max: 100,
+        //   step: 1,
+        //   validator: FormBuilderValidators.min(context, 1, errorText: 'Please specify the number of fish caught.'),
+        // ),
       ],
     );
   }
@@ -653,14 +654,14 @@ class _PositionSection extends StatelessWidget {
     return Column(
       children: [
         DSComponents.header(text: title),
-        FormBuilderTouchSpin(
-          name: attribute,
-          initialValue: initialValue ?? 0,
-          min: 1,
-          max: 10,
-          step: 1,
-          validator: FormBuilderValidators.min(context, 1, errorText: 'Please specify the position.'),
-        )
+        // FormBuilderTouchSpin(
+        //   name: attribute,
+        //   initialValue: initialValue ?? 0,
+        //   min: 1,
+        //   max: 10,
+        //   step: 1,
+        //   validator: FormBuilderValidators.min(context, 1, errorText: 'Please specify the position.'),
+        // )
       ],
     );
   }

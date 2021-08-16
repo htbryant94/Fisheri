@@ -7,7 +7,7 @@ import 'package:json_annotation/json_annotation.dart';
 @JsonSerializable()
 class VenueDetailed {
   VenueDetailed({
-    this.id,
+    required this.id,
     this.address,
     this.alwaysOpen,
     this.amenities,
@@ -30,51 +30,51 @@ class VenueDetailed {
   });
 
   String id;
-  VenueAddress address;
+  VenueAddress? address;
 
   @JsonKey(name: 'always_open')
-  bool alwaysOpen;
+  bool? alwaysOpen;
 
-  List<String> amenities;
-  List<String> categories;
+  List<String>? amenities;
+  List<String>? categories;
 
   @JsonKey(name: 'contact_details')
-  ContactDetails contactDetails;
+  ContactDetails? contactDetails;
 
   @JsonKey(ignore: true)
-  GeoPoint coordinates;
+  GeoPoint? coordinates;
 
-  String description;
+  String? description;
 
   @JsonKey(name: 'fishing_rules')
-  String fishingRules;
+  String? fishingRules;
 
   @JsonKey(name: 'fish_stock')
-  List<FishStock> fishStock;
+  List<FishStock>? fishStock;
 
   @JsonKey(name: 'fish_stock_array')
-  List<String> fishStocked;
+  List<String>? fishStocked;
 
   @JsonKey(name: 'fishing_tackles')
-  List<String> fishingTackles;
+  List<String>? fishingTackles;
 
   @JsonKey(name: 'fishing_types')
-  List<String> fishingTypes;
+  List<String>? fishingTypes;
 
-  List<String> images;
-  String name;
+  List<String?>? images;
+  String? name;
 
   @JsonKey(name: 'number_of_lakes')
-  int numberOfLakes;
+  int? numberOfLakes;
 
   @JsonKey(name: 'hours_of_operation')
-  HoursOfOperation operationalHours;
+  HoursOfOperation? operationalHours;
 
-  Social social;
-  List<String> tickets;
+  Social? social;
+  List<String>? tickets;
 
   @JsonKey(name: 'website_url')
-  String websiteURL;
+  String? websiteURL;
   // factory VenueDetailed.fromJson(Map<String, dynamic> json) => _$VenueDetailedFromJson(json);
   // Map<String, dynamic> toJson() => _$VenueDetailedToJson(this);
 }
@@ -86,9 +86,9 @@ class FishStock {
     this.weight,
 });
 
-  String name;
-  int weight;
-  int priority;
+  String? name;
+  int? weight;
+  late int priority;
 
   // factory FishStock.fromJson(Map<String, dynamic> json) => _$FishStockFromJson(json);
   // Map<String, dynamic> toJson() => _$FishStockToJson(this);
@@ -101,8 +101,8 @@ class ContactDetails {
     this.phone,
   });
 
-  String email;
-  String phone;
+  String? email;
+  String? phone;
 
   // factory ContactDetails.fromJson(Map<String, dynamic> json) => _$ContactDetailsFromJson(json);
   // Map<String, dynamic> toJson() => _$ContactDetailsToJson(this);
@@ -117,10 +117,10 @@ class Social {
     this.youtube,
   });
 
-  String facebook;
-  String instagram;
-  String twitter;
-  String youtube;
+  String? facebook;
+  String? instagram;
+  String? twitter;
+  String? youtube;
 
   // factory Social.fromJson(Map<String, dynamic> json) => _$SocialFromJson(json);
   // Map<String, dynamic> toJson() => _$SocialToJson(this);

@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'dart:ui';
 
 import 'package:firebase_storage/firebase_storage.dart';
@@ -15,7 +17,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:form_builder_extra_fields/form_builder_extra_fields.dart';
 import 'package:form_builder_fields/form_builder_fields.dart';
 import 'package:form_builder_image_picker/form_builder_image_picker.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
@@ -850,14 +851,14 @@ class _AmenitiesSection extends StatelessWidget {
     return Column(
       children: <Widget>[
         HouseTexts.subtitle('Amenities'),
-        FormBuilderTouchSpin(
-          name: 'number_of_lakes',
-          decoration: InputDecoration(labelText: 'Number of Lakes'),
-          initialValue: 0,
-          min: 0,
-          max: 100,
-          step: 1,
-        ),
+        // FormBuilderTouchSpin(
+        //   name: 'number_of_lakes',
+        //   decoration: InputDecoration(labelText: 'Number of Lakes'),
+        //   initialValue: 0,
+        //   min: 0,
+        //   max: 100,
+        //   step: 1,
+        // ),
         FormBuilderCheckboxGroup(
           name: 'amenities_list',
           orientation: OptionsOrientation.vertical,

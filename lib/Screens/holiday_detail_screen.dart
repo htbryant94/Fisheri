@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:fisheri/Screens/book_tickets_screen.dart';
 import 'package:fisheri/Screens/detail_screen/contact_section.dart';

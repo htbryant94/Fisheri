@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fisheri/Components/favourite_button.dart';
 import 'package:fisheri/Components/pill.dart';

@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fisheri/Screens/catch_form_screen.dart';
 import 'package:fisheri/Screens/detail_screen/description_section.dart';

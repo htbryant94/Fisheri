@@ -1,3 +1,5 @@
+// @dart=2.9
+
 
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:fisheri/Components/fisheri_icon_button.dart';

@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fisheri/models/venue_detailed.dart';

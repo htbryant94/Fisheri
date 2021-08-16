@@ -4,9 +4,9 @@ import 'package:json_annotation/json_annotation.dart';
 @JsonSerializable()
 class Catch {
   Catch({
-    this.id,
-    this.catchReportID,
-    this.catchType,
+    required this.id,
+    required this.catchReportID,
+    required this.catchType,
     this.date,
     this.images,
     this.notes,
@@ -15,7 +15,7 @@ class Catch {
     this.temperature,
     this.time,
     this.typeOfFish,
-    this.userID,
+    required this.userID,
     this.weatherCondition,
     this.weight,
     this.windDirection,
@@ -29,30 +29,30 @@ class Catch {
   @JsonKey(name: 'catch_type')
   String catchType;
 
-  String date;
-  List<String> images;
-  String notes;
+  String? date;
+  List<String>? images;
+  String? notes;
 
   @JsonKey(name: 'num_of_fish')
-  int numberOfFish;
+  int? numberOfFish;
 
-  int position;
-  double temperature;
-  String time;
+  int? position;
+  double? temperature;
+  String? time;
 
   @JsonKey(name: 'type_of_fish')
-  String typeOfFish;
+  String? typeOfFish;
 
   @JsonKey(name: 'user_id')
   String userID;
 
   @JsonKey(name: 'weather_condition')
-  String weatherCondition;
+  String? weatherCondition;
 
   @JsonKey(name: 'wind_direction')
-  String windDirection;
+  String? windDirection;
 
-  double weight;
+  double? weight;
 
   // factory Catch.fromJson(Map<String, dynamic> json) => _$CatchFromJson(json);
   // Map<String, dynamic> toJson() => _$CatchToJson(this);

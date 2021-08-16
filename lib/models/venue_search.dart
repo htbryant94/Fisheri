@@ -18,31 +18,31 @@ class VenueSearch {
     this.numberOfLakes,
   });
 
-  String id;
-  VenueAddress address;
+  String? id;
+  VenueAddress? address;
 
   @JsonKey(name: 'always_open')
-  bool alwaysOpen;
+  bool? alwaysOpen;
 
-  List<dynamic> amenities;
-  List<dynamic> categories;
+  List<dynamic>? amenities;
+  List<dynamic>? categories;
 
   @JsonKey(name: 'fish_stocked')
-  List<dynamic> fishStocked;
+  List<dynamic>? fishStocked;
 
   @JsonKey(name: 'fishing_tackles')
-  List<dynamic> fishingTackles;
+  List<dynamic>? fishingTackles;
 
   @JsonKey(name: 'fishing_types')
-  List<dynamic> fishingTypes;
+  List<dynamic>? fishingTypes;
 
   @JsonKey(name: 'image_url')
-  String imageURL;
+  String? imageURL;
 
-  String name;
+  String? name;
 
   @JsonKey(name: 'number_of_lakes')
-  int numberOfLakes;
+  int? numberOfLakes;
 
   // factory VenueSearch.fromJson(Map<String, dynamic> json) => _$VenueSearchFromJson(json);
   // Map<String, dynamic> toJson() => _$VenueSearchToJson(this);

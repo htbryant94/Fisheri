@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fisheri/Components/distance_indicator.dart';

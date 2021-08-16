@@ -43,28 +43,28 @@ class VenueFishStock {
   }
 
   @JsonKey(name: 'with_weight')
-  List<FishWithWeight> withWeight;
+  List<FishWithWeight>? withWeight;
 
-  bool brownTrout;
-  bool chub;
+  bool? brownTrout;
+  bool? chub;
 
   @JsonKey(name: 'crucian_carp')
-  bool crucianCarp;
+  bool? crucianCarp;
 
-  bool dace;
-  bool eel;
-  bool grassCarp;
-  bool grayling;
-  bool gudgeon;
-  bool koiCarp;
-  bool orfe;
-  bool perch;
-  bool rainbowTrout;
-  bool roach;
-  bool rudd;
-  bool ruffe;
-  bool salmon;
-  bool zander;
+  bool? dace;
+  bool? eel;
+  bool? grassCarp;
+  bool? grayling;
+  bool? gudgeon;
+  bool? koiCarp;
+  bool? orfe;
+  bool? perch;
+  bool? rainbowTrout;
+  bool? roach;
+  bool? rudd;
+  bool? ruffe;
+  bool? salmon;
+  bool? zander;
 
   // factory VenueFishStock.fromJson(Map<String, dynamic> json) => _$VenueFishStockFromJson(json);
   // Map<String, dynamic> toJson() => _$VenueFishStockToJson(this);
@@ -74,13 +74,13 @@ class VenueFishStock {
 class FishWithWeight {
   FishWithWeight(String name, int maxWeight, bool isStocked);
 
-  String name;
+  late String name;
 
   @JsonKey(name: 'max_weight')
-  int maxWeight;
+  late int maxWeight;
 
   @JsonKey(name: 'is_stocked')
-  bool isStocked;
+  bool? isStocked;
 
   // factory FishWithWeight.fromJson(Map<String, dynamic> json) => _$FishWithWeightFromJson(json);
   // Map<String, dynamic> toJson() => _$FishWithWeightToJson(this);

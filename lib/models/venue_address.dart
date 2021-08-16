@@ -4,10 +4,10 @@ import 'package:json_annotation/json_annotation.dart';
 @JsonSerializable()
 class VenueAddress {
   VenueAddress({
-    String county,
-    String postcode,
-    String street,
-    String town,
+    String? county,
+    String? postcode,
+    String? street,
+    String? town,
   }) {
     this.county = county;
     this.postcode = postcode;
@@ -15,10 +15,10 @@ class VenueAddress {
     this.town = town;
   }
 
-  String county;
-  String postcode;
-  String street;
-  String town;
+  String? county;
+  String? postcode;
+  String? street;
+  String? town;
 
   // factory VenueAddress.fromJson(Map<String, dynamic> json) => _$VenueAddressFromJson(json);
   // Map<String, dynamic> toJson() => _$VenueAddressToJson(this);

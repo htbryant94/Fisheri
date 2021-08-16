@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fisheri/Components/base_cell.dart';
 import 'package:fisheri/models/catch_report.dart';

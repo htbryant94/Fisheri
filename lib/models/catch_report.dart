@@ -4,14 +4,14 @@ import 'package:json_annotation/json_annotation.dart';
 @JsonSerializable()
 class CatchReport {
   CatchReport({
-    this.id,
-    this.endDate,
+    required this.id,
+    required this.endDate,
     this.images,
     this.lakeID,
     this.lakeName,
     this.notes,
-    this.startDate,
-    this.userID,
+    required this.startDate,
+    required this.userID,
   });
 
   String id;
@@ -19,15 +19,15 @@ class CatchReport {
   @JsonKey(name: 'end_date')
   String endDate;
 
-  List<String> images;
+  List<String>? images;
 
   @JsonKey(name: 'lake_id')
-  String lakeID;
+  String? lakeID;
 
   @JsonKey(name: 'lake_name')
-  String lakeName;
+  String? lakeName;
 
-  String notes;
+  String? notes;
 
   @JsonKey(name: 'user_id')
   String userID;
