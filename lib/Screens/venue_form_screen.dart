@@ -15,9 +15,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:form_builder_fields/form_builder_fields.dart';
-import 'package:form_builder_image_picker/form_builder_image_picker.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:fisheri/house_texts.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -549,9 +546,9 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
                               ),
                             ),
                             SizedBox(height: 16),
-                            FormBuilderImagePicker(
-                              name: 'images',
-                            ),
+                            // FormBuilderImagePicker(
+                            //   name: 'images',
+                            // ),
 //                            FormBuilderImagePickerCustom(
 //                              attribute: 'images',
 //                            )

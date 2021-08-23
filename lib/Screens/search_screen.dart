@@ -42,7 +42,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   StreamSubscription<Position> positionStream;
   Stream<List<DocumentSnapshot>> stream;
-  Set<Circle> _circles;
+  Set<Circle> _circles = {};
 
   BitmapDescriptor _mapMarkerLakeUnselectedIcon;
   BitmapDescriptor _mapMarkerLakeSelectedIcon;

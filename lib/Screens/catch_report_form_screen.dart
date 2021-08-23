@@ -13,9 +13,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:form_builder_fields/form_builder_fields.dart';
-import 'package:form_builder_image_picker/form_builder_image_picker.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:uuid/uuid.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
@@ -414,14 +411,14 @@ class _CatchReportPhotosFormImagePicker extends StatelessWidget {
             color: isEditMode ? Colors.red : DSColors.black,
         ),
         DSComponents.singleSpacer(),
-        if (!isEditMode)
-        FormBuilderImagePicker(
-          name: CatchReportFormConstants.images,
-          enabled: !isEditMode,
-          decoration: InputDecoration(
-              border: InputBorder.none
-          ),
-        ),
+        // if (!isEditMode)
+        // FormBuilderImagePicker(
+        //   name: CatchReportFormConstants.images,
+        //   enabled: !isEditMode,
+        //   decoration: InputDecoration(
+        //       border: InputBorder.none
+        //   ),
+        // ),
       ],
     );
   }
