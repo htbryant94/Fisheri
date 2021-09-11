@@ -87,8 +87,7 @@ class EditVenueCell extends StatelessWidget {
               .doc(venue.id)
               .get()
               .then((DocumentSnapshot document) {
-            // final VenueDetailed _venue = VenueDetailedJSONSerializer().fromMap(document.data());
-            final _venue = VenueDetailed(); // TEMP
+            final _venue = VenueDetailed.fromJson(document.data());
               Coordinator.push(context, screenTitle: "Edit Venue", screen: VenueFormEditScreen(venue: _venue, venueID: venue.id));
           });
         },
@@ -141,8 +140,7 @@ class SearchResultCell extends StatelessWidget {
               .get()
               .then((DocumentSnapshot document) {
             print('detail screen for venueID: ${venue.id}');
-            // final _venue = VenueDetailedJSONSerializer().fromMap(document.data());
-            final _venue = VenueDetailed(); // TEMP
+            final _venue = VenueDetailed.fromJson(document.data());
             Coordinator.pushVenueDetailScreen(
                 context,
                 'Map',

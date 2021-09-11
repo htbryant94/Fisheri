@@ -191,8 +191,10 @@ class _SearchScreenState extends State<SearchScreen> {
         context: context,
         apiKey: API_KEY,
         mode: Mode.overlay,
+        types: [],
         language: 'en',
         components: [Component(Component.country, 'uk')],
+        strictbounds: false,
         onError: (response) {
           print('Error with Places API: ${response.errorMessage}');
         }
@@ -508,8 +510,7 @@ class _SearchScreenState extends State<SearchScreen> {
     });
 
     documentList.forEach((DocumentSnapshot document) {
-      // final result = VenueSearchJSONSerializer().fromMap(document.data());
-      final result = VenueSearch(); // TEMP
+      final result = VenueSearch.fromJson(document.data());
       if (result != null) {
         final json = document.data() as Map<String, dynamic>;
         GeoPoint point = json['position']['geopoint'];

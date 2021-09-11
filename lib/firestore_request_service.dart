@@ -25,8 +25,7 @@ class FirestoreRequestService {
         .doc(id)
         .get()
         .then((DocumentSnapshot document) {
-      // return VenueDetailedJSONSerializer().fromMap(document.data());
-      return VenueDetailed(); // TEMP
+      return VenueDetailed.fromJson(document.data());
     }).catchError((error) {
       print('getVenueDetailed request error: $error');
     });
@@ -41,8 +40,7 @@ class FirestoreRequestService {
 
     return snapshots.first.then((snapshot) {
       return snapshot.docs.map((doc) {
-        // var catchModel = CatchJSONSerializer().fromMap(doc.data());
-        var catchModel = Catch(); // TEMP
+        var catchModel = Catch.fromJson(doc.data());
         catchModel.id = doc.id;
         return catchModel;
       }).toList();

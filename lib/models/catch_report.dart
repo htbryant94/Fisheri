@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-// part 'catch_report.g.dart';
+part 'catch_report.g.dart';
 
 @JsonSerializable()
 class CatchReport {
@@ -35,6 +35,6 @@ class CatchReport {
   @JsonKey(name: 'start_date')
   String startDate;
 
-  // factory CatchReport.fromJson(Map<String, dynamic> json) => _$CatchReportFromJson(json);
-  // Map<String, dynamic> toJson() => _$CatchReportToJson(this);
+  factory CatchReport.fromJson(Map<String, dynamic> json) => _$CatchReportFromJson(json);
+  Map<String, dynamic> toJson() => _$CatchReportToJson(this);
 }

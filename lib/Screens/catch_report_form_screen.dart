@@ -305,8 +305,7 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
 
                         // 3. Upload Model to DB
                         print('uploading catch report');
-                        // final _catchReportJSON = CatchReportJSONSerializer().toMap(_catchReport);
-                        final _catchReportJSON = Map(); // TEMP
+                        final _catchReportJSON = _catchReport.toJson();
 
                         await _firestore
                             .collection('catch_reports')

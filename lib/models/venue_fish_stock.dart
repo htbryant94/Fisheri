@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-// part 'venue_fish_stock.g.dart';
+part 'venue_fish_stock.g.dart';
 
 @JsonSerializable()
 class VenueFishStock {
@@ -66,8 +66,8 @@ class VenueFishStock {
   bool? salmon;
   bool? zander;
 
-  // factory VenueFishStock.fromJson(Map<String, dynamic> json) => _$VenueFishStockFromJson(json);
-  // Map<String, dynamic> toJson() => _$VenueFishStockToJson(this);
+  factory VenueFishStock.fromJson(Map<String, dynamic> json) => _$VenueFishStockFromJson(json);
+  Map<String, dynamic> toJson() => _$VenueFishStockToJson(this);
 }
 
 @JsonSerializable()
@@ -82,6 +82,6 @@ class FishWithWeight {
   @JsonKey(name: 'is_stocked')
   bool? isStocked;
 
-  // factory FishWithWeight.fromJson(Map<String, dynamic> json) => _$FishWithWeightFromJson(json);
-  // Map<String, dynamic> toJson() => _$FishWithWeightToJson(this);
+  factory FishWithWeight.fromJson(Map<String, dynamic> json) => _$FishWithWeightFromJson(json);
+  Map<String, dynamic> toJson() => _$FishWithWeightToJson(this);
 }

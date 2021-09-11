@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-// part 'venue_address.g.dart';
+part 'venue_address.g.dart';
 
 @JsonSerializable()
 class VenueAddress {
@@ -20,6 +20,6 @@ class VenueAddress {
   String? street;
   String? town;
 
-  // factory VenueAddress.fromJson(Map<String, dynamic> json) => _$VenueAddressFromJson(json);
-  // Map<String, dynamic> toJson() => _$VenueAddressToJson(this);
+  factory VenueAddress.fromJson(Map<String, dynamic> json) => _$VenueAddressFromJson(json);
+  Map<String, dynamic> toJson() => _$VenueAddressToJson(this);
 }

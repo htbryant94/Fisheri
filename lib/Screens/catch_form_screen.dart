@@ -474,8 +474,7 @@ class _CatchFormScreenState extends State<CatchFormScreen> {
                                   final _catchID = _isEditMode ? widget.catchID : Uuid().v1();
 
                                   // 2. Upload catch to database
-                                  // final catchJSON = CatchJSONSerializer().toMap(catchModel);
-                                  final catchJSON = Map(); // TEMP
+                                  final catchJSON = catchModel.toJson();
 
                                   await FirebaseFirestore.instance
                                       .collection('catches')
@@ -529,8 +528,7 @@ class _CatchFormScreenState extends State<CatchFormScreen> {
                                       print('amending Catch');
 
                                       catchModel.images = imageURLs;
-                                      // final amendedCatchJSON = CatchJSONSerializer().toMap(catchModel);
-                                      final amendedCatchJSON = Map(); // TEMP
+                                      final amendedCatchJSON = catchModel.toJson();
 
                                       await FirebaseFirestore.instance
                                           .collection('catches')

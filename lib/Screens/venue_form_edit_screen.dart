@@ -317,8 +317,7 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
       print('adding point');
       final _geo = Geoflutterfire();
       var geoFirePoint = _geo.point(latitude: lat, longitude: long);
-      // final result = VenueSearchJSONSerializer().toMap(venueSearch);
-      final result = Map(); // TEMP
+      final result = venueSearch.toJson();
       result['position'] = geoFirePoint.data;
 
       FirebaseFirestore.instance
@@ -355,8 +354,7 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
     }
 
     Future amendVenue(String id, VenueDetailed venue) async {
-      // var venueJSON = VenueDetailedJSONSerializer().toMap(venue);
-      var venueJSON = Map(); // TEMP
+      var venueJSON = venue.toJson();
       venueJSON = addCoordinatesIfValid(venueJSON);
 
       await FirebaseFirestore.instance

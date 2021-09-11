@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-// part 'catch.g.dart';
+part 'catch.g.dart';
 
 @JsonSerializable()
 class Catch {
@@ -54,6 +54,6 @@ class Catch {
 
   double? weight;
 
-  // factory Catch.fromJson(Map<String, dynamic> json) => _$CatchFromJson(json);
-  // Map<String, dynamic> toJson() => _$CatchToJson(this);
+  factory Catch.fromJson(Map<String, dynamic> json) => _$CatchFromJson(json);
+  Map<String, dynamic> toJson() => _$CatchToJson(this);
 }

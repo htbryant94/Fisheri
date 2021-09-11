@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fisheri/models/hours_of_operation.dart';
 import 'package:fisheri/models/venue_address.dart';
 import 'package:json_annotation/json_annotation.dart';
-// part 'venue_detailed.g.dart';
+part 'venue_detailed.g.dart';
 
 @JsonSerializable()
 class VenueDetailed {
@@ -75,8 +75,8 @@ class VenueDetailed {
 
   @JsonKey(name: 'website_url')
   String? websiteURL;
-  // factory VenueDetailed.fromJson(Map<String, dynamic> json) => _$VenueDetailedFromJson(json);
-  // Map<String, dynamic> toJson() => _$VenueDetailedToJson(this);
+  factory VenueDetailed.fromJson(Map<String, dynamic> json) => _$VenueDetailedFromJson(json);
+  Map<String, dynamic> toJson() => _$VenueDetailedToJson(this);
 }
 
 @JsonSerializable()
@@ -90,8 +90,8 @@ class FishStock {
   int? weight;
   late int priority;
 
-  // factory FishStock.fromJson(Map<String, dynamic> json) => _$FishStockFromJson(json);
-  // Map<String, dynamic> toJson() => _$FishStockToJson(this);
+  factory FishStock.fromJson(Map<String, dynamic> json) => _$FishStockFromJson(json);
+  Map<String, dynamic> toJson() => _$FishStockToJson(this);
 }
 
 @JsonSerializable()
@@ -104,8 +104,8 @@ class ContactDetails {
   String? email;
   String? phone;
 
-  // factory ContactDetails.fromJson(Map<String, dynamic> json) => _$ContactDetailsFromJson(json);
-  // Map<String, dynamic> toJson() => _$ContactDetailsToJson(this);
+  factory ContactDetails.fromJson(Map<String, dynamic> json) => _$ContactDetailsFromJson(json);
+  Map<String, dynamic> toJson() => _$ContactDetailsToJson(this);
 }
 
 @JsonSerializable()
@@ -122,6 +122,6 @@ class Social {
   String? twitter;
   String? youtube;
 
-  // factory Social.fromJson(Map<String, dynamic> json) => _$SocialFromJson(json);
-  // Map<String, dynamic> toJson() => _$SocialToJson(this);
+  factory Social.fromJson(Map<String, dynamic> json) => _$SocialFromJson(json);
+  Map<String, dynamic> toJson() => _$SocialToJson(this);
 }

@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-// part 'hours_of_operation.g.dart';
+part 'hours_of_operation.g.dart';
 
 @JsonSerializable()
 class HoursOfOperation {
@@ -21,8 +21,8 @@ class HoursOfOperation {
   OpeningHoursDay? saturday;
   OpeningHoursDay? sunday;
 
-  // factory HoursOfOperation.fromJson(Map<String, dynamic> json) => _$HoursOfOperationFromJson(json);
-  // Map<String, dynamic> toJson() => _$HoursOfOperationToJson(this);
+  factory HoursOfOperation.fromJson(Map<String, dynamic> json) => _$HoursOfOperationFromJson(json);
+  Map<String, dynamic> toJson() => _$HoursOfOperationToJson(this);
 }
 
 @JsonSerializable()
@@ -35,6 +35,6 @@ class OpeningHoursDay {
   String? open;
   String? close;
 
-  // factory OpeningHoursDay.fromJson(Map<String, dynamic> json) => _$OpeningHoursDayFromJson(json);
-  // Map<String, dynamic> toJson() => _$OpeningHoursDayToJson(this);
+  factory OpeningHoursDay.fromJson(Map<String, dynamic> json) => _$OpeningHoursDayFromJson(json);
+  Map<String, dynamic> toJson() => _$OpeningHoursDayToJson(this);
 }

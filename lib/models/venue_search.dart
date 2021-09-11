@@ -1,6 +1,6 @@
 import 'package:fisheri/models/venue_address.dart';
 import 'package:json_annotation/json_annotation.dart';
-// part 'venue_search.g.dart';
+part 'venue_search.g.dart';
 
 @JsonSerializable()
 class VenueSearch {
@@ -44,6 +44,6 @@ class VenueSearch {
   @JsonKey(name: 'number_of_lakes')
   int? numberOfLakes;
 
-  // factory VenueSearch.fromJson(Map<String, dynamic> json) => _$VenueSearchFromJson(json);
-  // Map<String, dynamic> toJson() => _$VenueSearchToJson(this);
+  factory VenueSearch.fromJson(Map<String, dynamic> json) => _$VenueSearchFromJson(json);
+  Map<String, dynamic> toJson() => _$VenueSearchToJson(this);
 }
