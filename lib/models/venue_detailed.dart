@@ -41,7 +41,7 @@ class VenueDetailed {
   @JsonKey(name: 'contact_details')
   ContactDetails? contactDetails;
 
-  @JsonKey(ignore: true)
+  @JsonKey(name: 'coordinates', fromJson: _fromJsonGeoPoint, toJson: _toJsonGeoPoint)
   GeoPoint? coordinates;
 
   String? description;
@@ -77,6 +77,15 @@ class VenueDetailed {
   String? websiteURL;
   factory VenueDetailed.fromJson(Map<String, dynamic> json) => _$VenueDetailedFromJson(json);
   Map<String, dynamic> toJson() => _$VenueDetailedToJson(this);
+
+  // GeoPoint
+  static GeoPoint? _fromJsonGeoPoint(GeoPoint? geoPoint) { return geoPoint; }
+  static Map<String, dynamic>? _toJsonGeoPoint(GeoPoint? geoPoint) {
+    if (geoPoint != null) {
+      return {'latitude': geoPoint.latitude, 'longitude': geoPoint.longitude};
+    }
+    return null;
+  }
 }
 
 @JsonSerializable()

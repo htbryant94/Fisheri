@@ -214,7 +214,7 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
                         FormBuilderTextField(
                           keyboardType: TextInputType.multiline,
                           minLines: 5,
-                          maxLines: null,
+                          maxLines: 100,
                           name: CatchReportFormConstants.notes,
                           decoration: InputDecoration(
                               labelText: 'Notes', border: OutlineInputBorder()),

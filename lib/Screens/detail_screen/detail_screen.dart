@@ -204,14 +204,15 @@ class _DetailScreenState extends State<DetailScreen> {
 
     sections.add(DSComponents.divider());
 
-    sections.add(
-        MapViewSection(
-          address: venue.address,
-          coordinates: venue.coordinates,
-        )
-    );
-
-    sections.add(DSComponents.paragraphSpacer());
+    if (venue.coordinates != null) {
+      sections.add(
+          MapViewSection(
+            address: venue.address,
+            coordinates: venue.coordinates,
+          )
+      );
+      sections.add(DSComponents.paragraphSpacer());
+    }
 
     if (venue.websiteURL != null || venue.contactDetails != null) {
       sections.add(ContactSection(

@@ -354,7 +354,7 @@ class _CatchFormScreenState extends State<CatchFormScreen> {
                               child: FormBuilderTextField(
                                 keyboardType: TextInputType.multiline,
                                 minLines: 5,
-                                maxLines: null,
+                                maxLines: 100,
                                 name: CatchFormConstants.notes,
                                 decoration: InputDecoration(
                                     labelText: 'Notes', border: OutlineInputBorder()),

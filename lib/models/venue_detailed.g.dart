@@ -22,6 +22,8 @@ VenueDetailed _$VenueDetailedFromJson(Map<String, dynamic> json) {
         ? null
         : ContactDetails.fromJson(
             json['contact_details'] as Map<String, dynamic>),
+    coordinates:
+        VenueDetailed._fromJsonGeoPoint(json['coordinates'] as GeoPoint?),
     description: json['description'] as String?,
     fishingRules: json['fishing_rules'] as String?,
     fishStock: (json['fish_stock'] as List<dynamic>?)
@@ -61,6 +63,7 @@ Map<String, dynamic> _$VenueDetailedToJson(VenueDetailed instance) =>
       'amenities': instance.amenities,
       'categories': instance.categories,
       'contact_details': instance.contactDetails,
+      'coordinates': VenueDetailed._toJsonGeoPoint(instance.coordinates),
       'description': instance.description,
       'fishing_rules': instance.fishingRules,
       'fish_stock': instance.fishStock,
