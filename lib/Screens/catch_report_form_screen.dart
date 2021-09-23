@@ -54,6 +54,7 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
   String _loadingText = 'Loading...';
   QuerySnapshot _availableLakes;
   bool _isEditMode;
+  final _imagesEnabled = false;
 
   @override
   void initState() {
@@ -234,7 +235,7 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
                         final _catchReportID = _isEditMode ? widget.catchReportID : Uuid().v1();
 
                         // 1. Upload images to storage
-                        if (!_isEditMode) {
+                        if (!_isEditMode && _imagesEnabled) {
                           if (_valueFor(attribute: CatchReportFormConstants.images) != null) {
                             _updateLoadingMessage('Saving your Photos...');
                             final _images = _valueFor(attribute: CatchReportFormConstants.images);

@@ -3,6 +3,7 @@
 import 'dart:ui';
 
 import 'package:fisheri/Components/form_fields/fishing_types_field.dart';
+import 'package:fisheri/Components/touch_spin.dart';
 import 'package:fisheri/Components/form_fields/social_media_field.dart';
 import 'package:fisheri/Screens/venue_form_edit_screen.dart';
 import 'package:fisheri/house_colors.dart';
@@ -758,14 +759,19 @@ class _AmenitiesSection extends StatelessWidget {
     return Column(
       children: <Widget>[
         HouseTexts.subtitle('Amenities'),
-        // FormBuilderTouchSpin(
-        //   name: 'number_of_lakes',
-        //   decoration: InputDecoration(labelText: 'Number of Lakes'),
-        //   initialValue: 0,
-        //   min: 0,
-        //   max: 100,
-        //   step: 1,
-        // ),
+        FormBuilderField(
+          name: 'number_of_lakes',
+          // validator: FormBuilderValidators.compose([
+          //   FormBuilderValidators.required(context),
+          // ]),
+          builder: (FormFieldState<dynamic> field) {
+            return TouchSpin(
+              min: 0,
+              max: 100,
+              step: 1,
+            );
+          },
+        ),
         FormBuilderCheckboxGroup(
           name: 'amenities_list',
           orientation: OptionsOrientation.vertical,

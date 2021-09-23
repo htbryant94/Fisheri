@@ -1,12 +1,12 @@
 // @dart=2.9
 
-import 'dart:ffi';
 import 'dart:ui';
 
 import 'package:basic_utils/basic_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:fisheri/Components/form_fields/form_builder_touch_spin.dart';
 import 'package:fisheri/WeightConverter.dart';
 import 'package:fisheri/Factories/alert_dialog_factory.dart';
 import 'package:fisheri/models/catch_report.dart';
@@ -66,6 +66,7 @@ class _CatchFormScreenState extends State<CatchFormScreen> {
   String _loadingText = 'Loading...';
   bool _didSetTemperature = false;
   bool _isEditMode;
+  final _imagesEnabled = false;
 
   CatchType parseStringToCatchType(String catchType) {
     switch (catchType) {
@@ -276,7 +277,7 @@ class _CatchFormScreenState extends State<CatchFormScreen> {
                               catchType: selectedCatchType,
                               supportedCatchTypes: [CatchType.multi],
                               child: _NumberOfFishSection(
-                                initialValue: _isEditMode ? widget.catchData.numberOfFish : 0,
+                                initialValue: _isEditMode ? widget.catchData.numberOfFish : 1,
                               ),
                             ),
                             CatchReportVisibility(
@@ -292,7 +293,7 @@ class _CatchFormScreenState extends State<CatchFormScreen> {
                               child: _PositionSection(
                                 title: 'Position',
                                 attribute: CatchFormConstants.position,
-                                initialValue: _isEditMode ? widget.catchData.position : 0,
+                                initialValue: _isEditMode ? widget.catchData.position : 1,
                               ),
                             ),
                             CatchReportVisibility(
@@ -403,10 +404,12 @@ class _CatchFormScreenState extends State<CatchFormScreen> {
                                             onError: (_) { return 0; });
                                       }
 
-                                      _weight = _convertFishWeight(
-                                          whole: int.parse(_valueFor(attribute: CatchFormConstants.weightWhole)),
-                                          fraction: _weightFraction
-                                      );
+                                      if (_valueFor(attribute: CatchFormConstants.weightWhole) != null) {
+                                        _weight = _convertFishWeight(
+                                            whole: int.parse(_valueFor(attribute: CatchFormConstants.weightWhole)),
+                                            fraction: _weightFraction
+                                        );
+                                      }
                                     }
                                   }
 
@@ -485,7 +488,7 @@ class _CatchFormScreenState extends State<CatchFormScreen> {
                                     print('catch added successfully: $_catchID');
 
                                     // 3. Upload images to storage
-                                    if (!_isEditMode) {
+                                    if (!_isEditMode && _imagesEnabled) {
                                       if (_valueFor(attribute: 'images') != null) {
                                         print('uploading images');
                                         _updateLoadingMessage(
@@ -617,22 +620,15 @@ class _NumberOfFishSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        DSComponents.header(text: 'Number of Fish'),
-        // FormBuilderTouchSpin(
-        //   name: CatchFormConstants.numberOfFish,
-        //   initialValue: initialValue ?? 0,
-        //   min: 0,
-        //   max: 100,
-        //   step: 1,
-        //   validator: FormBuilderValidators.min(context, 1, errorText: 'Please specify the number of fish caught.'),
-        // ),
-      ],
+    return FormBuilderTouchSpin(
+      attribute: CatchFormConstants.numberOfFish,
+      max: 100,
+      min: 1,
+      value: initialValue,
+      title: 'Number of Fish',
     );
   }
 }
-
 
 class _PositionSection extends StatelessWidget {
   _PositionSection({
@@ -648,15 +644,13 @@ class _PositionSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        DSComponents.header(text: title),
-        // FormBuilderTouchSpin(
-        //   name: attribute,
-        //   initialValue: initialValue ?? 0,
-        //   min: 1,
-        //   max: 10,
-        //   step: 1,
-        //   validator: FormBuilderValidators.min(context, 1, errorText: 'Please specify the position.'),
-        // )
+        FormBuilderTouchSpin(
+            attribute: attribute,
+            max: 10,
+            min: 1,
+            title: title,
+            value: initialValue
+        )
       ],
     );
   }
