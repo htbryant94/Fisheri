@@ -151,6 +151,27 @@ class DSComponents {
     );
   }
 
+  static Widget progressIndicator({bool isOverlay = false}) {
+    final progressIndicator = CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(DSColors.green));
+    final padding = EdgeInsets.all(16);
+
+    return Center(
+      child: isOverlay ? Container(
+          padding: padding,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              color: Colors.black87
+          ),
+          child: progressIndicator
+      ) : Container(
+        padding: padding,
+        child: Center(
+          child: progressIndicator,
+        ),
+      ),
+    );
+  }
+
   static SizedBox halfSpacer() {
     return SizedBox(height: 4, width: 4);
   }

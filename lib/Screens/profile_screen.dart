@@ -1,17 +1,16 @@
 // @dart=2.9
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fisheri/Screens/achievements_screen.dart';
 import 'package:fisheri/Screens/auth_screen.dart';
-import 'package:fisheri/Screens/events_calendar_screen.dart';
-import 'package:fisheri/Screens/create_event_screen.dart';
-import 'package:fisheri/Screens/fishing_license_screen.dart';
 import 'package:fisheri/Screens/search_results_screen.dart';
 import 'package:fisheri/Screens/venue_form_screen.dart';
 import 'package:fisheri/coordinator.dart';
 import 'package:fisheri/design_system.dart';
+import 'package:fisheri/models/fisheri_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import 'ImageUploadScreen.dart';
 
 class ProfileListItem {
   ProfileListItem({
@@ -44,6 +43,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     'CD0fIQ4BozOoYxBktmSBev5qiQh2'
   ];
 
+  final _initialImages = [
+    FisheriImage(id: '520ce9f0-1ed8-11ec-ada9-576c0d07763f', url: 'https://firebasestorage.googleapis.com:443/v0/b/fishing-finder-594f0.appspot.com/o/test%2F520ce9f0-1ed8-11ec-ada9-576c0d07763f?alt=media&token=8eb8ad6b-1221-4318-a904-e17e6aced4e3'),
+    FisheriImage(id: '4430d100-1ed5-11ec-ada9-576c0d07763f', url: 'https://firebasestorage.googleapis.com:443/v0/b/fishing-finder-594f0.appspot.com/o/test%2F4430d100-1ed5-11ec-ada9-576c0d07763f?alt=media&token=87e13b3b-ef47-47f5-a485-3c79adaf8ed0'),
+    FisheriImage(id: '492b13f0-1ed5-11ec-ada9-576c0d07763f', url: 'https://firebasestorage.googleapis.com:443/v0/b/fishing-finder-594f0.appspot.com/o/test%2F492b13f0-1ed5-11ec-ada9-576c0d07763f?alt=media&token=22353675-0ce7-44df-ab7a-7fcace58005a'),
+  ];
+
   @override
   Widget build(BuildContext context) {
     var _isLoggedIn = _auth.currentUser != null;
@@ -67,6 +72,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
           screen: AllVenuesListBuilder(),
           title: 'Edit a Venue',
           icon: Icon(Icons.library_books, color: Colors.green)
+      ),
+      ProfileListItem(
+        screen: ImageUploadScreen(initialImages: _initialImages),
+        title: 'Upload Images',
+        icon: Icon(Icons.file_upload)
       ),
       // ProfileListItem(
       //   screen: FishingLicenseScreen(),
