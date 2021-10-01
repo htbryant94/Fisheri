@@ -12,8 +12,9 @@ Catch _$CatchFromJson(Map<String, dynamic> json) {
     catchReportID: json['catch_report_id'] as String,
     catchType: json['catch_type'] as String,
     date: json['date'] as String?,
-    images:
-        (json['images'] as List<dynamic>?)?.map((e) => e as String).toList(),
+    images: (json['images'] as List<dynamic>?)
+        ?.map((e) => FisheriImage.fromJson(e as Map<String, dynamic>))
+        .toList(),
     notes: json['notes'] as String?,
     numberOfFish: json['num_of_fish'] as int?,
     position: json['position'] as int?,
@@ -32,7 +33,7 @@ Map<String, dynamic> _$CatchToJson(Catch instance) => <String, dynamic>{
       'catch_report_id': instance.catchReportID,
       'catch_type': instance.catchType,
       'date': instance.date,
-      'images': instance.images,
+      'images': instance.images?.map((e) => e.toJson()).toList(),
       'notes': instance.notes,
       'num_of_fish': instance.numberOfFish,
       'position': instance.position,

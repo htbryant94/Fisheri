@@ -2,7 +2,7 @@ import 'package:fisheri/models/venue_address.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'venue_search.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class VenueSearch {
   VenueSearch({
     this.id,

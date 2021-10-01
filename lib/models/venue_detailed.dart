@@ -4,7 +4,7 @@ import 'package:fisheri/models/venue_address.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'venue_detailed.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class VenueDetailed {
   VenueDetailed({
     required this.id,
@@ -88,7 +88,7 @@ class VenueDetailed {
   }
 }
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class FishStock {
   FishStock({
     this.name,
@@ -103,7 +103,7 @@ class FishStock {
   Map<String, dynamic> toJson() => _$FishStockToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class ContactDetails {
   ContactDetails({
     this.email,
@@ -117,7 +117,7 @@ class ContactDetails {
   Map<String, dynamic> toJson() => _$ContactDetailsToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class Social {
   Social({
     this.facebook,

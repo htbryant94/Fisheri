@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 part 'venue_address.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class VenueAddress {
   VenueAddress({
     String? county,

@@ -2,6 +2,7 @@
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fisheri/Components/base_cell.dart';
+import 'package:fisheri/FirestoreCollections.dart';
 import 'package:fisheri/models/catch_report.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -41,7 +42,7 @@ class CatchReportCell extends StatelessWidget {
 
   Future<String> _fetchImages() async {
     if (catchReport.images != null && catchReport.images.isNotEmpty) {
-      return await FirebaseStorage.instance.ref('catch_reports/$catchReportID/images/0').getDownloadURL();
+      return await FirebaseStorage.instance.ref('${FirestoreCollections.catchReports}/$catchReportID/images/0').getDownloadURL();
     } else {
       return await FirebaseStorage.instance.ref('venues/${catchReport.lakeID}/images/0').getDownloadURL();
     }

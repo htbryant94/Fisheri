@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 part 'hours_of_operation.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class HoursOfOperation {
   HoursOfOperation({
     this.monday,
@@ -25,7 +25,7 @@ class HoursOfOperation {
   Map<String, dynamic> toJson() => _$HoursOfOperationToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class OpeningHoursDay {
   OpeningHoursDay({
     this.open,

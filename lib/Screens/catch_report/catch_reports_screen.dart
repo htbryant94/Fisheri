@@ -1,6 +1,7 @@
 // @dart=2.9
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fisheri/FirestoreCollections.dart';
 import 'package:fisheri/Screens/catch_report_form_screen.dart';
 import 'package:fisheri/coordinator.dart';
 import 'package:fisheri/design_system.dart';
@@ -56,9 +57,9 @@ class _CatchReportListBuilder extends StatelessWidget {
     return StreamBuilder(
       stream: FirebaseFirestore
           .instance
-          .collection('catch_reports')
-          .where('user_id', isEqualTo: FirebaseAuth.instance.currentUser.uid)
-          .orderBy('start_date', descending: true)
+          .collection(FirestoreCollections.catchReports) // TODO: Reintroduce filter / sort
+          // .where('user_id', isEqualTo: FirebaseAuth.instance.currentUser.uid)
+          // .orderBy('start_date', descending: true)
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (!snapshot.hasData) {

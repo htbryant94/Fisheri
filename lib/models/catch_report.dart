@@ -1,7 +1,8 @@
+import 'package:fisheri/models/fisheri_image.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'catch_report.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class CatchReport {
   CatchReport({
     required this.id,
@@ -19,7 +20,7 @@ class CatchReport {
   @JsonKey(name: 'end_date')
   String endDate;
 
-  List<String>? images;
+  List<FisheriImage>? images;
 
   @JsonKey(name: 'lake_id')
   String? lakeID;

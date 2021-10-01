@@ -27,7 +27,7 @@ VenueSearch _$VenueSearchFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$VenueSearchToJson(VenueSearch instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'address': instance.address,
+      'address': instance.address?.toJson(),
       'always_open': instance.alwaysOpen,
       'amenities': instance.amenities,
       'categories': instance.categories,

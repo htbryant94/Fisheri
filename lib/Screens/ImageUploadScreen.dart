@@ -13,8 +13,15 @@ import 'package:uuid/uuid.dart';
 import '../design_system.dart';
 
 class ImageUploadScreen extends StatefulWidget {
-  const ImageUploadScreen({Key? key, this.initialImages}) : super(key: key);
+  const ImageUploadScreen({
+    Key? key,
+    required this.documentReference,
+    required this.storageReference,
+    this.initialImages,
+  }) : super(key: key);
 
+  final DocumentReference documentReference;
+  final Reference storageReference;
   final List<FisheriImage>? initialImages;
 
   @override
@@ -43,83 +50,102 @@ class _ImageUploadScreenState extends State<ImageUploadScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: GridView.builder(
-            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 400,
-                childAspectRatio: 1.5,
-                crossAxisSpacing: 16,
-                mainAxisSpacing: 16
-            ),
-            itemCount: _images.length + 1,
-            itemBuilder: (context, index) {
-              if (index < _images.length) {
-                return _addedImageCell(index);
-              } else {
-                return _addImageCell(index);
-              }
-            }
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 24),
+          child: Stack(
+            children: [
+              GridView.builder(
+                padding: EdgeInsets.only(bottom: 44 + 16 + 8, top: 16),
+                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 400,
+                      childAspectRatio: 1.5,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16
+                  ),
+                  itemCount: _images.length + 1,
+                  itemBuilder: (context, index) {
+                    if (index < _images.length) {
+                      return _addedImageCell(index);
+                    } else {
+                      return _addImageCell(index);
+                    }
+                  }
+              ),
+              Positioned(
+                bottom: 8,
+                left: 0,
+                right: 0,
+                child: DSComponents.primaryButton(
+                    text: 'Done',
+                    onPressed: () {
+                      Navigator.pop(context);
+                    }
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
   Widget _addedImageCell(int index) {
-    return Container(
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-          color: Colors.grey[200],
-          border: Border.all(
-            width: 1,
-            color: Colors.grey,
+    return Stack(
+      fit: StackFit.expand,
+      clipBehavior: Clip.antiAliasWithSaveLayer,
+      children: [
+        Container(
+          clipBehavior: Clip.antiAliasWithSaveLayer,
+          decoration: BoxDecoration(
+              color: Colors.grey[200],
+              border: Border.all(
+                width: 0.2,
+                color: Colors.grey,
+              ),
+              borderRadius: BorderRadius.circular(10)
           ),
-          borderRadius: BorderRadius.circular(12)
-      ),
-      child: Stack(
-        fit: StackFit.expand,
-        clipBehavior: Clip.antiAliasWithSaveLayer,
-        children: [
-          ClipRRect(
-              borderRadius: BorderRadius.circular(12),
+          child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
               child: _images[index].image
           ),
-          if (_images[index].isUploading)
-            Center(
-              child: Container(
-                padding: EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: Colors.black87
-                ),
-                child: DSComponents.progressIndicator(isOverlay: true),
+        ),
+        if (_images[index].isUploading)
+          Center(
+            child: Container(
+              padding: EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: Colors.black87
               ),
+              child: DSComponents.progressIndicator(isOverlay: true),
             ),
-          if (!_images[index].isUploading)
-            Positioned(
-              bottom: 16,
-              right: 16,
-              child: FisheriIconButton(
-                icon: Icon(Icons.delete, color: Colors.white),
-                onTap: () {
-                  _deleteFromStorage(_uploadedImages[index].url, index)
-                      .whenComplete(() {
-                    setState(() {
-                      _uploadedImages.removeAt(index);
-                      _images.removeAt(index);
-                    });
-                    _updateDatabaseEntry(_uploadedImages);
+          ),
+        if (!_images[index].isUploading)
+          Positioned(
+            bottom: 16,
+            right: 16,
+            child: FisheriIconButton(
+              icon: Icon(Icons.delete, color: Colors.white),
+              onTap: () {
+                _deleteFromStorage(_uploadedImages[index].url, index)
+                    .whenComplete(() {
+                  setState(() {
+                    _uploadedImages.removeAt(index);
+                    _images.removeAt(index);
                   });
-                },
-              ),
-            )
-        ],
-      ),
+                  _updateDatabaseEntry(_uploadedImages);
+                });
+              },
+            ),
+          )
+      ],
     );
   }
 
   _AddImageCell _addImageCell(int index) {
     return _AddImageCell(
+        storageReference: widget.storageReference,
         onImageSelected: (file) {
           final uploadImage = _UploadImage(
               image: Image.asset(file.path),
@@ -142,16 +168,11 @@ class _ImageUploadScreenState extends State<ImageUploadScreen> {
   }
 
   void _updateDatabaseEntry(List<FisheriImage> _uploadedImages) {
-    final documentRef = FirebaseFirestore
-        .instance
-        .collection('test')
-        .doc('RqTrbLFO5c3UYD9O2Ikw');
-
     if (_uploadedImages.isNotEmpty) {
       final imagesData = _uploadedImages.map((image) => image.toJson()).toList();
-      documentRef.update({'images': imagesData});
+      widget.documentReference.update({'images': imagesData});
     } else {
-      documentRef.update({'images': null});
+      widget.documentReference.update({'images': null});
     }
   }
 }
@@ -160,11 +181,13 @@ class _AddImageCell extends StatefulWidget {
   const _AddImageCell({
     Key? key,
     required this.onImageSelected,
-    required this.onUpload
+    required this.onUpload,
+    required this.storageReference,
   }) : super(key: key);
 
   final ValueChanged<XFile> onImageSelected;
   final ValueChanged<FisheriImage> onUpload;
+  final Reference storageReference;
 
   @override
   _AddImageCellState createState() => _AddImageCellState();
@@ -176,12 +199,12 @@ class _AddImageCellState extends State<_AddImageCell> {
     return Container(
       alignment: Alignment.center,
       decoration: BoxDecoration(
-          color: Colors.green,
-          borderRadius: BorderRadius.circular(15)
+          color: Colors.grey[200],
+          borderRadius: BorderRadius.circular(10)
       ),
-      child: IconButton(
-        icon: Icon(Icons.add),
-        onPressed: () async {
+      child: FisheriIconButton(
+        icon: Icon(Icons.add, color: Colors.white),
+        onTap: () async {
           final image = await ImagePicker().pickImage(source: ImageSource.gallery);
           if (image != null) {
             widget.onImageSelected(image);
@@ -194,7 +217,8 @@ class _AddImageCellState extends State<_AddImageCell> {
 
   void _uploadToStorage(XFile image) async {
     final uuid = Uuid().v1();
-    final storageRef = FirebaseStorage.instance.ref().child('test/$uuid');
+    final storageRef = widget.storageReference.child(uuid);
+    // print(storageRef);
 
     await storageRef.putFile(File(image.path)).whenComplete(() async {
       await storageRef.getDownloadURL().then((fileURL) {

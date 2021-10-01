@@ -3,6 +3,7 @@
 import 'dart:ui';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fisheri/FirestoreCollections.dart';
 import 'package:fisheri/Screens/catch_report_screen.dart';
 import 'package:fisheri/Factories/alert_dialog_factory.dart';
 import 'package:fisheri/design_system.dart';
@@ -64,7 +65,7 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
       final endDate = DateTime.parse(widget.catchReport.endDate);
       isDayOnly = startDate == endDate;
       if (widget.catchReport.images != null && widget.catchReport.images.isNotEmpty) {
-        imageURLs = widget.catchReport.images;
+        imageURLs = widget.catchReport.images.map((e) => e.url).toList();
       }
     } else {
       isDayOnly = false;
@@ -244,7 +245,7 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
                             print('uploading images: $_images');
 
                             await Future.forEach(_images, (image) async {
-                              final reference = FirebaseStorage.instance.ref().child('catch_reports/$_catchReportID/images/$index');
+                              final reference = FirebaseStorage.instance.ref().child('${FirestoreCollections.catchReports}/$_catchReportID/images/$index');
 
                               await reference.putFile(image).whenComplete(() async {
                                 print('putting file');
@@ -297,7 +298,7 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
                           lakeName: _isCustomLake ? _valueFor(attribute: CatchReportFormConstants.customName) : _document['name'],
                           startDate: _startDate.toIso8601String(),
                           endDate: _endDate.toIso8601String(),
-                          images: imageURLs.isNotEmpty ? imageURLs : null,
+                          // images: imageURLs.isNotEmpty ? imageURLs : null,
                           notes: _valueFor(attribute: CatchReportFormConstants.notes),
                         );
 
@@ -309,7 +310,7 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
                         final _catchReportJSON = _catchReport.toJson();
 
                         await _firestore
-                            .collection('catch_reports')
+                            .collection(FirestoreCollections.catchReports)
                             .doc(_catchReportID)
                             .set(_catchReportJSON)
                             .whenComplete(() {

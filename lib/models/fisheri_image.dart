@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'fisheri_image.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class FisheriImage {
   FisheriImage({
     required this.id,

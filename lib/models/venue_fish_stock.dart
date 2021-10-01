@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 part 'venue_fish_stock.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class VenueFishStock {
   VenueFishStock(
       List<FishWithWeight> withWeight,
@@ -70,7 +70,7 @@ class VenueFishStock {
   Map<String, dynamic> toJson() => _$VenueFishStockToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class FishWithWeight {
   FishWithWeight(String name, int maxWeight, bool isStocked);
 

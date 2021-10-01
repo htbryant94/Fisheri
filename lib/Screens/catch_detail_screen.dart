@@ -83,7 +83,7 @@ class _CatchDetailScreenState extends State<CatchDetailScreen> {
 
   List<String> _carouselImages() {
     if (widget.data.images != null && widget.data.images.isNotEmpty) {
-      return widget.data.images;
+      return widget.data.images.map((e) => e.url).toList();
     } else if (widget.data.images == null && _isMatch()) {
       return [_makeMatchPositionImageURL(widget.data.position)];
     } else if (widget.data.images == null && widget.data.typeOfFish != null) {

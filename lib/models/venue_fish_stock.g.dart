@@ -33,7 +33,7 @@ VenueFishStock _$VenueFishStockFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$VenueFishStockToJson(VenueFishStock instance) =>
     <String, dynamic>{
-      'with_weight': instance.withWeight,
+      'with_weight': instance.withWeight?.map((e) => e.toJson()).toList(),
       'brownTrout': instance.brownTrout,
       'chub': instance.chub,
       'crucian_carp': instance.crucianCarp,

@@ -10,8 +10,9 @@ CatchReport _$CatchReportFromJson(Map<String, dynamic> json) {
   return CatchReport(
     id: json['id'] as String,
     endDate: json['end_date'] as String,
-    images:
-        (json['images'] as List<dynamic>?)?.map((e) => e as String).toList(),
+    images: (json['images'] as List<dynamic>?)
+        ?.map((e) => FisheriImage.fromJson(e as Map<String, dynamic>))
+        .toList(),
     lakeID: json['lake_id'] as String?,
     lakeName: json['lake_name'] as String?,
     notes: json['notes'] as String?,
@@ -24,7 +25,7 @@ Map<String, dynamic> _$CatchReportToJson(CatchReport instance) =>
     <String, dynamic>{
       'id': instance.id,
       'end_date': instance.endDate,
-      'images': instance.images,
+      'images': instance.images?.map((e) => e.toJson()).toList(),
       'lake_id': instance.lakeID,
       'lake_name': instance.lakeName,
       'notes': instance.notes,
