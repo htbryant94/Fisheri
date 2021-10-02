@@ -10,8 +10,6 @@ import 'package:fisheri/models/fisheri_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'ImageUploadScreen.dart';
-
 class ProfileListItem {
   ProfileListItem({
     this.title,
@@ -72,14 +70,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           screen: AllVenuesListBuilder(),
           title: 'Edit a Venue',
           icon: Icon(Icons.library_books, color: Colors.green)
-      ),
-      ProfileListItem(
-        screen: ImageUploadScreen(
-          initialImages: _initialImages,
-          onDonePressed: (cxt) { Navigator.pop(cxt); },
-        ),
-        title: 'Upload Images',
-        icon: Icon(Icons.file_upload)
       ),
       // ProfileListItem(
       //   screen: FishingLicenseScreen(),
