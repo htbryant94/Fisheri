@@ -74,7 +74,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
           icon: Icon(Icons.library_books, color: Colors.green)
       ),
       ProfileListItem(
-        screen: ImageUploadScreen(initialImages: _initialImages),
+        screen: ImageUploadScreen(
+          initialImages: _initialImages,
+          onDonePressed: (cxt) { Navigator.pop(cxt); },
+        ),
         title: 'Upload Images',
         icon: Icon(Icons.file_upload)
       ),

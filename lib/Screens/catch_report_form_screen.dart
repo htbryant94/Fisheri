@@ -20,6 +20,9 @@ import 'package:firebase_storage/firebase_storage.dart';
 // DateFormat
 import 'package:intl/intl.dart';
 
+import '../coordinator.dart';
+import 'ImageUploadScreen.dart';
+
 class CatchReportFormConstants {
   static const String customName = 'custom_name';
   static const String lakeName = 'lake_name';
@@ -221,50 +224,17 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
                           decoration: InputDecoration(
                               labelText: 'Notes', border: OutlineInputBorder()),
                         ),
-                        DSComponents.paragraphSpacer(),
-                        _CatchReportPhotosFormImagePicker(isEditMode: _isEditMode),
                       ],
                     ),
                   ),
                   SizedBox(height: 16),
                   DSComponents.primaryButton(
-                    text:  _isEditMode ? 'Update' : 'Create',
+                    text: 'Continue to Photos',
                     onPressed: () async {
                       if (_fbKey.currentState.validate()) {
                         _setLoadingState(true, message: 'Please wait...');
 
                         final _catchReportID = _isEditMode ? widget.catchReportID : Uuid().v1();
-
-                        // 1. Upload images to storage
-                        if (!_isEditMode && _imagesEnabled) {
-                          if (_valueFor(attribute: CatchReportFormConstants.images) != null) {
-                            _updateLoadingMessage('Saving your Photos...');
-                            final _images = _valueFor(attribute: CatchReportFormConstants.images);
-                            var index = 0;
-
-                            print('uploading images: $_images');
-
-                            await Future.forEach(_images, (image) async {
-                              final reference = FirebaseStorage.instance.ref().child('${FirestoreCollections.catchReports}/$_catchReportID/images/$index');
-
-                              await reference.putFile(image).whenComplete(() async {
-                                print('putting file');
-                                await reference.getDownloadURL().then((fileURL) {
-                                  print('getting download URL');
-                                  setState(() {
-                                    print('setting imageURLs');
-                                    imageURLs.add(fileURL);
-                                  });
-                                });
-                              }).catchError((error) {
-                                print('error putting file: $error');
-                              });
-                              index += 1;
-                            });
-
-                            print('finished uploading images');
-                          }
-                        }
 
                         _updateLoadingMessage('Creating your Catch Report...');
 
@@ -293,12 +263,13 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
                         final _isCustomLake = selectedReportType == 'custom';
 
                         final _catchReport = CatchReport(
+                          id: _catchReportID,
                           userID: FirebaseAuth.instance.currentUser.uid,
                           lakeID: _isCustomLake ? null : _document.id,
                           lakeName: _isCustomLake ? _valueFor(attribute: CatchReportFormConstants.customName) : _document['name'],
                           startDate: _startDate.toIso8601String(),
                           endDate: _endDate.toIso8601String(),
-                          // images: imageURLs.isNotEmpty ? imageURLs : null,
+                          images: widget.catchReport != null ? widget.catchReport.images : null,
                           notes: _valueFor(attribute: CatchReportFormConstants.notes),
                         );
 
@@ -312,28 +283,46 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
                         await _firestore
                             .collection(FirestoreCollections.catchReports)
                             .doc(_catchReportID)
-                            .set(_catchReportJSON)
+                            .set(_catchReportJSON, SetOptions(merge: false))
+                            .catchError((onError) {
+                              print('error uploading catch report: $onError');
+                            })
                             .whenComplete(() {
                           print('catch report added successfully');
 
                           _setLoadingState(false);
 
-                          if (!_isEditMode) {
-                            Navigator.popAndPushNamed(
-                              context,
-                              CatchReportScreen.routeName,
-                              arguments: CatchReportScreenArguments(
-                                catchReportID: _catchReportID,
-                                catchReport: _catchReport,
-                              ),
-                            );
-                          } else {
-                            if (widget.onFormSubmitted != null) {
-                              widget.onFormSubmitted(_catchReport);
-                            }
-                            Navigator.of(context).pop();
-                          }
-
+                          Navigator.of(context).pop();
+                          Coordinator.push(
+                            context,
+                            screenTitle: 'Your Photos',
+                            screen: ImageUploadScreen(
+                              documentReference: FirebaseFirestore.instance.collection(FirestoreCollections.catchReports).doc(_catchReportID),
+                              storageReference: FirebaseStorage.instance.ref().child(FirestoreCollections.catchReports).child(_catchReportID).child('images'),
+                              initialImages: widget.catchReport != null ? widget.catchReport.images : null,
+                              onDonePressed: (cxt) {
+                                if (!_isEditMode) {
+                                  Navigator.popAndPushNamed(
+                                    cxt,
+                                    CatchReportScreen.routeName,
+                                    arguments: CatchReportScreenArguments(
+                                      catchReportID: _catchReportID,
+                                      catchReport: _catchReport,
+                                    ),
+                                  );
+                                } else {
+                                  Navigator.pop(cxt);
+                                }
+                              },
+                              onUpload: (images) {
+                                final updatedCatchReport = _catchReport;
+                                updatedCatchReport.images = images;
+                                if (widget.onFormSubmitted != null) {
+                                  widget.onFormSubmitted(_catchReport);
+                                }
+                              },
+                            )
+                          );
                         });
                       } else {
                         await showDialog(
@@ -391,40 +380,6 @@ class _CatchReportFormScreenState extends State<CatchReportFormScreen> {
     });
   }
 }
-
-class _CatchReportPhotosFormImagePicker extends StatelessWidget {
-  const _CatchReportPhotosFormImagePicker({
-    this.isEditMode,
-});
-
-  final bool isEditMode;
-  final _enabledText = 'The first photo will be the cover of your catch report.';
-  final _disabledText = 'Editing photos is currently disabled, this will be included in a future release';
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        DSComponents.header(text: 'Photos'),
-        DSComponents.singleSpacer(),
-        DSComponents.subheaderSmall(
-            text: isEditMode ? _disabledText : _enabledText,
-            color: isEditMode ? Colors.red : DSColors.black,
-        ),
-        DSComponents.singleSpacer(),
-        // if (!isEditMode)
-        // FormBuilderImagePicker(
-        //   name: CatchReportFormConstants.images,
-        //   enabled: !isEditMode,
-        //   decoration: InputDecoration(
-        //       border: InputBorder.none
-        //   ),
-        // ),
-      ],
-    );
-  }
-}
-
 
 class _LakesDropDownMenu extends StatelessWidget {
   _LakesDropDownMenu({

@@ -18,11 +18,15 @@ class ImageUploadScreen extends StatefulWidget {
     required this.documentReference,
     required this.storageReference,
     this.initialImages,
+    required this.onDonePressed,
+    this.onUpload,
   }) : super(key: key);
 
   final DocumentReference documentReference;
   final Reference storageReference;
   final List<FisheriImage>? initialImages;
+  final ValueChanged<BuildContext> onDonePressed;
+  final ValueChanged<List<FisheriImage>?>? onUpload;
 
   @override
   _ImageUploadScreenState createState() => _ImageUploadScreenState();
@@ -31,6 +35,7 @@ class ImageUploadScreen extends StatefulWidget {
 class _ImageUploadScreenState extends State<ImageUploadScreen> {
   List<_UploadImage> _images = [];
   List<FisheriImage> _uploadedImages = [];
+  var _doneButtonEnabled = true;
 
   @override
   void initState() {
@@ -78,9 +83,9 @@ class _ImageUploadScreenState extends State<ImageUploadScreen> {
                 right: 0,
                 child: DSComponents.primaryButton(
                     text: 'Done',
-                    onPressed: () {
-                      Navigator.pop(context);
-                    }
+                    onPressed: _doneButtonEnabled ? () {
+                      widget.onDonePressed(context);
+                    } : null
                 ),
               ),
             ],
@@ -128,6 +133,7 @@ class _ImageUploadScreenState extends State<ImageUploadScreen> {
             child: FisheriIconButton(
               icon: Icon(Icons.delete, color: Colors.white),
               onTap: () {
+                setState(() { _doneButtonEnabled = false; });
                 _deleteFromStorage(_uploadedImages[index].url, index)
                     .whenComplete(() {
                   setState(() {
@@ -153,13 +159,16 @@ class _ImageUploadScreenState extends State<ImageUploadScreen> {
           );
           setState(() { _images.add(uploadImage); });
         },
-        onUpload: (uploadedImage) {
+        onUploadComplete: (uploadedImage) {
           setState(() {
             _images[index].isUploading = false;
             _uploadedImages.add(uploadedImage);
           });
           _updateDatabaseEntry(_uploadedImages);
-        }
+        },
+      onUploadStarted: () {
+        setState(() { _doneButtonEnabled = false; });
+      }
     );
   }
 
@@ -168,11 +177,24 @@ class _ImageUploadScreenState extends State<ImageUploadScreen> {
   }
 
   void _updateDatabaseEntry(List<FisheriImage> _uploadedImages) {
+    setState(() { _doneButtonEnabled = false; });
     if (_uploadedImages.isNotEmpty) {
       final imagesData = _uploadedImages.map((image) => image.toJson()).toList();
-      widget.documentReference.update({'images': imagesData});
+      widget.documentReference.update({'images': imagesData})
+      .whenComplete(() {
+        if (widget.onUpload != null) {
+          widget.onUpload!(_uploadedImages);
+        }
+        setState(() { _doneButtonEnabled = true; });
+      });
     } else {
-      widget.documentReference.update({'images': null});
+      widget.documentReference.update({'images': null})
+          .whenComplete(() {
+        if (widget.onUpload != null) {
+          widget.onUpload!(null);
+        }
+        setState(() { _doneButtonEnabled = true; });
+      });
     }
   }
 }
@@ -181,12 +203,14 @@ class _AddImageCell extends StatefulWidget {
   const _AddImageCell({
     Key? key,
     required this.onImageSelected,
-    required this.onUpload,
+    required this.onUploadComplete,
+    required this.onUploadStarted,
     required this.storageReference,
   }) : super(key: key);
 
   final ValueChanged<XFile> onImageSelected;
-  final ValueChanged<FisheriImage> onUpload;
+  final ValueChanged<FisheriImage> onUploadComplete;
+  final VoidCallback onUploadStarted;
   final Reference storageReference;
 
   @override
@@ -216,13 +240,14 @@ class _AddImageCellState extends State<_AddImageCell> {
   }
 
   void _uploadToStorage(XFile image) async {
+    widget.onUploadStarted();
     final uuid = Uuid().v1();
     final storageRef = widget.storageReference.child(uuid);
     // print(storageRef);
 
     await storageRef.putFile(File(image.path)).whenComplete(() async {
       await storageRef.getDownloadURL().then((fileURL) {
-        widget.onUpload(FisheriImage(id: uuid, url: fileURL));
+        widget.onUploadComplete(FisheriImage(id: uuid, url: fileURL));
       });
     });
   }

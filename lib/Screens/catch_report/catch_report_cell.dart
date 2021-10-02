@@ -42,7 +42,7 @@ class CatchReportCell extends StatelessWidget {
 
   Future<String> _fetchImages() async {
     if (catchReport.images != null && catchReport.images.isNotEmpty) {
-      return await FirebaseStorage.instance.ref('${FirestoreCollections.catchReports}/$catchReportID/images/0').getDownloadURL();
+      return catchReport.images.first.url;
     } else {
       return await FirebaseStorage.instance.ref('venues/${catchReport.lakeID}/images/0').getDownloadURL();
     }

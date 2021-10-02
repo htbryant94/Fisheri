@@ -485,7 +485,7 @@ class _CatchFormScreenState extends State<CatchFormScreen> {
                                       .doc(_catchID)
                                       .set(catchJSON, SetOptions(merge: false))
                                       .catchError((onError) {
-                                        print('error: $onError');
+                                        print('error uploading catch: $onError');
                                       })
                                       .whenComplete(() async {
                                     print('catch added successfully: $_catchID');
@@ -499,6 +499,7 @@ class _CatchFormScreenState extends State<CatchFormScreen> {
                                           documentReference: FirebaseFirestore.instance.collection(FirestoreCollections.catches).doc(_catchID),
                                           storageReference: FirebaseStorage.instance.ref().child('${FirestoreCollections.catchReports}/${widget.catchReportID}/$_catchID'),
                                           initialImages: (_isEditMode && widget.catchData != null) ? widget.catchData.images :null,
+                                          onDonePressed: (cxt) { Navigator.pop(cxt); }
                                         )
                                     );
                                       });
