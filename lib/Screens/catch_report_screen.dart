@@ -382,7 +382,7 @@ class CatchCell extends StatelessWidget {
   }
 
   String _fetchImageURL(Catch data) {
-    if (_isMatch()) {
+    if (_isMatch() && data.images == null) {
       return null;
     } else if (data.images != null && data.images.isNotEmpty) {
       return data.images.first.url;
