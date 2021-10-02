@@ -230,7 +230,7 @@ class __CatchListBuilderState extends State<_CatchListBuilder> {
     _stream = FirebaseFirestore.instance
         .collection(FirestoreCollections.catches)
         .where('catch_report_id', isEqualTo: widget.catchReportID)
-        // .orderBy('date', descending: true)
+        // .orderBy('date', descending: true) // TODO: Reintroduce filter / sort
         // .orderBy('time', descending: true)
         .snapshots();
 

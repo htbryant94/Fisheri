@@ -280,7 +280,7 @@ class _CatchFormScreenState extends State<CatchFormScreen> {
                               catchType: selectedCatchType,
                               supportedCatchTypes: [CatchType.multi],
                               child: _NumberOfFishSection(
-                                initialValue: _isEditMode ? widget.catchData.numberOfFish : 1,
+                                initialValue: _isEditMode ? widget.catchData.numberOfFish ?? 1 : 1,
                               ),
                             ),
                             CatchReportVisibility(
@@ -296,7 +296,7 @@ class _CatchFormScreenState extends State<CatchFormScreen> {
                               child: _PositionSection(
                                 title: 'Position',
                                 attribute: CatchFormConstants.position,
-                                initialValue: _isEditMode ? widget.catchData.position : 1,
+                                initialValue: _isEditMode ? widget.catchData.position ?? 1 : 1,
                               ),
                             ),
                             CatchReportVisibility(
