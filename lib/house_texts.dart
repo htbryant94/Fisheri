@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:fisheri/house_colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -88,7 +90,7 @@ class HouseTexts {
       alignment: alignment,
       child: Text(
         text,
-        style: GoogleFonts.dMSans(
+        style: GoogleFonts.dmSans(
           fontSize: fontSize,
           fontWeight: fontWeight,
           color: color,

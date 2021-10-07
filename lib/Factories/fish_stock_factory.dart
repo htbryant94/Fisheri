@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:fisheri/models/venue_detailed.dart';
 import 'package:fisheri/types/fish_stock_list.dart';
 import 'package:flutter/foundation.dart';

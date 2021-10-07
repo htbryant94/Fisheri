@@ -1,8 +1,12 @@
+// @dart=2.9
+
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fisheri/FirestoreCollections.dart';
 import 'package:fisheri/models/venue_detailed.dart';
 
 import 'models/catch.dart';
+import 'models/fisheri_image.dart';
 
 class FirestoreRequestService {
   static const venuesDetail = 'venues_detail';
@@ -23,7 +27,7 @@ class FirestoreRequestService {
         .doc(id)
         .get()
         .then((DocumentSnapshot document) {
-      return VenueDetailedJSONSerializer().fromMap(document.data());
+      return VenueDetailed.fromJson(document.data());
     }).catchError((error) {
       print('getVenueDetailed request error: $error');
     });
@@ -32,13 +36,13 @@ class FirestoreRequestService {
   Future<List<Catch>> getCatches({String catchReportID}) async {
     print('----- FETCHING CATCHES -----');
     final snapshots = await firestore
-        .collection('catches')
+        .collection(FirestoreCollections.catches)
         .where('catch_report_id', isEqualTo: catchReportID)
         .snapshots();
 
     return snapshots.first.then((snapshot) {
       return snapshot.docs.map((doc) {
-        var catchModel = CatchJSONSerializer().fromMap(doc.data());
+        var catchModel = Catch.fromJson(doc.data());
         catchModel.id = doc.id;
         return catchModel;
       }).toList();
@@ -48,7 +52,7 @@ class FirestoreRequestService {
   Future deleteCatch(String catchID) async {
     await FirebaseFirestore
         .instance
-        .collection('catches')
+        .collection(FirestoreCollections.catches)
         .doc(catchID)
         .delete()
         .catchError((error) => print(error));
@@ -57,14 +61,14 @@ class FirestoreRequestService {
   Future deleteCatchReport(String catchReportID) async {
     await FirebaseFirestore
         .instance
-        .collection('catch_reports')
+        .collection(FirestoreCollections.catchReports)
         .doc(catchReportID)
         .delete()
         .catchError((error) => print(error));
   }
 
   Future deleteCatchesForCatchReport(String catchReportID) async {
-    await firestore.collection('catches').where('catch_report_id', isEqualTo: catchReportID).get()
+    await firestore.collection(FirestoreCollections.catches).where('catch_report_id', isEqualTo: catchReportID).get()
         .then((querySnapshot) {
         // Once we get the results, begin a batch
         var batch = firestore.batch();
@@ -101,12 +105,12 @@ class FireStorageRequestService {
     return await imageURL;
   }
 
-  Future deleteImages(List<String> imageURLs) async {
-    await imageURLs.forEach((imageURL) async
+  Future deleteImages(List<FisheriImage> imageURLs) async {
+    imageURLs.forEach((imageURL) async
     {
       await FirebaseStorage
           .instance
-          .refFromURL(imageURL)
+          .refFromURL(imageURL.url)
           .delete();
     });
   }

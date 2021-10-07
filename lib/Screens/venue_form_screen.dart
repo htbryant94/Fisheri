@@ -1,6 +1,9 @@
+// @dart=2.9
+
 import 'dart:ui';
 
 import 'package:fisheri/Components/form_fields/fishing_types_field.dart';
+import 'package:fisheri/Components/touch_spin.dart';
 import 'package:fisheri/Components/form_fields/social_media_field.dart';
 import 'package:fisheri/Screens/venue_form_edit_screen.dart';
 import 'package:fisheri/house_colors.dart';
@@ -13,7 +16,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:form_builder_image_picker/form_builder_image_picker.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:fisheri/house_texts.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -271,7 +273,7 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
       print('adding point');
       final _geo = Geoflutterfire();
       GeoFirePoint geoFirePoint = _geo.point(latitude: lat, longitude: long);
-      final result = VenueSearchJSONSerializer().toMap(venueSearch);
+      final result = venueSearch.toJson();
       result['position'] = geoFirePoint.data;
 
       FirebaseFirestore.instance
@@ -307,7 +309,7 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
     }
 
     Future amendVenue(String id, VenueDetailed venue) async {
-      var venueJSON = VenueDetailedJSONSerializer().toMap(venue);
+      var venueJSON = venue.toJson();
       venueJSON = addCoordinatesIfValid(venueJSON);
 
       await FirebaseFirestore.instance
@@ -543,9 +545,9 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
                               ),
                             ),
                             SizedBox(height: 16),
-                            FormBuilderImagePicker(
-                              name: 'images',
-                            ),
+                            // FormBuilderImagePicker(
+                            //   name: 'images',
+                            // ),
 //                            FormBuilderImagePickerCustom(
 //                              attribute: 'images',
 //                            )
@@ -582,8 +584,7 @@ class _VenueFormScreenState extends State<VenueFormScreen> {
                                     _isLoading = true;
                                   });
                                   var _venue = makeVenueDetailed();
-                                  var _venueJSON = VenueDetailedJSONSerializer()
-                                      .toMap(_venue);
+                                  var _venueJSON = _venue.toJson();
                                   _venueJSON =
                                       addCoordinatesIfValid(_venueJSON);
                                   print(_venueJSON);
@@ -758,13 +759,18 @@ class _AmenitiesSection extends StatelessWidget {
     return Column(
       children: <Widget>[
         HouseTexts.subtitle('Amenities'),
-        FormBuilderTouchSpin(
+        FormBuilderField(
           name: 'number_of_lakes',
-          decoration: InputDecoration(labelText: 'Number of Lakes'),
-          initialValue: 0,
-          min: 0,
-          max: 100,
-          step: 1,
+          // validator: FormBuilderValidators.compose([
+          //   FormBuilderValidators.required(context),
+          // ]),
+          builder: (FormFieldState<dynamic> field) {
+            return TouchSpin(
+              min: 0,
+              max: 100,
+              step: 1,
+            );
+          },
         ),
         FormBuilderCheckboxGroup(
           name: 'amenities_list',

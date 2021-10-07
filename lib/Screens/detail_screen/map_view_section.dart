@@ -1,4 +1,7 @@
+// @dart=2.9
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fisheri/Screens/search_screen.dart';
 import 'package:fisheri/models/venue_address.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -37,12 +40,10 @@ class _MapViewSectionState extends State<MapViewSection> {
   void initState() {
     super.initState();
 
-    BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(),
-        'images/icons/map_marker_selected.png'
-    ).then((onValue) {
+    FisheriIconAsset.get('images/icons/map_marker_lake_selected.png',125)
+        .then((value) {
       setState(() {
-        _pinLocationIconGreen = onValue;
+        _pinLocationIconGreen = value;
       });
     });
   }
@@ -64,11 +65,13 @@ class _MapViewSectionState extends State<MapViewSection> {
           width: double.infinity,
           child: GoogleMap(
             initialCameraPosition: CameraPosition(target: _latLng, zoom: 9),
+            cameraTargetBounds: CameraTargetBounds.unbounded,
+            minMaxZoomPreference: MinMaxZoomPreference.unbounded,
             markers: Set<Marker>.of({
               Marker(
                 markerId: MarkerId('1'),
                 position: _latLng,
-                icon: _pinLocationIconGreen,
+                icon: _pinLocationIconGreen ?? BitmapDescriptor.defaultMarker,
               )
             }),
             scrollGesturesEnabled: false,

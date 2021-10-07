@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:fisheri/Components/favourite_button.dart';
 import 'package:fisheri/design_system.dart';

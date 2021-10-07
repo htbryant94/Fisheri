@@ -1,4 +1,7 @@
+// @dart=2.9
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fisheri/FirestoreCollections.dart';
 import 'package:fisheri/Screens/catch_form_screen.dart';
 import 'package:fisheri/Screens/detail_screen/description_section.dart';
 import 'package:fisheri/Screens/detail_screen/image_carousel.dart';
@@ -7,6 +10,7 @@ import 'package:fisheri/Factories/alert_dialog_factory.dart';
 import 'package:fisheri/coordinator.dart';
 import 'package:fisheri/models/catch.dart';
 import 'package:fisheri/models/catch_report.dart';
+import 'package:fisheri/models/fisheri_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fisheri/Components/base_cell.dart';
@@ -119,7 +123,7 @@ class _CatchReportScreenState extends State<CatchReportScreen> {
                             DSComponents.doubleSpacer(),
                             if(widget.catchReport.images != null)
                             ImageCarousel(
-                              imageURLs: widget.catchReport.images,
+                              imageURLs: widget.catchReport.images.map((e) => e.url).toList(),
                               showFavouriteButton: false,
                               height: 300,
                             ),
@@ -137,7 +141,7 @@ class _CatchReportScreenState extends State<CatchReportScreen> {
                                 ),
                               ),
                             _DeleteCatchButton(
-                                imageURLs: widget.catchReport.images,
+                                images: widget.catchReport.images,
                                 catchReportID: widget.catchReportID,
                             )
                           ],
@@ -150,7 +154,7 @@ class _CatchReportScreenState extends State<CatchReportScreen> {
                               alignment: Alignment.center
                           ),
                           _DeleteCatchButton(
-                            imageURLs: widget.catchReport.images,
+                            images: widget.catchReport.images,
                             catchReportID: widget.catchReportID,
                           )
                         ],
@@ -224,10 +228,10 @@ class __CatchListBuilderState extends State<_CatchListBuilder> {
   @override
   void initState() {
     _stream = FirebaseFirestore.instance
-        .collection('catches')
+        .collection(FirestoreCollections.catches)
         .where('catch_report_id', isEqualTo: widget.catchReportID)
-        .orderBy('date', descending: true)
-        .orderBy('time', descending: true)
+        // .orderBy('date', descending: true) // TODO: Reintroduce filter / sort
+        // .orderBy('time', descending: true)
         .snapshots();
 
     _stream.listen((event) {
@@ -258,7 +262,7 @@ class __CatchListBuilderState extends State<_CatchListBuilder> {
                 },
                 itemBuilder: (context, index) {
                   final _catch = snapshot.data.docs[index];
-                  final _data = CatchJSONSerializer().fromMap(_catch.data());
+                  final _data = Catch.fromJson(_catch.data());
                   print('catch index: $index with id: ${_catch.id}');
                   return CatchCell(
                     catchData: _data,
@@ -378,10 +382,10 @@ class CatchCell extends StatelessWidget {
   }
 
   String _fetchImageURL(Catch data) {
-    if (_isMatch()) {
+    if (_isMatch() && data.images == null) {
       return null;
     } else if (data.images != null && data.images.isNotEmpty) {
-      return data.images.first;
+      return data.images.first.url;
     } else {
       return _makeImageURL(catchData.typeOfFish);
     }
@@ -452,27 +456,16 @@ class CatchCell extends StatelessWidget {
 
 class _DeleteCatchButton extends StatelessWidget {
   _DeleteCatchButton({
-    this.imageURLs,
+    this.images,
     this.catchReportID
 });
 
-  final List<String> imageURLs;
+  final List<FisheriImage> images;
   final String catchReportID;
 
   @override
   Widget build(BuildContext context) {
     return CupertinoButton(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(CupertinoIcons.delete_solid, color: Colors.red, size: 20),
-          DSComponents.body(
-            text: 'Delete',
-            color: Colors.red,
-            alignment: Alignment.center,
-          ),
-        ],
-      ),
       onPressed: () async {
         var _shouldDelete = false;
         await showDialog(
@@ -490,11 +483,8 @@ class _DeleteCatchButton extends StatelessWidget {
 
         if (_shouldDelete) {
         // delete Catch Report images
-        if (imageURLs != null &&
-        imageURLs.isNotEmpty) {
-        await FireStorageRequestService
-            .defaultService().deleteImages(
-        imageURLs);
+        if (images != null && images.isNotEmpty) {
+        await FireStorageRequestService.defaultService().deleteImages(images);
         }
         // get all Catches for Catch Report
         final catchDocuments = await FirestoreRequestService
@@ -514,8 +504,7 @@ class _DeleteCatchButton extends StatelessWidget {
         // delete Catches for Catch Report
         await FirestoreRequestService
             .defaultService()
-            .deleteCatchesForCatchReport(
-        catchReportID);
+            .deleteCatchesForCatchReport(catchReportID);
 
         // delete Catch Report
         await FirestoreRequestService
@@ -526,6 +515,17 @@ class _DeleteCatchButton extends StatelessWidget {
         });
         }
       },
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(CupertinoIcons.delete_solid, color: Colors.red, size: 20),
+          DSComponents.body(
+            text: 'Delete',
+            color: Colors.red,
+            alignment: Alignment.center,
+          ),
+        ],
+      ),
     );
   }
 }

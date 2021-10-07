@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fisheri/Factories/alert_dialog_factory.dart';
 import 'package:fisheri/Factories/snack_bar_factory.dart';
@@ -31,7 +33,9 @@ class _LoginScreenState extends State<LoginScreen> {
       final error = onError as FirebaseAuthException;
       await showDialog(
         context: context,
-        child: AlertDialogFactory.generic(context: context, message: error.message),
+        builder: (BuildContext context) {
+          return AlertDialogFactory.generic(context: context, message: error.message);
+        },
       );
     }).then((userCredential) {
       if (userCredential != null) {

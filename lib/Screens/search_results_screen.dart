@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:fisheri/Components/FilterDistancePill.dart';
 import 'package:fisheri/Components/base_cell.dart';
 import 'package:fisheri/Components/distance_indicator.dart';
@@ -35,7 +37,7 @@ class AllVenuesListBuilder extends StatelessWidget {
                 },
                 itemBuilder: (context, int index) {
                   final result =  snapshot.data.docs[index];
-                  final venue = VenueSearchJSONSerializer().fromMap(result.data());
+                  final venue = VenueSearch.fromJson(result.data());
                   return EditVenueCell(
                     venue: venue,
                   );

@@ -1,10 +1,14 @@
-import 'dart:ffi';
+// @dart=2.9
+
 import 'dart:ui';
 
 import 'package:basic_utils/basic_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:fisheri/Screens/ImageUploadScreen.dart';
+import 'package:fisheri/coordinator.dart';
+import 'package:fisheri/Components/form_fields/form_builder_touch_spin.dart';
 import 'package:fisheri/WeightConverter.dart';
 import 'package:fisheri/Factories/alert_dialog_factory.dart';
 import 'package:fisheri/models/catch_report.dart';
@@ -15,11 +19,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:form_builder_image_picker/form_builder_image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:fisheri/models/catch.dart';
 import 'package:recase/recase.dart';
 import 'package:uuid/uuid.dart';
+import '../FirestoreCollections.dart';
 import '../design_system.dart';
 
 class CatchFormConstants {
@@ -65,6 +69,7 @@ class _CatchFormScreenState extends State<CatchFormScreen> {
   String _loadingText = 'Loading...';
   bool _didSetTemperature = false;
   bool _isEditMode;
+  final _imagesEnabled = false;
 
   CatchType parseStringToCatchType(String catchType) {
     switch (catchType) {
@@ -275,7 +280,7 @@ class _CatchFormScreenState extends State<CatchFormScreen> {
                               catchType: selectedCatchType,
                               supportedCatchTypes: [CatchType.multi],
                               child: _NumberOfFishSection(
-                                initialValue: _isEditMode ? widget.catchData.numberOfFish : 0,
+                                initialValue: _isEditMode ? widget.catchData.numberOfFish ?? 1 : 1,
                               ),
                             ),
                             CatchReportVisibility(
@@ -291,7 +296,7 @@ class _CatchFormScreenState extends State<CatchFormScreen> {
                               child: _PositionSection(
                                 title: 'Position',
                                 attribute: CatchFormConstants.position,
-                                initialValue: _isEditMode ? widget.catchData.position : 0,
+                                initialValue: _isEditMode ? widget.catchData.position ?? 1 : 1,
                               ),
                             ),
                             CatchReportVisibility(
@@ -353,28 +358,28 @@ class _CatchFormScreenState extends State<CatchFormScreen> {
                               child: FormBuilderTextField(
                                 keyboardType: TextInputType.multiline,
                                 minLines: 5,
-                                maxLines: null,
+                                maxLines: 100,
                                 name: CatchFormConstants.notes,
                                 decoration: InputDecoration(
                                     labelText: 'Notes', border: OutlineInputBorder()),
                               ),
                             ),
-                            Visibility(
-                              visible: _isEditMode ? widget.catchData.images != null : true,
-                              child: FormBuilderImagePicker(
-                                name: CatchFormConstants.images,
-                                enabled: !_isEditMode,
-                                decoration: InputDecoration(
-                                  border: InputBorder.none
-                                ),
-                                onChanged: (value) {
-                                  print('image value changes: $value');
-                                },
-                              ),
-                            ),
+                            // Visibility(
+                            //   visible: _isEditMode ? widget.catchData.images != null : true,
+                            //   child: FormBuilderImagePicker(
+                            //     name: CatchFormConstants.images,
+                            //     enabled: !_isEditMode,
+                            //     decoration: InputDecoration(
+                            //       border: InputBorder.none
+                            //     ),
+                            //     onChanged: (value) {
+                            //       print('image value changes: $value');
+                            //     },
+                            //   ),
+                            // ),
                             DSComponents.doubleSpacer(),
                             DSComponents.primaryButton(
-                              text: 'Log your Catch',
+                              text: 'Continue to Photos',
                               onPressed: () async {
                                 if(_fbKey.currentState.validate()) {
                                   _setLoadingState(true, message: 'Creating your Catch...');
@@ -402,10 +407,12 @@ class _CatchFormScreenState extends State<CatchFormScreen> {
                                             onError: (_) { return 0; });
                                       }
 
-                                      _weight = _convertFishWeight(
-                                          whole: int.parse(_valueFor(attribute: CatchFormConstants.weightWhole)),
-                                          fraction: _weightFraction
-                                      );
+                                      if (_valueFor(attribute: CatchFormConstants.weightWhole) != null) {
+                                        _weight = _convertFishWeight(
+                                            whole: int.parse(_valueFor(attribute: CatchFormConstants.weightWhole)),
+                                            fraction: _weightFraction
+                                        );
+                                      }
                                     }
                                   }
 
@@ -448,7 +455,10 @@ class _CatchFormScreenState extends State<CatchFormScreen> {
 
                                   print('creating catch');
 
+                                  final _catchID = _isEditMode ? widget.catchID : Uuid().v1();
+
                                   catchModel = Catch(
+                                    id: _catchID,
                                     userID: FirebaseAuth.instance.currentUser.uid,
                                     catchType: describeEnum(selectedCatchType),
                                     catchReportID: widget.catchReportID,
@@ -462,86 +472,36 @@ class _CatchFormScreenState extends State<CatchFormScreen> {
                                     weatherCondition: _weatherCondition,
                                     weight: _weight,
                                     windDirection: _windDirection,
-                                    images: null
+                                    images: widget.catchData != null ? widget.catchData.images : null,
                                   );
-
-                                  print('catch report successfully created:');
-                                  print('catchType: ${catchModel.catchType}');
 
                                   _updateLoadingMessage('Saving your Catch...');
 
-                                  final _catchID = _isEditMode ? widget.catchID : Uuid().v1();
-
                                   // 2. Upload catch to database
-                                  final catchJSON = CatchJSONSerializer().toMap(catchModel);
+                                  final catchJSON = catchModel.toJson();
+
                                   await FirebaseFirestore.instance
-                                      .collection('catches')
+                                      .collection(FirestoreCollections.catches)
                                       .doc(_catchID)
                                       .set(catchJSON, SetOptions(merge: false))
+                                      .catchError((onError) {
+                                        print('error uploading catch: $onError');
+                                      })
                                       .whenComplete(() async {
-
                                     print('catch added successfully: $_catchID');
 
-                                    // 3. Upload images to storage
-                                    if (!_isEditMode) {
-                                      if (_valueFor(attribute: 'images') != null) {
-                                        print('uploading images');
-                                        _updateLoadingMessage(
-                                            'Saving your Photos...');
-
-                                        final _images = _valueFor(
-                                            attribute: 'images');
-                                        var index = 0;
-
-                                        await Future.forEach(
-                                            _images, (image) async {
-                                          final storageReference = FirebaseStorage
-                                              .instance
-                                              .ref()
-                                              .child('catch_reports/${widget
-                                              .catchReportID}/$_catchID/$index');
-
-                                          await storageReference
-                                              .putFile(image)
-                                              .whenComplete(() async {
-                                            await storageReference
-                                                .getDownloadURL()
-                                                .then((fileURL) {
-                                              // 4. Fetch downloadURLs and populate imageURLs
-                                              setState(() {
-                                                imageURLs.add(fileURL);
-                                              });
-                                            });
-                                          });
-                                          index += 1;
-                                        });
-
-                                        _updateLoadingMessage('Finalising...');
-                                        print('finished uploading images');
-                                      }
-                                    }
-
-                                    // 5. Amend database entry with imageURLs
-                                    if (imageURLs.isNotEmpty) {
-                                      print('amending Catch');
-
-                                      catchModel.images = imageURLs;
-                                      final amendedCatchJSON = CatchJSONSerializer().toMap(catchModel);
-
-                                      await FirebaseFirestore.instance
-                                          .collection('catches')
-                                          .doc(_catchID)
-                                          .set(amendedCatchJSON)
-                                          .whenComplete(() {
-                                          });
-                                    }
                                     _setLoadingState(false);
                                     Navigator.of(context).pop();
-
-                                    // Dismisses the Detail Screen after edit is complete
-                                    if (_isEditMode) {
-                                      Navigator.of(context).pop();
-                                    }
+                                    Coordinator.push(
+                                        context,
+                                        screenTitle: 'Your Photos',
+                                        screen: ImageUploadScreen(
+                                          documentReference: FirebaseFirestore.instance.collection(FirestoreCollections.catches).doc(_catchID),
+                                          storageReference: FirebaseStorage.instance.ref().child('${FirestoreCollections.catchReports}/${widget.catchReportID}/$_catchID'),
+                                          initialImages: (_isEditMode && widget.catchData != null) ? widget.catchData.images :null,
+                                          onDonePressed: (cxt) { Navigator.pop(cxt); }
+                                        )
+                                    );
                                       });
                                 } else {
                                   await showDialog(
@@ -615,22 +575,15 @@ class _NumberOfFishSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        DSComponents.header(text: 'Number of Fish'),
-        FormBuilderTouchSpin(
-          name: CatchFormConstants.numberOfFish,
-          initialValue: initialValue ?? 0,
-          min: 0,
-          max: 100,
-          step: 1,
-          validator: FormBuilderValidators.min(context, 1, errorText: 'Please specify the number of fish caught.'),
-        ),
-      ],
+    return FormBuilderTouchSpin(
+      attribute: CatchFormConstants.numberOfFish,
+      max: 100,
+      min: 1,
+      value: initialValue,
+      title: 'Number of Fish',
     );
   }
 }
-
 
 class _PositionSection extends StatelessWidget {
   _PositionSection({
@@ -646,14 +599,12 @@ class _PositionSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        DSComponents.header(text: title),
         FormBuilderTouchSpin(
-          name: attribute,
-          initialValue: initialValue ?? 0,
-          min: 1,
-          max: 10,
-          step: 1,
-          validator: FormBuilderValidators.min(context, 1, errorText: 'Please specify the position.'),
+            attribute: attribute,
+            max: 10,
+            min: 1,
+            title: title,
+            value: initialValue
         )
       ],
     );

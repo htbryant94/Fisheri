@@ -27,27 +27,27 @@ class HolidayDetailed {
     this.isSponsored,
 });
 
-  String country;
-  String name;
-  String distanceFromCalais;
-  String bookingURL;
-  FishingDifficulty difficulty;
-  List<FishStock> fishStocked;
-  String largestCarp;
-  String largestCatfish;
-  int maxAnglers;
-  String description;
-  String priceInfo;
-  List<String> amenities;
-  GeoPoint coordinates;
-  VenueAddress address;
-  List<String> images;
-  List<String> videos;
-  List<String> fishingRules;
-  ContactDetails contactDetails;
-  String websiteURL;
-  Social social;
-  bool isSponsored;
+  String? country;
+  String? name;
+  String? distanceFromCalais;
+  String? bookingURL;
+  FishingDifficulty? difficulty;
+  List<FishStock>? fishStocked;
+  String? largestCarp;
+  String? largestCatfish;
+  int? maxAnglers;
+  String? description;
+  String? priceInfo;
+  List<String>? amenities;
+  GeoPoint? coordinates;
+  VenueAddress? address;
+  List<String>? images;
+  List<String>? videos;
+  List<String>? fishingRules;
+  ContactDetails? contactDetails;
+  String? websiteURL;
+  Social? social;
+  bool? isSponsored;
 }
 
 enum FishingDifficulty {

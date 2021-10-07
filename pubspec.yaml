@@ -14,52 +14,47 @@ description: A new Flutter project.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.2.2 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
-  google_maps_flutter:
-  http: ^0.12.0+2
-  json_serializable: ^3.0.0
-  json_annotation: ^2.4.0
-  firebase_core: ^0.7.0
-  firebase_storage:
-  cloud_firestore: ^0.16.0
-  jaguar_serializer: ^2.2.12
-  flutter_form_builder: ^4.2.0
-  form_builder_image_picker: ^0.1.2
-  geoflutterfire: ^2.2.2
-  google_fonts: ^0.3.9
-  cached_network_image: ^2.0.0
-  carousel_slider: ^3.0.0
-  page_view_indicators: ^1.3.1
-  basic_utils: ^2.5.2
-  webview_flutter: ^0.3.21
-  recase: ^3.0.0
-  image_picker: ^0.6.7
-  uuid: ^2.1.0
-  geolocator: ^6.2.0
-  modal_bottom_sheet: ^1.0.0+1
-  panorama: ^0.0.2
-  firebase_auth: ^0.20.1
-  url_launcher: ^5.7.10
-  get: ^3.26.0
+  google_maps_flutter: ^2.0.6
+  http: ^0.13.3
+  json_serializable: ^4.1.4
+  firebase_auth: ^3.0.1
+  firebase_core: ^1.4.0
+  firebase_storage: ^10.0.1
+  cloud_firestore: ^2.4.0
+  flutter_form_builder: ^6.1.0+1
+  geoflutterfire: ^3.0.1
+  google_fonts: ^2.0.0
+  cached_network_image: ^3.1.0
+  carousel_slider: ^4.0.0
+  page_view_indicators: ^2.0.0
+  basic_utils: ^3.4.0
+  webview_flutter: ^2.0.10
+  recase: ^4.0.0
+  image_picker: ^0.8.3
+  uuid: ^3.0.4
+  geolocator: ^7.4.0
+  modal_bottom_sheet: ^2.0.0
+  panorama: ^0.4.1
+  url_launcher: ^6.0.9
+  get: ^4.3.4
   flutter_google_places:
     git:
-      url: https://github.com/hayderux/flutter_google_places
-  
+      url: https://github.com/imhafeez/flutter_google_places
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^0.1.2
+  cupertino_icons: ^1.0.3
   
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   pedantic: ^1.5.0
-  build_runner: ^1.2.7
-  jaguar_serializer_cli: ^2.2.8
+  build_runner: ^2.1.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec

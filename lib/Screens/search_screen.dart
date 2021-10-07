@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
@@ -22,6 +24,20 @@ import 'package:google_maps_webservice/places.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'dart:math';
 
+class FisheriIconAsset {
+  static Future<BitmapDescriptor> get(String path, int width) async {
+    final imageData = await _getBytesFromAsset(path, width);
+    return BitmapDescriptor.fromBytes(imageData);
+  }
+
+  static Future<Uint8List> _getBytesFromAsset(String path, int width) async {
+    final data = await rootBundle.load(path);
+    final codec = await ui.instantiateImageCodec(data.buffer.asUint8List(), targetWidth: width);
+    final fi = await codec.getNextFrame();
+    return (await fi.image.toByteData(format: ui.ImageByteFormat.png)).buffer.asUint8List();
+  }
+}
+
 class SearchScreen extends StatefulWidget {
   @override
   _SearchScreenState createState() => _SearchScreenState();
@@ -40,7 +56,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   StreamSubscription<Position> positionStream;
   Stream<List<DocumentSnapshot>> stream;
-  Set<Circle> _circles;
+  Set<Circle> _circles = {};
 
   BitmapDescriptor _mapMarkerLakeUnselectedIcon;
   BitmapDescriptor _mapMarkerLakeSelectedIcon;
@@ -70,18 +86,6 @@ class _SearchScreenState extends State<SearchScreen> {
   double _zoomLevel = 8;
   double _lastRadius;
 
-  Future<Uint8List> getBytesFromAsset(String path, int width) async {
-    ByteData data = await rootBundle.load(path);
-    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(), targetWidth: width);
-    ui.FrameInfo fi = await codec.getNextFrame();
-    return (await fi.image.toByteData(format: ui.ImageByteFormat.png)).buffer.asUint8List();
-  }
-
-  Future<BitmapDescriptor> getBitmapDescriptorFromAssetBytes(String path, int width) async {
-    final Uint8List imageData = await getBytesFromAsset(path, width);
-    return BitmapDescriptor.fromBytes(imageData);
-  }
-
   @override
   void initState() {
     super.initState();
@@ -96,31 +100,35 @@ class _SearchScreenState extends State<SearchScreen> {
       _mapStyle = string;
     });
 
-    getBitmapDescriptorFromAssetBytes('images/icons/map_marker_lake_unselected.png',iconSize)
+    FisheriIconAsset.get('images/icons/map_marker_lake_unselected.png',iconSize)
         .then((value) {
           setState(() {
             _mapMarkerLakeUnselectedIcon = value;
           });
     });
-    getBitmapDescriptorFromAssetBytes('images/icons/map_marker_lake_selected.png',iconSize)
+
+    FisheriIconAsset.get('images/icons/map_marker_lake_selected.png',iconSize)
         .then((value) {
       setState(() {
         _mapMarkerLakeSelectedIcon = value;
       });
     });
-    getBitmapDescriptorFromAssetBytes('images/icons/map_marker_shop_unselected.png',iconSize)
+
+    FisheriIconAsset.get('images/icons/map_marker_shop_unselected.png',iconSize)
         .then((value) {
       setState(() {
         _mapMarkerShopUnselectedIcon = value;
       });
     });
-    getBitmapDescriptorFromAssetBytes('images/icons/map_marker_shop_selected.png',iconSize)
+
+    FisheriIconAsset.get('images/icons/map_marker_shop_selected.png',iconSize)
         .then((value) {
       setState(() {
         _mapMarkerShopSelectedIcon = value;
       });
     });
-    getBitmapDescriptorFromAssetBytes('images/icons/map_marker_embryo.png', 100)
+
+    FisheriIconAsset.get('images/icons/map_marker_embryo.png', 100)
         .then((value) {
       setState(() {
         _mapMarkerEmbryoIcon = value;
@@ -189,8 +197,10 @@ class _SearchScreenState extends State<SearchScreen> {
         context: context,
         apiKey: API_KEY,
         mode: Mode.overlay,
+        types: [],
         language: 'en',
         components: [Component(Component.country, 'uk')],
+        strictbounds: false,
         onError: (response) {
           print('Error with Places API: ${response.errorMessage}');
         }
@@ -247,6 +257,7 @@ class _SearchScreenState extends State<SearchScreen> {
               myLocationEnabled: true,
               compassEnabled: false,
               myLocationButtonEnabled: false,
+              zoomControlsEnabled: false,
               onCameraMove: (cameraPosition) {
                 setState(() {
                   _lastCameraZoom = cameraPosition.zoom;
@@ -506,10 +517,10 @@ class _SearchScreenState extends State<SearchScreen> {
     });
 
     documentList.forEach((DocumentSnapshot document) {
-      final result =
-          VenueSearchJSONSerializer().fromMap(document.data());
+      final result = VenueSearch.fromJson(document.data());
       if (result != null) {
-        GeoPoint point = document.data()['position']['geopoint'];
+        final json = document.data() as Map<String, dynamic>;
+        GeoPoint point = json['position']['geopoint'];
         List<String> venueTypes = result.categories.cast<String>();
 
         String venueType;

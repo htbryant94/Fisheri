@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:fisheri/Screens/search_results_screen.dart';
 import 'package:fisheri/coordinator.dart';
 import 'package:flutter/foundation.dart';

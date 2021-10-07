@@ -1,7 +1,10 @@
+// @dart=2.9
+
 import 'dart:ui';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fisheri/Components/form_fields/fishing_types_field.dart';
+import 'package:fisheri/Components/form_fields/form_builder_touch_spin.dart';
 import 'package:fisheri/Components/form_fields/social_media_field.dart';
 import 'package:fisheri/house_colors.dart';
 import 'package:fisheri/models/hours_of_operation.dart';
@@ -15,7 +18,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:form_builder_image_picker/form_builder_image_picker.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:fisheri/house_texts.dart';
 import 'package:recase/recase.dart';
@@ -316,7 +318,7 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
       print('adding point');
       final _geo = Geoflutterfire();
       var geoFirePoint = _geo.point(latitude: lat, longitude: long);
-      final result = VenueSearchJSONSerializer().toMap(venueSearch);
+      final result = venueSearch.toJson();
       result['position'] = geoFirePoint.data;
 
       FirebaseFirestore.instance
@@ -353,7 +355,7 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
     }
 
     Future amendVenue(String id, VenueDetailed venue) async {
-      var venueJSON = VenueDetailedJSONSerializer().toMap(venue);
+      var venueJSON = venue.toJson();
       venueJSON = addCoordinatesIfValid(venueJSON);
 
       await FirebaseFirestore.instance
@@ -640,10 +642,10 @@ class _VenueFormEditScreenState extends State<VenueFormEditScreen> {
                                 },
                               )
                             ),
-                            FormBuilderImagePicker(
-                              name: 'images',
-                              enabled: !_imagesReadOnly,
-                            )
+                            // FormBuilderImagePicker(
+                            //   name: 'images',
+                            //   enabled: !_imagesReadOnly,
+                            // )
                           ],
                         ),
                       ),
@@ -846,12 +848,11 @@ class _AmenitiesSection extends StatelessWidget {
       children: <Widget>[
         HouseTexts.subtitle('Amenities'),
         FormBuilderTouchSpin(
-          name: 'number_of_lakes',
-          decoration: InputDecoration(labelText: 'Number of Lakes'),
-          initialValue: 0,
-          min: 0,
-          max: 100,
-          step: 1,
+            attribute: 'number_of_lakes',
+            max: 100,
+            min: 0,
+            title: 'Number of Lakes',
+            value: 0
         ),
         FormBuilderCheckboxGroup(
           name: 'amenities_list',

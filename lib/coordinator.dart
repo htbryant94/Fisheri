@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fisheri/Components/list_view_button.dart';
 import 'package:fisheri/Screens/auth_screen.dart';

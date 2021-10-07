@@ -1,55 +1,60 @@
-import 'package:jaguar_serializer/jaguar_serializer.dart';
+import 'package:fisheri/models/fisheri_image.dart';
+import 'package:json_annotation/json_annotation.dart';
+part 'catch.g.dart';
 
-part 'catch.jser.dart';
-
-@GenSerializer(
-  serializers: [],
-  fields: {
-    'catchType': EnDecode(alias: 'catch_type'),
-    'catchReportID': EnDecode(alias: 'catch_report_id'),
-    'numberOfFish': EnDecode(alias: 'num_of_fish'),
-    'typeOfFish': EnDecode(alias: 'type_of_fish'),
-    'weatherCondition': EnDecode(alias: 'weather_condition'),
-    'windDirection': EnDecode(alias: 'wind_direction'),
-    'userID': EnDecode(alias: 'user_id'),
-  },
-)
-
-class CatchJSONSerializer extends Serializer<Catch>
-    with _$CatchJSONSerializer {}
-
+@JsonSerializable(explicitToJson: true)
 class Catch {
   Catch({
-    this.id,
-    this.userID,
-    this.catchType,
-    this.catchReportID,
+    required this.id,
+    required this.catchReportID,
+    required this.catchType,
     this.date,
+    this.images,
     this.notes,
     this.numberOfFish,
     this.position,
     this.temperature,
     this.time,
     this.typeOfFish,
+    required this.userID,
     this.weatherCondition,
     this.weight,
     this.windDirection,
-    this.images,
   });
 
   String id;
-  String userID;
-  String catchType;
+
+  @JsonKey(name: 'catch_report_id')
   String catchReportID;
-  String date;
-  String notes;
-  int numberOfFish;
-  int position;
-  double temperature;
-  String time;
-  String typeOfFish;
-  String weatherCondition;
-  double weight;
-  String windDirection;
-  List<String> images;
+
+  @JsonKey(name: 'catch_type')
+  String catchType;
+
+  String? date;
+  List<FisheriImage>? images;
+  String? notes;
+
+  @JsonKey(name: 'num_of_fish')
+  int? numberOfFish;
+
+  int? position;
+  double? temperature;
+  String? time;
+
+  @JsonKey(name: 'type_of_fish')
+  String? typeOfFish;
+
+  @JsonKey(name: 'user_id')
+  String userID;
+
+  @JsonKey(name: 'weather_condition')
+  String? weatherCondition;
+
+  @JsonKey(name: 'wind_direction')
+  String? windDirection;
+
+  double? weight;
+
+  factory Catch.fromJson(Map<String, dynamic> json) => _$CatchFromJson(json);
+  Map<String, dynamic> toJson() => _$CatchToJson(this);
 }

@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:fisheri/Screens/catch_report_form_screen.dart';
 import 'package:fisheri/Screens/catch_report_screen.dart';
 import 'package:fisheri/models/catch_report.dart';

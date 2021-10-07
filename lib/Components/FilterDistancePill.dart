@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -38,7 +40,7 @@ class FilterDistancePill extends StatelessWidget {
                   if (showPlus)
                     TextSpan(
                       text: '+',
-                      style: GoogleFonts.dMSans(
+                      style: GoogleFonts.dmSans(
                           fontWeight: FontWeight.bold,
                           fontSize: 12,
                           color: DSColors.black
@@ -46,7 +48,7 @@ class FilterDistancePill extends StatelessWidget {
                     ),
                   TextSpan(
                     text: distance.toStringAsFixed(0),
-                    style: GoogleFonts.dMSans(
+                    style: GoogleFonts.dmSans(
                         fontWeight: FontWeight.bold,
                         fontSize: 12,
                         color: DSColors.black
@@ -54,7 +56,7 @@ class FilterDistancePill extends StatelessWidget {
                   ),
                   TextSpan(
                     text: (distance != 1) ? ' miles' : ' mile',
-                    style: GoogleFonts.dMSans(
+                    style: GoogleFonts.dmSans(
                         fontWeight: FontWeight.normal,
                         fontSize: 12,
                         color: DSColors.black

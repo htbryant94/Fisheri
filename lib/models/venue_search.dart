@@ -1,49 +1,49 @@
 import 'package:fisheri/models/venue_address.dart';
-import 'package:jaguar_serializer/jaguar_serializer.dart';
+import 'package:json_annotation/json_annotation.dart';
+part 'venue_search.g.dart';
 
-part 'venue_search.jser.dart';
-
-@GenSerializer(
-  serializers: [
-    VenueAddressJSONSerializer,
-  ],
-  fields: {
-    'amenities': EnDecode(alias: 'amenities'),
-    'fishStocked': EnDecode(alias: 'fish_stocked'),
-    'fishingTackles': EnDecode(alias: 'fishing_tackles'),
-    'fishingTypes': EnDecode(alias: 'fishing_types'),
-    'imageURL': EnDecode(alias: 'image_url'),
-    'numberOfLakes': EnDecode(alias: 'number_of_lakes'),
-    'alwaysOpen': EnDecode(alias: 'always_open'),
-  },
-)
-class VenueSearchJSONSerializer extends Serializer<VenueSearch>
-    with _$VenueSearchJSONSerializer {}
-
+@JsonSerializable(explicitToJson: true)
 class VenueSearch {
   VenueSearch({
-    this.name,
     this.id,
-    this.imageURL,
-    this.categories,
     this.address,
-    this.numberOfLakes,
+    this.alwaysOpen,
     this.amenities,
+    this.categories,
     this.fishStocked,
     this.fishingTackles,
     this.fishingTypes,
-    this.alwaysOpen,
+    this.imageURL,
+    this.name,
+    this.numberOfLakes,
   });
 
-  String name;
-  String id;
-  String imageURL;
-  List<dynamic> categories;
-  VenueAddress address;
-  int numberOfLakes;
-  List<dynamic> amenities;
-  List<dynamic> fishStocked;
-  List<dynamic> fishingTackles;
-  List<dynamic> fishingTypes;
-  bool alwaysOpen;
+  String? id;
+  VenueAddress? address;
+
+  @JsonKey(name: 'always_open')
+  bool? alwaysOpen;
+
+  List<dynamic>? amenities;
+  List<dynamic>? categories;
+
+  @JsonKey(name: 'fish_stocked')
+  List<dynamic>? fishStocked;
+
+  @JsonKey(name: 'fishing_tackles')
+  List<dynamic>? fishingTackles;
+
+  @JsonKey(name: 'fishing_types')
+  List<dynamic>? fishingTypes;
+
+  @JsonKey(name: 'image_url')
+  String? imageURL;
+
+  String? name;
+
+  @JsonKey(name: 'number_of_lakes')
+  int? numberOfLakes;
+
+  factory VenueSearch.fromJson(Map<String, dynamic> json) => _$VenueSearchFromJson(json);
+  Map<String, dynamic> toJson() => _$VenueSearchToJson(this);
 }

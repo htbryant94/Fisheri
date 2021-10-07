@@ -1,17 +1,7 @@
-import 'package:jaguar_serializer/jaguar_serializer.dart';
-part 'venue_fish_stock.jser.dart';
+import 'package:json_annotation/json_annotation.dart';
+part 'venue_fish_stock.g.dart';
 
-@GenSerializer(
-  serializers: const [
-    FishWithWeightJSONSerializer
-  ],
-  fields: const {
-  'crucianCarp': EnDecode(alias: 'crucian_carp'),
-  'withWeight': EnDecode(alias: 'with_weight')
-})
-class VenueFishStockJSONSerializer extends Serializer<VenueFishStock>
-    with _$VenueFishStockJSONSerializer {}
-
+@JsonSerializable(explicitToJson: true)
 class VenueFishStock {
   VenueFishStock(
       List<FishWithWeight> withWeight,
@@ -52,37 +42,46 @@ class VenueFishStock {
     this.zander = zander;
   }
 
-  List<FishWithWeight> withWeight;
-  bool brownTrout;
-  bool chub;
-  bool crucianCarp;
-  bool dace;
-  bool eel;
-  bool grassCarp;
-  bool grayling;
-  bool gudgeon;
-  bool koiCarp;
-  bool orfe;
-  bool perch;
-  bool rainbowTrout;
-  bool roach;
-  bool rudd;
-  bool ruffe;
-  bool salmon;
-  bool zander;
+  @JsonKey(name: 'with_weight')
+  List<FishWithWeight>? withWeight;
+
+  bool? brownTrout;
+  bool? chub;
+
+  @JsonKey(name: 'crucian_carp')
+  bool? crucianCarp;
+
+  bool? dace;
+  bool? eel;
+  bool? grassCarp;
+  bool? grayling;
+  bool? gudgeon;
+  bool? koiCarp;
+  bool? orfe;
+  bool? perch;
+  bool? rainbowTrout;
+  bool? roach;
+  bool? rudd;
+  bool? ruffe;
+  bool? salmon;
+  bool? zander;
+
+  factory VenueFishStock.fromJson(Map<String, dynamic> json) => _$VenueFishStockFromJson(json);
+  Map<String, dynamic> toJson() => _$VenueFishStockToJson(this);
 }
 
-@GenSerializer(fields: const {
-  'maxWeight': EnDecode(alias: 'max_weight'),
-  'isStocked': EnDecode(alias: 'is_stocked')
-})
-class FishWithWeightJSONSerializer extends Serializer<FishWithWeight>
-    with _$FishWithWeightJSONSerializer {}
-
+@JsonSerializable(explicitToJson: true)
 class FishWithWeight {
   FishWithWeight(String name, int maxWeight, bool isStocked);
 
-  String name;
-  int maxWeight;
-  bool isStocked;
+  late String name;
+
+  @JsonKey(name: 'max_weight')
+  late int maxWeight;
+
+  @JsonKey(name: 'is_stocked')
+  bool? isStocked;
+
+  factory FishWithWeight.fromJson(Map<String, dynamic> json) => _$FishWithWeightFromJson(json);
+  Map<String, dynamic> toJson() => _$FishWithWeightToJson(this);
 }

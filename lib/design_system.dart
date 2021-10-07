@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -15,7 +17,7 @@ class DSColors {
 }
 
 class DesignSystemFonts {
-  static TextStyle titleLarge = GoogleFonts.dMSans(
+  static TextStyle titleLarge = GoogleFonts.dmSans(
     color: DSColors.black,
     fontWeight: FontWeight.bold,
     letterSpacing: -0.2,
@@ -23,7 +25,7 @@ class DesignSystemFonts {
   );
 
   static TextStyle title(Color color) {
-    return GoogleFonts.dMSans(
+    return GoogleFonts.dmSans(
       color: color,
       fontWeight: FontWeight.bold,
       letterSpacing: -0.2,
@@ -31,7 +33,7 @@ class DesignSystemFonts {
     );
   }
 
-  static TextStyle header = GoogleFonts.dMSans(
+  static TextStyle header = GoogleFonts.dmSans(
     color: DSColors.black,
     fontWeight: FontWeight.bold,
     letterSpacing: -0.2,
@@ -39,7 +41,7 @@ class DesignSystemFonts {
   );
 
   static TextStyle subheader(Color color) {
-    return GoogleFonts.dMSans(
+    return GoogleFonts.dmSans(
       color: color,
       fontWeight: FontWeight.bold,
       letterSpacing: -0.2,
@@ -48,7 +50,7 @@ class DesignSystemFonts {
   }
 
   static TextStyle subheaderSmall(Color color) {
-    return GoogleFonts.dMSans(
+    return GoogleFonts.dmSans(
       color: color,
       fontWeight: FontWeight.bold,
       letterSpacing: -0.2,
@@ -57,7 +59,7 @@ class DesignSystemFonts {
   }
 
   static TextStyle body(Color color) {
-    return GoogleFonts.dMSans(
+    return GoogleFonts.dmSans(
       color: color,
       fontWeight: FontWeight.normal,
       letterSpacing: 0.1,
@@ -66,7 +68,7 @@ class DesignSystemFonts {
   }
 
   static TextStyle bodySmall(Color color) {
-    return GoogleFonts.dMSans(
+    return GoogleFonts.dmSans(
       color: color,
       fontWeight: FontWeight.normal,
       letterSpacing: 0,
@@ -75,7 +77,7 @@ class DesignSystemFonts {
   }
 
   static TextStyle link(Color color) {
-    return GoogleFonts.dMSans(
+    return GoogleFonts.dmSans(
       color: color,
       fontWeight: FontWeight.normal,
       letterSpacing: 0.1,
@@ -145,6 +147,27 @@ class DSComponents {
             alignment: Alignment.center
         ),
         onPressed: onPressed,
+      ),
+    );
+  }
+
+  static Widget progressIndicator({bool isOverlay = false}) {
+    final progressIndicator = CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(DSColors.green));
+    final padding = EdgeInsets.all(16);
+
+    return Center(
+      child: isOverlay ? Container(
+          padding: padding,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              color: Colors.black87
+          ),
+          child: progressIndicator
+      ) : Container(
+        padding: padding,
+        child: Center(
+          child: progressIndicator,
+        ),
       ),
     );
   }
@@ -295,7 +318,7 @@ class DSComponents {
       alignment: alignment,
       child: Text(
         text,
-        style: GoogleFonts.dMSans(
+        style: GoogleFonts.dmSans(
           fontSize: fontSize,
           fontWeight: fontWeight,
           color: color,

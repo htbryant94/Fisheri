@@ -1,108 +1,123 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fisheri/models/hours_of_operation.dart';
 import 'package:fisheri/models/venue_address.dart';
-import 'package:jaguar_serializer/jaguar_serializer.dart';
+import 'package:json_annotation/json_annotation.dart';
+part 'venue_detailed.g.dart';
 
-part 'venue_detailed.jser.dart';
-
-@GenSerializer(
-  serializers: [
-    ContactDetailsJSONSerializer,
-    SocialJSONSerializer,
-  ],
-  fields: {
-    'contactDetails': EnDecode(alias: 'contact_details'),
-    'fishingRules': EnDecode(alias: 'fishing_rules'),
-    'fishingTackles': EnDecode(alias: 'fishing_tackles'),
-    'fishingTypes': EnDecode(alias: 'fishing_types'),
-    'fishStocked': EnDecode(alias: 'fish_stock_array'),
-    'fishStock': EnDecode(alias: 'fish_stock'),
-    'operationalHours': EnDecode(alias: 'hours_of_operation'),
-    'websiteURL': EnDecode(alias: 'website_url'),
-    'numberOfLakes': EnDecode(alias: 'number_of_lakes'),
-    'alwaysOpen': EnDecode(alias: 'always_open'),
-  },
-)
-class VenueDetailedJSONSerializer extends Serializer<VenueDetailed>
-    with _$VenueDetailedJSONSerializer {}
-
+@JsonSerializable(explicitToJson: true)
 class VenueDetailed {
   VenueDetailed({
-    this.coordinates,
-    this.name,
-    this.images,
-    this.categories,
-    this.description,
-    this.websiteURL,
+    required this.id,
     this.address,
-    this.contactDetails,
-    this.social,
-    this.numberOfLakes,
+    this.alwaysOpen,
     this.amenities,
+    this.categories,
+    this.contactDetails,
+    this.coordinates,
+    this.description,
+    this.fishingRules,
+    this.fishStock,
     this.fishStocked,
     this.fishingTackles,
     this.fishingTypes,
-    this.tickets,
+    this.images,
+    this.name,
+    this.numberOfLakes,
     this.operationalHours,
-    this.alwaysOpen,
-    this.fishingRules,
+    this.social,
+    this.tickets,
+    this.websiteURL,
   });
 
-  @pass
-  GeoPoint coordinates;
-  String name;
-  List<String> images;
-  List<String> categories;
-  String description;
-  String websiteURL;
-  VenueAddress address;
-  ContactDetails contactDetails;
-  Social social;
-  int numberOfLakes;
-  List<String> amenities;
-  List<String> fishStocked;
-  List<String> fishingTackles;
-  List<String> fishingTypes;
-  List<String> tickets;
-  HoursOfOperation operationalHours;
-  bool alwaysOpen;
-  String fishingRules;
-  List<FishStock> fishStock;
+  String id;
+  VenueAddress? address;
+
+  @JsonKey(name: 'always_open')
+  bool? alwaysOpen;
+
+  List<String>? amenities;
+  List<String>? categories;
+
+  @JsonKey(name: 'contact_details')
+  ContactDetails? contactDetails;
+
+  @JsonKey(name: 'coordinates', fromJson: _fromJsonGeoPoint, toJson: _toJsonGeoPoint)
+  GeoPoint? coordinates;
+
+  String? description;
+
+  @JsonKey(name: 'fishing_rules')
+  String? fishingRules;
+
+  @JsonKey(name: 'fish_stock')
+  List<FishStock>? fishStock;
+
+  @JsonKey(name: 'fish_stock_array')
+  List<String>? fishStocked;
+
+  @JsonKey(name: 'fishing_tackles')
+  List<String>? fishingTackles;
+
+  @JsonKey(name: 'fishing_types')
+  List<String>? fishingTypes;
+
+  List<String?>? images;
+  String? name;
+
+  @JsonKey(name: 'number_of_lakes')
+  int? numberOfLakes;
+
+  @JsonKey(name: 'hours_of_operation')
+  HoursOfOperation? operationalHours;
+
+  Social? social;
+  List<String>? tickets;
+
+  @JsonKey(name: 'website_url')
+  String? websiteURL;
+  factory VenueDetailed.fromJson(Map<String, dynamic> json) => _$VenueDetailedFromJson(json);
+  Map<String, dynamic> toJson() => _$VenueDetailedToJson(this);
+
+  // GeoPoint
+  static GeoPoint? _fromJsonGeoPoint(GeoPoint? geoPoint) { return geoPoint; }
+  static Map<String, dynamic>? _toJsonGeoPoint(GeoPoint? geoPoint) {
+    if (geoPoint != null) {
+      return {'latitude': geoPoint.latitude, 'longitude': geoPoint.longitude};
+    }
+    return null;
+  }
 }
 
-@GenSerializer()
-class FishStockJSONSerializer extends Serializer<FishStock>
-    with _$FishStockJSONSerializer {}
-
+@JsonSerializable(explicitToJson: true)
 class FishStock {
   FishStock({
     this.name,
     this.weight,
 });
 
-  String name;
-  int weight;
-  int priority;
+  String? name;
+  int? weight;
+  late int priority;
+
+  factory FishStock.fromJson(Map<String, dynamic> json) => _$FishStockFromJson(json);
+  Map<String, dynamic> toJson() => _$FishStockToJson(this);
 }
 
-@GenSerializer()
-class ContactDetailsJSONSerializer extends Serializer<ContactDetails>
-    with _$ContactDetailsJSONSerializer {}
-
+@JsonSerializable(explicitToJson: true)
 class ContactDetails {
   ContactDetails({
     this.email,
     this.phone,
   });
 
-  String email;
-  String phone;
+  String? email;
+  String? phone;
+
+  factory ContactDetails.fromJson(Map<String, dynamic> json) => _$ContactDetailsFromJson(json);
+  Map<String, dynamic> toJson() => _$ContactDetailsToJson(this);
 }
 
-@GenSerializer()
-class SocialJSONSerializer extends Serializer<Social>
-    with _$SocialJSONSerializer {}
-
+@JsonSerializable(explicitToJson: true)
 class Social {
   Social({
     this.facebook,
@@ -111,8 +126,11 @@ class Social {
     this.youtube,
   });
 
-  String facebook;
-  String instagram;
-  String twitter;
-  String youtube;
+  String? facebook;
+  String? instagram;
+  String? twitter;
+  String? youtube;
+
+  factory Social.fromJson(Map<String, dynamic> json) => _$SocialFromJson(json);
+  Map<String, dynamic> toJson() => _$SocialToJson(this);
 }
